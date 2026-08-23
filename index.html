@@ -1094,6 +1094,21 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       <button class="btn sm" style="background:linear-gradient(135deg,#eab308,#f59e0b); color:#1c1400; font-weight:800" onclick="claimDailyChest()">🎁 Открыть сундук</button>
     </div>
     <div id="daily_quests_list"></div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px; margin-top:14px">
+      <div style="background:var(--card); border:1.5px solid var(--acc2); border-radius:12px; padding:14px">
+        <div style="font-weight:800; color:var(--acc2); font-size:14px; margin-bottom:6px">🎯 Прогноз дня (Brier-калибровка)</div>
+        <div id="brier_box"></div>
+      </div>
+      <div style="background:var(--card); border:1.5px solid var(--warn); border-radius:12px; padding:14px">
+        <div style="font-weight:800; color:var(--warn); font-size:14px; margin-bottom:6px">🕵️ Детектив недели</div>
+        <div id="detective_box"></div>
+        <div style="margin-top:8px; border-top:1px dashed var(--line); padding-top:8px">
+          <div style="font-weight:700; font-size:12.5px; color:var(--txt); margin-bottom:4px">🎡 Рулетка квестов</div>
+          <div id="roulette_box" style="font-size:12.5px; color:var(--mut)">Крути — получишь случайный квест понимания.</div>
+          <button class="btn sm ghost" style="margin-top:6px" onclick="spinQuestRoulette()">🎡 Крутить</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- 🧘 Протокол учебной сессии (консолидация памяти) -->
@@ -26810,7 +26825,7 @@ function showConsolidationScreen(lessonId, customTitle){
     const yesterday = new Date(Date.now() - 864e5).toDateString();
     cs.count = (cs.lastDay === yesterday) ? cs.count + 1 : 1;
     cs.lastDay = today;
-    save('cn_consol_streak', cs);
+    localStorage.setItem('cn_consol_streak', JSON.stringify(cs));
   }
   const lbl = overlay.querySelector('#consol_streak_lbl');
   if(lbl) lbl.textContent = cs.count + (cs.count === 1 ? ' день' : cs.count < 5 ? ' дня' : ' дней');
@@ -26897,6 +26912,167 @@ completeLessonWithMastery = function(id){
   }catch(e){}
   return res;
 };
+
+
+/* =========================================================================
+   E3: ПРОГНОЗ ДНЯ (Brier) · E6: ДЕТЕКТИВ + РУЛЕТКА КВЕСТОВ
+   ========================================================================= */
+const BRIER_QUESTIONS = [
+  { q: 'Фандинг BTC перпетуалов сейчас положительный. Значит ли это, что лонгисты платят шортистам?', a: true },
+  { q: 'Если z-score спреда пары = +2.5, это сигнал стоп-лосса для mean-reversion стратегии.', a: false },
+  { q: 'При плече x10 движение цены на −10% ликвидирует лонг-позицию (без учёта буферов).', a: true },
+  { q: 'Корреляция BTC и ETH близкая к +1 гарантирует, что они не упадут одновременно.', a: false },
+  { q: 'Комиссия сети Bitcoin зависит от суммы перевода в BTC.', a: false },
+  { q: 'По шкале НДФЛ-2025 доход от продажи крипты свыше 2.4 млн ₽/год может облагаться по ставке выше 13%.', a: true },
+  { q: 'Непостоянные потери пула 50/50 при росте цены актива вдвое (×2) составляют примерно 5.7%.', a: true },
+  { q: 'Full Kelly максимизирует рост капитала и при этом имеет наименьшие просадки.', a: false },
+  { q: 'Short call имеет ограниченный максимальный убыток.', a: false },
+  { q: 'Seed-фразу из 12 слов невозможно восстановить перебором на современном оборудовании.', a: true },
+  { q: 'Биржа обязана хранить 100% клиентских активов в холодных кошельках по закону РФ.', a: false },
+  { q: 'Interleaving (чередование тем) улучшает долговременное запоминание по сравнению с блоковым повторением.', a: true },
+  { q: 'Walk-forward тест устраняет lookahead bias полностью.', a: false },
+  { q: 'Kill-switch должен отменять открытые ордера и подтверждать отмену на бирже.', a: true }
+];
+
+function brierDayIdx(offset = 0){
+  const day = Math.floor((Date.now() + offset * 864e5) / 864e5);
+  return day % BRIER_QUESTIONS.length;
+}
+
+function renderBrierBox(){
+  const box = document.getElementById('brier_box');
+  if(!box) return;
+  const st = load('cn_brier', { preds: [] }); // {day, qIdx, p, resolved}
+  const today = Math.floor(Date.now() / 864e5);
+  // резолвим вчерашние и старше
+  let changed = false;
+  st.preds.forEach(pr => {
+    if(!pr.resolved && pr.day < today){
+      pr.resolved = true;
+      pr.outcome = BRIER_QUESTIONS[pr.qIdx].a ? 1 : 0;
+      pr.score = Math.pow(pr.p - pr.outcome, 2);
+      changed = true;
+    }
+  });
+  if(changed) localStorage.setItem('cn_brier', JSON.stringify(st));
+  const todays = st.preds.find(pr => pr.day === today);
+  const done = st.preds.filter(pr => pr.resolved);
+  const week = done.slice(-7);
+  const brier = week.length ? (week.reduce((s, p) => s + p.score, 0) / week.length) : null;
+  const q = BRIER_QUESTIONS[brierDayIdx()];
+  let html = '';
+  if(todays){
+    html += `<div style="font-size:12.5px; color:var(--txt)">Твой прогноз записан: <b>${Math.round(todays.p * 100)}%</b> «да». Вердикт завтра.</div>`;
+  } else {
+    html += `
+      <div style="font-size:12.5px; color:var(--txt); margin-bottom:8px; line-height:1.5">${q.q}</div>
+      <div style="font-size:12px; color:var(--mut)">Насколько ты уверен, что утверждение верно? <b id="brier_p_lbl" style="color:var(--acc2)">50%</b></div>
+      <input type="range" id="brier_p" min="5" max="95" step="5" value="50" style="width:100%" oninput="document.getElementById('brier_p_lbl').textContent=this.value+'%'">
+      <button class="btn sm" style="margin-top:6px" onclick="submitBrier()">📌 Зафиксировать прогноз</button>`;
+  }
+  if(brier !== null){
+    const grade = brier <= 0.18 ? 'отличная калибровка 🎯' : brier <= 0.30 ? 'нормальная калибровка' : 'переоцениваешь уверенность ⚠️';
+    html += `<div style="margin-top:8px; font-size:12.5px; color:var(--txt); border-top:1px dashed var(--line); padding-top:6px">
+      Brier за неделю: <b style="color:${brier <= 0.30 ? 'var(--ok)' : 'var(--warn)'}">${brier.toFixed(3)}</b> (${grade}) · прогнозов: ${done.length}
+      ${done.length >= 7 && brier <= 0.25 ? '<div style="color:var(--ok); font-weight:800; margin-top:2px">🏅 Бейдж «Калиброванный аналитик» заработан!</div>' : ''}
+    </div>`;
+  } else {
+    html += `<div style="margin-top:8px; font-size:11.5px; color:var(--mut)">Brier-скор появится завтра: прогноз сравнивается с вердиктом, (p − исход)².</div>`;
+  }
+  box.innerHTML = html;
+}
+
+function submitBrier(){
+  const st = load('cn_brier', { preds: [] });
+  const today = Math.floor(Date.now() / 864e5);
+  if(st.preds.find(pr => pr.day === today)) return;
+  st.preds.push({ day: today, qIdx: brierDayIdx(), p: +document.getElementById('brier_p').value / 100, resolved: false });
+  localStorage.setItem('cn_brier', JSON.stringify(st));
+  showToast('🎯 Прогноз зафиксирован. Завтра — вердикт и Brier-скор.', '📌');
+  renderBrierBox();
+}
+
+/* ---------- E6: Детектив недели ---------- */
+const DETECTIVE_CASES = [
+  {
+    id: 'case_019',
+    title: 'Дело №019: исчезнувший фандинг',
+    story: 'Трейдер держал дельта-нейтральную позицию: спот BTC + шорт перп 1:1. За неделю цена не сдвинулась, а на счёте стало на 0.8% меньше. Куда ушли деньги?',
+    clues: ['Фандинг всю неделю был положительным: +0.01% / 8ч ≈ +0.03%/день', 'Позиция: шорт перпетуала', 'Спред и комиссии входа ≈ 0.1%'],
+    q: 'Что съело 0.8%?',
+    opts: ['Взлом биржи', 'Положительный фандинг: лонги платят шортам — значит, шорт ПОЛУЧАЕТ, деньги потеряться не могли', 'Шорт платил фандинг? Нет: при положительном фандинге платят ЛОНГИ. Ищем дальше: комиссии входа/выхода + проскальзывание ребалансировок', 'Проскальзывание и комиссии ребалансировок + фандинг, если часть недели он был отрицательным'],
+    a: 3,
+    explain: 'Положительный фандинг действительно платит шорту. Но −0.8% за неделю объясняется издержками: вход/выход по спреду, комиссии тейкера на ребалансах и периоды отрицательного фандинга. Мораль: считай ВСЕ издержки дельта-нейтральной конструкции, а не только «красивый» фандинг.'
+  }
+];
+
+function renderDetective(){
+  const box = document.getElementById('detective_box');
+  if(!box) return;
+  const c = DETECTIVE_CASES[0];
+  const st = load('cn_detective', {});
+  if(st[c.id]){
+    box.innerHTML = `<div style="font-size:12.5px; color:var(--ok)">✅ ${c.title} — раскрыто! ${c.explain.split('.')[0]}.</div>`;
+    return;
+  }
+  box.innerHTML = `
+    <div style="font-size:13px; color:var(--txt); margin-bottom:6px"><b>${c.title}</b></div>
+    <div style="font-size:12.5px; color:var(--mut); line-height:1.55; margin-bottom:6px">${c.story}</div>
+    <div style="font-size:11.5px; color:var(--acc2); margin-bottom:8px">🔎 Улики:<ul style="margin:4px 0 0; padding-left:16px">${c.clues.map(x => `<li>${x}</li>`).join('')}</ul></div>
+    <div style="font-size:12.5px; color:var(--txt); margin-bottom:6px"><b>${c.q}</b></div>
+    ${c.opts.map((o, i) => `<button class="ans" style="display:block; width:100%; text-align:left; margin-bottom:6px; padding:8px 10px; font-size:12px" onclick="solveDetective(${i}, ${c.a})">${o}</button>`).join('')}
+    <div id="detective_out" style="font-size:12.5px; margin-top:6px"></div>`;
+}
+
+function solveDetective(chosen, correct){
+  const out = document.getElementById('detective_out');
+  if(chosen === correct){
+    const c = DETECTIVE_CASES[0];
+    const st = load('cn_detective', {});
+    st[c.id] = true;
+    localStorage.setItem('cn_detective', JSON.stringify(st));
+    out.innerHTML = `<div style="background:rgba(34,197,94,.1); border-left:3px solid var(--ok); border-radius:6px; padding:8px; color:var(--txt)">✅ Дело раскрыто! ${c.explain}</div>`;
+    addFundCapital(25000, 40, 'Раскрыто дело детектива');
+    if(typeof grantXp === 'function'){} else {}
+  } else {
+    out.innerHTML = `<div style="background:rgba(239,68,68,.1); border-left:3px solid var(--bad); border-radius:6px; padding:8px; color:var(--txt)">❌ Не сходится. Перечитай улики: знак фандинга и направление платежа — ключ.</div>`;
+  }
+}
+
+/* ---------- E6: Рулетка квестов ---------- */
+const QUEST_ROULETTE = [
+  'Объясни вслух (Фейнман), почему ликвидация при x10 наступает раньше −10% — из-за буферов и MMR.',
+  'Найди в глоссарии термин «спред» и сформулируй своими словами без слова «разница».',
+  'Открой стакан-сим и посчитай slippage bps для рыночной покупки на весь видимый объём.',
+  'Назови три издержки арбитража между биржами, которые съедают «гарантированную» прибыль.',
+  'Объясни, почему корреляция в крипте растёт именно в крах.',
+  'Вспомни без подглядывания пороги шкалы НДФЛ-2025 для крипты.',
+  'Объясни разницу mark price и last price при ликвидации.',
+  'Придумай пример lookahead bias из собственной торговли или наблюдений.',
+  'Назови три звена RWA-цепочки доверия и слабейшее из них.',
+  'Объясни, почему Full Kelly даёт огромные просадки при идеальных вводных.',
+  'Вспомни, что делает kill-switch и как проверяется его срабатывание.',
+  'Объясни разницу FIFO и средней стоимости в налоговом учёте.'
+];
+
+function spinQuestRoulette(){
+  const box = document.getElementById('roulette_box');
+  if(!box) return;
+  const day = Math.floor(Date.now() / 864e5);
+  const rnd = Math.abs(Math.sin(day * 9301 + Date.now() % 997) * 49297) % 1;
+  const q = QUEST_ROULETTE[Math.floor(rnd * QUEST_ROULETTE.length) % QUEST_ROULETTE.length];
+  box.innerHTML = `<div style="background:#040714; border-left:3px solid var(--warn); border-radius:6px; padding:8px 10px; color:var(--txt)">🎡 <b>Квест:</b> ${q}</div>`;
+}
+
+// рендер при заходе на главную
+(function(){
+  const prevGo = window.go;
+  window.go = function(t){
+    prevGo(t);
+    if(t === 'home') setTimeout(() => { renderBrierBox(); renderDetective(); }, 60);
+  };
+  document.addEventListener('DOMContentLoaded', () => { renderBrierBox(); renderDetective(); });
+})();
 
 /* =========================================================================
    D3.1 ВОЛНА 1 ИГР (G-01, G-03, G-10, G-14, G-15) — аудит визуализаций
