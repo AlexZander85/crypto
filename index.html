@@ -21,7 +21,7 @@ body{
 header{display:flex; align-items:center; gap:16px; padding:14px 24px; border-bottom:1px solid var(--line); position:sticky; top:0; background:rgba(13,16,34,.92); backdrop-filter:blur(10px); z-index:100}
 .logo{font-weight:800; font-size:20px; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; white-space:nowrap; cursor:pointer}
 .hprog{flex:1; height:8px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden}
-#hbar{height:100%; width:0%; background:var(--grad); border-radius:99px; transition:width .5s}
+#hbar{height:100%; width:0%; background:var(--grad); border-radius:99px; transition:width .3s}
 #hpct{font-size:13px; color:var(--mut); min-width:44px; text-align:right; font-weight:700}
 nav{display:flex; justify-content:center; align-items:center; gap:10px; padding:12px 24px; flex-wrap:wrap; border-bottom:1px solid var(--line); background:rgba(255,255,255,.02)}
 .tab{border:1px solid var(--line); background:var(--card); color:var(--txt); padding:8px 16px; border-radius:99px; cursor:pointer; font-size:13.5px; transition:.2s; display:inline-flex; align-items:center; gap:6px}
@@ -53,7 +53,7 @@ h3{font-size:17px; margin-bottom:8px; font-weight:700}
 .chip.active{color:#fff; font-weight:700; background:rgba(255,255,255,.1)}
 .gloss, .gloss-grid, #gloss.gloss-grid { display:grid !important; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)) !important; gap:16px !important; }
 .gcard{perspective:1000px; height:280px; cursor:pointer}
-.gin{position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d}
+.gin{position:relative; width:100%; height:100%; transition:transform .3s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d}
 .gcard.flipped .gin{transform:rotateY(180deg)}
 .gface{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; border:1px solid var(--line); padding:16px; display:flex; flex-direction:column}
 .gfront{background:var(--card)}
@@ -2082,6 +2082,14 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <div class="panel" id="stats" style="margin-bottom:24px"></div>
+
+  <!-- E5: Карьерная лестница фонда -->
+  <div style="background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:24px">
+    <h3 style="color:var(--txt); margin-bottom:6px">🏛️ Найм в фонд: карьерная лестница</h3>
+    <p style="color:var(--mut); font-size:13px; margin-bottom:12px">AUM растёт за понимание: уроки, симуляторы, боссы, детектив. Ранг — это допуск, а не украшение.</p>
+    <div id="rank_ladder"></div>
+    <div id="rank_mentor" style="margin-top:10px; font-size:13px; color:var(--txt); background:#040714; border-left:3px solid var(--acc1); border-radius:6px; padding:10px 12px"></div>
+  </div>
 
   <!-- Simulator Mastery Badges Grid -->
   <div style="background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:24px">
@@ -16013,6 +16021,9 @@ function renderPhaseTestView(phaseNum){
   }
 
   const testKey = phaseNum === 6 ? 'exam_capstone' : `p${phaseNum}`;
+  // E8: спидран — метка старта попытки
+  window._ptStart = window._ptStart || {};
+  if(!window._ptStart[phaseNum]) window._ptStart[phaseNum] = Date.now();
   // D0.1: перемешанная копия вопросов для этой отрисовки (новая соль на каждый заход)
   const _ptSalt = nextShuffleSalt();
   window._ptView = window._ptView || {};
@@ -16037,6 +16048,9 @@ function renderPhaseTestView(phaseNum){
         <span class="badge" style="background:${isPassed?'rgba(34,197,94,.15)':'rgba(234,179,8,.15)'}; color:${isPassed?'var(--ok)':'var(--warn)'}">
           ${isPassed ? '✓ СДАН (' + bestScore + '%)' : 'Не сдан (Лучший: ' + bestScore + '%)'}
         </span>
+        ${(() => { const sr = load('cn_speedrun', {}); const g = sr[testKey];
+          return g ? `<span class="badge" title="Лучшее время (ghost) и сезон" style="background:rgba(6,182,212,.12); color:var(--acc2)">👻 ${Math.floor(g.secs/60)}:${String(g.secs%60).padStart(2,'0')} · ${g.season}</span>` : '';
+        })()}
       </div>
     </div>
   `;
@@ -16104,6 +16118,25 @@ function calcPhaseTestResult(phaseNum){
   const pct = Math.round((correctCount / test.questions.length) * 100);
   const testKey = phaseNum === 6 ? 'exam_capstone' : `p${phaseNum}`;
   phaseTestsDone[testKey] = Math.max(phaseTestsDone[testKey] || 0, pct);
+  // E8: спидран — сравнение с ghost
+  try {
+    const t0 = (window._ptStart || {})[phaseNum];
+    if(t0){
+      const secs = Math.round((Date.now() - t0) / 1000);
+      window._ptStart[phaseNum] = 0;
+      const season = ['❄️ Зима','🌱 Весна','☀️ Лето','🍂 Осень'][Math.floor((new Date().getMonth() % 12) / 3)] + ' ' + new Date().getFullYear();
+      const sr = load('cn_speedrun', {});
+      const prev = sr[testKey];
+      if(!prev || secs < prev.secs){
+        sr[testKey] = { secs, pct, season, when: Date.now() };
+        localStorage.setItem('cn_speedrun', JSON.stringify(sr));
+        showToast(`⏱ Новый спидран-рекорд: ${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')} (${pct}%)!`, '🏁');
+      } else {
+        const d = secs - prev.secs;
+        showToast(`⏱ Время: ${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')} · ghost ${d >= 0 ? '+' : ''}${d}с к рекорду`, '🏁');
+      }
+    }
+  } catch(e){}
   save();
   updateHeader();
   renderProgressStats();
@@ -17486,6 +17519,36 @@ function checkAndUnlockBadge(badgeId){
       }
       break;
     }
+    case 'g01': { qualified = simActionStats.g01 === true; break; }
+    case 'g03': { qualified = simActionStats.g03 === true; break; }
+    case 'g10': { qualified = simActionStats.g10 === true; break; }
+    case 'g14': { qualified = simActionStats.g14 === true; break; }
+    case 'g15': { qualified = simActionStats.g15 === true; break; }
+    case 'brier': {
+      const st = load('cn_brier', { preds: [] });
+      const done = st.preds.filter(p => p.resolved).slice(-7);
+      qualified = done.length >= 7 && (done.reduce((s,p)=>s+p.score,0)/done.length) <= 0.25;
+      break;
+    }
+    case 'consol7': {
+      const cs = load('cn_consol_streak', { count: 0 });
+      qualified = (cs.count || 0) >= 7;
+      break;
+    }
+    case 'detective': {
+      const st = load('cn_detective', {});
+      qualified = st.case_019 === true;
+      break;
+    }
+    case 'boss6': {
+      qualified = [0,1,2,3,4,5].every(b => simMastery['boss_' + b] === true);
+      break;
+    }
+    case 'speedrun': {
+      const sr = load('cn_speedrun', {});
+      qualified = Object.keys(sr).length >= 3;
+      break;
+    }
   }
 
   if(qualified && !simMastery[badgeId]){
@@ -17501,6 +17564,56 @@ function renderBadgesGrid(){
   if(!box) return;
 
   const BADGES_DEFINITIONS = [
+    {
+      id: 'g01', icon: '⛓️', name: 'Судья форков',
+      desc: 'Верно определи судьбу невалидного блока в «Гонке блоков»',
+      progressText: () => simActionStats.g01 ? '✓ orphan-блок разобран' : '○ сыграй в G-01 в уроке 0.1'
+    },
+    {
+      id: 'g03', icon: '🚧', name: 'Хранитель коридора',
+      desc: 'Прогони месяц в «Ликвидационном коридоре» с MMR-буфером',
+      progressText: () => simActionStats.g03 ? '✓ коридор пройден' : '○ сыграй в G-03 в уроке 0.16'
+    },
+    {
+      id: 'g10', icon: '🎲', name: 'Келли-реалист',
+      desc: 'Запусти Монте-Карло в «Келли-веере» и сравни Full/Half/Quarter',
+      progressText: () => simActionStats.g10 ? '✓ 200 траекторий изучены' : '○ сыграй в G-10 в уроке 3.3'
+    },
+    {
+      id: 'g14', icon: '🚂', name: 'FIFO-проводник',
+      desc: 'Продай лот в «FIFO-очереди» и увидь налог по лотам',
+      progressText: () => simActionStats.g14 ? '✓ лот продан' : '○ сыграй в G-14 в уроке 4.6'
+    },
+    {
+      id: 'g15', icon: '🏰', name: 'Кастелян крепости',
+      desc: 'Проверь распределение портфеля в «Крепости хранения»',
+      progressText: () => simActionStats.g15 ? '✓ лимиты проверены' : '○ сыграй в G-15 в уроке 5.7'
+    },
+    {
+      id: 'brier', icon: '🎯', name: 'Калиброванный аналитик',
+      desc: '7 прогнозов с недельным Brier ≤ 0.25 в «Прогнозе дня»',
+      progressText: () => { const st = load('cn_brier', { preds: [] }); return 'Прогнозов: ' + st.preds.filter(p=>p.resolved).length + ' / 7'; }
+    },
+    {
+      id: 'consol7', icon: '🧘', name: 'Дисциплина NSDR',
+      desc: 'Стрик консолидаций памяти 7 дней подряд',
+      progressText: () => 'Стрик: ' + (load('cn_consol_streak', { count: 0 }).count || 0) + ' / 7'
+    },
+    {
+      id: 'detective', icon: '🕵️', name: 'Расследователь фандинга',
+      desc: 'Раскрой «Дело №019: исчезнувший фандинг» на главной',
+      progressText: () => load('cn_detective', {}).case_019 ? '✓ раскрыто' : '○ дело ждёт на главной'
+    },
+    {
+      id: 'boss6', icon: '👑', name: 'Укротитель Чёрных Лебедей',
+      desc: 'Повергни всех 6 кризисных боссов босс-арены',
+      progressText: () => [0,1,2,3,4,5].filter(b => simMastery['boss_' + b]).length + ' / 6 боссов'
+    },
+    {
+      id: 'speedrun', icon: '🏁', name: 'Спидраннер фаз',
+      desc: 'Установи рекорды времени в трёх разных фазовых тестах',
+      progressText: () => 'Рекордов: ' + Object.keys(load('cn_speedrun', {})).length + ' / 3'
+    },
     { 
       id: 'ob', icon: '⚡', name: 'Мастер Стакана & Slippage', 
       desc: 'Исполни Limit Maker и Market Taker ордера и рассчитай проскальзывание в bps',
@@ -20780,7 +20893,7 @@ function renderFeynmanBox(lesson){
       </div>
       <textarea id="feynman_input_${lesson.id}" rows="2" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение..."></textarea>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
-        <button class="btn sm" style="background:var(--acc1)" onclick="document.getElementById('feynman_model_${lesson.id}').style.display='block'">
+        <button class="btn sm" style="background:var(--acc1)" onclick="revealFeynmanModel('${lesson.id}')">
           ✨ Сверить с эталонным объяснением
         </button>
       </div>
@@ -20976,7 +21089,7 @@ function showToast(message, icon = '💾', duration = 3000){
   container.appendChild(toast);
 
   setTimeout(() => {
-    toast.style.transition = 'all 0.4s ease';
+    toast.style.transition = 'all 0.3s ease';
     toast.style.opacity = '0';
     toast.style.transform = 'translateY(10px)';
     setTimeout(() => { if(toast && typeof toast.remove === 'function') toast.remove(); }, 400);
@@ -22335,7 +22448,7 @@ function wrap(name, factory){
   st.id = 'p1_pack_css';
   st.textContent = [
     '@keyframes p1AumPulse{0%{transform:scale(1)}35%{transform:scale(1.25);color:#22c55e}100%{transform:scale(1)}}',
-    '.p1-aum-pulse{display:inline-block;animation:p1AumPulse .9s ease-out}',
+    '.p1-aum-pulse{display:inline-block;animation:p1AumPulse .3s ease-out}',
     '.p1-onb-step{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:rgba(255,255,255,.03)}',
     '.p1-onb-step.done{border-color:var(--ok);background:rgba(34,197,94,.05)}',
     '.p1-onb-step.locked{opacity:.45}',
@@ -26914,6 +27027,57 @@ completeLessonWithMastery = function(id){
 };
 
 
+
+/* ---------- E5: Лестница рангов + наставник ---------- */
+// XP за понимание: самообъяснение Фейнмана (один раз на урок)
+window.revealFeynmanModel = function(lessonId){
+  const el = document.getElementById('feynman_model_' + lessonId);
+  if(el) el.style.display = 'block';
+  const st = load('cn_feynman_xp', {});
+  if(!st[lessonId]){
+    const inp = document.getElementById('feynman_input_' + lessonId);
+    const wrote = inp && inp.value.trim().length >= 20;
+    if(wrote){
+      st[lessonId] = true;
+      localStorage.setItem('cn_feynman_xp', JSON.stringify(st));
+      addFundCapital(5000, 80, 'Самообъяснение по Фейнману');
+    } else {
+      showToast('✍️ Сначала напиши своё объяснение (≥20 символов) — XP идёт за понимание, а не за клик.', '🧠');
+    }
+  }
+};
+const RANK_MENTOR_LINES = [
+  'Наставник: «Стажёр учится не терять. Первое правило фонда: выживание важнее доходности».',
+  'Наставник: «Аналитик доказывает цифрами. Каждая идея — гипотеза с тестом и издержками».',
+  'Наставник: «Алго-трейдер доверяет коду, но проверяет исполнение: kill-switch и мониторинг — твои ноги».',
+  'Наставник: «Риск-офицер говорит "нет" красивым стратегиям. Просадка фонда — твоя вина, а не рынка».',
+  'Наставник: «Управляющий думает портфелем: корреляции в крах сходятся к единице».',
+  'Наставник: «Архитектор строит систему, которая переживает его отпуск. Ты дошёл — теперь учи других».'
+];
+function renderRankLadder(){
+  const box = document.getElementById('rank_ladder');
+  if(!box || typeof QUANT_RANKS === 'undefined') return;
+  const cur = getCurrentQuantRank();
+  const curIdx = QUANT_RANKS.findIndex(r => r.title === cur.title);
+  box.innerHTML = '<div style="display:flex; flex-direction:column; gap:6px">' + QUANT_RANKS.map((r, i) => {
+    const done = i <= curIdx;
+    return `<div style="display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:8px; background:${i === curIdx ? 'rgba(6,182,212,.1)' : 'transparent'}; border:1px solid ${i === curIdx ? 'var(--acc2)' : 'var(--line)'}; opacity:${done ? 1 : 0.55}">
+      <span style="font-size:16px">${done ? '✅' : '🔒'}</span>
+      <span style="font-weight:800; color:${r.color}; min-width:230px">${r.title}</span>
+      <span style="font-size:12px; color:var(--mut)">AUM от $${r.minAum.toLocaleString()} · ${r.perk}</span>
+    </div>`;
+  }).join('') + '</div>';
+  const mentor = document.getElementById('rank_mentor');
+  if(mentor) mentor.textContent = RANK_MENTOR_LINES[Math.min(curIdx, RANK_MENTOR_LINES.length - 1)];
+}
+(function(){
+  const prev = window.updateFundUI;
+  window.updateFundUI = function(){
+    prev.apply(this, arguments);
+    renderRankLadder();
+  };
+})();
+
 /* =========================================================================
    E3: ПРОГНОЗ ДНЯ (Brier) · E6: ДЕТЕКТИВ + РУЛЕТКА КВЕСТОВ
    ========================================================================= */
@@ -27128,11 +27292,12 @@ function g01DrawNet(){
   sc.innerHTML = `Узел <b style="color:var(--bad)">№${g01State.culprit + 1}</b> транслирует блок #842 317, в котором одна и та же монета потрачена дважды. Твой выбор:`;
   document.getElementById('g01_out').innerHTML = '';
 }
+function _gstat(k){ if(typeof simActionStats !== 'undefined'){ simActionStats[k] = true; if(typeof save === 'function') save(); } }
 function g01Answer(choice){
   const out = document.getElementById('g01_out');
   const debrief = `<div style="margin-top:8px; padding:10px; background:#040714; border-left:3px solid var(--acc2); border-radius:6px; font-size:12px; color:var(--mut)">
     <b style="color:var(--txt)">Дебрифинг:</b> узлы не «голосуют» — каждый сам проверяет блок по правилам протокола. Блок с двойной тратой просто не принимается честными узлами, и жуликоватая ветка становится orphan-форком: канонической считается цепочка, которую протокол признаёт действительной (наибольшая суммарная работа при соблюдении всех правил).</div>`;
-  if(choice === 1){
+  if(choice === 1){ _gstat('g01');
     g01State.score++;
     out.innerHTML = `<div style="color:var(--ok); font-weight:700">✅ Верно. Твой узел отверг блок, нарушающий правила — и все честные узлы сделали то же самое независимо.</div>` + debrief;
   } else if(choice === 0){
@@ -27207,7 +27372,7 @@ function g03Draw(paths){
     document.getElementById('g03_stat').innerHTML = '<span style="color:var(--mut)">Нажми «Прогнать месяц», чтобы увидеть статистику выживания, а не один счастливый путь.</span>';
   }
 }
-function g03SimMonth(){
+function g03SimMonth(){ _gstat('g03');
   const cv = document.getElementById('g03_cv');
   const midY = cv.height / 2;
   const paths = [];
@@ -27230,7 +27395,7 @@ function renderG10(box){
       <div id="g10_stat" style="margin-top:8px; font-size:12.5px"></div>
     </div>`;
 }
-function g10Run(){
+function g10Run(){ _gstat('g10');
   const cv = document.getElementById('g10_cv');
   const ctx = cv.getContext('2d');
   ctx.clearRect(0, 0, cv.width, cv.height);
@@ -27319,7 +27484,8 @@ function g14Tax2025(base){
   }
   return Math.round(tax);
 }
-function g14Sell(){
+function _gstat14(){ _gstat('g14'); }
+function g14Sell(){ _gstat('g14');
   if(!g14Lots.length){ document.getElementById('g14_out').innerHTML = '<span style="color:var(--bad)">Очередь пуста — продавать нечего.</span>'; return; }
   const lot = g14Lots.shift();
   const sellPrice = 9000000, fee = 10000;
@@ -27371,7 +27537,7 @@ function g15Read(){
     defi: +(document.getElementById('g15_defi').value || 0)
   };
 }
-function g15Check(){
+function g15Check(){ _gstat('g15');
   const v = g15Read();
   const out = document.getElementById('g15_out');
   const sum = v.cold + v.cexa + v.cexb + v.defi;
@@ -28884,7 +29050,7 @@ function renderC2Lifecycle(box){
     <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin:16px 0">
       <div style="display:flex; justify-content:space-between; gap:6px; margin-bottom:14px; flex-wrap:wrap" id="c2_stages">
         ${stages.map((s, i) => `
-          <div id="c2_st_${i}" style="flex:1; min-width:100px; text-align:center; padding:10px 6px; border-radius:10px; border:1px solid var(--line); background:#040714; transition:all .4s; opacity:.45">
+          <div id="c2_st_${i}" style="flex:1; min-width:100px; text-align:center; padding:10px 6px; border-radius:10px; border:1px solid var(--line); background:#040714; transition:all .3s; opacity:.45">
             <div style="font-size:22px">${s[0]}</div>
             <div style="font-size:11px; font-weight:700; color:var(--txt); margin-top:4px">${s[1]}</div>
           </div>`).join('<div style="align-self:center; color:var(--mut)">→</div>')}
