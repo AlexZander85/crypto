@@ -1108,7 +1108,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       <span style="color:var(--mut)">→</span>
       <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:6px 10px">🌙 Сон <b>7–9 ч</b> + повтор SM-2 перед сном</span>
     </div>
-    <div style="font-size:12px; color:var(--mut); margin-top:8px">После каждого завершённого урока приложение предложит экран консолидации с таймером паузы — не пропускай его: без паузы новая информация «не прописывается» в долговременную память.</div>
+    <div style="font-size:12px; color:var(--mut); margin-top:8px">После каждого завершённого урока или сданной аттестации приложение предложит экран консолидации с таймером паузы — не пропускай его: без паузы новая информация «не прописывается» в долговременную память. И ещё одно правило: <b style="color:var(--acc2)">раз в неделю — день тишины</b>: ноль новых уроков, только интервальное повторение (SM-2), квесты и свободные симуляторы. Именно в такие дни мозг «дожимает» накопленное.</div>
   </div>
 </section>
 
@@ -1211,7 +1211,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   <!-- SIM 2: Leverage & Liquidation Calculator -->
   <div id="sim_liq" class="sim-box" style="display:none">
     <h3>💥 Калькулятор кредитного плеча и цены ликвидации</h3>
-    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Упрощённый учебный расчёт цены ликвидации (изолированная маржа). Реальная цена зависит от правил конкретной биржи: считается по mark price и включает поддерживающую маржу (MMR); комиссии и ступенчатые лимиты уточняй у биржи.</p>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Упрощённый учебный расчёт цены ликвидации (изолированная маржа). Реальная цена зависит от правил конкретной биржи: считается по <span style="color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)" data-tooltip-term="mark price">mark price</span> и включает поддерживающую маржу (MMR); комиссии и ступенчатые лимиты уточняй у биржи.</p>
     
     <div class="sim-controls">
       <div class="sim-input-group">
@@ -5328,7 +5328,7 @@ const LESSONS = [
         "type": "concept",
         "level1": "Цена сама по себе для анализа почти бесполезна: биткоин за 100 000 $ и мемкоин за 0,00001 $ живут в разных масштабах, и сравнивать их числа бессмысленно. Поэтому аналитики работают не с ценой, а с доходностью — на сколько цена изменилась. Но у обычных процентов есть неприятное свойство: их нельзя складывать. Упал на 50%, вырос на 50% — ты не в нуле, ты в минус 25%. Логарифмическая доходность это чинит: её можно спокойно складывать за любое число периодов.",
         "level2": "Простая доходность: r = (P_t − P_t−1) / P_t−1. Логарифмическая: R = ln(P_t / P_t−1). Свойства log-доходностей: они аддитивны во времени (доходность за неделю = сумма дневных), симметричны (падение и обратный рост дают равные по модулю значения) и лучше подходят для статистических моделей, которые предполагают сложение случайных величин. При малых движениях (до ~1–2%) log-доходность почти совпадает с обычной, поэтому переход ничего не ломает.",
-        "level3": "Ещё одна причина: цена — нестационарный ряд с трендом, а доходности гораздо ближе к стационарным (об этом следующий урок). Практически весь квант-стек — от расчёта волатильности и корреляций до GARCH-моделей и портфельной оптимизации — построен на доходностях, а не на ценах. При этом важно помнить: суммировать по портфелю (по активам в один момент времени) корректно простые доходности, а суммировать по времени — логарифмические.",
+        "level3": "Ещё одна причина: цена — нестационарный ряд с трендом, а доходности гораздо ближе к <span style=\"color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)\" data-tooltip-term=\"stationary_series\">стационарным</span> (об этом следующий урок). Практически весь квант-стек — от расчёта волатильности и корреляций до GARCH-моделей и портфельной оптимизации — построен на доходностях, а не на ценах. При этом важно помнить: суммировать по портфелю (по активам в один момент времени) корректно простые доходности, а суммировать по времени — логарифмические.",
         "level4": "import numpy as np, pandas as pd\ndf['ret']     = df['close'].pct_change()              # простая доходность\ndf['log_ret'] = np.log(df['close']).diff()            # логарифмическая\n\n# аддитивность: сумма дневных log-доходностей = log-доходность за период\nassert np.isclose(df['log_ret'].sum(), np.log(df['close'].iloc[-1] / df['close'].iloc[0]))\n\n# обратно в проценты\ntotal_pct = np.exp(df['log_ret'].sum()) - 1",
         "simpleAnalogy": "Представь лифт, который считает этажи в процентах от текущей высоты. Спустился на «половину» — теперь каждый следующий процент стоит вдвое меньше в метрах. Логарифм — это как перейти от процентов обратно к обычным ступенькам: одна ступенька вниз и одна вверх снова возвращают тебя ровно туда, откуда ты начал."
       },
@@ -7240,7 +7240,7 @@ const LESSONS = [
           ],
           [
             "2. Дедупликация",
-            "MinHash / SimHash по тексту",
+            "<span style=\"color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)\" data-tooltip-term=\"MinHash\">MinHash / SimHash</span> по тексту",
             "< 5 мс",
             "Отсечение одинаковых репостов по 20 каналам за секунду"
           ],
@@ -8031,7 +8031,7 @@ const LESSONS = [
       },
       {
         "type": "warn",
-        "text": "Критический параметр — Half-Life (период полураспада спреда по процессу Орнштейна — Уленбека). Если Half-Life превышает 30 дней, капитал будет заморожен в сделке месяцами, а плата за фандинг и заем сожрет всю прибыль."
+        "text": "Критический параметр — Half-Life (период полураспада спреда по процессу <span style=\"color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)\" data-tooltip-term=\"OU\">Орнштейна — Уленбека</span>). Если Half-Life превышает 30 дней, капитал будет заморожен в сделке месяцами, а плата за фандинг и заем сожрет всю прибыль."
       },
       {
         "type": "table",
@@ -8104,7 +8104,7 @@ const LESSONS = [
     ],
     "practice": [
       {
-        "text": "Дай задачу ИИ-агенту: написать класс PairsTradingBacktest на Python, который рассчитывает rolling hedge ratio через Kalman Filter или OLS, вычисляет rolling z-score и симулирует торговлю с учетом двухсторонних комиссий maker/taker.",
+        "text": "Дай задачу ИИ-агенту: написать класс PairsTradingBacktest на Python, который рассчитывает rolling hedge ratio через <span style=\"color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)\" data-tooltip-term=\"Kalman\">Kalman Filter</span> или OLS, вычисляет rolling z-score и симулирует торговлю с учетом двухсторонних комиссий maker/taker.",
         "criteria": "Бэктест корректно отслеживает PnL обеих ног и выводит график спреда с точками входа/выхода."
       }
     ],
@@ -8668,7 +8668,7 @@ const LESSONS = [
       },
       {
         "type": "simple",
-        "text": "Jupyter Notebook идеален для исследований (исследования гипотез, построения графиков и EDA), но категорически непригоден для реальной 24/7 торговли. В ноутбуке скрыто глобальное состояние ячеек, нет нормального перехвата исключений и управления памятью. Переход в продакшн — это упаковка кода в модульную архитектуру: Config, ExchangeClient, StrategyEngine, RiskManager, OrderExecutor и Logger."
+        "text": "Jupyter Notebook идеален для исследований (исследования гипотез, построения графиков и <span style=\"color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)\" data-tooltip-term=\"EDA\">EDA</span>), но категорически непригоден для реальной 24/7 торговли. В ноутбуке скрыто глобальное состояние ячеек, нет нормального перехвата исключений и управления памятью. Переход в продакшн — это упаковка кода в модульную архитектуру: Config, ExchangeClient, StrategyEngine, RiskManager, OrderExecutor и Logger."
       },
       {
         "type": "analogy",
@@ -8682,7 +8682,7 @@ const LESSONS = [
       },
       {
         "type": "numbers",
-        "text": "В ноутбуке перезапуск ячейки с циклом `while True` может оставить в фоне висящий процесс WebSocket-соединения, который будет незаметно дублировать отправку ордеров при каждом клике. В продакшн-сервисе используется строгий класс LifeCycleManager с Graceful Shutdown через обработчики сигналов `SIGINT` и `SIGTERM`."
+        "text": "В ноутбуке перезапуск ячейки с циклом `while True` может оставить в фоне висящий процесс WebSocket-соединения, который будет незаметно дублировать отправку ордеров при каждом клике. В продакшн-сервисе используется строгий класс LifeCycleManager с Graceful Shutdown через обработчики сигналов <span style=\"color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)\" data-tooltip-term=\"SIGINT\">SIGINT</span> и <span style=\"color:var(--acc2); cursor:help; border-bottom:1px dotted var(--acc2)\" data-tooltip-term=\"SIGTERM\">SIGTERM</span>."
       },
       {
         "type": "warn",
@@ -8839,7 +8839,7 @@ const LESSONS = [
             "Перезапуск при падении",
             "Systemd service / Docker restart policy",
             "Авто-рестарт упавшего процесса за 2 сек",
-            "Защита от случайных Kernel Panic / OOM"
+            "Защита от случайных Kernel Panic / OOM (исчерпания памяти)"
           ],
           [
             "Оперативные алерты",
@@ -15947,6 +15947,8 @@ function calcPhaseTestResult(phaseNum){
     }
     if(scoreBox) scoreBox.innerHTML = `<span style="color:var(--ok)">🎉 ТЕСТ СДАН! Результат: ${pct}% (${correctCount}/${test.questions.length})</span>`;
     alert(`Поздравляем! Тест Фазы ${phaseNum} успешно сдан на ${pct}%!`);
+    // D2.1: аттестация тоже требует консолидации — экран паузы после сдачи
+    try{ setTimeout(() => showConsolidationScreen(null, `Аттестация Фазы ${phaseNum} сдана на ${pct}%`), 600); }catch(e){}
   } else {
     if(scoreBox) scoreBox.innerHTML = `<span style="color:var(--bad)">❌ НЕ СДАНО: ${pct}% (${correctCount} из ${test.questions.length}; необходимо ≥ ${requiredCorrect} из ${test.questions.length})</span>`;
     alert(`Результат: ${pct}%. Для сдачи необходимо ответить минимум на ${requiredCorrect} из ${test.questions.length} вопросов (${passThreshold}%). Повторите материал и попробуйте снова.`);
@@ -16842,6 +16844,74 @@ const ADAPTIVE_QUESTION_BANK = [
       'Увеличить размер плеча'
     ],
     a: 1, explain: 'Потеря связи = слепая торговля. Защитный механизм отменяет ордера во избежание исполнения на неконтролируемом рынке.'
+  },
+
+  // ============ КЕЙСЫ-МОСТЫ (D2.2): связывают темы разных фаз ============
+  {
+    topic: 'stationarity', difficulty: 'medium', lessonId: 'p1_l6', bridge: true,
+    q: 'Кейс-мост Ф0→Ф1: ты собрал историю фандинг-ставок BTC-перпа за год и хочешь моделировать её доходностью фандинг-арбитража. Какая проверка обязательна ПЕРЕД построением модели?',
+    opts: [
+      'Проверить ряд ставок на стационарность (ADF/KPSS): тренд в фандинге сломает любую модель среднего',
+      'Убедиться, что ставка всегда положительная',
+      'Сразу усреднить ставку за год и экстраполировать на будущее',
+      'Проверить только объём торгов биржи'
+    ],
+    a: 0, explain: 'Фандинг-ставка — временной ряд. Стационарность (урок 1.6) — входной билет любой модели; нестационарный ряд делает «среднюю ставку» бессмысленной.'
+  },
+  {
+    topic: 'portfolio_risk', difficulty: 'medium', lessonId: 'p1_l15', bridge: true,
+    q: 'Кейс-мост Ф1→Ф2: корреляция BTC и ETH на спокойном рынке — 0.6, но в панике вырастает до 0.95. Что это значит для «диверсификации» портфеля 50/50?',
+    opts: [
+      'Диверсификация надёжна: корреляция ниже 1 всегда спасает',
+      'В кризис корреляции сходятся к 1, и «два актива» ведут себя почти как один — риск-паритет надо считать по стрессовой корреляции, а не по средней',
+      'Корреляцию вообще нельзя измерить для крипты',
+      'Нужно просто добавить третью монету — тогда точно всё защищено'
+    ],
+    a: 1, explain: 'Корреляции нестабильны во времени (урок 1.15) и взлетают в стрессе: именно тогда, когда диверсификация нужнее всего, она исчезает.'
+  },
+  {
+    topic: 'kelly_sizing', difficulty: 'hard', lessonId: 'p2_l10', bridge: true,
+    q: 'Кейс-мост Ф2→Ф3: стратегия даёт положительное EV, Келли советует риск 8% на сделку, но реальные издержки исполнения (комиссия + слиппедж) съедают 30% края. Как правильно скорректировать сайзинг?',
+    opts: [
+      'Оставить 8%: Келли всегда прав',
+      'Пересчитать Келли на чистом крае после издержек (край меньше → доля меньше) и дополнительно применить дробный Келли (четверть/половина)',
+      'Удвоить сайзинг, чтобы компенсировать издержки',
+      'Отказаться от стратегии навсегда'
+    ],
+    a: 1, explain: 'Келли считается от чистого матожидания после издержек (Ф3), а не от грязного края на бумаге; дробный Келли (урок 2.10) добавляет защиту от ошибок оценки.'
+  },
+  {
+    topic: 'crypto_tax_rf', difficulty: 'medium', lessonId: 'p4_l3', bridge: true,
+    q: 'Кейс-мост Ф3→Ф4: твой бот сделал за год 4,000 сделок с итоговой прибылью 900,000 ₽. Какая ставка НДФЛ-2025 применится к этой базе (418-ФЗ)?',
+    opts: [
+      'Всегда 13% независимо от суммы',
+      '13% на часть до 2.4 млн ₽; поскольку 900,000 ₽ не превышает порог (при отсутствии других доходов), применяется 13% со всей базы',
+      '30% как с «высокодоходных операций»',
+      '0% — боты не облагаются'
+    ],
+    a: 1, explain: 'Шкала-2025: 13% ≤2.4 млн ₽, далее 15/18/20/22% по ступеням; база суммируется с прочими доходами — поэтому учёт (FIFO, урок 4.3) ведут на весь год.'
+  },
+  {
+    topic: 'production_reliability', difficulty: 'hard', lessonId: 'p5_l3', bridge: true,
+    q: 'Кейс-мост Ф5→Ф1: во время каскада ликвидаций (как 10 октября 2025) твой kill-switch сработал по метрике отклонения equity. Почему этого МОЖЕТ быть недостаточно?',
+    opts: [
+      'Kill-switch вообще не работает в кризис',
+      'В каскаде проскальзывание и гэпы стакана делают исполнение «стопа» далёким от расчётного — нужны отдельные триггеры по латентности API, потере WebSocket и всплеску слиппеджа, а не только по equity',
+      'Достаточно просто перезагрузить сервер',
+      'В каскад надо наоборот увеличивать плечо'
+    ],
+    a: 1, explain: 'Каскад (урок 1.x про микроструктуру) ломает сам механизм выхода: стоп исполняется с гэпом. Отказоустойчивость (Ф5) требует триггеров по инфраструктуре, а не только по деньгам.'
+  },
+  {
+    topic: 'market_microstructure', difficulty: 'medium', lessonId: 'p6_l11', bridge: true,
+    q: 'Кейс-мост Ф6→Ф0: на Polymarket YES стоит $0.48, NO — $0.50 (сумма $0.98). Кажется, арбитраж $0.02 гарантирован. Что забыли в расчёте?',
+    opts: [
+      'Ничего, $0.02 — чистая прибыль',
+      'Комиссию тейкера по кривой fee ≈ C × feeRate × p × (1−p), которая максимальна именно у p≈50%: после издержек маржа может стать отрицательной',
+      'Цвет интерфейса биржи',
+      'То, что Polymarket не платит выигрыши'
+    ],
+    a: 1, explain: 'Кривая комиссии (урок Б11) нагружает середину диапазона вероятностей; «бесплатный» арбитраж YES+NO < $1 проверяют только после всех издержек исполнения (Ф0: комиссии и слиппедж).'
   }
 ];
 
@@ -16862,7 +16932,7 @@ function startAdaptiveWorkout(){
   if(weakMastery === 'PRACTICED') targetDiff = 'medium';
   if(weakMastery === 'PROFICIENT' || weakMastery === 'MASTERED') targetDiff = 'hard';
 
-  // 2. Build 60% Weak / 20% Prereq / 20% Mixed Question Set
+  // 2. Build 50% Weak / 15% Prereq / 35% Interleaving (смешение тем прошлых фаз — удержание дистанции)
   let weakPool = ADAPTIVE_QUESTION_BANK.filter(q => q.topic === weakTopic.id);
   let prereqPool = ADAPTIVE_QUESTION_BANK.filter(q => q.topic === prereqTopicId);
   let mixedPool = ADAPTIVE_QUESTION_BANK.filter(q => q.topic !== weakTopic.id && q.topic !== prereqTopicId);
@@ -16873,9 +16943,9 @@ function startAdaptiveWorkout(){
   if(mixedPool.length === 0) mixedPool = ADAPTIVE_QUESTION_BANK.slice(5, 8);
 
   const selectedQs = [
-    ...weakPool.sort(() => 0.5 - Math.random()).slice(0, 6),
-    ...prereqPool.sort(() => 0.5 - Math.random()).slice(0, 2),
-    ...mixedPool.sort(() => 0.5 - Math.random()).slice(0, 2)
+    ...weakPool.sort(() => 0.5 - Math.random()).slice(0, 5),
+    ...prereqPool.sort(() => 0.5 - Math.random()).slice(0, 1),
+    ...mixedPool.sort(() => 0.5 - Math.random()).slice(0, 4)
   ];
 
   quiz.qs = selectedQs;
@@ -17126,14 +17196,24 @@ function revealSrsAnswer(){
 
 function recordTopicResult(topicId, isCorrect){
   if(!topicStats[topicId]){
-    topicStats[topicId] = { correct: 0, errors: 0, errorRate: 0, mastery: 'INTRODUCED' };
+    topicStats[topicId] = { correct: 0, errors: 0, errorRate: 0, mastery: 'INTRODUCED', recent: [] };
   }
   const t = topicStats[topicId];
   if(isCorrect) t.correct++;
   else t.errors++;
 
+  // D2.3: скользящая калибровка по последним 20 ответам — давние ошибки не должны вечно тянуть тему в «слабые»
+  if(!Array.isArray(t.recent)) t.recent = [];
+  t.recent.push(isCorrect ? 1 : 0);
+  if(t.recent.length > 20) t.recent = t.recent.slice(-20);
+
   const total = t.correct + t.errors;
-  t.errorRate = total > 0 ? Math.round((t.errors / total) * 100) : 0;
+  if(t.recent.length >= 5){
+    const recentErrors = t.recent.reduce((s, v) => s + (v ? 0 : 1), 0);
+    t.errorRate = Math.round((recentErrors / t.recent.length) * 100);
+  } else {
+    t.errorRate = total > 0 ? Math.round((t.errors / total) * 100) : 0;
+  }
 
   if(t.correct >= 8 && t.errorRate <= 15) t.mastery = 'MASTERED';
   else if(t.correct >= 4 && t.errorRate <= 30) t.mastery = 'PROFICIENT';
@@ -20002,6 +20082,17 @@ function drawInteractiveSvgRoadmap(){
 
 const ABBREVIATION_GLOSSARY = {
   'OOS': { title: 'Out-of-Sample (OOS)', text: 'Тестирование стратегии на чистых данных, которые алгоритм никогда не видел при подборе параметров.' },
+  // D2.4: hover-хинты жаргона Фаз 1–5
+  'EDA': { title: 'EDA — Exploratory Data Analysis', text: 'Разведочный анализ данных: графики, распределения, пропуски и выбросы до построения модели. Первый шаг любой исследовательской работы с рядом.' },
+  'SIGINT': { title: 'SIGINT (сигнал прерывания)', text: 'Системный сигнал остановки процесса (Ctrl+C). Продакшн-бот обязан перехватывать его и корректно закрывать позиции и соединения, а не умирать мгновенно.' },
+  'SIGTERM': { title: 'SIGTERM (сигнал завершения)', text: 'Системный сигнал «вежливого» завершения процесса (от systemd/оркестратора). Обработчик должен выполнить graceful shutdown: отменить ордера, закрыть WebSocket, сохранить состояние.' },
+  'OOM': { title: 'OOM — Out Of Memory', text: 'Исчерпание оперативной памяти процессом. Linux-ядро тогда убивает процесс (OOM-killer) — для торгового бота это внезапная смерть посреди позиции. Лечится лимитами, стримингом данных и мониторингом.' },
+  'NVMe': { title: 'NVMe-диск', text: 'Быстрый твердотельный накопитель (новее SATA SSD). Для бота важен при записи тиковых данных и логов: не «захлёбывается» на пиковых нагрузках.' },
+  'mark price': { title: 'Mark Price (расчётная цена)', text: 'Справедливая цена контракта по индексу спота, которую биржа использует для ликвидаций и расчёта маржи — чтобы случайный «фитиль» на самой бирже не выбивал позиции.' },
+  'OU': { title: 'Процесс Орнштейна — Уленбека', text: 'Математическая модель возврата к среднему: спред «тянет» к равновесию с постоянной скоростью. Half-Life показывает, за какое время отклонение в среднем сокращается вдвое.' },
+  'Kalman': { title: 'Фильтр Калмана', text: 'Рекурсивный алгоритм оценки скрытого состояния (например, истинного hedge ratio) по зашумлённым наблюдениям. Обновляет оценку с каждым новым наблюдением без пересчёта всей истории.' },
+  'MinHash': { title: 'MinHash / SimHash', text: 'Алгоритмы быстрого поиска почти-дубликатов текстов. Боту нужны, чтобы не реагировать на одну и ту же новость, перепостенную в 20 каналах.' },
+  'stationary_series': { title: 'Стационарный ряд', text: 'Ряд, чьи статистические свойства (среднее, дисперсия) не меняются во времени. Доходности близки к стационарным, цены — нет. Проверяется тестами ADF и KPSS.' },
   'Look-ahead': { title: 'Утечка из будущего (Look-ahead Bias)', text: 'Критическая ошибка бэктеста: использование данных из будущего (например, цены Close до закрытия свечи или глобального min/max датасета).' },
   'look-ahead': { title: 'Утечка из будущего (Look-ahead Bias)', text: 'Критическая ошибка бэктеста: использование данных из будущего (например, цены Close до закрытия свечи или глобального min/max датасета).' },
   'bps': { title: 'Базисный пункт (bps)', text: '1 bps = 0.01% (одна сотая процента, или 0.0001 от суммы). Стандартная единица измерения биржевых комиссий и проскальзывания.' },
@@ -26282,6 +26373,9 @@ renderFeynmanBox = function(lesson){
       <div style="font-size:12.5px; color:var(--txt); margin-bottom:10px">
         Напиши объяснение темы урока так, будто рассказываешь другу, который вообще не в теме. Потом сверься с эталоном и честно оцени себя — это и есть метод Фейнмана.
       </div>
+      <div style="font-size:12px; color:var(--acc2); background:rgba(6,182,212,.07); border-left:3px solid var(--acc2); border-radius:6px; padding:9px 12px; margin-bottom:10px; line-height:1.55">
+        <b>Шаблон из 3 предложений:</b> ① «Это …» — скажи, что это за вещь одной фразой без жаргона. ② «Работает так: …» — опиши механику на бытовой аналогии. ③ «На практике я …» — скажи, что ты с этим делаешь (когда применяешь, чего избегаешь).
+      </div>
       <textarea id="feynman_input_${lesson.id}" rows="3" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение...">${saved ? saved.text.replace(/</g, '&lt;') : ''}</textarea>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px">
         <button class="btn sm" style="background:var(--acc1)" onclick="revealFeynmanCheck('${lesson.id}')">
@@ -26391,16 +26485,16 @@ renderProgressStats = function(){
    ========================================================================= */
 var consolidationTimerId = null;
 
-function showConsolidationScreen(lessonId){
+function showConsolidationScreen(lessonId, customTitle){
   closeConsolidationScreen();
-  const l = LESSONS.find(x => x.id === lessonId);
+  const l = lessonId ? LESSONS.find(x => x.id === lessonId) : null;
   const overlay = document.createElement('div');
   overlay.id = 'consolidation_overlay';
   overlay.style.cssText = 'position:fixed; inset:0; background:rgba(2,4,12,.94); z-index:999999; display:flex; justify-content:center; align-items:center; padding:20px; backdrop-filter:blur(10px)';
   overlay.innerHTML = `
     <div style="background:#090d1f; border:2px solid var(--acc2); border-radius:20px; max-width:560px; width:100%; padding:30px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.9)">
       <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">🧘 Консолидация памяти</div>
-      <h2 style="margin:0 0 8px; font-size:20px; color:var(--txt)">Урок «${l ? l.title : ''}» завершён — теперь самое важное</h2>
+      <h2 style="margin:0 0 8px; font-size:20px; color:var(--txt)">${customTitle ? customTitle : ("Урок «" + (l ? l.title : '') + "» завершён")} — теперь самое важное</h2>
       <div id="consolidation_body"></div>
     </div>`;
   document.body.appendChild(overlay);
