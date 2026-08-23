@@ -37335,6 +37335,102 @@ function mentorRunExt(action){
   }
 }
 window.mentorRunExt = mentorRunExt;
+
+/* =========================================================================
+   M6 · H4 Диагноз ошибки (trap_type предвыбор) + H5 Стальман-спарринг (3 стадии)
+   ========================================================================= */
+
+/* ---------- H4: диагноз ошибки — предвыбор в offerMistakeClassification ---------- */
+(function patchMistakeForMentor(){
+  const orig = window.offerMistakeClassification;
+  if(typeof orig !== 'function') return;
+  window.offerMistakeClassification = function(contextKey, q, chosen, correct){
+    let mentorHtml = '';
+    if(mentorIsMax()){
+      // если есть max-тариф и уже было — сначала спросим модель классификацию
+      const lessonId = typeof contextKey === 'string' && contextKey.startsWith('numeric:') ? contextKey.slice(8) : null;
+      const examples = [];
+      if(lessonId){
+        try{
+          const st = JSON.parse(localStorage.getItem('cn_feynman_ai') || '{}');
+          examples.push(st[lessonId]);
+        }catch(e){}
+      }
+      MENTOR.ask('diagnose', lessonId || contextKey, { question: q || 'ошибка', chosen: chosen, correct: correct, examples: examples }).then(r => {
+        let data = null;
+        try{ data = r.json || JSON.parse(r.text); }catch(e){ data = null; }
+        if(!data){ return; }
+        const trap = data.trap_type || 'concept';
+        // предвыдум VS вручную — выбираем кнопку под указанным id по trap_type
+        setTimeout(() => {
+          const box = document.querySelector('[data-mentor-trap]');
+          if(!box) return;
+          const btn = box.querySelector('[data-trap="' + trap + '"]');
+          if(btn) btn.click();
+        }, 50);
+      }).catch(() => {});
+    }
+    return orig(contextKey);
+  };
+  // прикрепляем marker для предвыбранного: trap_type → кнопка с id data-trap
+  setTimeout(() => {
+    const boxes = document.querySelectorAll('[id^="mcl_"], [id^="mistake_"]');
+    boxes.forEach(box => {
+      if(box.querySelector('[data-trap]')) return;
+      // тег processor: MENTOR.ask переписывает без этого хелпера — здесь только заносим marker
+      box.setAttribute('data-mentor-trap', '1');
+    });
+  }, 300);
+})();
+
+/* ---------- H5: спарринг убеждений — 3 стадии по очереди ---------- */
+function mentorSparInit(outEl){
+  if(!mentorIsMax()){ mentorUpsellModal(); return; }
+  window._mentorSparStage = 1;
+  window._mentorSparBelief = '';
+  outEl.innerHTML = '<div style="font-size:12px;color:var(--mut);margin-bottom:6px">⚔️ <b>Стадия 1/3 · STEELMAN</b>: сформулируй своё убеждение одной фразой — модель усилит её лучшими аргументами.</div>' +
+    '<input type="text" id="mentor_spare_in" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" placeholder="Убеждение, например: «ETH оказалась сильнее BTC за счёт L2»">' +
+    '<button class="btn sm" onclick="mentorSparStep()">Дальше</button>' +
+    '<div id="mentor_spare_out" style="margin-top:10px"></div>';
+  if(document.getElementById('mentor_spare_in')) document.getElementById('mentor_spare_in').onclick = () => {};
+}
+window.mentorSparInit = mentorSparInit;
+
+function mentorSparStep(){
+  const lessonId = window._mentorLessonId || 'sparring';
+  const stage = window._mentorSparStage || 1;
+  const inEl = document.getElementById('mentor_spare_in');
+  const outEl = document.getElementById('mentor_spare_out');
+  const belief = inEl ? (inEl.value || '').trim() : '';
+  if(belief && !window._mentorSparBelief) window._mentorSparBelief = belief;
+  const prompt = window._mentorSparBelief;
+  MENTOR.ask('spar', lessonId, { stage: stage, belief: prompt }).then(r => {
+    const colors = ['var(--ok)', 'var(--warn)', 'var(--acc2)'];
+    const titles = ['сильная сторона (Steelman)', 'контраргументы (Attack)', 'класс убеждения (Check)'];
+    if(outEl){
+      outEl.innerHTML += '<div style="padding:10px 12px;background:#040714;border-left:3px solid ' + colors[stage - 1] + ';border-radius:6px;font-size:12.5px;color:var(--txt);margin-top:8px">' +
+        '<div style="font-size:10px;color:' + colors[stage - 1] + ';text-transform:uppercase;font-weight:800;margin-bottom:4px">стадия ' + stage + '/3: ' + titles[stage - 1] + '</div>' + r.text + '</div>';
+    }
+    if(stage < 3){
+      window._mentorSparStage = stage + 1;
+      const nextBtn = document.querySelector('#mentor_result button[onclick^=mentorSparStep]');
+      if(nextBtn) nextBtn.textContent = 'Дальше: стадия ' + (stage + 1) + '/3';
+      //
+    } else {
+      // финал: сохраняем только факт прохождения
+      try{ localStorage.setItem('cn_sparring_done', JSON.stringify({ t: Date.now(), belief: window._mentorSparBelief.slice(0, 80) })); }catch(e){}
+      const done = document.createElement('div');
+      done.id = 'mentor_spar_done';
+      done.style.cssText = 'font-size:11px;color:var(--ok);margin-top:8px';
+      done.textContent = 'Сегодняшним финал нейтрален — класс убеждения записан (не стежётся)';
+      document.getElementById('mentor_spare_out').appendChild(done);
+    }
+    if(inEl) inEl.value = '';
+  }).catch(e => {
+    if(outEl) outEl.innerHTML += '<div style="font-size:12.5px;color:var(--warn);margin-top:8px">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Спарринг не отвечает.') + '</div>';
+  });
+}
+window.mentorSparStep = mentorSparStep;
 /*__LIVE_APPEND__*/
 })();
 
