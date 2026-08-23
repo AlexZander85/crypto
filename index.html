@@ -17541,7 +17541,7 @@ function checkAndUnlockBadge(badgeId){
       break;
     }
     case 'boss6': {
-      qualified = [0,1,2,3,4,5].every(b => simMastery['boss_' + b] === true);
+      qualified = [0,1,2,3,4,5,6,7].every(b => simMastery['boss_' + b] === true);
       break;
     }
     case 'speedrun': {
@@ -17606,8 +17606,8 @@ function renderBadgesGrid(){
     },
     {
       id: 'boss6', icon: '👑', name: 'Укротитель Чёрных Лебедей',
-      desc: 'Повергни всех 6 кризисных боссов босс-арены',
-      progressText: () => [0,1,2,3,4,5].filter(b => simMastery['boss_' + b]).length + ' / 6 боссов'
+      desc: 'Повергни всех 8 кризисных боссов босс-арены',
+      progressText: () => [0,1,2,3,4,5,6,7].filter(b => simMastery['boss_' + b]).length + ' / 8 боссов'
     },
     {
       id: 'speedrun', icon: '🏁', name: 'Спидраннер фаз',
@@ -22908,7 +22908,7 @@ window.P1_FT = {
 /* ---------- 8. BOSS SCENARIOS (verdict rounds) ---------- */
 if(typeof BOSS_SCENARIOS !== 'undefined'){
   BOSS_SCENARIOS.push({
-    id:3, title:'«Sharpe 3.1» от агента — ловушка перебора (Фаза 1)', time:90, bossHp:100,
+    id:6, title:'«Sharpe 3.1» от агента — ловушка перебора (Фаза 1)', time:90, bossHp:100,
     desc:'Агент приносит стратегию с Sharpe 3.1 на бэктесте и просит капитал. Проверь цифры как Архитектор — красивый результат ещё ничего не доказывает.',
     rounds:[
       { q:'Стратегия показала Sharpe 3.1 на исторических данных. Какой твой первый вопрос агенту?',
@@ -22926,7 +22926,7 @@ if(typeof BOSS_SCENARIOS !== 'undefined'){
     ]
   });
   BOSS_SCENARIOS.push({
-    id:4, title:'Бета под маской альфы (Фаза 3)', time:90, bossHp:100,
+    id:7, title:'Бета под маской альфы (Фаза 3)', time:90, bossHp:100,
     desc:'Стратегия сделала +35% за год. Агент называет это альфой и просит долю прибыли. Разберись, есть ли тут настоящее преимущество.',
     rounds:[
       { q:'Стратегия: +35% за год. Buy&Hold BTC за тот же год: +60%. Корреляция 0.92. Первая гипотеза?',
