@@ -35341,6 +35341,7 @@ function renderLiveView(){
     '<style>@media (max-width:860px){ #live_grid{ grid-template-columns:1fr !important } }</style>';
   if(typeof window.renderLiveMarketCol === 'function') window.renderLiveMarketCol();
   if(typeof window.renderLiveCoachCol === 'function') window.renderLiveCoachCol();
+  if(typeof window.newsSyncSubView === 'function') window.newsSyncSubView();
 }
 window.renderLiveView = renderLiveView;
 
@@ -36090,6 +36091,296 @@ window.goLiveFromLesson = goLiveFromLesson;
   };
 })();
 
+
+/* =========================================================================
+   NEWS LAYER · «Новости как учебный материал»
+   Ядро: классификатор 7 типов (словарь + наивный Байес), шаблоны карточек,
+   лента RSS через rss2json, субвкладка «Новости» внутри «Живого рынка».
+   ========================================================================= */
+
+/* ---------- реестр типов и источников ---------- */
+const NEWS_TYPES = {
+  regulatory: { icon: '⚖️', ru: 'Регуляторное', w: ['sec', 'иск', 'штраф', 'запрет', 'лицензи', 'закон', 'mica', 'суд', 'комиссия', 'регулятор', 'esma', 'approve', 'regulat', 'lawsuit', 'ban'] },
+  security:   { icon: '🔓', ru: 'Безопасность', w: ['взлом', 'эксплойт', 'украден', 'украли', 'мост', 'утечк', 'фишинг', 'hack', 'exploit', 'bridge', 'breach', 'phishing', 'stolen', 'drain'] },
+  macro:      { icon: '📉', ru: 'Макро',        w: ['ставк', 'инфляц', 'фрс', 'индекс потребительск', 'доллар', 'нефть', 'pmi', 'fed', 'rate', 'inflation', 'cpi'] },
+  tech:       { icon: '⚙️', ru: 'Технологическое', w: ['хардфорк', 'апгрейд', 'обновлени', 'тестнет', 'мейннет', 'hardfork', 'upgrade', 'testnet', 'mainnet'] },
+  market:     { icon: '💼', ru: 'Рынок капитала', w: ['etf', 'листинг', 'ipo', 'приток', 'отток', 'listing', 'inflow', 'outflow'] },
+  hype:       { icon: '📢', ru: 'Хайп/маркетинг', w: ['партнёрств', 'коллаборац', 'интеграц', 'миллионы пользовател', 'революц', 'partnership', 'collab', 'integrat', 'synergy'] },
+  scam:       { icon: '🚨', ru: 'Скам-маркеры', w: ['гарантирован', 'фиксированный процент', 'без риска', 'guaranteed', 'no risk', 'fixed return'] }
+};
+const NEWS_SRC_LIST = ['ForkLog', 'BeInCrypto RU', 'CoinDesk', 'Decrypt', 'SEC'];
+const NEWS_FEEDS = [
+  { id: 'forklog', name: 'ForkLog', lang: 'ru', url: 'https://forklog.com/feed' },
+  { id: 'beincrypto', name: 'BeInCrypto RU', lang: 'ru', url: 'https://ru.beincrypto.com/feed/' },
+  { id: 'coindesk', name: 'CoinDesk', lang: 'en', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+  { id: 'decrypt', name: 'Decrypt', lang: 'en', url: 'https://decrypt.co/feed' },
+  { id: 'sec', name: 'SEC', lang: 'en', reg: true, url: 'https://www.sec.gov/news/pressreleases.rss' }
+];
+window.NEWS_TYPES = NEWS_TYPES;
+window.NEWS_SRC_LIST = NEWS_SRC_LIST;
+window.NEWS_FEEDS = NEWS_FEEDS;
+
+/* ---------- классификатор: словарь + наивный Байес ---------- */
+function newsWordCounts(){
+  try{ return JSON.parse(localStorage.getItem('cn_news_word_counts') || '{}'); }catch(e){ return {}; }
+}
+function classifyNewsType(text, categories){
+  const t = ((text || '') + ' ' + (categories || []).join(' ')).toLowerCase().replace(/ё/g, 'е');
+  let best = null, bestScore = 0;
+  const scores = {};
+  Object.keys(NEWS_TYPES).forEach(k => {
+    let s = (categories || []).reduce((sum, c) => sum + (c.toLowerCase().includes(k) ? 2 : 0), 0);
+    NEWS_TYPES[k].w.forEach(w => { if(t.includes(w)) s += 1; });
+    const wc = newsWordCounts();
+    Object.keys(wc).forEach(word => { if(t.includes(word) && wc[word][k]) s += wc[word][k].n * 0.4; });
+    scores[k] = s;
+    if(s > bestScore){ best = k; bestScore = s; }
+  });
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+  return { type: best, score: bestScore, confident: bestScore >= 2, confidence: total ? Math.round(bestScore / total * 100) : 0, scores: scores };
+}
+window.classifyNewsType = classifyNewsType;
+
+/* ---------- извлечение чисел ---------- */
+function newsExtract(text){
+  const out = { money: '', percents: [], dates: [] };
+  const money = text.match(/\$\s?[\d,.]+\s?(млн|млрд|тыс)?/);
+  if(money) out.money = money[0].replace(/\s+/g, ' ');
+  const pc = text.match(/\d+([,.]\d+)?%/g);
+  if(pc) out.percents = pc;
+  const d = text.match(/(\d{1,2} [а-яА-Я]+ \d{4})|(\d{4}-\d{2}-\d{2})|(в \d{4} году)/);
+  if(d) out.dates = [d[0]];
+  return out;
+}
+window.newsExtract = newsExtract;
+
+/* ---------- 7 шаблонов карточек (написаны человеком) ---------- */
+const NEWS_TEMPLATES = {
+  regulatory: {
+    mechanic: 'Правила меняют доступ участников и издержки compliance — цена реагирует прежде всего на неопределённость правил, а не на сам факт.',
+    caveat: 'Сроки вступления, детали исполнения, реакция других регуляторов — этого заголовок не говорит.'
+  },
+  security: {
+    mechanic: 'Прямые потери конкретного протокола + рост требований к доходности за риск хранения на площадках в целом.',
+    caveat: 'Масштаб потерь, был ли страховой фонд, повторится ли эксплойт — всегда открытые вопросы в первые часы.'
+  },
+  macro: {
+    mechanic: 'Меняется цена денег: ставка, инфляция и сила валюты определяют, насколько дорого держать рисковые активы.',
+    caveat: 'Одна публикация данных — это один порт к маршруту, а не маршрут целиком; реакция рынка часто обратна «логике».'
+  },
+  tech: {
+    mechanic: 'Технический параметр сети меняется — цена/скорость/возможности; рынок оценивает, сдвигает ли это конкурентную привлекательность.',
+    caveat: 'Апгрейд ≠ рост: цена обычно двигалась до события, а в моменте реализуется «продай на новости».'
+  },
+  market: {
+    mechanic: 'Фактическое движение капитала — ETF, листинг, потоки фондов — показывает вкус институционалов к конкретному способу доступа.',
+    caveat: 'Приток ≠ рост цены: деньги в фонд и цена актива связаны, но обратная связь может занять недели.'
+  },
+  hype: {
+    mechanic: 'Словесное событие (партнёрство/интеграция) без аудита масштаба — инструмент привлечения внимания; цена реагирует на внимание, а не на факт пользы.',
+    caveat: '«Миллионы пользователей» без независимого аудита — маркетинговый посыл; проверяй только твёрдые цифры и даты.'
+  },
+  scam: {
+    mechanic: 'Заголовок использует ложный сигнал доверия (гарантия, требование регулятора, CAPS, отсутствие дат) — типичная структура скама.',
+    caveat: 'Даже если предложение мимикрирует под официальное, отсутствие реквизитов и точной формулировки = красная зона.'
+  }
+};
+window.NEWS_TEMPLATES = NEWS_TEMPLATES;
+
+/* ---------- карточка разбора одной новости ---------- */
+function newsCoachCard(item){
+  const cls = classifyNewsType((item.title || '') + ' ' + (item.snippet || ''), item.categories);
+  const T = cls.type || 'regulatory';
+  const tpl = NEWS_TEMPLATES[T];
+  const meta = NEWS_TYPES[T];
+  const ex = newsExtract(item.title + ' ' + (item.snippet || ''));
+  const fact = (item.snippet || item.title || '').trim();
+  return '<div class="news-coach" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:10px">' +
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">' +
+      '<div style="font-weight:800;font-size:13px;color:var(--txt)">' + meta.icon + ' ' + meta.ru + (cls.confident ? '' : ' <span style="font-size:10px;color:var(--mut)">(подсказка)</span>') + '</div>' +
+      '<span style="font-size:10px;color:var(--mut);white-space:nowrap">' + (item.source || '') + '</span>' +
+    '</div>' +
+    '<div style="font-size:12.5px;color:var(--txt);line-height:1.55;margin-bottom:8px">' + item.title + '</div>' +
+    (item.lang === 'en' ? '<div style="font-size:10px;color:var(--acc2);margin-bottom:6px">🌐 авто-перевод — оригинал</div>' : '') +
+    '<div style="border-left:3px solid var(--acc2);padding-left:10px;margin-bottom:8px">' +
+      '<div style="font-size:11px;color:var(--acc2);text-transform:uppercase;font-weight:800">Механика</div>' +
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">' + tpl.mechanic + (ex.money ? ' (' + ex.money + ')' : '') + '</div>' +
+    '</div>' +
+    '<div style="border-left:3px solid var(--bad);padding-left:10px">' +
+      '<div style="font-size:11px;color:var(--bad);text-transform:uppercase;font-weight:800">Чего не говорит</div>' +
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">' + tpl.caveat + '</div>' +
+    '</div>' +
+    (fact ? '<div style="margin-top:8px;font-size:11.5px;color:var(--mut)">Факт из текста: ' + fact.slice(0, 160) + (fact.length > 160 ? '…' : '') + '</div>' : '') +
+    (item.url ? '<div style="margin-top:6px"><a href="' + item.url + '" target="_blank" rel="noopener" style="font-size:11.5px;color:var(--acc2)">🔗 Источник ↗</a></div>' : '') +
+  '</div>';
+}
+window.newsCoachCard = newsCoachCard;
+
+/* ---------- модуль NEWS: загрузка, кэш, статусы ---------- */
+const NEWS = {
+  items: [],
+  status: {},
+  cacheKey: 'cn_news_cache',
+  subscribers: [],
+
+  subscribe(fn){ this.subscribers.push(fn); },
+  emit(){ this.subscribers.forEach(fn => { try{ fn(); }catch(e){} }); },
+  cacheGet(){ try{ const raw = localStorage.getItem(this.cacheKey); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } },
+  cacheSet(items){ try{ localStorage.setItem(this.cacheKey, JSON.stringify({ ts: Date.now(), items: items })); }catch(e){} },
+
+  parseFeed(feed, data){
+    return ((data && data.items) || []).slice(0, 15).map(it => ({
+      title: (it.title || '').trim(), url: it.link || '', source: feed.name, feedId: feed.id,
+      lang: feed.lang, reg: !!feed.reg, published_at: it.pubDate || Date.now(),
+      snippet: (it.description || it.contentSnippet || '').replace(/<[^>]+>/g, '').slice(0, 300),
+      categories: it.categories || []
+    }));
+  },
+  fetchFeed(feed){
+    const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed.url);
+    return fetch(url).then(r => { if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }).then(data => {
+      if(data.status !== 'ok') throw new Error(data.message || 'rss2json: не ok');
+      this.status[feed.id] = { state: 'live', ts: Date.now() };
+      return this.parseFeed(feed, data);
+    }).catch(err => {
+      this.status[feed.id] = { state: 'fail', ts: Date.now(), msg: String(err && err.message || err) };
+      return [];
+    });
+  },
+  fetchAll(){
+    return Promise.all(NEWS_FEEDS.map(f => this.fetchFeed(f))).then(list => {
+      const merged = [].concat.apply([], list);
+      if(merged.length){
+        merged.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+        this.items = merged;
+        this.cacheSet(merged);
+      }
+      this.emit();
+    });
+  },
+  feed(lang, worldOn){
+    let items = this.items.filter(it => it.reg || it.lang === lang || (worldOn && it.lang !== lang));
+    if(!items.length){
+      const c = this.cacheGet();
+      if(c && c.items) items = c.items.filter(it => it.reg || it.lang === lang || (worldOn && it.lang !== lang));
+    }
+    return items;
+  },
+  anyFail(){ return NEWS_FEEDS.some(f => (this.status[f.id] || {}).state === 'fail'); },
+  cacheAge(){ const c = this.cacheGet(); return c ? Math.round((Date.now() - c.ts) / 60000) : null; },
+
+  eduItems(){
+    const t = Date.now();
+    const mk = (title, source, lang, reg, hoursAgo, snip) => ({
+      title: title, url: '', source: source, feedId: source.toLowerCase().replace(/\s/g, ''),
+      lang: lang, reg: !!reg, published_at: t - hoursAgo * 36e5, snippet: snip || title, categories: []
+    });
+    return [
+      mk('SEC ввела новые правила отчётности для криптобирж', 'SEC', 'en', true, 2),
+      mk('Взлом моста: украдено около $12 млн', 'ForkLog', 'ru', false, 5),
+      mk('ФРС сохранила ставку 4.25%: инфляция замедляется', 'BeInCrypto RU', 'ru', false, 8),
+      mk('Апгрейд сети запущен в тестнете', 'ForkLog', 'ru', false, 12),
+      mk('Приток в спотовые ETF достиг $800 млн за неделю', 'BeInCrypto RU', 'ru', false, 16),
+      mk('Партнёрство протокола с платёжной сетью откроет новую эру', 'ForkLog', 'ru', false, 20),
+      mk('ГАРАНТИРОВАННЫЙ ДОХОД 25% в месяц для всех', 'BeInCrypto RU', 'ru', false, 24),
+      mk('Запрет на майнинг: суд удовлетворил иск регулятора', 'ForkLog', 'ru', false, 28),
+      mk('Мост обновлён: устранена уязвимость фишингом', 'ForkLog', 'ru', false, 32),
+      mk('Network upgrade: throughput x2 in new testnet', 'Decrypt', 'en', false, 36),
+      mk('ETF снова в плюсе: приток $300 млн', 'BeInCrypto RU', 'ru', false, 40),
+      mk('По требованию регулятора активы заморожены — подробности', 'ForkLog', 'ru', false, 44)
+    ];
+  },
+  newsUseEducational(){
+    this.items = this.eduItems();
+    NEWS_FEEDS.forEach(f => { this.status[f.id] = { state: 'edu', ts: Date.now() }; });
+    this.emit();
+  }
+};
+window.NEWS = NEWS;
+
+/* ---------- субвкладки «Наставник / Новости» ---------- */
+function newsSubsHTML(active){
+  const subs = [ { id: 'coach', label: '🎓 Наставник' }, { id: 'news', label: '📰 Новости' } ];
+  return '<div style="display:flex;gap:6px;margin-bottom:14px">' +
+    subs.map(s => '<button class="btn sm ' + (active === s.id ? '' : 'ghost') + '" style="' + (active === s.id ? '' : 'opacity:.7') + '" onclick="newsSwitchSub(\'' + s.id + '\')">' + s.label + '</button>').join('') +
+  '</div>';
+}
+window.newsSubsHTML = newsSubsHTML;
+
+function newsSwitchSub(id){
+  sessionStorage.setItem('cn_live_sub', id);
+  renderLiveView();
+  newsSyncSubView();
+}
+window.newsSwitchSub = newsSwitchSub;
+
+function newsSyncSubView(){
+  const sub = sessionStorage.getItem('cn_live_sub') || 'coach';
+  const view = document.getElementById('live');
+  if(!view || !view.classList.contains('active')) return;
+  const grid = document.getElementById('live_status_grid');
+  if(grid && !document.getElementById('live_sub_nav')){
+    grid.insertAdjacentHTML('beforebegin', '<div id="live_sub_nav">' + newsSubsHTML(sub) + '</div>');
+  }
+  if(sub === 'news'){
+    const market = document.getElementById('live_market_col');
+    const coachCol = document.getElementById('live_coach_col');
+    if(market) market.innerHTML = '';
+    if(coachCol) coachCol.innerHTML = renderNewsView();
+    const nav = document.getElementById('live_sub_nav');
+    if(nav) nav.innerHTML = newsSubsHTML('news');
+  } else {
+    const nav = document.getElementById('live_sub_nav');
+    if(nav) nav.innerHTML = newsSubsHTML('coach');
+  }
+}
+window.newsSyncSubView = newsSyncSubView;
+LIVE.onUpdate(newsSyncSubView);
+
+function renderNewsView(){
+  const worldOn = localStorage.getItem('cn_news_world') === 'on';
+  const items = NEWS.feed('ru', worldOn);
+  const failCount = NEWS_FEEDS.filter(f => (NEWS.status[f.id] || {}).state === 'fail').length;
+  const cacheAge = NEWS.cacheAge();
+  return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">' +
+      '<div style="font-weight:800;font-size:15px;color:var(--txt)">📰 Лента новостей</div>' +
+      '<div style="display:flex;gap:8px;align-items:center">' +
+        '<label style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--txt);cursor:pointer;user-select:none">' +
+          '<input type="checkbox" ' + (worldOn ? 'checked' : '') + ' onchange="newsWorldToggle(this.checked)" style="accent-color:var(--acc2)"> 🌐 показывать мировые' +
+        '</label>' +
+        '<button class="btn sm ghost" onclick="NEWS.fetchAll().then(renderLiveView)" style="font-size:11px;padding:4px 10px">🔄</button>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:11px;color:var(--mut);margin-bottom:10px">Источники: ' + NEWS_SRC_LIST.join(' · ') + '. Атрибуция на каждой карточке.</div>' +
+    (failCount === NEWS_FEEDS.length && !items.length ? '<div style="background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:14px;font-size:12.5px;color:var(--mut)">Лента недоступна (нет сети). Нажми «🧪 Учебные данные» — всё работает офлайн.</div>' : '') +
+    (cacheAge !== null && failCount ? '<div style="font-size:11.5px;color:var(--warn);margin-bottom:8px">🕐 Снимок ленты от ' + cacheAge + ' мин назад — часть источников недоступна.</div>' : '') +
+    items.slice(0, 20).map(it => newsCoachCard(it)).join('') +
+    (items.length ? '' : '<div style="font-size:12.5px;color:var(--mut)">Пока пусто: подключи «🌍 живые данные» или «🧪 учебные».</div>');
+}
+window.renderNewsView = renderNewsView;
+
+function newsWorldToggle(v){
+  localStorage.setItem('cn_news_world', v ? 'on' : 'off');
+  renderLiveView();
+  newsSyncSubView();
+}
+window.newsWorldToggle = newsWorldToggle;
+
+/* подключаем NEWS к LIVE-кнопкам */
+(function hookNewsToLive(){
+  const prevConnect = LIVE.connect;
+  LIVE.connect = function(){
+    const p = prevConnect.apply(this, arguments);
+    NEWS.fetchAll();
+    return p;
+  };
+  const prevEdu = LIVE.useEducational;
+  LIVE.useEducational = function(){
+    prevEdu.apply(this, arguments);
+    NEWS.newsUseEducational();
+  };
+  NEWS.subscribe(() => { if(sessionStorage.getItem('cn_live_sub') === 'news') newsSyncSubView(); });
+})();
 /*__LIVE_APPEND__*/
 })();
 
