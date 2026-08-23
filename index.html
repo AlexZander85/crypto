@@ -31487,5 +31487,258 @@ function renderV4LlmAgentWidget(){
   };
 })();
 </script>
+<script>
+/* =========================================================================
+   V4-B: ТРИ МИНИ-ИГРЫ (третий аудит)
+   B1 «Защити seed-фразу» (p0_l2), B2 «Угадай режим рынка» (p0_l8),
+   B3 «Риск-менеджер: спаси депозит» (p3_l4)
+   ========================================================================= */
+(function attachV4Games(){
+  const ATT = [
+    ['p0_l2', 'widget_v4_seed',   '🔐 Мини-игра «Защити seed-фразу»', '12 слов, 6 мест хранения — только 3 безопасных. Разложи слова так, чтобы ни одно не утекло в облако, телефон или почту.'],
+    ['p0_l8', 'widget_v4_regime', '🎯 Мини-игра «Угадай режим рынка»', 'Фрагмент из 100 свечей: тренд, боковик или разворот? Отвечай — и график «развернётся» ещё на 50 свечей вперёд. Серия из 20 раундов.'],
+    ['p3_l4', 'widget_v4_riskmgr','🛡️ Мини-игра «Спаси депозит»', 'Депозит 1 000 000 ₽, 20 дней событий: падения, инверсии фандинга, отказы биржи. Каждый день — одно решение. Цель: финиш с депозитом выше 800 000 ₽.']
+  ];
+  ATT.forEach(function(a){
+    const l = LESSONS.find(x => x.id === a[0]);
+    if(!l || !l.blocks) return;
+    if(l.blocks.some(b => b.id === a[1])) return;
+    let pos = l.blocks.length;
+    for(let i = 0; i < l.blocks.length; i++){
+      if(l.blocks[i].type === 'recap'){ pos = i; break; }
+    }
+    l.blocks.splice(pos, 0, { type: 'interactive_inline', id: a[1], title: a[2], desc: a[3] });
+  });
+})();
+
+/* ---------- V4-B1: «Защити seed-фразу» ---------- */
+const V4_SEED_WORDS = ['apple','bridge','cactus','delta','eagle','flame','grape','harbor','island','jungle','kitten','lemon'];
+const V4_SEED_SPOTS = [
+  { id:'metal',  t:'🛡️ Металлическая пластина в сейфе', safe:true },
+  { id:'bank',   t:'🏦 Бумага в банковской ячейке', safe:true },
+  { id:'cache',  t:'📦 Ламинированная карта в тайнике', safe:true },
+  { id:'cloud',  t:'☁️ Скриншот в облаке', safe:false, why:'Облако взламывают и индексируют — скриншот seed = потеря всего.' },
+  { id:'phone',  t:'📱 Заметка в телефоне', safe:false, why:'Телефон теряется, синхронизируется и читается приложениями.' },
+  { id:'photo',  t:'📸 Фото в галерее', safe:false, why:'Галерея синхронизируется с облаком и видна другим приложениям.' }
+];
+window._v4seed = null;
+function renderV4SeedGame(box){
+  if(!box) return;
+  if(!window._v4seed){
+    const spots = {};
+    V4_SEED_SPOTS.forEach(s => spots[s.id] = []);
+    window._v4seed = { spots, picked: null, done: false, leaked: false };
+  }
+  const st = window._v4seed;
+  const placed = {};
+  Object.keys(st.spots).forEach(k => st.spots[k].forEach(w => placed[w] = k));
+  const unplaced = V4_SEED_WORDS.filter(w => !placed[w]);
+  const wordsHtml = unplaced.map(w =>
+    `<button class="btn sm ${st.picked === w ? '' : 'ghost'}" style="font-size:12px" onclick="window._v4seed.picked='${w}'; renderV4SeedGame(document.getElementById('widget_v4_seed'))">${w}</button>`).join(' ');
+  const spotsHtml = V4_SEED_SPOTS.map(s => {
+    const words = st.spots[s.id];
+    const cnt = words.length;
+    const leakedHere = st.done && !s.safe && cnt > 0;
+    return `<div style="background:#040714; border:1.5px solid ${st.done ? (s.safe ? 'var(--ok)' : (cnt ? 'var(--bad)' : 'var(--line)')) : 'var(--line)'}; border-radius:10px; padding:10px 12px; margin-bottom:8px">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap">
+        <span style="font-size:12.5px; font-weight:700; color:var(--txt)">${s.t} <span style="color:var(--mut); font-weight:400">(${cnt}/4)</span></span>
+        ${!st.done ? `<button class="btn sm ghost" ${!st.picked || cnt >= 4 ? 'disabled style="opacity:.35"' : ''} onclick="window._v4seed.spots['${s.id}'].push(window._v4seed.picked); window._v4seed.picked=null; renderV4SeedGame(document.getElementById('widget_v4_seed'))">⬇ положить</button>` : ''}
+      </div>
+      <div style="margin-top:6px; font-size:12px; color:${leakedHere ? 'var(--bad)' : 'var(--mut)'}">${words.join(' · ') || '—'}${leakedHere ? ' 💸 УТЕЧКА!' : ''}</div>
+      ${st.done && !s.safe && cnt > 0 ? `<div style="font-size:11.5px; color:var(--bad); margin-top:4px">${s.why}</div>` : ''}
+    </div>`;
+  }).join('');
+  const totalPlaced = Object.keys(placed).length;
+  let resultHtml = '';
+  if(st.done){
+    const bad = V4_SEED_SPOTS.filter(s => !s.safe).reduce((n, s) => n + st.spots[s.id].length, 0);
+    if(bad === 0){
+      resultHtml = `<div style="background:rgba(34,197,94,.1); border:1.5px solid var(--ok); border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:var(--ok)">🏆 Кошелёк в безопасности!</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">Все 12 слов — только в офлайн-хранилищах. Правило 2026: ни одно слово seed-фразы никогда не касается интернета.</div></div>`;
+      if(typeof addFundCapital === 'function' && !st.rewarded){ st.rewarded = true; addFundCapital(3000, 40, 'Игра «Защити seed-фразу»'); }
+    } else {
+      resultHtml = `<div style="background:rgba(239,68,68,.08); border:1.5px solid var(--bad); border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:var(--bad)">💸 Утечка: ${bad} ${bad === 1 ? 'слово' : bad < 5 ? 'слова' : 'слов'} скомпрометировано</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">Для восстановления кошелька достаточно всех 12 слов — но злоумышленнику хватит доступа к тому месту, где они лежат все вместе. Перемешивание по разным местам не спасает: опасно само присутствие слов онлайн.</div></div>`;
+    }
+  }
+  box.innerHTML = `<div style="background:rgba(234,179,8,.05); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin:16px 0">
+    <div style="font-size:12px; font-weight:800; color:var(--warn); text-transform:uppercase; margin-bottom:8px">🔐 Разложи 12 слов по местам хранения</div>
+    ${!st.done ? `<div style="font-size:12px; color:var(--mut); margin-bottom:10px">1) Кликни слово. 2) Кликни «⬇ положить» у места. Размещено: ${totalPlaced}/12.</div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px">${wordsHtml || '<span style="color:var(--mut); font-size:12px">Все слова размещены.</span>'}</div>` : ''}
+    ${spotsHtml}
+    ${!st.done && totalPlaced === 12 ? `<button class="btn" style="background:var(--acc2); margin-top:6px" onclick="window._v4seed.done=true; renderV4SeedGame(document.getElementById('widget_v4_seed'))">🔒 Проверить хранилище</button>` : ''}
+    ${resultHtml}
+    ${st.done ? `<button class="btn sm ghost" style="margin-top:10px" onclick="window._v4seed=null; renderV4SeedGame(document.getElementById('widget_v4_seed'))">↺ Сыграть ещё раз</button>` : ''}
+  </div>`;
+}
+
+/* ---------- V4-B2: «Угадай режим рынка» ---------- */
+window._v4regime = null;
+function v4GenSeries(regime, n){
+  const out = [100];
+  for(let i = 1; i < n; i++){
+    let drift = 0, vol = 0.6;
+    if(regime === 'trend') drift = 0.35;
+    else if(regime === 'range'){ drift = (100 - out[i-1]) * 0.08; vol = 0.5; }
+    else if(regime === 'reversal'){ drift = i < n/2 ? 0.35 : -0.55; vol = 0.55; }
+    out.push(Math.max(60, out[i-1] + drift + (Math.random()*2 - 1) * vol));
+  }
+  return out;
+}
+function v4DrawSeries(canvas, series, upto){
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  const data = series.slice(0, upto);
+  const min = Math.min(...data), max = Math.max(...data);
+  const pad = (max - min) * 0.08 || 1;
+  const x = i => (i / (series.length - 1)) * w;
+  const y = v => h - ((v - min + pad) / (max - min + 2*pad)) * h;
+  ctx.strokeStyle = 'rgba(255,255,255,.12)';
+  ctx.strokeRect(0.5, 0.5, w-1, h-1);
+  ctx.beginPath();
+  data.forEach((v, i) => i === 0 ? ctx.moveTo(x(i), y(v)) : ctx.lineTo(x(i), y(v)));
+  ctx.strokeStyle = 'rgb(6,182,212)';
+  ctx.lineWidth = 1.6;
+  ctx.stroke();
+  if(upto < series.length){
+    ctx.fillStyle = 'rgba(255,255,255,.25)';
+    ctx.fillRect(x(upto), 0, w - x(upto), h);
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('будущее скрыто', x(upto) + 6, 16);
+  }
+}
+function renderV4RegimeGame(box){
+  if(!box) return;
+  if(!window._v4regime){
+    window._v4regime = { round: 1, total: 20, score: 0, streakBonus: 0, regime: null, series: null, answered: false, guess: null };
+  }
+  const st = window._v4regime;
+  if(!st.series && st.round <= st.total){
+    const regimes = ['trend','range','reversal'];
+    st.regime = regimes[Math.floor(Math.random() * 3)];
+    st.series = v4GenSeries(st.regime, 150);
+    st.answered = false; st.guess = null;
+  }
+  const names = { trend:'📈 Тренд', range:'↔️ Боковик', reversal:'🔄 Разворот' };
+  const finished = st.round > st.total;
+  box.innerHTML = `<div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin:16px 0">
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px">
+      <span style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase">🎯 Угадай режим рынка</span>
+      <span style="font-size:12px; color:var(--mut)">Раунд ${Math.min(st.round, st.total)}/${st.total} · Точность: ${st.round > 1 ? Math.round(st.score / (st.round - 1) * 100) : 0}%</span>
+    </div>
+    <canvas id="v4regime_canvas" width="640" height="220" style="width:100%; border-radius:8px; background:#040714"></canvas>
+    ${!finished ? (!st.answered ? `
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap">
+        ${['trend','range','reversal'].map(r => `<button class="btn sm ghost" onclick="window._v4regime.guess='${r}'; window._v4regime.answered=true; renderV4RegimeGame(document.getElementById('widget_v4_regime'))">${names[r]}</button>`).join('')}
+      </div>` : `
+      <div style="margin-top:12px; font-size:13px; line-height:1.6">
+        ${st.guess === st.regime
+          ? `<b style="color:var(--ok)">✅ Верно: это ${names[st.regime].toLowerCase().slice(2)}.</b>`
+          : `<b style="color:var(--bad)">❌ Мимо: это был режим «${names[st.regime]}».</b>`}
+        <span style="color:var(--mut)"> Смотри, как график развернулся дальше.</span>
+        <div style="margin-top:8px"><button class="btn sm" style="background:var(--acc2)" onclick="window._v4regime.round++; window._v4regime.series=null; renderV4RegimeGame(document.getElementById('widget_v4_regime'))">⏭ Следующий раунд</button></div>
+      </div>`) : `
+      <div style="margin-top:12px; background:rgba(34,197,94,.08); border:1px solid var(--ok); border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:var(--ok)">Итог: ${st.score}/${st.total} (${Math.round(st.score/st.total*100)}%)</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">${st.score/st.total >= 0.7 ? 'Навык классификации режимов сформирован: стратегии подбираются под режим, а не «всегда одна и та же».' : 'Ниже 70% — это нормально: даже профи ошибаются на отдельном фрагменте. Важен процесс: определяй режим до входа, а не после убытка.'}</div>
+        <button class="btn sm ghost" style="margin-top:8px" onclick="window._v4regime=null; renderV4RegimeGame(document.getElementById('widget_v4_regime'))">↺ Новая серия</button>
+      </div>`}
+  </div>`;
+  if(st.series){
+    const upto = st.answered ? 150 : 100;
+    v4DrawSeries(document.getElementById('v4regime_canvas'), st.series, upto);
+    if(st.answered && !st._counted){
+      st._counted = true;
+      if(st.guess === st.regime) st.score++;
+      if(typeof addFundCapital === 'function' && st.guess === st.regime) addFundCapital(500, 20, 'Игра «Угадай режим»');
+    }
+    if(!st.answered) st._counted = false;
+  }
+}
+
+/* ---------- V4-B3: «Спаси депозит» ---------- */
+const V4_RM_EVENTS = [
+  { t:'📉 BTC упал на 5% за ночь', hit:{ hold:-0.05, hedge:-0.01, close:-0.04, margin:-0.05 } },
+  { t:'📉 BTC упал на 8%, паника в ленте', hit:{ hold:-0.08, hedge:-0.015, close:-0.065, margin:-0.08 } },
+  { t:'🔄 Фандинг инвертировался: перегретые лонги платят шортам', hit:{ hold:-0.02, hedge:0.005, close:-0.01, margin:-0.02 } },
+  { t:'⚡ Биржа недоступна 3 часа: ордера не исполняются', hit:{ hold:-0.03, hedge:-0.03, close:-0.03, margin:-0.03 } },
+  { t:'📈 BTC вырос на 6% на ETF-потоках', hit:{ hold:0.06, hedge:0.015, close:0.0, margin:0.06 } },
+  { t:'📈 Альты +9%, BTC +3%', hit:{ hold:0.03, hedge:0.01, close:0.0, margin:0.03 } },
+  { t:'🌊 Резкий вынос ликвидности: свеча −4% и возврат', hit:{ hold:-0.01, hedge:-0.005, close:-0.035, margin:-0.01 } },
+  { t:'🏦 Регуляторные новости: волатильность выросла вдвое', hit:{ hold:-0.04, hedge:-0.01, close:-0.03, margin:-0.04 } },
+  { t:'😴 Боковик: неделя без движения, фандинг капает', hit:{ hold:0.005, hedge:0.008, close:-0.005, margin:0.005 } },
+  { t:'🐋 Кит переместил 12,000 BTC на биржу', hit:{ hold:-0.03, hedge:-0.005, close:-0.025, margin:-0.03 } }
+];
+const V4_RM_ACTIONS = {
+  hold:   '✋ Держать',
+  hedge:  '⚖️ Хеджировать',
+  close:  '🔒 Закрыть позицию',
+  margin: '💵 Долить маржу'
+};
+window._v4rm = null;
+function renderV4RiskManagerGame(box){
+  if(!box) return;
+  if(!window._v4rm){
+    window._v4rm = { day: 1, total: 20, deposit: 1000000, last: null, over: false };
+  }
+  const st = window._v4rm;
+  const ev = V4_RM_EVENTS[(st.day - 1) % V4_RM_EVENTS.length];
+  const fmt = v => Math.round(v).toLocaleString('ru-RU') + ' ₽';
+  const pct = st.deposit / 1000000;
+  const depColor = pct > 0.9 ? 'var(--ok)' : pct > 0.8 ? 'var(--warn)' : 'var(--bad)';
+  box.innerHTML = `<div style="background:rgba(239,68,68,.05); border:1.5px solid var(--bad); border-radius:12px; padding:16px; margin:16px 0">
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px">
+      <span style="font-size:12px; font-weight:800; color:var(--bad); text-transform:uppercase">🛡️ Спаси депозит</span>
+      <span style="font-size:12.5px; color:var(--mut)">День ${Math.min(st.day, st.total)}/${st.total}</span>
+    </div>
+    <div style="background:#040714; border-radius:8px; height:14px; overflow:hidden; margin-bottom:10px">
+      <div style="height:100%; width:${Math.max(0, Math.min(100, pct*100))}%; background:${depColor}; transition:width .4s"></div>
+    </div>
+    <div style="font-size:15px; font-weight:800; color:${depColor}; margin-bottom:10px">Депозит: ${fmt(st.deposit)}</div>
+    ${st.last ? `<div style="font-size:12.5px; color:var(--mut); margin-bottom:10px; line-height:1.5">Вчера: ${st.last.ev} → ты выбрал «${V4_RM_ACTIONS[st.last.act]}»: <b style="color:${st.last.delta >= 0 ? 'var(--ok)' : 'var(--bad)'}">${st.last.delta >= 0 ? '+' : ''}${fmt(st.last.delta)}</b></div>` : ''}
+    ${!st.over ? `
+      <div style="background:#040714; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px; font-size:14px; font-weight:700; color:var(--txt)">🗞️ ${ev.t}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        ${Object.keys(V4_RM_ACTIONS).map(k => `<button class="btn sm ghost" onclick="v4RmAct('${k}')">${V4_RM_ACTIONS[k]}</button>`).join('')}
+      </div>` : `
+      <div style="background:${st.deposit > 800000 ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.08)'}; border:1.5px solid ${st.deposit > 800000 ? 'var(--ok)' : 'var(--bad)'}; border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:${st.deposit > 800000 ? 'var(--ok)' : 'var(--bad)'}">${st.deposit > 800000 ? '🏆 Депозит спасён: ' + fmt(st.deposit) : '💥 Депозит не удержан: ' + fmt(st.deposit)}</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">${st.deposit > 800000 ? 'Дисциплина риск-менеджмента: выжил — значит, заработаешь. Главная цель первых лет — не доходность, а непрерывность игры.' : 'Урок дешевле учебного депозита: хедж в панику дороже хеджа заранее, а «держать» при инверсии фандинга — это решение, а не бездействие.'}</div>
+        <button class="btn sm ghost" style="margin-top:8px" onclick="window._v4rm=null; renderV4RiskManagerGame(document.getElementById('widget_v4_riskmgr'))">↺ Новая попытка</button>
+      </div>`}
+  </div>`;
+}
+function v4RmAct(act){
+  const st = window._v4rm; if(!st || st.over) return;
+  const ev = V4_RM_EVENTS[(st.day - 1) % V4_RM_EVENTS.length];
+  const jitter = (Math.random() - 0.5) * 0.01;
+  const delta = Math.round(st.deposit * (ev.hit[act] + jitter));
+  st.last = { ev: ev.t, act, delta };
+  st.deposit += delta;
+  st.day++;
+  if(st.day > st.total || st.deposit <= 600000){
+    st.over = true;
+    if(st.deposit < 0) st.deposit = 0;
+    if(typeof addFundCapital === 'function' && st.deposit > 800000) addFundCapital(4000, 40, 'Игра «Спаси депозит»');
+  }
+  renderV4RiskManagerGame(document.getElementById('widget_v4_riskmgr'));
+}
+
+/* монтирование V4-игр */
+(function v4GamesMountPatch(){
+  const prev = renderCStreamWidget;
+  renderCStreamWidget = function(widgetId){
+    if(widgetId === 'widget_v4_seed'){ const b = document.getElementById(widgetId); if(b){ renderV4SeedGame(b); return true; } }
+    if(widgetId === 'widget_v4_regime'){ const b = document.getElementById(widgetId); if(b){ renderV4RegimeGame(b); return true; } }
+    if(widgetId === 'widget_v4_riskmgr'){ const b = document.getElementById(widgetId); if(b){ renderV4RiskManagerGame(b); return true; } }
+    return prev(widgetId);
+  };
+})();
+</script>
 </body>
 </html>
+
