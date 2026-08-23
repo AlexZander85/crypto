@@ -1172,10 +1172,10 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   <div class="controls" id="sim_phase_chips" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px">
     <button class="chip active" onclick="filterSimulators('all', this)">🕹️ Все симуляторы</button>
     <button class="chip" onclick="filterSimulators(0, this)">⚡ Фаза 0: Основы (8)</button>
-    <button class="chip" onclick="filterSimulators(1, this)">📈 Фаза 1: Эконометрика & ML (5)</button>
+    <button class="chip" onclick="filterSimulators(1, this)">📈 Фаза 1: Эконометрика & ML (6)</button>
     <button class="chip" onclick="filterSimulators(2, this)">🐋 Фаза 2: Ордер флоу (3)</button>
     <button class="chip" onclick="filterSimulators(3, this)">⚖️ Фаза 3: Портфель & Риск (2)</button>
-    <button class="chip" onclick="filterSimulators(4, this)">🛡️ Фаза 4: Продакшен & Право (4)</button>
+    <button class="chip" onclick="filterSimulators(4, this)">🛡️ Фаза 4: Продакшен & Право (5)</button>
     <button class="chip" onclick="filterSimulators(5, this)">👑 Фаза 5: Управление & Боссы (3)</button>
   </div>
 
@@ -1872,6 +1872,36 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
+  <!-- V3-B1 SIM: Funding Drag Simulator -->
+  <div id="sim_funding_drag" class="sim-box" style="display:none">
+    <h3>📉 Funding Drag: сколько съедает фандинг за месяц</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">На перпетуале фандинг платится каждые 8 часов. Даже крошечная ставка превращается в заметную годовую «аренду позиции». Посчитай драг и подумай, какое ожидание на сделку нужно, чтобы его окупить.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Размер позиции (₽):</label><input type="number" id="fd_notional" value="100000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Фандинг за 8 ч (bps):</label><input type="number" id="fd_rate" value="1" step="0.5"></div>
+      <div class="sim-input-group"><label>Дней удержания:</label><input type="number" id="fd_days" value="30" min="1" step="1"></div>
+      <div class="sim-input-group"><label>Направление:</label>
+        <select id="fd_side"><option value="long">Лонг (платишь при положительном фандинге)</option><option value="short">Шорт</option></select>
+      </div>
+    </div>
+    <button class="btn" onclick="window.runFundingDragSim()">📉 Посчитать Funding Drag</button>
+    <div class="sim-result" id="fd_result" style="margin-top:16px"></div>
+  </div>
+
+  <!-- V3-B1 SIM: Transaction Cost Simulator -->
+  <div id="sim_tcost" class="sim-box" style="display:none">
+    <h3>🧾 Transaction Cost: комиссии + спред + слиппедж за серию сделок</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Round-trip (вход+выход) стоит: 2×комиссия + спред + 2×слиппедж. Сотня сделок в месяц — и издержки сопоставимы с прибылью большинства стратегий. Проверь, сколько bps ожидания нужно на сделку, чтобы выйти в ноль.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Сделка (₽):</label><input type="number" id="tc_notional" value="50000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Комиссия тейкера (%):</label><input type="number" id="tc_fee" value="0.055" step="0.005"></div>
+      <div class="sim-input-group"><label>Спред (bps):</label><input type="number" id="tc_spread" value="2" step="0.5"></div>
+      <div class="sim-input-group"><label>Слиппедж (bps):</label><input type="number" id="tc_slip" value="3" step="0.5"></div>
+      <div class="sim-input-group"><label>Сделок (round-trips):</label><input type="number" id="tc_rt" value="20" min="1" step="1"></div>
+    </div>
+    <button class="btn" onclick="window.runTCostSim()">🧾 Посчитать издержки</button>
+    <div class="sim-result" id="tc_result" style="margin-top:16px"></div>
+  </div>
 </section>
 
 <!-- 4. ROADMAP VIEW (INTERACTIVE SVG KNOWLEDGE TREE) -->
@@ -13795,11 +13825,54 @@ let orderBookState = {
    ========================================================================= */
 const SIM_PHASE_MAP = {
   0: ['sim_ob', 'sim_liq', 'sim_fund', 'sim_candle', 'sim_arbitrage', 'sim_calendar', 'sim_risk_reward', 'sim_psychology', 'sim_first_trade', 'sim_meme', 'sim_firsttrade', 'sim_ruble2btc', 'sim_position_sizer'],
-  1: ['sim_lookahead', 'sim_overfit', 'sim_walkforward', 'sim_stationarity', 'sim_alphabeta'],
+  1: ['sim_lookahead', 'sim_overfit', 'sim_walkforward', 'sim_stationarity', 'sim_alphabeta', 'sim_funding_drag'],
   2: ['sim_sentiment', 'sim_whale'],
   3: ['sim_portfolio', 'sim_kelly', 'sim_predarb', 'sim_position_sizer'],
-  4: ['sim_tax', 'sim_115fz', 'sim_killswitch', 'sim_execdev', 'sim_chaos', 'sim_eoa'],
+  4: ['sim_tax', 'sim_115fz', 'sim_killswitch', 'sim_execdev', 'sim_chaos', 'sim_eoa', 'sim_tcost'],
   5: ['sim_scaling', 'sim_recovery', 'sim_boss', 'sim_restaking']
+};
+
+window.runFundingDragSim = function(){
+  const N = parseFloat(document.getElementById('fd_notional').value) || 0;
+  const rateBps = parseFloat(document.getElementById('fd_rate').value) || 0;
+  const days = Math.max(1, parseFloat(document.getElementById('fd_days').value) || 1);
+  const side = document.getElementById('fd_side').value;
+  const payPer8h = N * rateBps / 10000;
+  const perDay = payPer8h * 3;
+  const total = perDay * days;
+  const apyPct = rateBps * 3 * 365 / 100; // bps → % годовых
+  const dragPct = (total / N * 100).toFixed(2);
+  const edgeNeededBps = (perDay / N * 10000).toFixed(2);
+  document.getElementById('fd_result').innerHTML = `
+    <div style="font-weight:700; margin-bottom:8px">Funding Drag за ${days} дн. (${side} при фандинге ${rateBps} bps/8ч):</div>
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px">
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Платёж каждые 8 ч</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">${payPer8h.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Драг за день (3 платежа)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">${perDay.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Итого за период</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:800; color:var(--bad); text-align:right">−${total.toFixed(0)} ₽ (−${dragPct}%)</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Эквивалент APY</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">≈ ${apyPct.toFixed(1)}% годовых</td></tr>
+      <tr><td style="padding:6px 10px; color:var(--mut)">Ожидание на день для безубытка</td><td style="padding:6px 10px; font-weight:800; color:var(--warn); text-align:right">≥ ${edgeNeededBps} bps/день</td></tr>
+    </table>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Вывод: фандинг — это «аренда» позиции. Стратегия с ожиданием ниже ${edgeNeededBps} bps/день уходит в минус без единой ошибки в прогнозе.</div>`;
+};
+window.runTCostSim = function(){
+  const N = parseFloat(document.getElementById('tc_notional').value) || 0;
+  const feePct = parseFloat(document.getElementById('tc_fee').value) || 0;
+  const spreadBps = parseFloat(document.getElementById('tc_spread').value) || 0;
+  const slipBps = parseFloat(document.getElementById('tc_slip').value) || 0;
+  const rt = Math.max(1, parseFloat(document.getElementById('tc_rt').value) || 1);
+  const costRt = N * (2 * feePct / 100 + (spreadBps + 2 * slipBps) / 10000);
+  const total = costRt * rt;
+  const breakevenBps = (costRt / N * 10000).toFixed(1);
+  document.getElementById('tc_result').innerHTML = `
+    <div style="font-weight:700; margin-bottom:8px">Издержки на ${rt} round-trip сделок:</div>
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px">
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Комиссии (вход+выход)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); text-align:right">${(N * 2 * feePct / 100).toFixed(0)} ₽/RT</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Спред</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); text-align:right">${(N * spreadBps / 10000).toFixed(0)} ₽/RT</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Слиппедж (вход+выход)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); text-align:right">${(N * 2 * slipBps / 10000).toFixed(0)} ₽/RT</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Полная стоимость round-trip</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:800; color:var(--bad); text-align:right">${costRt.toFixed(0)} ₽ (${breakevenBps} bps)</td></tr>
+      <tr><td style="padding:6px 10px; color:var(--mut)">Итого за серию</td><td style="padding:6px 10px; font-weight:800; color:var(--bad); text-align:right">−${total.toFixed(0)} ₽</td></tr>
+    </table>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Правило безубытка: ожидание на сделку ≥ <b style="color:var(--warn)">${breakevenBps} bps</b>. Maker-ордера срезают комиссию, но добавляют риск неисполнения — обсуждается в уроке про стакан.</div>`;
 };
 
 function filterSimulators(phase, btn){
