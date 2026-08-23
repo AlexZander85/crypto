@@ -1180,7 +1180,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="chip active" onclick="filterSimulators('all', this)">🕹️ Все симуляторы</button>
     <button class="chip" onclick="filterSimulators(0, this)">⚡ Фаза 0: Основы (8)</button>
     <button class="chip" onclick="filterSimulators(1, this)">📈 Фаза 1: Эконометрика & ML (6)</button>
-    <button class="chip" onclick="filterSimulators(2, this)">🐋 Фаза 2: Ордер флоу (3)</button>
+    <button class="chip" onclick="filterSimulators(2, this)">🐋 Фаза 2: Ордер флоу (4)</button>
     <button class="chip" onclick="filterSimulators(3, this)">⚖️ Фаза 3: Портфель & Риск (2)</button>
     <button class="chip" onclick="filterSimulators(4, this)">🛡️ Фаза 4: Продакшен & Право (5)</button>
     <button class="chip" onclick="filterSimulators(5, this)">👑 Фаза 5: Управление & Боссы (3)</button>
@@ -1908,6 +1908,19 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
     <button class="btn" onclick="window.runTCostSim()">🧾 Посчитать издержки</button>
     <div class="sim-result" id="tc_result" style="margin-top:16px"></div>
+  </div>
+  <!-- V3-B4 SIM: DeFi Yield Lab -->
+  <div id="sim_defi" class="sim-box" style="display:none">
+    <h3>🌾 DeFi Yield Lab: APY против непостоянных потерь (IL)</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">В AMM-пуле ты даёшь ликвидность и получаешь APY, но при движении цены возникает непостоянная потеря (IL). Задача: понять, при каком движении цены и APY фарминг оправдан, а когда выгоднее просто держать актив (HODL).</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Депозит в пул (₽):</label><input type="number" id="df_dep" value="100000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Заявленный APY (%):</label><input type="number" id="df_apy" value="18" step="1"></div>
+      <div class="sim-input-group"><label>Движение цены пары (%):</label><input type="number" id="df_move" value="50" step="5"></div>
+      <div class="sim-input-group"><label>Дней в пуле:</label><input type="number" id="df_days" value="90" min="1" step="1"></div>
+    </div>
+    <button class="btn" onclick="window.runDefiSim()">🌾 Посчитать результат фарминга</button>
+    <div class="sim-result" id="df_result" style="margin-top:16px"></div>
   </div>
 </section>
 
@@ -13857,7 +13870,7 @@ let orderBookState = {
 const SIM_PHASE_MAP = {
   0: ['sim_ob', 'sim_liq', 'sim_fund', 'sim_candle', 'sim_arbitrage', 'sim_calendar', 'sim_risk_reward', 'sim_psychology', 'sim_first_trade', 'sim_meme', 'sim_firsttrade', 'sim_ruble2btc', 'sim_position_sizer'],
   1: ['sim_lookahead', 'sim_overfit', 'sim_walkforward', 'sim_stationarity', 'sim_alphabeta', 'sim_funding_drag'],
-  2: ['sim_sentiment', 'sim_whale'],
+  2: ['sim_sentiment', 'sim_whale', 'sim_defi'],
   3: ['sim_portfolio', 'sim_kelly', 'sim_predarb', 'sim_position_sizer'],
   4: ['sim_tax', 'sim_115fz', 'sim_killswitch', 'sim_execdev', 'sim_chaos', 'sim_eoa', 'sim_tcost'],
   5: ['sim_scaling', 'sim_recovery', 'sim_boss', 'sim_restaking']
@@ -13917,6 +13930,32 @@ window.addEventListener('DOMContentLoaded', () => {
   const sel = document.getElementById('account_size_sel');
   if(sel) sel.value = localStorage.getItem('cn_account_size') || 'small';
 });
+
+// V3-B4: DeFi Yield Lab — APY vs IL vs HODL
+window.runDefiSim = function(){
+  const dep = parseFloat(document.getElementById('df_dep').value) || 0;
+  const apy = parseFloat(document.getElementById('df_apy').value) || 0;
+  const move = parseFloat(document.getElementById('df_move').value) || 0;
+  const days = Math.max(1, parseFloat(document.getElementById('df_days').value) || 1);
+  const k = 1 + move / 100;
+  const ilPct = (2 * Math.sqrt(k) / (1 + k) - 1) * 100; // стандартная формула IL
+  const hodl = dep * k;
+  const pool = dep * (1 + ilPct / 100) * k;
+  const reward = dep * (apy / 100) * (days / 365);
+  const total = pool + reward;
+  const vsHodl = total - hodl;
+  const breakevenApy = Math.abs(ilPct) * 365 / days;
+  document.getElementById('df_result').innerHTML = `
+    <div style="font-weight:700; margin-bottom:8px">Фарминг ${days} дн. при движении цены ${move}%:</div>
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px">
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">HODL (просто держать)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">${hodl.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">IL (непостоянная потеря)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--bad); text-align:right">${ilPct.toFixed(2)}%</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Награда за период (APY ${apy}%)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--ok); text-align:right">+${reward.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Итог в пуле (с наградой)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:800; text-align:right">${total.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; color:var(--mut)">Пул vs HODL</td><td style="padding:6px 10px; font-weight:800; color:${vsHodl >= 0 ? 'var(--ok)' : 'var(--bad)'}; text-align:right">${vsHodl >= 0 ? '+' : ''}${vsHodl.toFixed(0)} ₽</td></tr>
+    </table>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Безубыток: APY ≥ <b style="color:var(--warn)">${breakevenApy.toFixed(1)}%</b> при таком движении цены. Волатильные пары требуют заметно больше APY — это главный скрытый риск DeFi-фарминга.</div>`;
+};
 
 function filterSimulators(phase, btn){
   if(btn){
