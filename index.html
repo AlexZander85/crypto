@@ -7315,7 +7315,7 @@ const LESSONS = [
       },
       {
         "type": "numbers",
-        "text": "Индекс Fear & Greed (Crypto Fear and Greed Index) колеблется от 0 (Extreme Fear) до 100 (Extreme Greed). Покупка BTC при значении индекса < 15 в выборке 2020–2024 гг. давала среднюю 90-дневную доходность около +42% при Win Rate 78% (точечная историческая оценка на конкретном окне — не закон природы: на другом окне цифры будут другими). Покупка при значении > 85 давала среднюю 90-дневную просадку −18%."
+        "text": "Индекс Fear & Greed (Crypto Fear and Greed Index) колеблется от 0 (Extreme Fear) до 100 (Extreme Greed). Покупка BTC при значении индекса < 15 в выборке 2020–2024 гг. давала среднюю 90-дневную доходность около +42% при Win Rate 78% (точечная историческая оценка на конкретном окне — не закон природы: на другом окне цифры будут другими). Важная оговорка 2024–2026: после запуска спотовых ETF и институционализации рынка сигнал экстремального страха стал менее стабильным — потоки ETF и макрофакторы часто «перекрикивают» сентимент розницы, поэтому индекс используют как один из входов, а не как самостоятельный триггер покупки. Покупка при значении > 85 давала среднюю 90-дневную просадку −18%."
       },
       {
         "type": "warn",
@@ -27680,6 +27680,29 @@ completeLessonWithMastery = function(id){
 };
 
 
+
+/* ---------- V4-D3: «Сборочный пункт» после каждых 5 завершённых уроков ---------- */
+const _origShowConsolV4 = showConsolidationScreen;
+showConsolidationScreen = function(lessonId, customTitle){
+  _origShowConsolV4.apply(this, arguments);
+  try{
+    const doneCount = Object.keys(lessonsDone).filter(k => lessonsDone[k] === 1).length;
+    if(doneCount > 0 && doneCount % 5 === 0){
+      const ov = document.getElementById('consolidation_overlay');
+      if(ov && !ov.querySelector('.v4-checkpoint')){
+        const card = ov.firstElementChild;
+        if(card){
+          card.insertAdjacentHTML('afterbegin', `
+            <div class="v4-checkpoint" style="background:rgba(6,182,212,.1); border:1.5px dashed var(--acc2); border-radius:12px; padding:12px 16px; margin-bottom:14px; text-align:left">
+              <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:4px">🧩 Сборочный пункт: пройдено ${doneCount} уроков</div>
+              <div style="font-size:12.5px; color:var(--mut); line-height:1.5">Каждые 5 уроков — точка интервального повторения: без него до 60% терминов «стирается» за неделю. 3 минуты SM-2 сейчас дешевле, чем переучивание потом.</div>
+              <button class="btn sm" style="background:var(--acc2); margin-top:8px" onclick="closeConsolidationScreen(); go('glossary'); if(typeof startSrsReviewSession==='function') startSrsReviewSession()">▶ Повторить термины (SM-2)</button>
+            </div>`);
+        }
+      }
+    }
+  }catch(e){}
+};
 
 /* ---------- E5: Лестница рангов + наставник ---------- */
 // XP за понимание: самообъяснение Фейнмана (один раз на урок)
