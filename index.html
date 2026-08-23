@@ -3743,8 +3743,15 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g01_blockrace",
+        "title": "🎮 Мини-игра «Гонка блоков»",
+        "desc": "Один из 8 узлов прислал жуликоватый блок. Реши, что делает честный узел — и посмотри, как протокол разруливает форк."
+      }
     ],
-    "quiz": {
+"quiz": {
       "q": "Что произойдет, если один из участников сети попытается тайно изменить баланс в своей локальной копии блокчейна?",
       "opts": [
         "Все остальные участники поверят ему и перепишут свои записи",
@@ -4962,8 +4969,15 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g03_liqcorridor",
+        "title": "🎮 Ликвидационный коридор",
+        "desc": "Цена блуждает, справа — красная стена ликвидации. Двигай плечо и смотри, как растёт шанс не дожить до конца месяца."
+      }
     ],
-    "quiz": {
+"quiz": {
       "q": "Что произойдет с позицией Long при 20x кредитном плече (без дополнительного залога), если цена актива упадет на 5%?",
       "opts": [
         "Позиция принесет прибыль",
@@ -8227,6 +8241,13 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g10_kellyfan",
+        "title": "🎮 Келли-веер: 1000 траекторий",
+        "desc": "Full / Half / Quarter Kelly на Монте-Карло: полосы перцентилей и доля траекторий с просадкой >50%. Честные числа 2k−k² прямо на экране."
+      }
     ],
     "resources": [
       {
@@ -8245,7 +8266,7 @@ const LESSONS = [
       "Убедиться, что симуляция не допускает отрицательного баланса (ограничение нулем)."
     ],
     "num": "3.3",
-    "quiz": {
+"quiz": {
       "q": "Почему институциональные quant-фонды используют дробный Келли (Half или Quarter Kelly) вместо полного Full Kelly?",
       "opts": [
         "Потому что они не умеют решать формулу Келли",
@@ -9396,6 +9417,13 @@ const LESSONS = [
         ]
       },
       {"type":"concept","level2":"Мир вокруг: MiCA (ЕС). Даже работая из РФ, ты зависишь от регламента ЕС через листинги токенов (многие проходят MiCA-проверку), правила стейблкоинов и требования к площадкам. Глобальный ландшафт — мозаика: 115-ФЗ/418-ФЗ дома, MiCA в ЕС, лицензии в ОАЭ/Сингапуре. Правило трансграничной работы: уточняй актуальный статус каждой юрисдикции."}
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g14_fifoqueue",
+        "title": "🎮 FIFO-очередь налогов",
+        "desc": "Покупки встают в очередь вагончиками, продажа забирает их слева. Считаем базу и НДФЛ по полной шкале-2025, сравниваем с учётом «по средней»."
+      }
     ],
     "resources": [
       {
@@ -9418,7 +9446,7 @@ const LESSONS = [
       "Убедиться, что курс доллара к рублю подтягивается на дату закрытия сделки через API ЦБ РФ."
     ],
     "num": "4.6",
-    "quiz": {
+"quiz": {
       "q": "Какой метод списания стоимости выбывшей цифровой валюты налогоплательщик вправе выбрать для расчета налоговой базы (ст. 282.3 НК РФ)?",
       "opts": [
         "Метод случайного выбора цены",
@@ -10518,6 +10546,13 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g15_vault",
+        "title": "🎮 Строитель крепости хранения",
+        "desc": "Распредели 6 млн ₽ по ячейкам хранения. Валидатор правил 5.7 проверит лимиты, а сценарий «биржа заморожена» — живучесть схемы."
+      }
     ],
     "practice": [
       {
@@ -10535,7 +10570,7 @@ const LESSONS = [
       "Запасной маршрут вывода проверен реальной операцией, а не прочитан в статье.",
       "Источник данных и место исполнения не завязаны на одну-единственную площадку."
     ],
-    "quiz": {
+"quiz": {
       "q": "Капитал 6 млн ₽ распределён так: 5 млн на бирже с лучшими комиссиями, 1 млн в холодном кошельке. Биржа останавливает выводы на неопределённый срок. Какой вывод правильный?",
       "opts": [
         "Ничего страшного: комиссии были действительно лучшими, экономия окупит паузу",
@@ -26599,6 +26634,333 @@ completeLessonWithMastery = function(id){
   }catch(e){}
   return res;
 };
+
+/* =========================================================================
+   D3.1 ВОЛНА 1 ИГР (G-01, G-03, G-10, G-14, G-15) — аудит визуализаций
+   ========================================================================= */
+(function(){
+  const GAME_IDS = ['widget_g01_blockrace','widget_g03_liqcorridor','widget_g10_kellyfan','widget_g14_fifoqueue','widget_g15_vault'];
+  const prev = window.renderPhase0Widget;
+  window.renderPhase0Widget = function(widgetId){
+    if(GAME_IDS.indexOf(widgetId) !== -1){
+      const box = document.getElementById(widgetId);
+      if(box && !box.dataset.rendered){
+        box.dataset.rendered = '1';
+        if(widgetId === 'widget_g01_blockrace') renderG01(box);
+        if(widgetId === 'widget_g03_liqcorridor') renderG03(box);
+        if(widgetId === 'widget_g10_kellyfan') renderG10(box);
+        if(widgetId === 'widget_g14_fifoqueue') renderG14(box);
+        if(widgetId === 'widget_g15_vault') renderG15(box);
+      }
+      return;
+    }
+    return prev(widgetId);
+  };
+})();
+
+/* ---------- G-01 «Гонка блоков» ---------- */
+var g01State = { culprit: 3, round: 0, score: 0 };
+function renderG01(box){
+  g01State = { culprit: Math.floor(Math.random() * 8), round: 0, score: 0 };
+  box.innerHTML = `
+    <div style="background:rgba(34,197,94,.05); border:1.5px solid var(--ok); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--ok); margin-bottom:6px">🎮 Гонка блоков</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:10px">Сеть из 8 узлов. Один прислал блок с транзакцией, нарушающей правила протокола (двойная трата). Ты — честный узел. Что делать?</div>
+      <div id="g01_net" style="display:flex; gap:6px; margin-bottom:10px"></div>
+      <div id="g01_scenario" style="font-size:13px; color:var(--txt); margin-bottom:10px"></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap" id="g01_btns">
+        <button class="btn sm" onclick="g01Answer(0)">✅ Принять блок</button>
+        <button class="btn sm" style="background:var(--bad)" onclick="g01Answer(1)">🚫 Отвергнуть по правилам</button>
+        <button class="btn sm ghost" onclick="g01Answer(2)">⏳ Подождать следующий</button>
+      </div>
+      <div id="g01_out" style="margin-top:10px; font-size:12.5px"></div>
+    </div>`;
+  g01DrawNet();
+}
+function g01DrawNet(){
+  const net = document.getElementById('g01_net');
+  if(!net) return;
+  net.innerHTML = Array.from({length:8}, (_,i) =>
+    `<div style="flex:1; text-align:center; padding:8px 2px; border-radius:8px; border:1.5px solid ${i === g01State.culprit ? 'var(--bad)' : 'var(--line)'}; background:#040714">
+      <div style="font-size:18px">${i === g01State.culprit ? '🦹' : '🖥️'}</div>
+      <div style="font-size:10px; color:var(--mut)">узел ${i+1}</div>
+    </div>`).join('');
+  const sc = document.getElementById('g01_scenario');
+  sc.innerHTML = `Узел <b style="color:var(--bad)">№${g01State.culprit + 1}</b> транслирует блок #842 317, в котором одна и та же монета потрачена дважды. Твой выбор:`;
+  document.getElementById('g01_out').innerHTML = '';
+}
+function g01Answer(choice){
+  const out = document.getElementById('g01_out');
+  const debrief = `<div style="margin-top:8px; padding:10px; background:#040714; border-left:3px solid var(--acc2); border-radius:6px; font-size:12px; color:var(--mut)">
+    <b style="color:var(--txt)">Дебрифинг:</b> узлы не «голосуют» — каждый сам проверяет блок по правилам протокола. Блок с двойной тратой просто не принимается честными узлами, и жуликоватая ветка становится orphan-форком: канонической считается цепочка, которую протокол признаёт действительной (наибольшая суммарная работа при соблюдении всех правил).</div>`;
+  if(choice === 1){
+    g01State.score++;
+    out.innerHTML = `<div style="color:var(--ok); font-weight:700">✅ Верно. Твой узел отверг блок, нарушающий правила — и все честные узлы сделали то же самое независимо.</div>` + debrief;
+  } else if(choice === 0){
+    out.innerHTML = `<div style="color:var(--bad); font-weight:700">❌ Ошибка. Приняв невалидный блок, твой узел ушёл бы на мёртвую ветку: остальные узлы её не признают, и твои награды в ней обесценятся.</div>` + debrief;
+  } else {
+    out.innerHTML = `<div style="color:var(--warn); font-weight:700">🟡 Осторожно, но пассивно. Ждать можно — форк разрешится сам, — но важно понимать: ты не «ждёшь голосования», а просто не строишь поверх невалидного блока.</div>` + debrief;
+  }
+  out.innerHTML += `<div style="margin-top:8px"><button class="btn sm ghost" onclick="renderG01(document.getElementById('widget_g01_blockrace'))">🔄 Новый раунд</button></div>`;
+}
+
+/* ---------- G-03 «Ликвидационный коридор» ---------- */
+var g03Lev = 10;
+function renderG03(box){
+  box.innerHTML = `
+    <div style="background:rgba(239,68,68,.05); border:1.5px solid var(--bad); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--bad); margin-bottom:6px">🎮 Ликвидационный коридор</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Цена случайно блуждает; справа — стена ликвидации с буфером MMR. Чем больше плечо, тем ближе стена. Ликвидация наступает РАНЬШЕ, чем «плечо × движение», из-за поддерживающей маржи.</div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px; font-size:13px">
+        <label>Плечо: <b id="g03_lev_lbl" style="color:var(--acc2)">x10</b></label>
+        <input type="range" id="g03_lev" min="1" max="25" step="1" value="10" oninput="g03Lev=+this.value; document.getElementById('g03_lev_lbl').textContent='x'+this.value; g03Draw()">
+        <button class="btn sm" onclick="g03SimMonth()">📅 Прогнать месяц (50 траекторий)</button>
+      </div>
+      <canvas id="g03_cv" width="560" height="260" style="width:100%; background:#040714; border-radius:10px"></canvas>
+      <div id="g03_stat" style="margin-top:8px; font-size:13px"></div>
+    </div>`;
+  g03Draw();
+}
+function g03Draw(paths){
+  const cv = document.getElementById('g03_cv');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const midY = cv.height / 2;
+  // стена ликвидации: движение против позиции на ~ (1/lev - MMR-буфер)
+  const mmr = 0.005;
+  const liqDist = Math.max(1/g03Lev - mmr, 0.005);
+  const wallX = cv.width - 30;
+  const wallY = midY + liqDist * 2400;
+  // буфер MMR
+  const bufY = midY + (1/g03Lev) * 2400;
+  ctx.fillStyle = 'rgba(239,68,68,.15)';
+  ctx.fillRect(0, wallY, cv.width, Math.min(bufY - wallY, cv.height));
+  ctx.strokeStyle = 'var(--bad)'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, wallY); ctx.lineTo(cv.width, wallY); ctx.stroke();
+  ctx.fillStyle = '#ef4444'; ctx.font = '11px sans-serif';
+  ctx.fillText('стена ликвидации (с буфером MMR)', 8, wallY - 5);
+  ctx.fillStyle = '#22c55e';
+  ctx.fillText('цена входа', 8, midY - 5);
+  ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, midY); ctx.lineTo(cv.width, midY); ctx.stroke();
+  if(paths){
+    let alive = 0;
+    paths.forEach(p => {
+      const hit = p.some(v => v >= wallY);
+      if(!hit) alive++;
+      ctx.strokeStyle = hit ? 'rgba(239,68,68,.35)' : 'rgba(34,197,94,.45)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      p.forEach((v, i) => { const x = 10 + i * (cv.width - 20) / p.length; i ? ctx.lineTo(x, v) : ctx.moveTo(x, v); });
+      ctx.stroke();
+    });
+    const stat = document.getElementById('g03_stat');
+    const pct = Math.round(alive / paths.length * 100);
+    stat.innerHTML = `Выжило <b style="color:${pct > 70 ? 'var(--ok)' : 'var(--bad)'}">${pct}%</b> траекторий при плече x${g03Lev}. ` +
+      (pct < 50 ? 'Больше половины путей доходят до стены даже без «плохого» рынка — чистая геометрия волатильности.' : 'Коридор шире, но хвостовые траектории всё равно пробивают стену.');
+  } else {
+    // одна траектория
+    ctx.strokeStyle = 'var(--acc2)'; ctx.lineWidth = 2;
+    let y = midY; ctx.beginPath(); ctx.moveTo(10, y);
+    for(let i = 1; i < 90; i++){ y += (Math.random() - 0.5) * 18; ctx.lineTo(10 + i * (cv.width - 20) / 90, y); }
+    ctx.stroke();
+    document.getElementById('g03_stat').innerHTML = '<span style="color:var(--mut)">Нажми «Прогнать месяц», чтобы увидеть статистику выживания, а не один счастливый путь.</span>';
+  }
+}
+function g03SimMonth(){
+  const cv = document.getElementById('g03_cv');
+  const midY = cv.height / 2;
+  const paths = [];
+  for(let k = 0; k < 50; k++){
+    const p = []; let y = midY;
+    for(let i = 0; i < 90; i++){ y += (Math.random() - 0.5) * 18; p.push(y); }
+    paths.push(p);
+  }
+  g03Draw(paths);
+}
+
+/* ---------- G-10 «Келли-веер» ---------- */
+function renderG10(box){
+  box.innerHTML = `
+    <div style="background:rgba(124,58,237,.05); border:1.5px solid var(--acc1); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--acc1); margin-bottom:6px">🎮 Келли-веер: 1000 траекторий</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Монте-Карло для серии ставок (p=55%, выплата 1:1, 252 ставки). Медианы и полосы 10–90 перцентиля. Формула честного trade-off: <code>g(k·f*)/g(f*) = 2k − k²</code> → Half Kelly = 75% роста, Quarter = 43.75% роста.</div>
+      <button class="btn sm" onclick="g10Run()">▶ Запустить симуляцию</button>
+      <canvas id="g10_cv" width="560" height="300" style="width:100%; background:#040714; border-radius:10px; margin-top:8px"></canvas>
+      <div id="g10_stat" style="margin-top:8px; font-size:12.5px"></div>
+    </div>`;
+}
+function g10Run(){
+  const cv = document.getElementById('g10_cv');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const variants = [
+    { k: 1.0,  label: 'Full Kelly',    color: '#ef4444' },
+    { k: 0.5,  label: 'Half Kelly',    color: '#f59e0b' },
+    { k: 0.25, label: 'Quarter Kelly', color: '#22c55e' }
+  ];
+  const N = 200, T = 252, pWin = 0.55;
+  let statsHtml = '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px">';
+  const maxLog = 3.2;
+  variants.forEach(v => {
+    const logs = [];
+    const snaps = [];
+    for(let s = 0; s < N; s++){
+      let eq = 1, peak = 1, maxDD = 0;
+      const path = [];
+      for(let t = 0; t < T; t++){
+        eq *= (Math.random() < pWin) ? (1 + v.k) : (1 - v.k);
+        if(eq > peak) peak = eq;
+        const dd = 1 - eq / peak;
+        if(dd > maxDD) maxDD = dd;
+        path.push(Math.log(eq));
+      }
+      logs.push({ end: Math.log(eq), maxDD: maxDD });
+      snaps.push(path);
+    }
+    // перцентильные полосы
+    const bands = [];
+    for(let t = 0; t < T; t++){
+      const col = snaps.map(s => s[t]).sort((a, b) => a - b);
+      bands.push([col[Math.floor(N*0.1)], col[Math.floor(N*0.5)], col[Math.floor(N*0.9)]]);
+    }
+    const yOf = lv => cv.height - 12 - (lv + 1.2) / (maxLog + 1.2) * (cv.height - 24);
+    ctx.fillStyle = v.color + '22';
+    ctx.beginPath();
+    bands.forEach((b, t) => { const x = 8 + t * (cv.width - 16) / T; t ? ctx.lineTo(x, yOf(b[2])) : ctx.moveTo(x, yOf(b[2])); });
+    for(let t = T - 1; t >= 0; t--){ ctx.lineTo(8 + t * (cv.width - 16) / T, yOf(bands[t][0])); }
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = v.color; ctx.lineWidth = 2;
+    ctx.beginPath();
+    bands.forEach((b, t) => { const x = 8 + t * (cv.width - 16) / T; t ? ctx.lineTo(x, yOf(b[1])) : ctx.moveTo(x, yOf(b[1])); });
+    ctx.stroke();
+    const ddShare = Math.round(logs.filter(l => l.maxDD > 0.5).length / N * 100);
+    const med = bands[T-1][1];
+    statsHtml += `<div style="background:#040714; border-radius:8px; padding:8px 10px; border:1.5px solid ${v.color}">
+      <div style="font-weight:800; color:${v.color}; font-size:12.5px">${v.label}</div>
+      <div style="font-size:11.5px; color:var(--mut)">Медиана капитала: <b style="color:var(--txt)">×${Math.exp(med).toFixed(1)}</b></div>
+      <div style="font-size:11.5px; color:var(--mut)">Просадка &gt;50% у: <b style="color:${ddShare > 30 ? 'var(--bad)' : 'var(--ok)'}">${ddShare}%</b> траекторий</div>
+      <div style="font-size:11px; color:var(--mut)">Рост: ${(2*v.k - v.k*v.k)*100 | 0}% от Full Kelly</div>
+    </div>`;
+  });
+  statsHtml += '</div><div style="margin-top:6px; color:var(--mut); font-size:12px">Quarter Kelly сохраняет 43.75% скорости роста (2·0.25 − 0.25²), но почти обнуляет шанс пережить просадку >50%. Именно это — предмет выбора, а не «больше/меньше удачи».</div>';
+  document.getElementById('g10_stat').innerHTML = statsHtml;
+}
+
+/* ---------- G-14 «FIFO-очередь налогов» ---------- */
+var g14Lots = [];
+function renderG14(box){
+  g14Lots = [ {qty: 1, price: 5000000}, {qty: 1, price: 7000000} ];
+  box.innerHTML = `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--acc2); margin-bottom:6px">🎮 FIFO-очередь налогов</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Покупки — вагончики в очереди. Продажа забирает вагоны СЛЕВА (FIFO). Налог — по полной шкале НДФЛ-2025: 13% ≤2.4 млн ₽, 15% до 5 млн, 18% до 20 млн, 20% до 50 млн, 22% свыше.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; font-size:13px; align-items:center">
+        <button class="btn sm" onclick="g14Buy()">➕ Купить 1 BTC (цена случайная 4–11 млн ₽)</button>
+        <button class="btn sm" style="background:var(--acc1)" onclick="g14Sell()">💰 Продать 1 BTC за 9,000,000 ₽</button>
+        <button class="btn sm ghost" onclick="g14Lots=[]; g14Draw()">🔄 Сброс</button>
+      </div>
+      <div id="g14_queue" style="display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap"></div>
+      <div id="g14_out" style="font-size:12.5px"></div>
+    </div>`;
+  g14Draw();
+}
+function g14Buy(){
+  g14Lots.push({ qty: 1, price: 4000000 + Math.floor(Math.random() * 70) * 100000 });
+  g14Draw();
+}
+function g14Tax2025(base){
+  const steps = [ [2400000, 0.13], [5000000, 0.15], [20000000, 0.18], [50000000, 0.20], [Infinity, 0.22] ];
+  let tax = 0, prev = 0;
+  for(const [lim, rate] of steps){
+    if(base <= prev) break;
+    tax += (Math.min(base, lim) - prev) * rate;
+    prev = lim;
+  }
+  return Math.round(tax);
+}
+function g14Sell(){
+  if(!g14Lots.length){ document.getElementById('g14_out').innerHTML = '<span style="color:var(--bad)">Очередь пуста — продавать нечего.</span>'; return; }
+  const lot = g14Lots.shift();
+  const sellPrice = 9000000, fee = 10000;
+  const base = sellPrice - lot.price - fee;
+  const taxFifo = g14Tax2025(Math.max(base, 0));
+  const avg = g14Lots.length ? Math.round(g14Lots.reduce((s,l) => s + l.price, 0) / (g14Lots.length + 1) ) : lot.price;
+  const baseAvg = sellPrice - avg - fee;
+  document.getElementById('g14_out').innerHTML = `
+    <div style="background:#040714; border-radius:8px; padding:10px; border-left:3px solid var(--ok)">
+      Забран лот за <b>${lot.price.toLocaleString('ru-RU')} ₽</b>. База FIFO: 9,000,000 − ${lot.price.toLocaleString('ru-RU')} − 10,000 = <b style="color:var(--ok)">${base.toLocaleString('ru-RU')} ₽</b>;
+      НДФЛ: <b>${taxFifo.toLocaleString('ru-RU')} ₽</b> (${base <= 2400000 ? '13%' : 'ступень выше'}).
+      <div style="margin-top:6px; color:var(--mut); font-size:12px">Если бы считали «по средней» (${avg.toLocaleString('ru-RU')} ₽), база была бы ${baseAvg.toLocaleString('ru-RU')} ₽ — метод меняет налог, поэтому 418-ФЗ фиксирует FIFO.</div>
+    </div>`;
+  g14Draw();
+}
+function g14Draw(){
+  const q = document.getElementById('g14_queue');
+  if(!q) return;
+  q.innerHTML = g14Lots.length
+    ? g14Lots.map((l, i) => `<div style="background:#040714; border:1.5px solid ${i === 0 ? 'var(--ok)' : 'var(--line)'}; border-radius:8px; padding:6px 10px; font-size:12px">🚃 1 BTC<br><span style="color:var(--mut)">${l.price.toLocaleString('ru-RU')} ₽</span>${i === 0 ? '<br><span style="color:var(--ok); font-size:10px">← продастся первым</span>' : ''}</div>`).join('')
+    : '<div style="color:var(--mut); font-size:12px">Очередь пуста. Добавь покупку.</div>';
+}
+
+/* ---------- G-15 «Строитель крепости хранения» ---------- */
+function renderG15(box){
+  box.innerHTML = `
+    <div style="background:rgba(245,158,11,.05); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--warn); margin-bottom:6px">🎮 Строитель крепости хранения</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Распредели 6,000,000 ₽. Правила крепости: не более 20% на одного контрагента; суммарно на площадках (CEX-A + CEX-B + DeFi) не более 40%.</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px; font-size:13px">
+        <label>🧊 Холодный кошелёк<br><input type="number" id="g15_cold" value="66" min="0" max="100" style="width:70px"> %</label>
+        <label>🏦 CEX-A<br><input type="number" id="g15_cexa" value="14" min="0" max="100" style="width:70px"> %</label>
+        <label>🏦 CEX-B<br><input type="number" id="g15_cexb" value="12" min="0" max="100" style="width:70px"> %</label>
+        <label>🌀 DeFi-протокол<br><input type="number" id="g15_defi" value="8" min="0" max="100" style="width:70px"> %</label>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+        <button class="btn sm" onclick="g15Check()">🛡️ Проверить крепость</button>
+        <button class="btn sm ghost" onclick="g15Scenario('cexa')">🔥 Сценарий: CEX-A заморожена</button>
+        <button class="btn sm ghost" onclick="g15Scenario('defi')">🔥 Сценарий: взлом DeFi</button>
+      </div>
+      <div id="g15_out" style="margin-top:10px; font-size:12.5px"></div>
+    </div>`;
+}
+function g15Read(){
+  return {
+    cold: +(document.getElementById('g15_cold').value || 0),
+    cexa: +(document.getElementById('g15_cexa').value || 0),
+    cexb: +(document.getElementById('g15_cexb').value || 0),
+    defi: +(document.getElementById('g15_defi').value || 0)
+  };
+}
+function g15Check(){
+  const v = g15Read();
+  const out = document.getElementById('g15_out');
+  const sum = v.cold + v.cexa + v.cexb + v.defi;
+  const errs = [];
+  if(sum !== 100) errs.push(`Сумма долей ${sum}% ≠ 100%`);
+  [['CEX-A', v.cexa], ['CEX-B', v.cexb], ['DeFi', v.defi]].forEach(([n, x]) => {
+    if(x > 20) errs.push(`${n}: ${x}% > лимита 20% на контрагента`);
+  });
+  if(v.cexa + v.cexb + v.defi > 40) errs.push(`На площадках суммарно ${v.cexa + v.cexb + v.defi}% > 40%`);
+  if(errs.length){
+    out.innerHTML = `<div style="color:var(--bad); font-weight:700">❌ Крепость не выдерживает проверку:</div><ul style="margin:6px 0 0; padding-left:18px; color:var(--bad); font-size:12.5px">${errs.map(e => `<li>${e}</li>`).join('')}</ul>`;
+  } else {
+    out.innerHTML = `<div style="color:var(--ok); font-weight:700">✅ Крепость соответствует правилам 5.7: ни один контрагент не уносит больше 20%, площадки суммарно ≤ 40%.</div>`;
+  }
+}
+function g15Scenario(kind){
+  const v = g15Read();
+  const total = 6000000;
+  const frozen = kind === 'cexa' ? v.cexa : v.defi;
+  const name = kind === 'cexa' ? 'CEX-A' : 'DeFi-протокол';
+  const avail = total * (100 - frozen) / 100;
+  document.getElementById('g15_out').innerHTML = `
+    <div style="background:#040714; border-radius:8px; padding:10px; border-left:3px solid var(--bad)">
+      <b>${name} недоступен на месяц.</b> Заморожено: <b style="color:var(--bad)">${(total * frozen / 100).toLocaleString('ru-RU')} ₽ (${frozen}%)</b>.<br>
+      Доступный капитал: <b style="color:${frozen <= 20 ? 'var(--ok)' : 'var(--bad)'}">${avail.toLocaleString('ru-RU')} ₽</b>.
+      <div style="margin-top:6px; color:var(--mut); font-size:12px">${frozen <= 20 ? 'Лимит 20% сработал: жизнь и обязательства не парализованы — в этом и смысл крепости.' : 'Доля выше лимита 20%: месяц без этой суммы бьёт по планам. Перераспредели.'}</div>
+    </div>`;
+}
 
 /* =========================================================================
    B5. МОДУЛЬ «ВАЙБКОДИНГ ДЛЯ КРИПТО-АРХИТЕКТОРА» (4 урока, Фаза 6 · Бонусы)
