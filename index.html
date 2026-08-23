@@ -4469,6 +4469,7 @@ const LESSONS = [
   },
   {
     "id": "p0_l10",
+    "numericQuiz": {"q": "Маркет-покупка: лучший аск $50 000, средневзвешенная цена исполнения $50 025. Чему равно проскальзывание в basis points (bps)?", "answer": 5, "absTol": 0.5, "unit": "bps", "solution": "Slippage = (исполнение − лучший аск) / лучший аск = $25 / $50 000 = 0.0005 = 5 bps (1 bps = 0.01%)."},
     "phase": 0,
     "num": "0.10",
     "title": "Ликвидность и проскальзывание цены (Slippage)",
@@ -4936,6 +4937,7 @@ const LESSONS = [
   },
   {
     "id": "p0_l16",
+    "numericQuiz": {"q": "Расчёт без подсказок: маржа $1 000, плечо x10, лонг. При каком движении цены ПРОТИВ позиции (в %) наступит ликвидация? Буферы MMR и комиссии не учитываем — введи теоретический минимум в процентах.", "answer": 10, "absTol": 0.5, "unit": "%", "solution": "Позиция = маржа × плечо = $1 000 × 10 = $10 000. Ликвидация — потеря всей маржи: $1 000 / $10 000 = 0.10 = 10% движения цены против позиции. В реальности — раньше из-за MMR-буфера и комиссий (урок 0.16)."},
     "phase": 0,
     "num": "0.16",
     "title": "Знакомство с деривативами и рисками (Шорт, Плечо, Ликвидация)",
@@ -6679,6 +6681,7 @@ const LESSONS = [
   {
     "phase": 1,
     "id": "p1_l10",
+    "numericQuiz": {"q": "Доходность стратегии 18% годовых, волатильность 12%, безрисковая ставка 6%. Посчитай коэффициент Шарпа (одно число).", "answer": 1, "absTol": 0.05, "unit": "", "solution": "Sharpe = (Rp − Rf) / σ = (18% − 6%) / 12% = 1.0. Интерпретация: каждая единица риска даёт одну единицу премии над безрисковой ставкой."},
     "title": "Метрики эффективности: Sharpe Ratio, Sortino Ratio, Max Drawdown и Calmar",
     "minutes": 16,
     "terms": [
@@ -8197,6 +8200,7 @@ const LESSONS = [
   {
     "phase": 3,
     "id": "p3_l3",
+    "numericQuiz": {"q": "Монетка-стратегия: вероятность выигрыша p = 0.55, выплата 1:1 (b = 1). Чему равна ПОЛНАЯ доля Келли f* в процентах капитала?", "answer": 10, "absTol": 0.5, "unit": "%", "solution": "f* = p − q/b = 0.55 − 0.45/1 = 0.10 = 10%. Напоминание урока: торгуется Quarter Kelly (2.5%) или Half Kelly (5%) — полный Келли даёт чудовищные просадки."},
     "title": "Критерий Келли и Дробный Келли (Fractional Kelly): сайзинг позиций без риска разорения",
     "minutes": 18,
     "terms": [
@@ -8468,6 +8472,7 @@ const LESSONS = [
   {
     "phase": 3,
     "id": "p3_l5",
+    "numericQuiz": {"q": "Фандинг стабильно +0.01% каждые 8 часов (3 раза в сутки), дельта-нейтральная позиция. Какая это ПРОСТАЯ годовая доходность в % (без реинвестирования, только фандинг)?", "answer": 10.95, "absTol": 0.5, "unit": "%", "solution": "0.01% × 3 выплаты/день × 365 дней = 10.95% годовых — до вычета комиссий входа/выхода и периодов отрицательного фандинга (дело №019 детектива!)."},
     "title": "Дельта-нейтральные стратегии: фандинг-арбитраж как гипотеза и скрытые риски",
     "minutes": 18,
     "terms": [
@@ -9390,6 +9395,7 @@ const LESSONS = [
   {
     "phase": 4,
     "id": "p4_l6",
+    "numericQuiz": {"q": "FIFO: куплено 0.1 BTC за 300 000 ₽, затем 0.1 BTC за 400 000 ₽. Продано 0.1 BTC за 500 000 ₽. Какая налогооблагаемая прибыль по методу FIFO (в ₽)?", "answer": 200000, "tolPct": 2, "unit": "₽", "solution": "FIFO: продаётся ПЕРВЫЙ купленный лот за 300 000 ₽. Прибыль = 500 000 − 300 000 = 200 000 ₽ (а не 100 000 ₽, как при продаже «второго» лота). НДФЛ считается с этой суммы."},
     "title": "Российская специфика: P2P-гигиена, 115-ФЗ и расчет 3-НДФЛ (13–15%) по методу FIFO",
     "minutes": 19,
     "terms": [
@@ -11862,6 +11868,21 @@ const PHASE_TESTS = [
           "Walk-Forward строится на длинных исторических рядах."
         ]
       }
+    ,
+      {
+        "type": "numeric",
+        "category": "statistics",
+        "q": "N1. Стратегия: win rate 52%, средний выигрыш +2%, средний проигрыш −2%. Математическое ожидание на сделку (в %)?",
+        "answer": 0.08, "absTol": 0.02, "unit": "%",
+        "solution": "E = 0.52×(+2%) + 0.48×(−2%) = 1.04% − 0.96% = +0.08% на сделку. Положительное, но тонкое — комиссии могут его съесть."
+      },
+      {
+        "type": "numeric",
+        "category": "statistics",
+        "q": "N2. Два периода подряд: +10%, затем −10%. Итоговая доходность (в %)?",
+        "answer": -1, "absTol": 0.2, "unit": "%",
+        "solution": "1.10 × 0.90 = 0.99 → −1%. Симметричные проценты НЕ компенсируют друг друга — волатильность сама по себе «стоит» денег (variance drag)."
+      },
     ]
   },
   {
@@ -12194,6 +12215,21 @@ const PHASE_TESTS = [
           "Портфельный Шарп — стандартная институциональная метрика."
         ]
       }
+    ,
+      {
+        "type": "numeric",
+        "category": "risk",
+        "q": "N1. Полный Келли даёт f* = 20%. Какую долю капитала ставит Quarter Kelly (в %)?",
+        "answer": 5, "absTol": 0.25, "unit": "%",
+        "solution": "Quarter Kelly = f*/4 = 20%/4 = 5%. Цена страховки — лишь 43.75% роста, зато просадки сжимаются радикально."
+      },
+      {
+        "type": "numeric",
+        "category": "risk",
+        "q": "N2. Фандинг +0.03% каждые 8 часов. Сколько это в день (в %)?",
+        "answer": 0.09, "absTol": 0.01, "unit": "%",
+        "solution": "3 выплаты в сутки × 0.03% = 0.09%/день. Годовая простая ставка: ×365 ≈ 32.85% — пока фандинг не перевернётся."
+      },
     ]
   },
   {
@@ -12360,6 +12396,21 @@ const PHASE_TESTS = [
           "Попытки сомнительных переводов усугубят блокировку."
         ]
       }
+    ,
+      {
+        "type": "numeric",
+        "category": "tax",
+        "q": "N1. Куплено 0.2 BTC по 5 000 000 ₽, продано 0.2 BTC по 5 500 000 ₽. Сколько НДФЛ по ставке 13% (в ₽)?",
+        "answer": 13000, "tolPct": 2, "unit": "₽",
+        "solution": "Прибыль = 0.2 × (5 500 000 − 5 000 000) = 100 000 ₽. НДФЛ = 100 000 × 0.13 = 13 000 ₽."
+      },
+      {
+        "type": "numeric",
+        "category": "ops",
+        "q": "N2. Пинг VPS до биржи 80 мс, бот делает 50 сделок в день. Сколько секунд в день теряется на сетевой задержке (RTT = 2 × пинг)?",
+        "answer": 8, "absTol": 0.5, "unit": "с",
+        "solution": "RTT = 160 мс на сделку; 50 × 160 мс = 8 000 мс = 8 секунд в день. Для HFT это вечность — поэтому colocation решает."
+      },
     ]
   },
   {
@@ -13392,6 +13443,23 @@ function renderLessonDetail(l){
     `;
   }
 
+  // V3-A1: числовая задача с открытым вводом (Active Recall 2.0 — конструирование вместо узнавания)
+  if(l.numericQuiz){
+    const nq = l.numericQuiz;
+    html += `
+      <div class="panel" style="background:#090d1f; border:2px solid var(--acc2); border-radius:14px; padding:20px; margin:24px 0">
+        <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:10px">🧮 Задача с открытым ответом (без вариантов — посчитай сам)</div>
+        <div style="font-size:14.5px; color:var(--txt); line-height:1.55; margin-bottom:12px">${nq.q}</div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <input id="lnum_in_${l.id}" type="text" inputmode="decimal" placeholder="твой ответ" style="width:160px; background:#040714; border:1px solid var(--acc2); border-radius:8px; padding:10px 12px; color:var(--txt); font-size:15px; font-weight:700">
+          <span style="color:var(--mut); font-size:14px">${nq.unit || ''}</span>
+          <button class="btn sm" onclick="handleLessonNumeric('${l.id}')">Проверить</button>
+          <span style="font-size:11.5px; color:var(--mut)">допуск: ${nq.absTol !== undefined ? '±' + nq.absTol + ' ' + (nq.unit || '') : '±' + (nq.tolPct || 2) + '%'}</span>
+        </div>
+        <div id="lnum_fb_${l.id}" style="display:none; margin-top:12px; padding:12px 14px; border-radius:8px; font-size:13.5px; line-height:1.55"></div>
+      </div>`;
+  }
+
   // Bottom Navigation Bar
   html += `
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:28px; padding-top:20px; border-top:1px solid var(--line); flex-wrap:wrap; gap:12px">
@@ -13417,6 +13485,34 @@ function renderLessonDetail(l){
   }
 }
 
+
+// V3-A1: проверка числового ответа с допуском и эталонным решением
+window.handleLessonNumeric = function(lessonId){
+  const l = LESSONS.find(x => x.id === lessonId);
+  if(!l || !l.numericQuiz) return;
+  const nq = l.numericQuiz;
+  const inp = document.getElementById('lnum_in_' + lessonId);
+  const fb = document.getElementById('lnum_fb_' + lessonId);
+  if(!inp || !fb) return;
+  const val = parseFloat(String(inp.value).replace(/\s/g, '').replace(',', '.'));
+  fb.style.display = 'block';
+  if(isNaN(val)){
+    fb.style.background = 'rgba(234,179,8,.12)'; fb.style.border = '1px solid var(--warn)';
+    fb.innerHTML = '<b>Введи число</b> — например, ' + nq.answer + '.';
+    return;
+  }
+  const tol = nq.absTol !== undefined ? nq.absTol : Math.abs(nq.answer) * (nq.tolPct || 2) / 100;
+  if(Math.abs(val - nq.answer) <= tol){
+    inp.disabled = true;
+    fb.style.background = 'rgba(34,197,94,.12)'; fb.style.border = '1px solid var(--ok)';
+    fb.innerHTML = '<b>✅ Верно (' + val + (nq.unit ? ' ' + nq.unit : '') + ').</b><br>📐 Эталонное решение: ' + nq.solution;
+    addFundCapital(8000, 30, 'Решена числовая задача без вариантов');
+  } else {
+    fb.style.background = 'rgba(239,68,68,.12)'; fb.style.border = '1px solid var(--bad)';
+    fb.innerHTML = '<b>❌ Не сходится (' + val + ').</b> Пересчитай шаг за шагом — и после второй попытки сверься с эталоном.<br><button class="btn sm ghost" style="margin-top:8px" onclick="document.getElementById(\'lnum_fb_' + lessonId + '\').innerHTML += \'<div style=\\\'margin-top:8px;border-top:1px dashed var(--line);padding-top:8px\\\'>📐 <b>Эталон:</b> ' + nq.solution.replace(/'/g, '’') + '</div>\'">Показать эталонное решение</button>' +
+      (typeof window.offerMistakeClassification === 'function' ? window.offerMistakeClassification('numeric:' + lessonId) : '');
+  }
+};
 
 function setLessonLevelTab(lessonId, tabName){
   activeLessonLevelTab[lessonId] = tabName;
@@ -16056,6 +16152,22 @@ function renderPhaseTestView(phaseNum){
   `;
 
   (window._ptView[phaseNum] || test.questions).forEach((q, qIdx)=>{
+    // V3-A1: числовые вопросы с открытым вводом — отдельный рендер
+    if(q.type === 'numeric'){
+      html += `
+      <div class="lblock" style="background:#090d1f; border:1px solid var(--acc2); border-radius:12px; padding:16px; margin-bottom:16px">
+        <div style="font-weight:700; font-size:14.5px; color:var(--txt); margin-bottom:6px; line-height:1.5">${q.q}</div>
+        <div style="font-size:11.5px; color:var(--acc2); margin-bottom:10px">🧮 Открытый ввод — вариантов нет, посчитай сам (допуск ${q.absTol !== undefined ? '±' + q.absTol + ' ' + (q.unit || '') : '±' + (q.tolPct || 2) + '%'})</div>
+        <div id="ptest_${phaseNum}_${qIdx}" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <input id="pnum_in_${phaseNum}_${qIdx}" type="text" inputmode="decimal" placeholder="число" style="width:150px; background:#040714; border:1px solid var(--acc2); border-radius:8px; padding:9px 12px; color:var(--txt); font-size:14.5px; font-weight:700">
+          <span style="color:var(--mut); font-size:13.5px">${q.unit || ''}</span>
+          <button class="btn sm" onclick="checkPhaseTestNumeric(${phaseNum}, ${qIdx})">Проверить</button>
+        </div>
+        <div id="ptest_exp_${phaseNum}_${qIdx}" style="display:none; margin-top:10px; font-size:13px"></div>
+      </div>
+      `;
+      return;
+    }
     html += `
       <div class="lblock" style="background:#090d1f; border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px">
         <div style="font-weight:700; font-size:14.5px; color:var(--txt); margin-bottom:12px; line-height:1.5">${q.q}</div>
@@ -16101,6 +16213,40 @@ function checkPhaseTestAnswer(phaseNum, qIdx, optIdx){
     expBox.innerHTML = `<b>Разбор варианта:</b> ${q.explain[optIdx]}`;
   }
 }
+
+// V3-A1: проверка числового вопроса аттестации (скрытые .ans.ok/.ans.bad — совместимость со скорингом)
+window.checkPhaseTestNumeric = function(phaseNum, qIdx){
+  const test = phaseNum === 6 ? CAPSTONE_EXAM : (typeof PHASE_TESTS !== 'undefined' ? PHASE_TESTS.find(t=>t.phase===phaseNum) : null);
+  if(!test) return;
+  const q = (window._ptView && window._ptView[phaseNum]) ? window._ptView[phaseNum][qIdx] : test.questions[qIdx];
+  if(!q || q.type !== 'numeric') return;
+  const container = document.getElementById(`ptest_${phaseNum}_${qIdx}`);
+  const expBox = document.getElementById(`ptest_exp_${phaseNum}_${qIdx}`);
+  const inp = document.getElementById(`pnum_in_${phaseNum}_${qIdx}`);
+  if(!container || !inp) return;
+  const val = parseFloat(String(inp.value).replace(/\s/g, '').replace(',', '.'));
+  if(isNaN(val)){ showToast('Введи число — без вариантов, только расчёт.', '🧮'); return; }
+  const tol = q.absTol !== undefined ? q.absTol : Math.abs(q.answer) * (q.tolPct || 2) / 100;
+  const ok = Math.abs(val - q.answer) <= tol;
+  inp.disabled = true;
+  const marker = document.createElement('span');
+  marker.className = 'ans ' + (ok ? 'ok' : 'bad');
+  marker.style.display = 'none';
+  container.appendChild(marker);
+  const checkBtn = container.querySelector('button');
+  if(checkBtn) checkBtn.disabled = true;
+  if(expBox){
+    expBox.style.display = 'block';
+    expBox.style.background = ok ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)';
+    expBox.style.borderLeft = '3px solid ' + (ok ? 'var(--ok)' : 'var(--bad)');
+    expBox.style.borderRadius = '6px';
+    expBox.style.padding = '8px 10px';
+    expBox.innerHTML = (ok ? '✅ <b>Верно!</b> ' : '❌ <b>Неверно (' + val + ').</b> ') + '📐 <b>Эталон:</b> ' + (q.solution || '');
+  }
+  if(!ok && typeof window.offerMistakeClassification === 'function'){
+    window.offerMistakeClassification('ptest:' + phaseNum + ':' + qIdx);
+  }
+};
 
 function calcPhaseTestResult(phaseNum){
   const test = phaseNum === 6 ? CAPSTONE_EXAM : (typeof PHASE_TESTS !== 'undefined' ? PHASE_TESTS.find(t=>t.phase===phaseNum) : null);
