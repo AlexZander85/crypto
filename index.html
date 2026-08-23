@@ -36326,7 +36326,7 @@ function newsSyncSubView(){
     const market = document.getElementById('live_market_col');
     const coachCol = document.getElementById('live_coach_col');
     if(market) market.innerHTML = '';
-    if(coachCol) coachCol.innerHTML = renderNewsView();
+    if(coachCol){ coachCol.innerHTML = window.renderNewsView(); }
     const nav = document.getElementById('live_sub_nav');
     if(nav) nav.innerHTML = newsSubsHTML('news');
   } else {
@@ -36380,6 +36380,220 @@ window.newsWorldToggle = newsWorldToggle;
     NEWS.newsUseEducational();
   };
   NEWS.subscribe(() => { if(sessionStorage.getItem('cn_live_sub') === 'news') newsSyncSubView(); });
+})();
+
+/* =========================================================================
+   N3 · Упражнения: «Угадай тип» + «История знает ответ» + «Анти-FUD»
+   Ответы → cn_news_stats; Байес пополняется; Brier — в cn_brier (coach=true)
+   ========================================================================= */
+
+/* ---------- cn_news_stats ---------- */
+function newsStatsLoad(){
+  try{ return JSON.parse(localStorage.getItem('cn_news_stats') || '{"guess":[],"history":[],"antifud":[]}'); }catch(e){ return { guess: [], history: [], antifud: [] }; }
+}
+function newsStatsSave(st){
+  try{ localStorage.setItem('cn_news_stats', JSON.stringify(st)); }catch(e){}
+}
+function newsBayesAdd(title, type){
+  try{
+    const wc = newsWordCounts();
+    title.toLowerCase().replace(/ё/g, 'е').split(/[^a-zа-яё0-9]+/i).forEach(w => {
+      if(!w || w.length < 4) return;
+      if(!wc[w]) wc[w] = {};
+      if(!wc[w][type]) wc[w][type] = { n: 0 };
+      wc[w][type].n++;
+    });
+    localStorage.setItem('cn_news_word_counts', JSON.stringify(wc));
+  }catch(e){}
+}
+
+/* ---------- режим «Угадай тип» ---------- */
+let newsGuessCurrent = null;
+function newsGuessHTML(){
+  const items = NEWS.items.length ? NEWS.items : NEWS.eduItems();
+  const idx = Math.floor(Date.now() / 36e5) % items.length; // ротация по часу
+  newsGuessCurrent = items[idx];
+  const st = newsStatsLoad();
+  const done = st.guess.length;
+  const hit = st.guess.filter(g => g.ok).length;
+  const types = Object.keys(NEWS_TYPES);
+  return '<div style="background:var(--card);border:1px solid var(--acc2);border-radius:12px;padding:14px 16px;margin-bottom:14px">' +
+    '<div style="font-weight:800;font-size:13.5px;color:var(--txt);margin-bottom:4px">🎯 Угадай тип новости</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">Определи категорию заголовка ДО раскрытия. Точность по типам — карта твоих слепых зон. Система учится на твоих ответах.</div>' +
+    (done ? '<div style="font-size:11px;color:var(--acc2);margin-bottom:8px">Точность: ' + hit + '/' + done + ' (' + Math.round(hit / done * 100) + '%)</div>' : '') +
+    '<div style="font-size:13px;color:var(--txt);line-height:1.55;padding:10px 12px;background:#040714;border-radius:8px;margin-bottom:10px">«' + newsGuessCurrent.title + '»</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px">' +
+      types.map(t => '<button class="btn sm ghost" style="font-size:11px" onclick="newsGuessAnswer(\'' + t + '\')">' + NEWS_TYPES[t].icon + ' ' + NEWS_TYPES[t].ru + '</button>').join('') +
+    '</div>' +
+    '<div id="news_guess_fb" style="margin-top:10px"></div>' +
+  '</div>';
+}
+window.newsGuessHTML = newsGuessHTML;
+
+function newsGuessAnswer(picked){
+  if(!newsGuessCurrent) return;
+  const cls = classifyNewsType(newsGuessCurrent.title + ' ' + (newsGuessCurrent.snippet || ''), newsGuessCurrent.categories);
+  const truth = cls.type || 'regulatory';
+  const ok = picked === truth;
+  const st = newsStatsLoad();
+  st.guess.push({ t: Date.now(), title: newsGuessCurrent.title.slice(0, 80), picked: picked, truth: truth, ok: ok });
+  newsStatsSave(st);
+  newsBayesAdd(newsGuessCurrent.title, truth);
+  const fb = document.getElementById('news_guess_fb');
+  if(fb){
+    fb.innerHTML =
+      '<div style="font-size:12.5px;line-height:1.55;color:' + (ok ? 'var(--ok)' : 'var(--bad)') + ';margin-bottom:8px">' +
+        (ok ? '✅ Верно: ' : '❌ Эталон: ') + NEWS_TYPES[truth].icon + ' ' + NEWS_TYPES[truth].ru + ' (уверенность системы: ' + cls.confidence + '%)' +
+      '</div>' +
+      newsCoachCard(newsGuessCurrent) +
+      '<button class="btn sm" onclick="renderLiveView()">Следующая →</button>';
+  }
+}
+window.newsGuessAnswer = newsGuessAnswer;
+
+/* ---------- режим «История знает ответ» ---------- */
+const NEWS_HISTORY_CASES = [
+  { title: 'FTX объявил о банкротстве', date: '11.11.2022', type: 'security', before: 'BTC: ~$17 000. FTT обрушился на 90% за дни.', after: 'BTC упал до ~$15 500 (−9% за неделю), стейблкоины отошли от $1, биржи начали публиковать proof-of-reserves.', lesson: 'Даже зная про банкротство, направление всего рынка угадать сложно: падение было не мгновенным, а волнами неделями.' },
+  { title: 'SEC одобрила спотовые Bitcoin-ETF', date: '10.01.2024', type: 'regulatory', before: 'BTC: ~$46 000. Рынок ждал решения месяцами.', after: 'BTC сначала вырос до $49 000, затем за неделю упал до $41 500 («продай на новости»), и лишь через месяцы ушёл к $70 000+.', lesson: 'Хорошая новость ≠ рост сразу: «покупай на слухах, продавай на факте» работает чаще, чем логика новичка.' },
+  { title: 'USDC потерял привязку к доллару (SVB)', date: '11.03.2023', type: 'security', before: 'USDC — второй стейблкоин, «безопасная гавань».', after: 'USDC упал до $0.88 (−12%), дегены в панике меняли на USDT; через 3 дня привязка восстановилась после гарантий ФРС.', lesson: 'Стейблкоин — не банковский вклад: «стабильность» держится на качестве резервов и доверии, а не на законе.' },
+  { title: 'Четвёртый халвинг Биткоина', date: '20.04.2024', type: 'tech', before: 'BTC: ~$64 000. Все ждали ралли после халвинга.', after: 'BTC болтался $58 000–72 000 ещё 4 месяца. Ралли случилось, но в ноябре, и катализатором стали выборы в США, а не сам халвинг.', lesson: 'Халвинг меняет предложение на годы вперёд, а не цену в этот четверг: рынок заранее включает известные события в цену.' },
+  { title: 'Взлом моста Ronin: украдено $625 млн', date: '29.03.2022', type: 'security', before: 'Крупнейший DeFi-взлом на тот момент.', after: 'Токен AXS упал на 8% за день, RON — на 22%. BTC почти не заметил. Через неделю рынок забыл — кроме жертв протокола.', lesson: 'Взлом бьёт точечно по протоколу, но почти не двигает рынок в целом: «криптовалюта» ≠ «всё падает вместе».' },
+  { title: 'Сальвадор сделал BTC официальной валютой', date: '07.09.2021', type: 'regulatory', before: 'Первая страна в мире. Все ждали «принятие = рост».', after: 'BTC упал на 10% в тот же день (флеш-крах до $43 000). Ликвидации составили $3 млрд за час.', lesson: '«Принятие государством» — не катализатор мгновенного роста: рынок смотрит на ликвидность и левередж, а не на флаги.' },
+  { title: 'Terra/LUNA начала крах (depeg UST)', date: '09.05.2022', type: 'security', before: 'UST — «стабильный» алгоритмический стейблкоин, TVL $18 млрд.', after: 'LUNA упала с $60 до $0.0001 за 4 дня (−99.99%). UST потерял $1 навсегда. Общий рынок потерял $400 млрд за неделю.', lesson: 'Алгоритмическая «стабильность» без избыточного резерва — это банк-ран, записанный в код: ловушка была видна в механике заранее.' },
+  { title: 'BlackRock подала заявку на спотовый Bitcoin-ETF', date: '15.06.2023', type: 'market', before: 'BTC: ~$25 000. Рынок в депрессии после FTX.', after: 'BTC вырос на 20% за неделю (до $30 000). Заявка ≠ одобрение, но сигнал крупнейшего управляющего мира сместил настроения.', lesson: 'Одна заявка крупного игрока двигает рынок сильнее десяти реальных апгрейдов: деньги реагируют на ожидание доступа капитала.' },
+  { title: 'Китай объявил транзакции с криптовалютой незаконными', date: '24.09.2021', type: 'regulatory', before: 'Новый запрет из Китая — уже не первый.', after: 'BTC упал на 9% за день, но через 3 недели обновил исторический максимум ($67 000).', lesson: 'Повторные запреты из одного источника теряют силу: рынок выучил, что «запрет Китая» не равен концу Биткоина.' },
+  { title: 'SEC подала иск против Binance и Coinbase', date: '05.06.2023', type: 'regulatory', before: 'Два исключительных иска за 2 дня подряд.', after: 'BNB упал на 9%, BTC — на 5%. Через 6 месяцев BTC вырос в 1.7 раза (иск ≠ запрет).', lesson: 'Даже самые громкие регуляторные удары могут быть шумом на пути к развязке: цена боялась неопределённости, а не самой статьи.' }
+];
+window.NEWS_HISTORY_CASES = NEWS_HISTORY_CASES;
+
+let newsHistoryCurrent = null;
+function newsHistoryHTML(){
+  const idx = Math.floor(Date.now() / 864e5) % NEWS_HISTORY_CASES.length;
+  newsHistoryCurrent = NEWS_HISTORY_CASES[idx];
+  const st = newsStatsLoad();
+  const done = st.history.length;
+  const hit = st.history.filter(h => Math.abs(h.p - (h.outcome ? 1 : 0)) < 0.25).length;
+  return '<div style="background:var(--card);border:1px solid var(--warn);border-radius:12px;padding:14px 16px;margin-bottom:14px">' +
+    '<div style="font-weight:800;font-size:13.5px;color:var(--txt);margin-bottom:4px">📜 История знает ответ</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">Архивный кейс. Спорим, ты уверен в исходе сильнее, чем реальность? Прогноз → факт → Brier-калибровка.</div>' +
+    (done ? '<div style="font-size:11px;color:var(--warn);margin-bottom:8px">Твоя калибровка на истории: ' + hit + '/' + done + '</div>' : '') +
+    '<div style="font-size:13px;color:var(--txt);line-height:1.55;padding:10px 12px;background:#040714;border-radius:8px;margin-bottom:6px">«' + newsHistoryCurrent.title + '»</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">' + newsHistoryCurrent.date + ' · ' + newsHistoryCurrent.before + '</div>' +
+    '<div id="news_hist_q">' +
+      '<div style="font-size:12.5px;color:var(--txt);margin-bottom:6px">Как отреагировал рынок через неделю?</div>' +
+      '<button class="btn sm ghost" style="margin-right:6px" onclick="newsHistoryOutcome(true)">📈 Рос</button>' +
+      '<button class="btn sm ghost" onclick="newsHistoryOutcome(false)">📉 Падал или боковик</button>' +
+    '</div>' +
+    '<div id="news_hist_fb"></div>' +
+  '</div>';
+}
+window.newsHistoryHTML = newsHistoryHTML;
+
+function newsHistoryOutcome(isUp){
+  const q = document.getElementById('news_hist_q');
+  const fb = document.getElementById('news_hist_fb');
+  if(!q || !fb) return;
+  q.innerHTML = '<div style="font-size:12.5px;color:var(--txt)">Ты выбрал: <b>' + (isUp ? '📈 Рос' : '📉 Падал') + '</b>. Насколько уверен? <b id="news_hist_p_lbl" style="color:var(--acc2)">75%</b></div>' +
+    '<input type="range" id="news_hist_p" min="50" max="100" step="5" value="75" style="width:100%" oninput="document.getElementById(\'news_hist_p_lbl\').textContent=this.value+\'%\'">' +
+    '<button class="btn sm" style="margin-top:6px" onclick="newsHistoryCommit(' + isUp + ')">Показать факт</button>';
+  fb.innerHTML = '';
+}
+window.newsHistoryOutcome = newsHistoryOutcome;
+
+function newsHistoryCommit(predictedUp){
+  if(!newsHistoryCurrent) return;
+  const p = +(document.getElementById('news_hist_p') || { value: 75 }).value / 100;
+  // эталон: была ли неделя растущей? извлекаем из after
+  const after = newsHistoryCurrent.after.toLowerCase();
+  const wasUp = after.includes('вырос') || after.includes('обновил') || after.includes('ушёл к') || after.includes('восстановил');
+  const truthUp = wasUp && !after.includes('упал');
+  const correct = predictedUp === truthUp;
+  const st = newsStatsLoad();
+  st.history.push({ t: Date.now(), case: newsHistoryCurrent.title.slice(0, 50), p: p, predictedUp: predictedUp, truthUp: truthUp, outcome: correct });
+  newsStatsSave(st);
+  // Brier — в общую калибровку с пометкой coach
+  if(typeof coachBrierPush === 'function') coachBrierPush(p, correct);
+  document.getElementById('news_hist_q').innerHTML = '';
+  document.getElementById('news_hist_fb').innerHTML =
+    '<div style="font-size:12.5px;line-height:1.6;color:' + (correct ? 'var(--ok)' : 'var(--bad)') + ';margin-top:10px">' +
+      (correct ? '✅ Верно. ' : '❌ Факт другой. ') + 'Твоя уверенность была ' + Math.round(p * 100) + '%; Brier: ' + Math.pow(p - (correct ? 1 : 0), 2).toFixed(3) + '.</div>' +
+    '<div style="font-size:12.5px;color:var(--txt);line-height:1.6;margin-top:8px;padding:10px 12px;background:#040714;border-radius:8px">' +
+      '<b>Факт:</b> ' + newsHistoryCurrent.after + '</div>' +
+    '<div style="font-size:12px;color:var(--warn);line-height:1.6;margin-top:8px;border-left:3px solid var(--warn);padding-left:10px">' +
+      '<b>Вывод:</b> ' + newsHistoryCurrent.lesson + '</div>' +
+    '<button class="btn sm" style="margin-top:10px" onclick="renderLiveView()">Следующий кейс →</button>';
+}
+window.newsHistoryCommit = newsHistoryCommit;
+
+/* ---------- режим «Анти-FUD / анти-хайп» ---------- */
+const NEWS_ANTIFUD = [
+  { pair: [
+    { source: 'Канал A', title: 'КРАХ! Биткоин ОБРУШИЛСЯ на 12% — это конец, всё на ноль!' },
+    { source: 'Канал B', title: 'BTC снизился на 12% за сутки: ликвидации $2 млрд, индекс страха и жадности упал до 22' }
+  ], truth: 'B', markers: ['CAPS', 'восклицательные знаки', '«это конец»', 'отсутствие цифр контекста'], lesson: 'Эмоциональная подача усиливает восприятие события в разы: одно и то же движение описано как катастрофа и как статистика.' },
+  { pair: [
+    { source: 'Канал A', title: 'Партнёрство с гигантом: миллионы новых пользователей уже скоро!' },
+    { source: 'Канал B', title: 'Протокол подписал пилотное соглашение: тест на 50 000 аккаунтах до конца года' }
+  ], truth: 'B', markers: ['«миллионы» без источника', '«уже скоро» вместо даты', 'отсутствие деталей'], lesson: 'Маркетинговая вода (партнёрства, «миллионы») — не данные: проверяй цифры, даты, независимый аудит.' },
+  { pair: [
+    { source: 'Канал A', title: 'БЕГИТЕ! Регулятор ЗАПРЕЩАЕТ крипту — выводите всё СРОЧНО' },
+    { source: 'Канал B', title: 'Регулятор предложил ограничить рекламу деривативов для розницы: консультации до 30 числа' }
+  ], truth: 'B', markers: ['паника и императив', '«СРОЧНО»', 'обобщение «запрещает всё»'], lesson: 'FUD работает на спешке: реальные регуляторные документы всегда содержат сроки, процедуры и конкретику.' }
+];
+window.NEWS_ANTIFUD = NEWS_ANTIFUD;
+
+let newsAntifudCurrent = null;
+function newsAntifudHTML(){
+  const idx = Math.floor(Date.now() / 864e5) % NEWS_ANTIFUD.length;
+  newsAntifudCurrent = NEWS_ANTIFUD[idx];
+  const st = newsStatsLoad();
+  const done = st.antifud.filter(a => a.ok).length;
+  return '<div style="background:var(--card);border:1px solid var(--bad);border-radius:12px;padding:14px 16px;margin-bottom:14px">' +
+    '<div style="font-weight:800;font-size:13.5px;color:var(--txt);margin-bottom:4px">🛡️ Анти-FUD / анти-хайп</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">Два заголовка об одном событии. Один — эмоция, второй — факты. Найди фактологический и назови маркеры манипуляции.</div>' +
+    (done ? '<div style="font-size:11px;color:var(--ok);margin-bottom:8px">Найдено верно: ' + done + '</div>' : '') +
+    newsAntifudCurrent.pair.map((p, i) =>
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55;padding:10px 12px;background:#040714;border-radius:8px;margin-bottom:6px">' +
+        '<div style="font-size:10px;color:var(--mut);margin-bottom:3px">' + p.source + '</div>«' + p.title + '»</div>'
+    ).join('') +
+    '<div style="display:flex;gap:8px;margin-bottom:8px">' +
+      '<button class="btn sm ghost" onclick="newsAntifudAnswer(\'A\')">A — фактологический</button>' +
+      '<button class="btn sm ghost" onclick="newsAntifudAnswer(\'B\')">B — фактологический</button>' +
+    '</div>' +
+    '<div id="news_antifud_fb"></div>' +
+  '</div>';
+}
+window.newsAntifudHTML = newsAntifudHTML;
+
+function newsAntifudAnswer(picked){
+  if(!newsAntifudCurrent) return;
+  const ok = picked === newsAntifudCurrent.truth;
+  const st = newsStatsLoad();
+  st.antifud.push({ t: Date.now(), ok: ok });
+  newsStatsSave(st);
+  document.getElementById('news_antifud_fb').innerHTML =
+    '<div style="font-size:12.5px;line-height:1.6;color:' + (ok ? 'var(--ok)' : 'var(--bad)') + ';margin-bottom:8px">' +
+      (ok ? '✅ Верно: фактологический — ' : '❌ Фактологический — ') + newsAntifudCurrent.truth + '.</div>' +
+    '<div style="font-size:12px;color:var(--txt);line-height:1.6">Маркеры манипуляции в другом: ' + newsAntifudCurrent.markers.join(' · ') + '.</div>' +
+    '<div style="font-size:12px;color:var(--warn);margin-top:6px;border-left:3px solid var(--warn);padding-left:10px">' + newsAntifudCurrent.lesson + '</div>';
+}
+window.newsAntifudAnswer = newsAntifudAnswer;
+
+/* ---------- режимы в ленту: блок упражнений ---------- */
+function newsExercisesHTML(){
+  return '<div style="margin-top:20px;border-top:1px solid var(--line);padding-top:14px">' +
+    '<div style="font-weight:800;font-size:14px;color:var(--txt);margin-bottom:12px">🧠 Упражнения</div>' +
+    newsGuessHTML() + newsHistoryHTML() + newsAntifudHTML() +
+  '</div>';
+}
+window.newsExercisesHTML = newsExercisesHTML;
+
+/* патчим renderNewsView: добавляем упражнения в конец ленты */
+(function patchNewsViewForExercises(){
+  const prev = window.renderNewsView;
+  window.renderNewsView = function(){
+    return prev() + newsExercisesHTML();
+  };
 })();
 /*__LIVE_APPEND__*/
 })();
