@@ -13957,6 +13957,22 @@ window.runDefiSim = function(){
     <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Безубыток: APY ≥ <b style="color:var(--warn)">${breakevenApy.toFixed(1)}%</b> при таком движении цены. Волатильные пары требуют заметно больше APY — это главный скрытый риск DeFi-фарминга.</div>`;
 };
 
+// V3-C1: гейт чек-листа перед первой сделкой
+window.preTradeChecklistOk = function(){
+  const cbs = document.querySelectorAll('#precheck_items .precheck_cb');
+  if(!cbs.length) return true;
+  const all = [...cbs].every(cb => cb.checked);
+  const st = document.getElementById('precheck_status');
+  if(st){
+    st.textContent = all ? '✅ Чек-лист пройден — можно исполнять.' : '⚠️ Отметь все пункты чек-листа перед сделкой.';
+    st.style.color = all ? 'var(--ok)' : 'var(--warn)';
+  }
+  return all;
+};
+document.addEventListener('change', (e) => {
+  if(e.target && e.target.classList && e.target.classList.contains('precheck_cb')) window.preTradeChecklistOk();
+});
+
 function filterSimulators(phase, btn){
   if(btn){
     const container = btn.parentElement || document.getElementById('sim_phase_chips');
@@ -23378,12 +23394,23 @@ if(typeof BOSS_SCENARIOS !== 'undefined'){
       '<div class="sim-controls">' +
         '<div class="sim-input-group"><label>Сумма ($10–500):</label><input type="number" id="ft_amount" value="50" min="10" max="500" step="10"></div>' +
       '</div>' +
+      '<div style="background:rgba(34,197,94,.06); border:1.5px solid var(--ok); border-radius:12px; padding:14px 16px; margin:12px 0">' +
+        '<div style="font-size:11.5px; font-weight:800; color:var(--ok); text-transform:uppercase; margin-bottom:8px">✅ Чек-лист перед сделкой (V3-C1)</div>' +
+        '<div id="precheck_items" style="display:flex; flex-direction:column; gap:6px; font-size:12.5px; color:var(--txt)">' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Я знаю размер позиции и риск на сделку (не больше 1–2% капитала)</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Я проверил ликвидность и спред (стакан не «дырявый»)</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> У меня есть план выхода: стоп-лосс и тейк-профит до входа</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Я учёл комиссии и проскальзывание (round-trip)</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Это не импульс: я могу вслух объяснить, почему вхожу</label>' +
+        '</div>' +
+        '<div id="precheck_status" style="font-size:11.5px; color:var(--mut); margin-top:8px">Отметь все пункты — это защита от импульсивных сделок.</div>' +
+      '</div>' +
       '<button class="btn" id="ft_open_btn">📈 Купить BTC по рынку</button>' +
       '<div id="ft_result" style="margin-top:16px"></div>' +
     '</div>');
   const ms=$id('meme_start_btn'); if(ms) ms.addEventListener('click', ()=>startMemeSim());
   const md=$id('meme_dump'); if(md) md.addEventListener('input', ()=>{ const v=$id('meme_dump_val'); if(v) v.textContent=md.value+'%'; });
-  const fo=$id('ft_open_btn'); if(fo) fo.addEventListener('click', window.P1_FT.open);
+  const fo=$id('ft_open_btn'); if(fo) fo.addEventListener('click', () => { if(window.preTradeChecklistOk()) window.P1_FT.open(); });
 })();
 
 (function injectRuble2BtcSim(){
