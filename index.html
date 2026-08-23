@@ -1243,6 +1243,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 
     <div class="sim-result" id="ob_result_box" style="margin-top:16px">
       <div style="font-weight:700; margin-bottom:8px">Состояние стакана (Order Book BTC/USDT):</div>
+      <canvas id="ob_depth_canvas" width="640" height="180" style="width:100%; border-radius:8px; background:#040714; margin-bottom:10px"></canvas>
       <table class="order-book-table">
         <thead>
           <tr><th>Объем (BTC)</th><th>Цена ($)</th><th>Тип</th><th>Глубина</th><th>Slippage (bps)</th></tr>
@@ -1294,6 +1295,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
 
     <div class="sim-result" id="liq_output"></div>
+    <div id="liq_gauge_wrap" style="margin-top:14px"></div>
   </div>
 
   <!-- SIM 3: Funding Rate Calculator -->
@@ -27881,6 +27883,129 @@ function spinQuestRoulette(){
     return prev(widgetId);
   };
 })();
+
+/* ---------- V4-C4: gauge «расстояние до ликвидации» (апгрейд sim_liq) ---------- */
+const _origCalcLiqV4 = calcLiquidation;
+calcLiquidation = function(){
+  _origCalcLiqV4.apply(this, arguments);
+  try{ renderLiqGauge(); }catch(e){}
+};
+function renderLiqGauge(){
+  const wrap = document.getElementById('liq_gauge_wrap');
+  if(!wrap) return;
+  const margin = parseFloat(document.getElementById('liq_margin')?.value) || 0;
+  const lev = parseFloat(document.getElementById('liq_lev')?.value) || 1;
+  const entry = parseFloat(document.getElementById('liq_entry')?.value) || 0;
+  const side = document.getElementById('liq_dir')?.value || 'long';
+  const mmr = (parseFloat(document.getElementById('liq_mmr')?.value) || 0.5) / 100;
+  if(margin <= 0 || entry <= 0){ wrap.innerHTML = ''; return; }
+  const liqPrice = side === 'long' ? entry * (1 - 1/lev + mmr) : entry * (1 + 1/lev - mmr);
+  if(!window._liqCurPrice) window._liqCurPrice = entry;
+  if(Math.abs(window._liqCurPrice - entry) / entry > 0.5) window._liqCurPrice = entry;
+  const cur = window._liqCurPrice;
+  // здоровье позиции: 100% при цене входа, 0% при цене ликвидации
+  let health;
+  if(side === 'long') health = (cur - liqPrice) / (entry - liqPrice);
+  else health = (liqPrice - cur) / (liqPrice - entry);
+  health = Math.max(0, Math.min(1, health));
+  const hpct = Math.round(health * 100);
+  const col = hpct > 50 ? '#22c55e' : hpct > 20 ? '#eab308' : '#ef4444';
+  const ang = Math.PI * (1 - health); // 0 (лево, 0%) .. PI (право, 100%)
+  const nx = 110 + 80 * Math.cos(ang), ny = 105 - 80 * Math.sin(ang);
+  const distPct = side === 'long' ? ((cur - liqPrice) / cur * 100) : ((liqPrice - cur) / cur * 100);
+  const liquidated = side === 'long' ? cur <= liqPrice : cur >= liqPrice;
+  wrap.innerHTML = `
+  <div style="background:#040714; border:1px solid var(--line); border-radius:12px; padding:14px 16px">
+    <div style="font-size:12px; font-weight:800; color:var(--mut); text-transform:uppercase; margin-bottom:8px">🧭 Спидометр маржи: расстояние до ликвидации</div>
+    <div style="display:flex; gap:18px; align-items:center; flex-wrap:wrap">
+      <svg width="220" height="120" viewBox="0 0 220 120">
+        <path d="M 20 105 A 90 90 0 0 1 200 105" fill="none" stroke="#26304a" stroke-width="14" stroke-linecap="round"/>
+        <path d="M 20 105 A 90 90 0 0 1 65 27" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round" opacity=".8"/>
+        <path d="M 65 27 A 90 90 0 0 1 110 15" fill="none" stroke="#eab308" stroke-width="14" opacity=".8"/>
+        <path d="M 110 15 A 90 90 0 0 1 200 105" fill="none" stroke="#22c55e" stroke-width="14" stroke-linecap="round" opacity=".8"/>
+        <line x1="110" y1="105" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="${col}" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="110" cy="105" r="7" fill="${col}"/>
+        <text x="24" y="118" font-size="10" fill="#ef4444">0%</text>
+        <text x="188" y="118" font-size="10" fill="#22c55e">100%</text>
+      </svg>
+      <div style="flex:1; min-width:200px">
+        <div style="font-size:26px; font-weight:900; color:${col}">${liquidated ? '💥 LIQUIDATED' : hpct + '%'}</div>
+        <div style="font-size:12.5px; color:var(--mut); margin:4px 0 10px">${liquidated
+          ? 'Позиция уничтожена: цена пересекла уровень ликвидации $' + liqPrice.toFixed(0)
+          : 'До ликвидации ($' + liqPrice.toFixed(0) + '): <b style="color:var(--txt)">' + distPct.toFixed(2) + '%</b> цены'}</div>
+        <label style="font-size:12px; color:var(--mut)">Текущая цена: <b style="color:var(--acc2)">$${Math.round(cur).toLocaleString('en-US')}</b><br>
+        <input type="range" min="${Math.round(side === 'long' ? liqPrice * 0.98 : entry * 0.7)}" max="${Math.round(side === 'long' ? entry * 1.3 : liqPrice * 1.02)}" step="10" value="${Math.round(cur)}" style="width:100%" oninput="window._liqCurPrice=+this.value; renderLiqGauge()"></label>
+      </div>
+    </div>
+    <div style="font-size:11.5px; color:var(--mut); margin-top:6px">Подвигай цену к линии ликвидации: стрелка уходит в красную зону. Плечо x${lev} означает, что хода в ${(100/lev).toFixed(1)}% против позиции достаточно для гибели маржи.</div>
+  </div>`;
+}
+
+/* ---------- V4-C5: depth-chart (апгрейд sim_ob) ---------- */
+const _origRenderObTableV4 = renderObTable;
+renderObTable = function(){
+  _origRenderObTableV4.apply(this, arguments);
+  try{ renderObDepthChart(); }catch(e){}
+};
+function renderObDepthChart(){
+  const cv = document.getElementById('ob_depth_canvas');
+  if(!cv || typeof orderBookState === 'undefined') return;
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  ctx.clearRect(0, 0, w, h);
+  const asks = orderBookState.asks.slice().sort((a,b) => a.price - b.price);
+  const bids = orderBookState.bids.slice().sort((a,b) => b.price - a.price);
+  if(!asks.length && !bids.length) return;
+  const bestAsk = asks.length ? asks[0].price : null;
+  const bestBid = bids.length ? bids[0].price : null;
+  const mid = (bestAsk && bestBid) ? (bestAsk + bestBid) / 2 : (bestAsk || bestBid);
+  const allPrices = asks.map(a => a.price).concat(bids.map(b => b.price));
+  const pMin = Math.min(...allPrices), pMax = Math.max(...allPrices);
+  const pad = (pMax - pMin) * 0.06 || 1;
+  const x = p => ((p - pMin + pad) / (pMax - pMin + 2 * pad)) * w;
+  const maxCum = Math.max(
+    asks.reduce((s, a) => s + a.qty, 0),
+    bids.reduce((s, b) => s + b.qty, 0), 0.001);
+  const y = v => h - (v / maxCum) * (h - 24);
+  // bids: кумулятив от центра влево
+  let cum = 0;
+  ctx.beginPath();
+  ctx.moveTo(x(bestBid), h);
+  bids.forEach(b => { cum += b.qty; ctx.lineTo(x(b.price), y(cum)); });
+  if(bids.length) ctx.lineTo(x(bids[bids.length-1].price) - 8, y(cum));
+  ctx.lineTo(x(bids.length ? bids[bids.length-1].price : pMin) - 8, h);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(34,197,94,.28)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgb(34,197,94)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  // asks: кумулятив от центра вправо
+  cum = 0;
+  ctx.beginPath();
+  ctx.moveTo(x(bestAsk), h);
+  asks.forEach(a => { cum += a.qty; ctx.lineTo(x(a.price), y(cum)); });
+  if(asks.length) ctx.lineTo(x(asks[asks.length-1].price) + 8, y(cum));
+  ctx.lineTo(x(asks.length ? asks[asks.length-1].price : pMax) + 8, h);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(239,68,68,.28)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgb(239,68,68)';
+  ctx.stroke();
+  // mid price line
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(x(mid), 0); ctx.lineTo(x(mid), h);
+  ctx.strokeStyle = 'rgba(255,255,255,.35)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,.6)';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('bids (покупатели)', 8, 16);
+  ctx.fillText('asks (продавцы)', w - 108, 16);
+  ctx.fillText('$' + mid.toFixed(0), x(mid) + 4, 14);
+}
 
 /* ---------- G-01 «Гонка блоков» ---------- */
 var g01State = { culprit: 3, round: 0, score: 0 };
