@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>КриптоНавигатор — Из нуля в крипто-архитекторы за 18 месяцев</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
 <style>
 :root{
   --bg:#0d1022; --card:rgba(255,255,255,.06); --card-hover:rgba(255,255,255,.1); --line:rgba(255,255,255,.12);
@@ -1094,6 +1095,21 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
     <div id="daily_quests_list"></div>
   </div>
+
+  <!-- 🧘 Протокол учебной сессии (консолидация памяти) -->
+  <div style="background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:14px; padding:16px 20px; margin-top:18px">
+    <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:8px">🧘 Протокол сессии — как мозг сохраняет знания</div>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:13.5px; color:var(--txt); line-height:1.6">
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:6px 10px">📖 <b>45 мин</b> учёбы</span>
+      <span style="color:var(--mut)">→</span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:6px 10px">😴 <b>10 мин</b> NSDR-паузы (тишина, без экрана)</span>
+      <span style="color:var(--mut)">→</span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:6px 10px">🚶 <b>20–30 мин</b> движения в ближайшие полчаса</span>
+      <span style="color:var(--mut)">→</span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:6px 10px">🌙 Сон <b>7–9 ч</b> + повтор SM-2 перед сном</span>
+    </div>
+    <div style="font-size:12px; color:var(--mut); margin-top:8px">После каждого завершённого урока приложение предложит экран консолидации с таймером паузы — не пропускай его: без паузы новая информация «не прописывается» в долговременную память.</div>
+  </div>
 </section>
 
 <!-- 2. LESSONS VIEW -->
@@ -1417,7 +1433,6 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="btn sm" onclick="runKellyMonteCarlo()">🎲 Монте-Карло: 1000 × 100</button>
 
     <div class="sim-result" id="k_result_box" style="margin-top:16px"></div>
-    <div id="k_mc_stats" style="margin-top:14px"></div>
     <div id="k_mc_stats" style="margin-top:14px"></div>
     <div style="background:#090d1f; border:1px solid var(--line); border-radius:12px; padding:16px; margin-top:14px">
       <canvas id="kelly_canvas" width="700" height="220" style="width:100%; height:220px; display:block"></canvas>
@@ -2014,12 +2029,18 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
-  <div class="controls" style="margin-bottom:18px">
+  <div class="controls" style="margin-bottom:10px">
     <button class="chip active" id="quiz_mode_terms" onclick="setQuizMode('terms', this)">⚡ Блиц по терминам</button>
     <button class="chip" id="quiz_mode_cases" onclick="setQuizMode('cases', this)">🧠 Практические квант-кейсы</button>
     <button class="chip" id="quiz_mode_legal" onclick="setQuizMode('legal', this)">⚖️ Законы, 115-ФЗ и Налоги</button>
     <button class="chip" id="quiz_mode_calc" onclick="setQuizMode('calc', this)">🧮 Расчётные задачи</button>
+    <button class="chip" id="quiz_mode_interleave" style="background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(6,182,212,.25)); border-color:var(--acc2)" onclick="startInterleavingSession()">🔀 Смешанная сессия (интерливинг)</button>
   </div>
+  <div style="font-size:12px; color:var(--mut); margin-bottom:14px; line-height:1.5">
+    💡 <b style="color:var(--txt)">Зачем интерливинг?</b> Мозг крепче запоминает, когда темы <i>чередуются</i>, а не идут блоками: 12 вопросов из 3–4 разных категорий в перемешку (свечи → стакан → риск → вероятность…) тренируют умение <b>выбирать</b>, какой инструмент применить, — именно так знания используются на реальном рынке.
+  </div>
+
+  <div id="quiz_session_banner"></div>
 
   <div class="qcard" id="quizBox">
     <!-- Quiz dynamically rendered here -->
@@ -2050,6 +2071,9 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <p style="color:var(--mut); font-size:13px; margin-bottom:16px">Бейджи присваиваются автоматически за успешное прохождение симуляций и квалификационных тестов.</p>
     <div id="badges_grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px"></div>
   </div>
+
+  <!-- Feynman Explanations Portfolio -->
+  <div id="feynman_portfolio_box"></div>
 
   <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid var(--line)">
     <span style="font-size:12.5px; color:var(--mut)">Локальное хранилище: <code>localStorage (prefix: cn_)</code></span>
@@ -2117,7 +2141,7 @@ var currentViewingLessonId = "p0_l1";
    ========================================================================= */
 const CATS = { basics: ['Основы', '#22c55e'], trading: ['Торговля', '#38bdf8'], metrics: ['Метрики', '#a78bfa'], algo: ['Алго-модели', '#fb923c'], risk: ['Риск-менеджмент', '#f43f5e'], ru: ['Право РФ', '#f472b6'], infra: ['Инфраструктура', '#eab308'] };
 
-const TERMS = [
+const TERMS_RAW = [
   {
     "t": "Блокчейн",
     "c": "basics",
@@ -2303,7 +2327,7 @@ const TERMS = [
   {
     "t": "Фандинг (Funding Rate)",
     "c": "metrics",
-    "d": "Периодический платёж (обычно каждые 8 часов) между лонгами и шортами на перпах, чтобы цена не отрывалась от спота.",
+    "d": "Периодический платёж (обычно каждые 8 часов, на части бирж и инструментов — каждые 1 или 4 часа) между лонгами и шортами на перпах, чтобы цена не отрывалась от спота.",
     "a": "Плата за то, что толпа слишком сильно давит в одну сторону.",
     "w": "Основа дельта-нейтральных стратегий и сигнал настроения рынка."
   },
@@ -2464,7 +2488,7 @@ const TERMS = [
   {
     "t": "3-НДФЛ",
     "c": "ru",
-    "d": "Налоговая декларация. Прибыль с крипты облагается налогом 13–15%.",
+    "d": "Налоговая декларация. Прибыль с торговли криптой облагается НДФЛ по двухступенчатой шкале 13% / 15% (418-ФЗ), доход от майнинга — по общей шкале 13–22%.",
     "a": "Честная квитанция государству, чтобы спать спокойно.",
     "w": "Крупные суммы требуют легализации. Готовь отчётность заранее."
   },
@@ -2735,13 +2759,6 @@ const TERMS = [
     "w": "Единственная резервная копия капитала. Хранится офлайн, никогда не вводится на сайтах."
   },
   {
-    "t": "Холодный кошелёк",
-    "c": "basics",
-    "d": "Хранилище, приватные ключи которого никогда не попадают в интернет: аппаратное устройство или бумага.",
-    "a": "Депозитная ячейка в банке против кошелька в кармане.",
-    "w": "Основной капитал держат в холоде, на бирже — только рабочую сумму для торговли."
-  },
-  {
     "t": "Майнинг",
     "c": "basics",
     "d": "Подтверждение транзакций вычислительной работой за вознаграждение в монетах. Так работает биткоин (Proof-of-Work).",
@@ -2754,13 +2771,6 @@ const TERMS = [
     "d": "Блокировка монет в сети Proof-of-Stake ради вознаграждения за поддержание её работы.",
     "a": "Вклад в банке: деньги лежат, проценты капают, но снять сразу не всегда получится.",
     "w": "Даёт базовую доходность, но добавляет риск блокировки средств в момент, когда они нужны для торговли."
-  },
-  {
-    "t": "Халвинг",
-    "c": "basics",
-    "d": "Плановое уменьшение вдвое награды за блок в биткоине, происходит примерно раз в четыре года.",
-    "a": "Кран, который каждые четыре года прикручивают наполовину: воды в системе прибавляется всё медленнее.",
-    "w": "Ключевое событие четырёхлетнего цикла рынка, вокруг которого строятся долгосрочные гипотезы."
   },
   {
     "t": "Капитализация (Market Cap)",
@@ -2936,13 +2946,6 @@ const TERMS = [
     "d": "Сумма всех прибылей, делённая на сумму всех убытков. Больше 1 — стратегия зарабатывает.",
     "a": "Отношение выручки к расходам в маленьком магазине.",
     "w": "Быстрая проверка жизнеспособности: ниже 1,2 обычно не переживает реальные издержки."
-  },
-  {
-    "t": "Математическое ожидание (Expectancy)",
-    "c": "metrics",
-    "d": "Средний результат одной сделки с учётом вероятностей выигрыша и проигрыша.",
-    "a": "Средний выигрыш с одного билета лотереи, если купить их очень много.",
-    "w": "Единственная величина, которая отвечает на вопрос «зарабатывает эта система или нет»."
   },
   {
     "t": "R-множитель",
@@ -3510,7 +3513,7 @@ const TERMS = [
     "d": "Real-World Assets: токенизированные реальные активы — трежерис, денежные фонды, золото.",
     "a": "Сертификат на слиток, живущий в блокчейне.",
     "w": "Доходность базовая; риск — офчейн-слой доверия."
-  },,
+  },
   {
     "t": "Математическое ожидание",
     "c": "metrics",
@@ -3575,6 +3578,20 @@ const TERMS = [
     "w": "Остатки должны быть шумом: структура в них = упущенная закономерность."
   }
 ];
+// Защита от «дыр» в массиве (elision) и поиск термина с нормализацией имени («Термин» ≡ «Термин (Term)»)
+const TERMS = TERMS_RAW.filter(Boolean);
+function normTermName(s){
+  return (s || '').toLowerCase().replace(/\s*\([^)]*\)/g, '').trim();
+}
+function findTermIndexByName(name){
+  const n = (name || '').toLowerCase();
+  let idx = TERMS.findIndex(g => g.t === name || g.t.toLowerCase() === n);
+  if(idx < 0){
+    const nn = normTermName(name);
+    idx = TERMS.findIndex(g => normTermName(g.t) === nn);
+  }
+  return idx;
+}
 
 /* =========================================================================
    2. ПАСПОРТА ФАЗ (PHASE_PASSPORTS)
@@ -3651,7 +3668,7 @@ const PHASE_PASSPORTS = [
 ];
 
 /* =========================================================================
-   3. УРОКИ (LESSONS) — ПОЛНАЯ ФАЗА 0 + КАРКАСЫ ПОСЛЕДУЮЩИХ
+   3. УРОКИ (LESSONS) — ПОЛНАЯ ФАЗА 0 + ПОЛНЫЕ ФАЗЫ 1–5 + БОНУСЫ
    ========================================================================= */
 const LESSONS = [
   {
@@ -4433,7 +4450,7 @@ const LESSONS = [
       {
         "ru": "Базисный пункт",
         "en": "bps / bips",
-        "desc": "Единица измерения treния: 1 bps = 0.01% (одна сотая процента от цены)."
+        "desc": "Единица измерения: 1 bps = 0.01% (одна сотая процента от цены)."
       }
     ],
     "prerequisites": [
@@ -5280,7 +5297,7 @@ const LESSONS = [
       "a": 1,
       "explain": "Любой запрос seed — 100% мошенничество. Спешка и страх «взлома» — стандартный рычаг социальной инженерии. Инициируй контакт сам через официальный домен."
     }
-  },,
+  },
   {
     "phase": 1,
     "id": "p1_l1",
@@ -9458,7 +9475,7 @@ const LESSONS = [
       "a": 1,
       "explain": "Исполнение должно быть воспроизводимым и ограниченным. LLM недетерминирован и склонен к галлюцинациям — его место в генерации идей и объяснений, а не в нажатии кнопки «купить»."
     }
-  },,
+  },
   {
     "id": "p4_l8",
     "phase": 4,
@@ -9509,7 +9526,7 @@ const LESSONS = [
       "a": 1,
       "explain": "Под задачу «много стратегий + бэктест + лайв» оптимален Freqtrade. Hummingbot заточен под котирование, а свой движок здесь — трата недель без пользы для альфы."
     }
-  },,
+  },
   {
     "id": "p4_l9",
     "phase": 4,
@@ -9560,7 +9577,7 @@ const LESSONS = [
       "a": 1,
       "explain": "На CEX расчёт ведёт закрытый движок по своему mark price; на DEX порог и триггер записаны в контракте и зависят от внешнего оракула — отсюда другие сценарии каскадов."
     }
-  },,
+  },
   {
     "phase": 5,
     "id": "p5_l1",
@@ -10522,7 +10539,8 @@ const LESSONS = [
       "a": 1,
       "explain": "Экономия на комиссиях измеряется десятыми долями процента, а концентрационный риск — десятками процентов капитала. Ни на одном контрагенте не должно находиться более 20% средств, каким бы удобным он ни был."
     }
-  },
+  }
+,
   {
     "id": "p6_l1",
     "phase": 6,
@@ -10890,7 +10908,7 @@ const LESSONS = [
       "a": 0,
       "explain": "Доли исходов агрегируют деньги и информацию тысяч участников в одну цифру — вероятность события. События эти (решения центробанков, регуляторика) двигают крипторынок."
     }
-  },,
+  },
   {
     "id": "p6_l7",
     "phase": 6,
@@ -11098,7 +11116,7 @@ const LESSONS = [
       "a": 1,
       "explain": "Пакет YES+NO гарантирует $1, поэтому цены связаны: рост вероятности одного исхода означает падение противоположного примерно на ту же величину (минус/плюс микроиздержки)."
     }
-  },,
+  },
   {
     "id": "p6_l11",
     "phase": 6,
@@ -11151,7 +11169,7 @@ const LESSONS = [
       "a": 0,
       "explain": "Сумма $0.95 меньше $1 при гарантированной выплате $1 одному из владельцев — это классический внутриплощадочный арбитраж; чистый доход ≈ $0.05 минус комиссии."
     }
-  },,
+  },
   {
     "id": "p6_l13",
     "phase": 6,
@@ -11202,7 +11220,7 @@ const LESSONS = [
       "a": 1,
       "explain": "В DeFi риск сосредоточен в коде и ликвидности; у RWA добавляется целый офчейн-слой доверия: реальность актива, юрисдикция, хранитель, аудит и поведение эмитента в стрессе."
     }
-  },,
+  },
 
 ];
 
@@ -12526,13 +12544,38 @@ const save = () => {
     localStorage.setItem(LS.simMastery, JSON.stringify(simMastery));
     localStorage.setItem('cn_sim_action_stats', JSON.stringify(simActionStats));
     localStorage.setItem(LS.lessonChecks, JSON.stringify(lessonCheckState));
-    localStorage.setItem(LS.mathTests, JSON.stringify(mathTestState));
+    if(typeof mathTestState !== 'undefined') localStorage.setItem(LS.mathTests, JSON.stringify(mathTestState));
     if(typeof beginnerCategoryErrors !== 'undefined') localStorage.setItem(LS.beginnerErrs, JSON.stringify(beginnerCategoryErrors));
   } catch(e) {
     console.error('Save error:', e);
   }
   updateHeader();
 };
+
+// Миграция индексных хранилищ (learned, srsState) после дедупликации глоссария: 208 → 205 терминов.
+// Удалённые дубли: «Холодный кошелёк» (89), «Халвинг» (93), «Математическое ожидание (Expectancy)» (120).
+(function migrateGlossaryIndices(){
+  if(localStorage.getItem('cn_gloss_idx_migrated_v3') === '1') return;
+  try{
+    const removed = [[89, 70], [93, 66], [120, 196]]; // [старый индекс, новый индекс сохранённого двойника]
+    const removedOld = removed.map(r => r[0]);
+    const remap = (obj) => {
+      const next = {};
+      Object.keys(obj || {}).forEach(k => {
+        const old = parseInt(k, 10);
+        if(isNaN(old)) return;
+        const ri = removedOld.indexOf(old);
+        const ni = ri >= 0 ? removed[ri][1] : old - removedOld.filter(x => x < old).length;
+        if(next[ni] === undefined) next[ni] = obj[k];
+      });
+      return next;
+    };
+    learned = remap(learned);
+    srsState = remap(srsState);
+    localStorage.setItem('cn_gloss_idx_migrated_v3', '1');
+    save();
+  } catch(e){ console.warn('Glossary index migration skipped:', e); }
+})();
 
 // Изоляция прогресса: основной % курса и бейдж «Гроссмейстер 56» считают ТОЛЬКО Фазы 0–5.
 // Бонус-уроки (phase 6) и матфакультатив (phase 7) не влияют на них.
@@ -12844,7 +12887,9 @@ function renderLessonDetail(l){
   // Hyper-theme
   const hTheme = (typeof window.P1_HYPER_THEMES !== 'undefined' && window.P1_HYPER_THEMES[l.id]) ? window.P1_HYPER_THEMES[l.id] : null;
 
-  let html = `
+  let html = (typeof renderPretestBlock === 'function' && !isDone) ? renderPretestBlock(l) : '';
+
+  html += `
     <div class="lesson-header" style="background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:var(--shadow)">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:12px">
         <div>
@@ -12991,6 +13036,16 @@ function renderLessonDetail(l){
             <b style="color:var(--ok)">🎯 Квант-инсайт:</b><br>
             ${autoLinkTerms(b.text || '')}
           </div>
+        `;
+      }
+
+      // 6b. Image / инфографика (GPT Image, папка assets/)
+      else if(b.type === 'image'){
+        html += `
+          <figure style="margin:0 0 20px; background:#040714; border:1px solid var(--line); border-radius:12px; overflow:hidden">
+            <img src="${b.src}" alt="${(b.alt || '').replace(/"/g, '&quot;')}" loading="lazy" style="width:100%; display:block" onerror="this.parentElement.innerHTML='<div style=&quot;padding:16px;color:var(--mut);font-size:12.5px&quot;>🖼️ Инфографика «${(b.alt || '').replace(/"/g, '&quot;')}» ещё не добавлена: положи файл в ${b.src}</div>'">
+            ${b.caption ? `<figcaption style="padding:10px 14px; font-size:12px; color:var(--mut)">${b.caption}</figcaption>` : ''}
+          </figure>
         `;
       }
 
@@ -14078,7 +14133,8 @@ const EARNING_METHODS = [
       '5. Легализация в РФ: регистрация в реестре майнеров ФНС (для юрлиц/ИП) или соблюдение лимитов энергопотребления для физлиц (до 6000 кВт·ч/мес согласно 221-ФЗ).'
     ],
     pitfalls: 'Рост сложности сети (Difficulty), халвинг награды, поломка плат и вентиляторов, запрет майнинга в отдельных энергодефицитных регионах РФ.',
-    zainullinTip: 'По закону 418-ФЗ майнинг освобожден от НДС (0%), но доход в криптовалюте учитывается в доходах физлица по рыночной котировке на дату начисления.',
+    zainullinTip: 'По закону 418-ФЗ майнинг освобожден от НДС (0%), но доход в криптовалюте учитывается в доходах физлица по рыночной котировке на дату начисления.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: ["Халвинг (Halving)"],
@@ -14104,7 +14160,8 @@ const EARNING_METHODS = [
       '4. Авто-реинвестирование наград (Compound Staking) для разгона сложного процента.'
     ],
     pitfalls: 'Слешинг (Slashing) — штраф за сбой ноды валидатора; период разблокировки (Unbonding Period от 2 до 28 дней); падение курса самой монеты.',
-    zainullinTip: 'Ликвидный стейкинг (LST) дает максимальную гибкость: вы получаете доходность сети и одновременно можете использовать деривативный токен (например, stETH) в DeFi.',
+    zainullinTip: 'Ликвидный стейкинг (LST) дает максимальную гибкость: вы получаете доходность сети и одновременно можете использовать деривативный токен (например, stETH) в DeFi.'
+,
     relatedLessons: ["p5_l7"],
     relatedSims: [],
     relatedTerms: ["Слешинг (Slashing)","Халвинг (Halving)"],
@@ -14131,7 +14188,8 @@ const EARNING_METHODS = [
       '5. Ведение книги учета сделок для подтверждения экономического смысла перед банком по 115-ФЗ.'
     ],
     pitfalls: 'Блокировка банковских карт по 115-ФЗ; риск мошеннических "треугольников"; недобросовестные контрагенты.',
-    zainullinTip: 'Никогда не работайте с "дропами" и третьими лицами. Только личные счета, сохранение всех квитанций и расчет 3-НДФЛ по методу FIFO.',
+    zainullinTip: 'Никогда не работайте с "дропами" и третьими лицами. Только личные счета, сохранение всех квитанций и расчет 3-НДФЛ по методу FIFO.'
+,
     relatedLessons: ["p4_l6","p0_l3"],
     relatedSims: ["arbitrage"],
     relatedTerms: ["Дроп","P2P-гигиена"],
@@ -14157,7 +14215,8 @@ const EARNING_METHODS = [
       '4. Настройка концентрированной ликвидности в Uniswap v3 для повышения комиссии на единицу капитала.'
     ],
     pitfalls: 'Непостоянные потери (Impermanent Loss) на волатильных парах; риск уязвимости смарт-контракта (Smart Contract Hack); риск отвязки стейблкоина.',
-    zainullinTip: 'Новичкам рекомендуется начинать строго с пулов стейблкоинов (USDC/USDT) на проверенных протоколах с TVL > $1 млрд.',
+    zainullinTip: 'Новичкам рекомендуется начинать строго с пулов стейблкоинов (USDC/USDT) на проверенных протоколах с TVL > $1 млрд.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: ["DeFi (Decentralized Finance)","Impermanent Loss (IL)","TVL (Total Value Locked)","Аудит смарт-контракта"],
@@ -14184,7 +14243,8 @@ const EARNING_METHODS = [
       '5. Листинг на маркетплейсах OpenSea, Blur, Magic Eden с настройкой роялти (Creator Fees).'
     ],
     pitfalls: 'Крах ликвидности на вторичном рынке; потеря интереса аудитории; высокие комиссии сети при минте.',
-    zainullinTip: 'В 2025 году "просто картинки" больше не продаются. Успешный NFT обязан иметь измеримую утилитарную ценность или интеграцию с бизнесом.',
+    zainullinTip: 'В 2025 году "просто картинки" больше не продаются. Успешный NFT обязан иметь измеримую утилитарную ценность или интеграцию с бизнесом.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: ["Rug Pull"],
@@ -14210,7 +14270,8 @@ const EARNING_METHODS = [
       '4. Автоматизация исполнения через API на выделенном VPS с подключением Kill-Switch.'
     ],
     pitfalls: 'Эмоциональный тильт; завышение кредитного плеча; переобучение бэктеста к истории.',
-    zainullinTip: 'Без жесткого риск-менеджмента и стоп-лоссов 95% ручных трейдеров теряют депозит в первый же год.',
+    zainullinTip: 'Без жесткого риск-менеджмента и стоп-лоссов 95% ручных трейдеров теряют депозит в первый же год.'
+,
     relatedLessons: ["p1_l1","p1_l6","p1_l7","p1_l10","p5_l5"],
     relatedSims: ["ob","walkforward","overfit"],
     relatedTerms: ["Sharpe Ratio","Просадка (Drawdown)"],
@@ -14236,7 +14297,8 @@ const EARNING_METHODS = [
       '4. Хеджирование рисков портфеля покупкой опционов Put (страховка от обвала).'
     ],
     pitfalls: 'Продажа непокрытых (голых) опционов несет неограниченный риск убытка при резком движении цены.',
-    zainullinTip: 'Опционы — лучший инструмент хеджирования крупного портфеля от "черных лебедей" и сборщик премии на боковом рынке.',
+    zainullinTip: 'Опционы — лучший инструмент хеджирования крупного портфеля от "черных лебедей" и сборщик премии на боковом рынке.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: ["Волатильность"],
@@ -14261,7 +14323,8 @@ const EARNING_METHODS = [
       '3. Фиксация прибыли до завершения события при изменении рыночных котировок (Early Cashout).'
     ],
     pitfalls: 'Риск неразрешимости события (Oracle Dispute); манипуляции ликвидностью; азартное привыкание.',
-    zainullinTip: 'Рынки предсказаний эффективны только при наличии инсайдерского понимания предметной области или количественной модели оценки вероятностей.',
+    zainullinTip: 'Рынки предсказаний эффективны только при наличии инсайдерского понимания предметной области или количественной модели оценки вероятностей.'
+,
     relatedLessons: ["p2_l1","p6_l17","p6_l10","p6_l11"],
     relatedSims: ["psychology"],
     relatedTerms: [],
@@ -14286,7 +14349,8 @@ const EARNING_METHODS = [
       '3. Продажа услуг компаниям по открытию виртуальных представительств.'
     ],
     pitfalls: 'Высокая волатильность игровых токенов; падение онлайна платформ.',
-    zainullinTip: 'Наиболее надежный заработок в метавселенной — это продажа профессиональных навыков (3D-дизайн, код, ивент-менеджмент), а не спекуляция виртуальной землей.',
+    zainullinTip: 'Наиболее надежный заработок в метавселенной — это продажа профессиональных навыков (3D-дизайн, код, ивент-менеджмент), а не спекуляция виртуальной землей.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: ["Rug Pull"],
@@ -14311,7 +14375,8 @@ const EARNING_METHODS = [
       '3. Полный отказ от стратегий без фиксированного стоп-лосса.'
     ],
     pitfalls: '100% вероятность полного разорения (Gambler\'s Ruin) при любом затяжном тренде.',
-    zainullinTip: 'Мартингейл создает иллюзию 90% Win Rate, но один 10-й убыток забирает весь депозит. Никогда не используйте его на реальном капитале.',
+    zainullinTip: 'Мартингейл создает иллюзию 90% Win Rate, но один 10-й убыток забирает весь депозит. Никогда не используйте его на реальном капитале.'
+,
     relatedLessons: ["p0_l13","p0_l14","p0_l18"],
     relatedSims: ["psychology"],
     relatedTerms: [],
@@ -14337,7 +14402,8 @@ const EARNING_METHODS = [
       '4. Защита от Sybil-фильтров: уникальные маршруты, отсутствие связей между своими кошельками, вывод с разных CEX.'
     ],
     pitfalls: 'Проект может отменить дроп; попадание под Sybil-кластеризацию; затраты на газ превышают размер раздачи.',
-    zainullinTip: 'Фокусируйтесь на качестве и органичности 2–3 кошельков, а не на создании 100 пустых "мультиаккаунтов", которые срежет автоматический антифрод.',
+    zainullinTip: 'Фокусируйтесь на качестве и органичности 2–3 кошельков, а не на создании 100 пустых "мультиаккаунтов", которые срежет автоматический антифрод.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: ["Дроп"],
@@ -14363,7 +14429,8 @@ const EARNING_METHODS = [
       '4. Плановая ребалансировка на пиках 4-летнего цикла (фиксация 30–50% в стейблкоины при перегреве).'
     ],
     pitfalls: 'Психологическая паника на просадках криптозимы (−70%); потеря сид-фразы.',
-    zainullinTip: 'Стратегия DCA убирает необходимость "угадывать дно" и исторически обыгрывает 90% активных трейдеров на дистанции полного цикла.',
+    zainullinTip: 'Стратегия DCA убирает необходимость "угадывать дно" и исторически обыгрывает 90% активных трейдеров на дистанции полного цикла.'
+,
     relatedLessons: ["p1_l1","p0_l18"],
     relatedSims: [],
     relatedTerms: ["DCA (Dollar Cost Averaging)"],
@@ -14389,7 +14456,8 @@ const EARNING_METHODS = [
       '4. Продажа полученных токенов в первые минуты листинга на пике ликвидности либо холд при сильном фундаментале.'
     ],
     pitfalls: 'Падение курса биржевого токена (например, BNB), если стейкать не стейблкоины; короткий период фарминга.',
-    zainullinTip: 'Используйте корзину стейблкоинов в Launchpool: это дает практически безрисковую долларовую доходность 20–35% годовых.',
+    zainullinTip: 'Используйте корзину стейблкоинов в Launchpool: это дает практически безрисковую долларовую доходность 20–35% годовых.'
+,
     relatedLessons: ["p0_l19"],
     relatedSims: [],
     relatedTerms: [],
@@ -14416,7 +14484,8 @@ const EARNING_METHODS = [
       '5. Получение аллокации или награды в нативных токенах после TGE (Token Generation Event).'
     ],
     pitfalls: 'Оплата серверов в течение 6–12 месяцев без 100% гарантии выплаты ревардов; техническая сложность.',
-    zainullinTip: 'Запуск нод развивает навыки системного администрирования Linux, которые напрямую пригодятся при развертывании боевой алго-инфраструктуры.',
+    zainullinTip: 'Запуск нод развивает навыки системного администрирования Linux, которые напрямую пригодятся при развертывании боевой алго-инфраструктуры.'
+,
     relatedLessons: ["p4_l1","p4_l2"],
     relatedSims: [],
     relatedTerms: [],
@@ -14442,7 +14511,8 @@ const EARNING_METHODS = [
       '4. Маркетинг, листинг на CoinGecko/CoinMarketCap и интеграция в полезный сервис.'
     ],
     pitfalls: 'Юридические риски признания ценной бумагой (Howey Test); риск недостатка ликвидности.',
-    zainullinTip: 'В РФ выпуск цифровых прав жестко регулируется законом № 259-ФЗ "О ЦФА", а закон № 331-ФЗ запрещает оплату товаров/услуг криптоактивами. Для международных проектов регистрируйте юрисдикцию в ОАЭ, Швейцарии или Сингапуре.',
+    zainullinTip: 'В РФ выпуск цифровых прав жестко регулируется законом № 259-ФЗ "О ЦФА", а закон № 331-ФЗ запрещает оплату товаров/услуг криптоактивами. Для международных проектов регистрируйте юрисдикцию в ОАЭ, Швейцарии или Сингапуре.'
+,
     relatedLessons: ["p0_l19"],
     relatedSims: [],
     relatedTerms: [],
@@ -14466,7 +14536,8 @@ const EARNING_METHODS = [
       '2. Использование ТОЛЬКО для тестнетов: получение бесплатных тестовых монет (Goerli/Sepolia ETH Faucet) для тестирования смарт-контрактов.'
     ],
     pitfalls: 'Пустая трата времени; скам-сайты с вирусами.',
-    zainullinTip: 'В 2025 году реальные краны используются ИСКЛЮЧИТЕЛЬНО разработчиками для получения тестовых токенов в тестнетах.',
+    zainullinTip: 'В 2025 году реальные краны используются ИСКЛЮЧИТЕЛЬНО разработчиками для получения тестовых токенов в тестнетах.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: [],
@@ -14492,7 +14563,8 @@ const EARNING_METHODS = [
       '4. Проверка аудита кода от CertiK, OpenZeppelin, Hacken.'
     ],
     pitfalls: 'Полная потеря денег при внесении депозита в пирамиду.',
-    zainullinTip: 'Главный фильтр кванта: откуда берется доходность? Если доход старым участникам выплачивается из денег новых вкладчиков — это пирамида (Понци).',
+    zainullinTip: 'Главный фильтр кванта: откуда берется доходность? Если доход старым участникам выплачивается из денег новых вкладчиков — это пирамида (Понци).'
+,
     relatedLessons: ["p0_l17","p0_l19"],
     relatedSims: [],
     relatedTerms: ["Rug Pull","Аудит смарт-контракта"],
@@ -14517,7 +14589,8 @@ const EARNING_METHODS = [
       '3. Вывод полученных игровых токенов на CEX/DEX сразу после листинга.'
     ],
     pitfalls: 'Гиперинфляция внутриигровых токенов; быстрый спад интереса игроков.',
-    zainullinTip: 'Фиксируйте прибыль в стейблкоины при первой возможности. Внутриигровая валюта P2E проектов почти всегда обесценивается со временем.',
+    zainullinTip: 'Фиксируйте прибыль в стейблкоины при первой возможности. Внутриигровая валюта P2E проектов почти всегда обесценивается со временем.'
+,
     relatedLessons: [],
     relatedSims: [],
     relatedTerms: [],
@@ -14542,7 +14615,8 @@ const EARNING_METHODS = [
       '3. Продажа своих аллокаций с наценкой до фактического TGE.'
     ],
     pitfalls: 'Отказ продавца передать токен при резком росте цены; блокировка аккаунта биржей за передачу третьим лицам.',
-    zainullinTip: 'Никогда не покупайте аккаунты через анонимные Telegram-чаты. Используйте только ончейн-маркетплейсы с автоматическим залоговым эскроу.',
+    zainullinTip: 'Никогда не покупайте аккаунты через анонимные Telegram-чаты. Используйте только ончейн-маркетплейсы с автоматическим залоговым эскроу.'
+,
     relatedLessons: ["p5_l7"],
     relatedSims: [],
     relatedTerms: [],
@@ -14567,7 +14641,8 @@ const EARNING_METHODS = [
       '3. Автоматическое погашение и вывод средств в любой момент без периода ожидания.'
     ],
     pitfalls: 'Риск банкротства биржи (CEX Counterparty Risk).',
-    zainullinTip: 'Идеальный инструмент для парковки 20% ликвидного резерва: капитал приносит стабильный процент и мгновенно доступен для торговых ботов.',
+    zainullinTip: 'Идеальный инструмент для парковки 20% ликвидного резерва: капитал приносит стабильный процент и мгновенно доступен для торговых ботов.'
+,
     relatedLessons: ["p5_l7"],
     relatedSims: ["calendar"],
     relatedTerms: ["Хедж (Hedge)"],
@@ -16079,6 +16154,17 @@ function setQuizMode(mode, btn){
 }
 
 function startQuiz(){
+  // Пользовательские сессии (адаптивная тренировка, интерливинг) сами задают вопросы — не пересобирать их
+  if(quiz.preserveQs){
+    quiz.preserveQs = false;
+    renderQuizQuestion();
+    return;
+  }
+  quiz.mode = 'standard';
+  quiz.isAdaptive = false;
+  quiz.targetTopic = null;
+  const sb = document.getElementById('quiz_session_banner');
+  if(sb) sb.innerHTML = '';
   quiz.score = 0;
   quiz.cur = 0;
   quiz.total = 10;
@@ -16124,6 +16210,10 @@ function renderQuizQuestion(){
   if(!box) return;
 
   if(quiz.cur >= quiz.total){
+    if(quiz.mode === 'interleaving' && typeof finishInterleavingSession === 'function'){
+      finishInterleavingSession(box);
+      return;
+    }
     const pct = Math.round((quiz.score / quiz.total) * 100);
     quizBest = Math.max(quizBest, pct);
     save();
@@ -16760,6 +16850,7 @@ function startAdaptiveWorkout(){
   quiz.score = 0;
   quiz.isAdaptive = true;
   quiz.targetTopic = weakTopic.id;
+  quiz.preserveQs = true;
 
   go('quiz');
   renderAdaptiveQuizHeader(weakTopic, weakMastery, targetDiff);
@@ -16868,6 +16959,7 @@ function checkQuizAnswer(optIdx){
   });
 
   const isCorrect = (optIdx === q.a);
+  (quiz.results = quiz.results || []).push({ cat: q._cat || null, src: q._src || null, ok: isCorrect });
 
   if(isCorrect){
     quiz.score++;
@@ -17497,7 +17589,10 @@ function renderProgressStats(){
         <h3 style="color:var(--acc2); margin:0 0 4px; display:flex; align-items:center; gap:8px">🎯 Адаптивный ИИ-тьютор (Adaptive Workout)</h3>
         <p style="color:var(--txt); font-size:13.5px; margin:0">Система автоматически отслеживает ваши ошибки по 10 квантовым темам и формирует индивидуальный тренировочный пул вопросов (60% слабые места / 20% пререквизиты / 20% микс).</p>
       </div>
-      <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)" onclick="startAdaptiveWorkout()">⚡ Тренировать слабые места</button>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end">
+        <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)" onclick="startAdaptiveWorkout()">⚡ Тренировать слабые места</button>
+        <button class="btn sm ghost" onclick="go('quiz'); startInterleavingSession()">🔀 Смешанная сессия · пройдено: <b id="interleaving_count_badge">${(typeof interleavingStats !== 'undefined' ? interleavingStats.sessions : 0)}</b></button>
+      </div>
     </div>
 
     <!-- Weakness Heatmap Grid -->
@@ -21249,14 +21344,15 @@ function renderDailyQuests(){
   // Суточный сброс: квесты «ежедневные», прогресс живёт один день
   const today = new Date().toDateString();
   if(dailyQuestsDone.date !== today){
-    dailyQuestsDone = { date: today, q1:false, q2:false, q3:false };
+    dailyQuestsDone = { date: today, q1:false, q2:false, q3:false, q4:false };
     localStorage.setItem('cn_daily_quests', JSON.stringify(dailyQuestsDone));
   }
 
   const quests = [
     { id: 'q1', title: '🎓 Пройти 1 любой урок курса', reward: '+$15,000 AUM', xp: '+50 XP', done: dailyQuestsDone.q1, action: "go('lessons')" },
     { id: 'q2', title: '🕯️ Собрать свечу в Конструкторе 2.0', reward: '+$10,000 AUM', xp: '+40 XP', done: dailyQuestsDone.q2, action: "go('sims'); showSim('candle', this)" },
-    { id: 'q3', title: '🧠 Повторить карточки в тренажере SM-2', reward: '+$12,000 AUM', xp: '+60 XP', done: dailyQuestsDone.q3, action: "go('glossary'); startSrsReviewSession()" }
+    { id: 'q3', title: '🧠 Повторить карточки в тренажере SM-2', reward: '+$12,000 AUM', xp: '+60 XP', done: dailyQuestsDone.q3, action: "go('glossary'); startSrsReviewSession()" },
+    { id: 'q4', title: '🔀 Смешанная интерливинг-сессия (12 вопросов)', reward: '+$18,000 AUM', xp: '+70 XP', done: dailyQuestsDone.q4, action: "go('quiz'); startInterleavingSession()" }
   ];
 
   container.innerHTML = quests.map(q => `
@@ -22642,6 +22738,17 @@ try{
   if(typeof renderDailyQuests === 'function') renderDailyQuests();
 }catch(e){ console.warn('[P1] boot', e); }
 
+/* Экспорт матфакультатива в глобальную область: имена ниже используются
+   внешним кодом (save(), адаптивная тренировка, экспорт/импорт, onclick),
+   но были заперты внутри этого IIFE. */
+window.MATH_LESSONS_SOURCE = MATH_LESSONS_SOURCE;
+window.MATH_TESTS = MATH_TESTS;
+window.mathTestState = mathTestState;
+window.beginnerCategoryErrors = beginnerCategoryErrors;
+window.renderMathTestsBox = renderMathTestsBox;
+window.answerMathTest = answerMathTest;
+window.finishMathTest = finishMathTest;
+
 })();
 
 
@@ -23903,7 +24010,7 @@ Object.assign(P25, {
     return box('rgba(6,182,212,.08)',
       `Налоговая база: ${big('var(--txt)', fmtRub(base))} · НДФЛ к уплате: ${big('var(--warn)', fmtRub(tax))}`) +
       `<div style="margin-top:9px; font-size:13px">По ставке 13%: ${fmtRub(at13)} → ${fmtRub(at13*0.13)}<br>По ставке 15%: ${fmtRub(at15)} → ${fmtRub(at15*0.15)}</div>` +
-      note('Порог 2,4 млн ₽ считается по совокупному годовому доходу. Расходы принимаются только при документальном подтверждении, убытки от реализации цифровой валюты не переносятся, имущественный вычет 250 тыс ₽ не применяется. Декларация — до 30 апреля, уплата — до 15 июля. Расчёт учебный и не заменяет налоговую консультацию.');
+      note('Порог 2,4 млн ₽ считается по совокупному годовому доходу от операций с цифровой валютой; для торговли действует двухступенчатая шкала 13%/15% (418-ФЗ, п. 1.1 ст. 224 НК РФ) — пятиступенчатая шкала 13–22% к ней не применяется. Доход от майнинга облагается иначе: НДФЛ по общей шкале 13–22% с рыночной стоимости монет на дату получения, а при последующей продаже эта обложенная стоимость засчитывается как расход. Расходы принимаются только при документальном подтверждении, убытки от реализации цифровой валюты не переносятся, имущественный вычет 250 тыс ₽ не применяется. Декларация — до 30 апреля, уплата — до 15 июля. Расчёт учебный и не заменяет налоговую консультацию.');
   }
 },
 
@@ -25701,7 +25808,7 @@ window.startAdaptiveWorkout=function(){
  if(!weakPool.length)weakPool=bank.slice(0,3);
  const sel=[...weakPool.sort(function(){return .5-Math.random();}).slice(0,6),
   ...restPool.sort(function(){return .5-Math.random();}).slice(0,2)];
- quiz.qs=sel;quiz.total=sel.length;quiz.cur=0;quiz.score=0;quiz.isAdaptive=true;quiz.targetTopic=weakTopic.id;
+ quiz.qs=sel;quiz.total=sel.length;quiz.cur=0;quiz.score=0;quiz.isAdaptive=true;quiz.targetTopic=weakTopic.id;quiz.preserveQs=true;
  go('quiz');renderAdaptiveQuizHeader(weakTopic,weakMastery,'easy');
  renderQuizQuestion();
  if(headerNote)setTimeout(function(){const c=document.querySelector('#quiz .controls div');if(c)c.innerHTML+='<div style="font-size:11px;color:var(--warn)">'+headerNote+'</div>';},80);
@@ -25734,7 +25841,7 @@ completeLessonWithMastery=function(id){
    let seeded=0;
    l.terms.forEach(function(t){
     const ru=(typeof t==='string')?t:t.ru;
-    const idx=TERMS.findIndex(function(g){return g.t===ru||g.t.toLowerCase()===ru.toLowerCase();});
+    const idx=findTermIndexByName(ru);
     if(idx>=0&&!srsState[idx]){srsState[idx]={interval:0,ease:2.5,reps:0};seeded++;}
    });
    if(seeded)save();
@@ -25778,6 +25885,2457 @@ function importMathTestsFile(input){
    +'<span style="font-size:11.5px;color:var(--mut);align-self:center">Состояние тестов автоматически сохраняется в браузере (localStorage).</span></div>';
   return inject+html;
  };
+})();
+/* =========================================================================
+   ПОТОК B — ДОСТРОЙКА МЕТОДИКИ
+   B1. Смешанная тренировка дня (системный интерливинг)
+   ========================================================================= */
+var interleavingStats = load('cn_interleaving_stats', { sessions: 0, best: 0 });
+
+const INTERLEAVING_CAT_LABELS = {
+  blockchain: '⛓️ Блокчейн', exchange: '🏦 Биржа', charts: '📊 Графики',
+  candles: '🕯️ Свечи', trading: '💹 Трейдинг', risk: '🛡️ Риск', probability: '🎲 Вероятность',
+  phase1: '🔬 Фаза 1', phase2: '📈 Фаза 2', phase3: '🏗️ Фаза 3', phase4: '⚖️ Фаза 4', phase5: '🚀 Фаза 5'
+};
+function interleavingCatLabel(cat){
+  if(INTERLEAVING_CAT_LABELS[cat]) return INTERLEAVING_CAT_LABELS[cat];
+  if(cat && cat.indexOf('glossary_') === 0){
+    const c = cat.slice(9);
+    return (typeof CATS !== 'undefined' && CATS[c]) ? ('📖 ' + CATS[c][0]) : cat;
+  }
+  return cat || 'Общее';
+}
+
+function buildInterleavingPools(){
+  const pools = {};
+  // 1. Вопросы из пройденных уроков (реальный прогресс пользователя)
+  LESSONS.forEach(l => {
+    if(!l || !l.quiz || lessonsDone[l.id] !== 1) return;
+    const cat = LESSON_BEGINNER_CAT[l.id] || ('phase' + Math.min(l.phase || 0, 5));
+    (pools[cat] = pools[cat] || []).push({
+      q: l.quiz.q,
+      opts: l.quiz.opts,
+      a: l.quiz.a !== undefined ? l.quiz.a : (l.quiz.correctOpt !== undefined ? l.quiz.correctOpt : 0),
+      explain: l.quiz.explain || '',
+      _cat: cat,
+      _src: 'Урок ' + (l.num || l.id)
+    });
+  });
+  // 2. Добор из глоссария — чтобы тем было ≥3 даже у новичка
+  const glossCats = {};
+  TERMS.forEach(t => { if(t) (glossCats[t.c] = glossCats[t.c] || []).push(t); });
+  Object.keys(glossCats).forEach(c => {
+    const terms = glossCats[c];
+    if(terms.length < 4) return;
+    pools['glossary_' + c] = terms.map(t => {
+      const others = terms.filter(x => x.t !== t.t).sort(() => 0.5 - Math.random()).slice(0, 3);
+      const allOpts = [t.t, ...others.map(o => o.t)].sort(() => 0.5 - Math.random());
+      return {
+        q: `💡 Определение: «${t.d}». О каком понятии речь?`,
+        opts: allOpts,
+        a: allOpts.indexOf(t.t),
+        explain: `Верный ответ: <b>${t.t}</b>. ${t.d}`,
+        _cat: 'glossary_' + c,
+        _src: 'Глоссарий'
+      };
+    });
+  });
+  return pools;
+}
+
+function startInterleavingSession(){
+  const pools = buildInterleavingPools();
+  let cats = Object.keys(pools).filter(c => pools[c].length > 0).sort(() => 0.5 - Math.random());
+  // Приоритет категориям из пройденных уроков, затем глоссарий — всего 3–4 темы
+  cats.sort((a, b) => (a.indexOf('glossary_') === 0 ? 1 : 0) - (b.indexOf('glossary_') === 0 ? 1 : 0));
+  cats = cats.slice(0, 4);
+  if(cats.length < 3){ cats = Object.keys(pools).filter(c => pools[c].length > 0).slice(0, 4); }
+  if(!cats.length){
+    showToast && showToast('Сначала пройди хотя бы пару уроков — тогда соберём смешанную сессию.', '🔀');
+    return;
+  }
+  cats.forEach(c => pools[c].sort(() => 0.5 - Math.random()));
+
+  // Круговое чередование A-B-C-A-B-C: одна и та же тема никогда не идёт дважды подряд
+  const qs = [];
+  let i = 0, guard = 0;
+  while(qs.length < 12 && guard < 300){
+    const c = cats[i % cats.length];
+    if(pools[c].length) qs.push(pools[c].pop());
+    i++; guard++;
+    if(cats.every(c => pools[c].length === 0)) break;
+  }
+
+  quiz.qs = qs;
+  quiz.total = qs.length;
+  quiz.cur = 0;
+  quiz.score = 0;
+  quiz.results = [];
+  quiz.isAdaptive = false;
+  quiz.targetTopic = null;
+  quiz.mode = 'interleaving';
+  quiz.preserveQs = true;
+
+  go('quiz');
+
+  const sb = document.getElementById('quiz_session_banner');
+  if(sb){
+    sb.innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(6,182,212,.18)); border:1.5px solid var(--acc2); border-radius:12px; padding:12px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
+        <div>
+          <span style="font-size:11px; font-weight:800; color:var(--acc2); text-transform:uppercase">🔀 СМЕШАННАЯ СЕССИЯ · ИНТЕРЛИВИНГ</span>
+          <div style="font-size:12.5px; color:var(--txt); margin-top:3px">Темы чередуются специально: ${cats.map(interleavingCatLabel).join(' → ')}</div>
+        </div>
+        <button class="btn sm ghost" onclick="setQuizMode('terms', document.getElementById('quiz_mode_terms'))">✕ Завершить</button>
+      </div>`;
+  }
+  document.querySelectorAll('#quiz .controls .chip').forEach(c => c.classList.remove('active'));
+  const ilChip = document.getElementById('quiz_mode_interleave');
+  if(ilChip) ilChip.classList.add('active');
+  renderQuizQuestion();
+}
+
+function finishInterleavingSession(box){
+  const pct = Math.round((quiz.score / quiz.total) * 100);
+  interleavingStats.sessions++;
+  interleavingStats.best = Math.max(interleavingStats.best, pct);
+  localStorage.setItem('cn_interleaving_stats', JSON.stringify(interleavingStats));
+
+  // Ежедневный квест q4
+  if(typeof dailyQuestsDone !== 'undefined' && !dailyQuestsDone.q4){
+    dailyQuestsDone.q4 = true;
+    localStorage.setItem('cn_daily_quests', JSON.stringify(dailyQuestsDone));
+    if(typeof addFundCapital === 'function') addFundCapital(18000, 70, 'Смешанная интерливинг-сессия');
+  }
+
+  // Разбор по категориям
+  const byCat = {};
+  (quiz.results || []).forEach(r => {
+    if(!r.cat) return;
+    byCat[r.cat] = byCat[r.cat] || { ok: 0, total: 0 };
+    byCat[r.cat].total++;
+    if(r.ok) byCat[r.cat].ok++;
+  });
+  const catRows = Object.keys(byCat).map(c => {
+    const s = byCat[c];
+    const p = Math.round((s.ok / s.total) * 100);
+    const col = p >= 80 ? 'var(--ok)' : (p >= 50 ? 'var(--warn)' : 'var(--bad)');
+    return `<div style="display:flex; justify-content:space-between; align-items:center; background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px; font-size:13px">
+      <span style="color:var(--txt)">${interleavingCatLabel(c)}</span>
+      <b style="color:${col}">${s.ok}/${s.total} · ${p}%</b>
+    </div>`;
+  }).join('');
+
+  const verdict = pct >= 80
+    ? 'Отлично! Чередование тем тебе по плечу — мозг уверенно переключается между концептами.'
+    : 'Это нормально: смешанные сессии ощущаются труднее блочных, но именно поэтому они сильнее закрепляют материал (эффект «желательной трудности»). Слабые категории выше — повтори их уроки.';
+
+  box.innerHTML = `
+    <div style="text-align:center; padding:24px">
+      <div style="font-size:44px; margin-bottom:10px">${pct >= 80 ? '🎉' : '🔀'}</div>
+      <h2>Интерливинг-сессия завершена!</h2>
+      <div style="font-size:24px; font-weight:800; color:${pct >= 80 ? 'var(--ok)' : 'var(--warn)'}; margin:10px 0">${quiz.score} из ${quiz.total} (${pct}%)</div>
+      <div style="font-size:13px; color:var(--mut); margin-bottom:16px">Всего смешанных сессий: <b style="color:var(--txt)">${interleavingStats.sessions}</b> · Лучший результат: <b style="color:var(--txt)">${interleavingStats.best}%</b></div>
+      <div style="max-width:420px; margin:0 auto 16px; display:flex; flex-direction:column; gap:6px; text-align:left">${catRows}</div>
+      <div style="max-width:520px; margin:0 auto 18px; font-size:13px; color:var(--txt); line-height:1.55; background:rgba(124,58,237,.08); border:1px solid var(--acc1); border-radius:10px; padding:12px 16px">${verdict}</div>
+      <button class="btn" onclick="startInterleavingSession()">🔄 Ещё одна смешанная сессия</button>
+    </div>
+  `;
+  save();
+  updateHeader();
+  renderProgressStats();
+}
+
+/* =========================================================================
+   B2. ПРЕДТЕСТ ПЕРЕД УРОКОМ (pre-test effect)
+   Вопросы ДО контента без штрафа к статистике: попытка ответить «вслепую»
+   разгоняет последующее кодирование материала.
+   ========================================================================= */
+var pretestDone = load('cn_pretest_done', {});
+var pretestCache = {};
+
+function getPretestQuestions(l){
+  if(pretestCache[l.id]) return pretestCache[l.id];
+  const qs = [];
+  const norm = q => ({
+    q: q.q,
+    opts: q.opts,
+    a: q.a !== undefined ? q.a : (q.correctOpt !== undefined ? q.correctOpt : 0),
+    teaser: q.explain || ''
+  });
+  if(l.quiz) qs.push({ ...norm(l.quiz), src: 'Вопрос этого урока' });
+  const cat = (typeof LESSON_BEGINNER_CAT !== 'undefined') ? LESSON_BEGINNER_CAT[l.id] : null;
+  const siblings = LESSONS.filter(x => x && x.id !== l.id && x.quiz && (cat ? LESSON_BEGINNER_CAT[x.id] === cat : x.phase === l.phase));
+  if(siblings.length){
+    const s = siblings[Math.floor(Math.random() * siblings.length)];
+    qs.push({ ...norm(s.quiz), src: 'Из соседнего урока: ' + (s.num || s.id) });
+  } else if(l.terms && l.terms.length){
+    const name = typeof l.terms[0] === 'string' ? l.terms[0] : l.terms[0].ru;
+    const idx = findTermIndexByName(name);
+    if(idx >= 0){
+      const t = TERMS[idx];
+      const others = TERMS.filter(x => x.t !== t.t).sort(() => 0.5 - Math.random()).slice(0, 3);
+      const allOpts = [t.t, ...others.map(o => o.t)].sort(() => 0.5 - Math.random());
+      qs.push({ q: `💡 «${t.d}» — о каком понятии речь?`, opts: allOpts, a: allOpts.indexOf(t.t), teaser: `<b>${t.t}</b>: ${t.d}`, src: 'Глоссарий' });
+    }
+  }
+  pretestCache[l.id] = qs.slice(0, 2);
+  return pretestCache[l.id];
+}
+
+function renderPretestBlock(l){
+  if(typeof pretestDone === 'undefined' || pretestDone[l.id]) return '';
+  const qs = getPretestQuestions(l);
+  if(!qs.length) return '';
+  return `
+    <div id="pretest_box_${l.id}" style="background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(124,58,237,.08)); border:1.5px dashed var(--acc2); border-radius:14px; padding:18px 20px; margin-bottom:20px">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:8px">
+        <span style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase">🧪 Предтест: разгон памяти (2 вопроса)</span>
+        <button class="btn sm ghost" style="font-size:11px" onclick="skipPretest('${l.id}')">Пропустить →</button>
+      </div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:14px; line-height:1.5">
+        Ответь <b style="color:var(--txt)">до</b> изучения материала. Ошибиться — нормально и даже полезно: попытка вспомнить заранее усиливает запоминание (эффект предтестирования). На статистику темы ответы не влияют.
+      </div>
+      ${qs.map((q, qi) => `
+        <div id="pretest_q_${l.id}_${qi}" style="background:#040714; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px">
+          <div style="font-size:10.5px; color:var(--mut); text-transform:uppercase; font-weight:700; margin-bottom:4px">${q.src || ''}</div>
+          <div style="font-size:14px; font-weight:700; color:var(--txt); margin-bottom:10px; line-height:1.45">${q.q}</div>
+          <div style="display:flex; flex-direction:column; gap:6px">
+            ${q.opts.map((o, oi) => `<button class="ans" style="text-align:left; padding:9px 12px; font-size:13px" onclick="handlePretestAnswer('${l.id}', ${qi}, ${oi})">${o}</button>`).join('')}
+          </div>
+          <div id="pretest_teaser_${l.id}_${qi}" style="display:none; margin-top:10px; padding:10px 12px; border-radius:8px; font-size:12.5px; background:rgba(6,182,212,.08); border-left:3px solid var(--acc2); color:var(--txt); line-height:1.5"></div>
+        </div>
+      `).join('')}
+      <div id="pretest_finish_${l.id}" style="display:none; text-align:center; margin-top:6px">
+        <button class="btn" style="background:var(--ok); color:#040714; font-weight:800" onclick="skipPretest('${l.id}')">🚀 Разогрелся — перейти к уроку</button>
+      </div>
+    </div>
+  `;
+}
+
+function handlePretestAnswer(lessonId, qIdx, optIdx){
+  const l = LESSONS.find(x => x.id === lessonId);
+  if(!l) return;
+  const q = getPretestQuestions(l)[qIdx];
+  if(!q) return;
+  const box = document.getElementById(`pretest_q_${lessonId}_${qIdx}`);
+  if(!box) return;
+  box.querySelectorAll('.ans').forEach((btn, i) => {
+    btn.disabled = true;
+    if(i === q.a) btn.classList.add('ok');
+    else if(i === optIdx) btn.classList.add('bad');
+  });
+  const teaser = document.getElementById(`pretest_teaser_${lessonId}_${qIdx}`);
+  if(teaser){
+    teaser.style.display = 'block';
+    teaser.innerHTML = (optIdx === q.a ? '<b>Верно, и это до изучения урока! 🎯</b> ' : '<b>Нормально ошибиться — память уже разогрета.</b> ') + (q.teaser || '');
+  }
+  // Когда отвечено на все вопросы — показать кнопку перехода к уроку
+  const total = getPretestQuestions(l).length;
+  let answered = 0;
+  for(let i = 0; i < total; i++){
+    const b = document.getElementById(`pretest_q_${lessonId}_${i}`);
+    if(b && b.querySelector('.ans:disabled')) answered++;
+  }
+  if(answered >= total){
+    const fin = document.getElementById(`pretest_finish_${lessonId}`);
+    if(fin) fin.style.display = 'block';
+  }
+}
+
+function skipPretest(lessonId){
+  pretestDone[lessonId] = 1;
+  localStorage.setItem('cn_pretest_done', JSON.stringify(pretestDone));
+  const l = LESSONS.find(x => x.id === lessonId);
+  if(l) renderLessonDetail(l);
+}
+
+/* =========================================================================
+   B3. МЕТОД ФЕЙНМАНА — ОПЕРАЦИОНАЛИЗАЦИЯ
+   Объясни своими словами → сверь с эталоном и чек-листом → самооценка 0–4.
+   Самооценка пишется в topicStats; при ≤2 термины урока уходят в SM-2 очередь.
+   Текст сохраняется в «портфель объяснений» (вкладка Прогресс).
+   ========================================================================= */
+var feynmanPortfolio = load('cn_feynman_portfolio', {});
+
+const FEYNMAN_MODEL_ANSWERS_V2 = {
+  p0_l1: 'Криптовалюта — это цифровые деньги в открытой общей тетрадке (блокчейне), где каждый перевод проверяется тысячами независимых участников без начальников и банков.',
+  p0_l2: 'Адрес — это прозрачный почтовый ящик на улице (номер счета), а приватный ключ — секретный ключ от замка ящика, которым подписывают переводы.',
+  p0_l3: 'CEX — биржа с поддержкой и хранением на ее серверах (как банк). DEX — обменник на автомате со смарт-контрактом прямо с личного кошелька.',
+  p0_l4: 'Цена покупки (Bid) — максимум от покупателя, цена продажи (Ask) — минимум от продавца. Спред — зазор между ними.',
+  p0_l5: 'Свеча — это контейнер, куда упакованы сотни сделок за минуту: первая цена (Open), пик (High), дно (Low) и последняя цена (Close).',
+  p0_l6: 'Если закрытие выше открытия — свеча зеленая (рост). Торчащие фитили показывают, куда залетала цена внутри периода.',
+  p0_l7: 'Часовая свеча берет цену открытия от 1-й минуты и закрытие от 60-й минуты, а максимум и минимум — за все 60 минут вместе.',
+  p0_l8: 'Объём снизу показывает, подтвержден ли рост реальными деньгами или это случайная манипуляция на пустом стакане.',
+  p0_l9: 'Плечо — это лупа: оно одинаково увеличивает и прибыль, и убыток. При плече x10 движение цены против тебя на 10% уничтожает залог — это и есть ликвидация.',
+  p0_l10: 'Кривая баланса (эквити) должна расти плавно под 45 градусов с минимальными ямами просадок — это главный критерий качества стратегии.'
+};
+
+const FEYNMAN_CHECKLISTS = {
+  p0_l1: [
+    'сказал, что блокчейн — это общая книга записей, копия которой есть у многих участников',
+    'упомянул, что нет единого владельца или банка-посредника',
+    'сказал, что записи почти невозможно подделать задним числом'
+  ],
+  p0_l2: [
+    'разделил адрес (публичный, можно показывать) и приватный ключ (секретный)',
+    'сказал, что ключ подписывает переводы',
+    'упомянул, что потеря ключа = потеря доступа к деньгам навсегда'
+  ],
+  p0_l3: [
+    'объяснил, что CEX хранит деньги у себя (как банк)',
+    'сказал, что DEX работает через смарт-контракт прямо с твоего кошелька',
+    'упомянул компромисс: удобство и поддержка против контроля над ключами'
+  ],
+  p0_l4: [
+    'объяснил Bid (лучшая цена покупателя) и Ask (лучшая цена продавца)',
+    'сказал, что спред — это зазор между ними',
+    'упомянул, что маркет-ордер «проедает» стакан и платит спред'
+  ],
+  p0_l5: [
+    'перечислил четыре цены свечи: Open, High, Low, Close',
+    'сказал, что свеча упаковывает множество сделок за период',
+    'объяснил, что тело и фитили показывают разное'
+  ],
+  p0_l9: [
+    'сказал, что плечо — это заёмные деньги, увеличивающие позицию',
+    'объяснил, что плечо умножает и прибыль, и убыток одинаково',
+    'назвал ликвидацию: принудительное закрытие при нехватке залога',
+    'привёл пороги: x10 ликвидируется при −10% против позиции, x25 — при −4%'
+  ]
+};
+
+function feynmanTopicOf(lessonId){
+  const l = LESSONS.find(x => x.id === lessonId);
+  if(!l) return 'feynman_general';
+  if(l.phase === 7 && typeof mathTopicOf === 'function') return mathTopicOf(l.num);
+  if(typeof LESSON_BEGINNER_CAT !== 'undefined' && LESSON_BEGINNER_CAT[lessonId]) return 'beginner_' + LESSON_BEGINNER_CAT[lessonId];
+  return 'phase' + (l.phase || 0);
+}
+
+function getFeynmanChecklist(lesson){
+  if(FEYNMAN_CHECKLISTS[lesson.id]) return FEYNMAN_CHECKLISTS[lesson.id];
+  const recap = (lesson.blocks || []).find(b => b.type === 'recap');
+  if(recap && recap.points && recap.points.length){
+    return recap.points.slice(0, 4).map(p => {
+      const short = String(p).replace(/\n/g, ' ').slice(0, 90);
+      return `упомянул, что «${short}${String(p).length > 90 ? '…' : ''}»`;
+    });
+  }
+  if(lesson.terms && lesson.terms.length){
+    return lesson.terms.slice(0, 3).map(t => `простыми словами раскрыл термин «${typeof t === 'string' ? t : t.ru}»`);
+  }
+  return ['сформулировал главную мысль урока без сложных терминов', 'привёл бытовой пример или аналогию', 'назвал, зачем это нужно на практике'];
+}
+
+// Переопределяем базовый бокс: теперь с эталоном, чек-листом и самооценкой
+renderFeynmanBox = function(lesson){
+  const modelAns = FEYNMAN_MODEL_ANSWERS_V2[lesson.id] || (function(){
+    const concept = (lesson.blocks || []).find(b => b.type === 'concept' && b.level1);
+    if(concept) return String(concept.level1).split('\n').filter(x => x.trim()).slice(0, 2).join(' ');
+    return 'Суть концепции: своими словами сформулируй 1–2 главных правила без сложных терминов.';
+  })();
+  const checklist = getFeynmanChecklist(lesson);
+  const saved = feynmanPortfolio[lesson.id];
+
+  return `
+    <div style="background:rgba(124,58,237,.06); border:1.5px dashed var(--acc1); border-radius:12px; padding:16px 18px; margin:20px 0">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px">
+        <span style="font-size:12px; font-weight:800; color:var(--acc1); text-transform:uppercase">🧑‍🏫 МЕТОД ФЕЙНМАНА: ОБЪЯСНИ СВОИМИ СЛОВАМИ</span>
+        ${saved ? `<span class="badge" style="background:rgba(34,197,94,.15); color:var(--ok)">Самооценка: ${saved.score}/4</span>` : '<span style="font-size:11.5px; color:var(--mut)">Объясни, как другу без подготовки</span>'}
+      </div>
+      <div style="font-size:12.5px; color:var(--txt); margin-bottom:10px">
+        Напиши объяснение темы урока так, будто рассказываешь другу, который вообще не в теме. Потом сверься с эталоном и честно оцени себя — это и есть метод Фейнмана.
+      </div>
+      <textarea id="feynman_input_${lesson.id}" rows="3" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение...">${saved ? saved.text.replace(/</g, '&lt;') : ''}</textarea>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px">
+        <button class="btn sm" style="background:var(--acc1)" onclick="revealFeynmanCheck('${lesson.id}')">
+          ✨ Сверить с эталоном и оценить себя
+        </button>
+      </div>
+      <div id="feynman_model_${lesson.id}" style="display:none; margin-top:12px">
+        <div style="padding:12px; background:#040714; border-left:3px solid var(--ok); border-radius:6px; font-size:12.5px; color:var(--txt); line-height:1.5; margin-bottom:10px">
+          <b>💡 Эталонное объяснение простыми словами:</b><br>${modelAns}
+        </div>
+        <div style="padding:12px; background:#040714; border-left:3px solid var(--acc2); border-radius:6px; margin-bottom:10px">
+          <div style="font-size:11px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">Чек-лист обязательных элементов — отметь, что было в твоём объяснении:</div>
+          <ul style="margin:0; padding-left:18px; font-size:12.5px; color:var(--txt); line-height:1.6">
+            ${checklist.map(c => `<li>☐ ${c}</li>`).join('')}
+          </ul>
+        </div>
+        <div style="font-size:12.5px; color:var(--txt); margin-bottom:8px"><b>Честная самооценка (0 — совсем не смог, 4 — объяснил всё своими словами):</b></div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap">
+          ${[0,1,2,3,4].map(s => `<button class="btn sm ${saved && saved.score === s ? '' : 'ghost'}" style="${saved && saved.score === s ? 'background:var(--ok); color:#040714; font-weight:800' : ''}" onclick="submitFeynmanScore('${lesson.id}', ${s})">${s}</button>`).join('')}
+        </div>
+        <div id="feynman_verdict_${lesson.id}" style="margin-top:10px; font-size:12.5px; color:var(--mut)"></div>
+      </div>
+    </div>
+  `;
+};
+
+function revealFeynmanCheck(lessonId){
+  const box = document.getElementById('feynman_model_' + lessonId);
+  if(box) box.style.display = 'block';
+}
+
+function submitFeynmanScore(lessonId, score){
+  const ta = document.getElementById('feynman_input_' + lessonId);
+  const text = ta ? ta.value.trim() : '';
+  if(!text){
+    const v = document.getElementById('feynman_verdict_' + lessonId);
+    if(v) v.innerHTML = '<span style="color:var(--warn)">Сначала напиши своё объяснение в поле выше — пустая самооценка не считается.</span>';
+    return;
+  }
+  feynmanPortfolio[lessonId] = { text, score, ts: Date.now() };
+  localStorage.setItem('cn_feynman_portfolio', JSON.stringify(feynmanPortfolio));
+
+  // (а) запись в topicStats
+  const topicId = feynmanTopicOf(lessonId);
+  const st = topicStats[topicId] || { errorRate: 50, correct: 0, errors: 0, mastery: 'INTRODUCED' };
+  if(score <= 2){ st.errors++; st.errorRate = Math.min(100, (st.errorRate || 0) + 6); }
+  else { st.correct++; st.errorRate = Math.max(0, (st.errorRate || 0) - 5); }
+  topicStats[topicId] = st;
+
+  // (б) при самооценке ≤2 — термины урока в SM-2 очередь
+  let seeded = 0;
+  if(score <= 2){
+    const l = LESSONS.find(x => x.id === lessonId);
+    ((l && l.terms) || []).forEach(t => {
+      const name = typeof t === 'string' ? t : t.ru;
+      const idx = findTermIndexByName(name);
+      if(idx >= 0 && !srsState[idx]){ srsState[idx] = { interval: 0, ease: 2.5, reps: 0 }; seeded++; }
+    });
+  }
+  save();
+
+  const v = document.getElementById('feynman_verdict_' + lessonId);
+  if(v){
+    v.innerHTML = score <= 2
+      ? `<span style="color:var(--warn)">Принято: ${score}/4. Это сигнал доработать тему: термины урока добавлены в очередь повторений SM-2${seeded ? ` (+${seeded})` : ''} — загляни в Глоссарий завтра.</span>`
+      : `<span style="color:var(--ok)">Отлично: ${score}/4! Объяснение сохранено в твоём «портфеле объяснений» на вкладке Прогресс.</span>`;
+  }
+  if(score >= 3 && typeof addFundCapital === 'function') addFundCapital(5000, 20, 'Метод Фейнмана: уверенное объяснение');
+}
+
+function renderFeynmanPortfolio(){
+  const box = document.getElementById('feynman_portfolio_box');
+  if(!box) return;
+  const ids = Object.keys(feynmanPortfolio).sort((a, b) => (feynmanPortfolio[b].ts || 0) - (feynmanPortfolio[a].ts || 0));
+  if(!ids.length){ box.innerHTML = ''; return; }
+  const rows = ids.slice(0, 12).map(id => {
+    const f = feynmanPortfolio[id];
+    const l = LESSONS.find(x => x.id === id);
+    const col = f.score >= 3 ? 'var(--ok)' : 'var(--warn)';
+    return `<div style="background:#040714; border:1px solid var(--line); border-radius:10px; padding:12px 14px">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px">
+        <b style="font-size:13px; color:var(--txt)">${l ? (l.num ? 'Урок ' + l.num + ' · ' : '') + l.title : id}</b>
+        <span class="badge" style="background:rgba(34,197,94,.12); color:${col}">${f.score}/4</span>
+      </div>
+      <div style="font-size:12.5px; color:var(--mut); line-height:1.5; font-style:italic">«${f.text.replace(/</g, '&lt;')}»</div>
+    </div>`;
+  }).join('');
+  box.innerHTML = `
+    <div style="background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:24px">
+      <h3 style="color:var(--txt); margin-bottom:6px">🧑‍🏫 Портфель объяснений (метод Фейнмана)</h3>
+      <p style="color:var(--mut); font-size:13px; margin-bottom:16px">Твои объяснения уроков своими словами и честные самооценки. Перечитывай перед сном — это усиливает консолидацию.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:10px">${rows}</div>
+    </div>`;
+}
+
+const _origRenderProgressStatsFeynman = renderProgressStats;
+renderProgressStats = function(){
+  const r = _origRenderProgressStatsFeynman.apply(this, arguments);
+  renderFeynmanPortfolio();
+  return r;
+};
+
+/* =========================================================================
+   B4. РИТУАЛ КОНСОЛИДАЦИИ (NSDR + пост-сессионный протокол)
+   После завершения урока: таймер «пустого отдыха» 5–10 минут → напоминание
+   об аэробной нагрузке → вечерний дайджест SM-2.
+   ========================================================================= */
+var consolidationTimerId = null;
+
+function showConsolidationScreen(lessonId){
+  closeConsolidationScreen();
+  const l = LESSONS.find(x => x.id === lessonId);
+  const overlay = document.createElement('div');
+  overlay.id = 'consolidation_overlay';
+  overlay.style.cssText = 'position:fixed; inset:0; background:rgba(2,4,12,.94); z-index:999999; display:flex; justify-content:center; align-items:center; padding:20px; backdrop-filter:blur(10px)';
+  overlay.innerHTML = `
+    <div style="background:#090d1f; border:2px solid var(--acc2); border-radius:20px; max-width:560px; width:100%; padding:30px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.9)">
+      <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">🧘 Консолидация памяти</div>
+      <h2 style="margin:0 0 8px; font-size:20px; color:var(--txt)">Урок «${l ? l.title : ''}» завершён — теперь самое важное</h2>
+      <div id="consolidation_body"></div>
+    </div>`;
+  document.body.appendChild(overlay);
+  renderConsolidationPhase1();
+}
+
+function renderConsolidationPhase1(){
+  const body = document.getElementById('consolidation_body');
+  if(!body) return;
+  body.innerHTML = `
+    <p style="font-size:13.5px; color:var(--mut); line-height:1.6; margin:0 0 16px">
+      Следующие 5–10 минут мозг «прописывает» изученное в долговременную память.
+      Условие одно: <b style="color:var(--txt)">никаких новых стимулов</b> — не открывай мессенджеры и ленты, отведи взгляд от экрана, сиди или лежи в тишине (NSDR-протокол).
+    </p>
+    <div id="consolidation_timer" style="font-size:46px; font-weight:900; color:var(--acc2); margin:10px 0 16px; font-variant-numeric:tabular-nums">10:00</div>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:14px">
+      <button class="btn sm ghost" onclick="setConsolidationMinutes(5)">5 мин</button>
+      <button class="btn sm" style="background:var(--acc2)" onclick="setConsolidationMinutes(10)">10 мин</button>
+      <button class="btn" style="background:var(--ok); color:#040714; font-weight:800" onclick="startConsolidationTimer()">▶ Начать паузу</button>
+    </div>
+    <button class="btn sm ghost" style="color:var(--mut); font-size:11.5px" onclick="renderConsolidationPhase2()">Пропустить паузу (не рекомендуется) →</button>
+  `;
+  window._consolidationSeconds = 600;
+}
+
+function setConsolidationMinutes(m){
+  window._consolidationSeconds = m * 60;
+  const t = document.getElementById('consolidation_timer');
+  if(t) t.textContent = String(m).padStart(2, '0') + ':00';
+}
+
+function startConsolidationTimer(){
+  if(consolidationTimerId) clearInterval(consolidationTimerId);
+  const t = document.getElementById('consolidation_timer');
+  consolidationTimerId = setInterval(() => {
+    window._consolidationSeconds--;
+    const s = Math.max(0, window._consolidationSeconds);
+    const mm = Math.floor(s / 60), ss = s % 60;
+    if(t) t.textContent = String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
+    if(s <= 0){
+      clearInterval(consolidationTimerId);
+      consolidationTimerId = null;
+      renderConsolidationPhase2();
+    }
+  }, 1000);
+}
+
+function renderConsolidationPhase2(){
+  if(consolidationTimerId){ clearInterval(consolidationTimerId); consolidationTimerId = null; }
+  const body = document.getElementById('consolidation_body');
+  if(!body) return;
+  const due = (typeof getSrsStats === 'function') ? getSrsStats().dueCount : 0;
+  body.innerHTML = `
+    <div style="text-align:left; font-size:13.5px; color:var(--txt); line-height:1.65">
+      <div style="background:rgba(34,197,94,.08); border:1px solid var(--ok); border-radius:10px; padding:12px 14px; margin-bottom:12px">
+        <b style="color:var(--ok)">🚶 Шаг 2 — движение.</b> В ближайшие 30 минут дай себе 20–30 минут аэробной нагрузки: прогулка быстрым шагом, велосипед, лёгкий бег. Это заметно усиливает закрепление только что изученного.
+      </div>
+      <div style="background:rgba(124,58,237,.08); border:1px solid var(--acc1); border-radius:10px; padding:12px 14px; margin-bottom:12px">
+        <b style="color:var(--acc1)">🌙 Шаг 3 — вечером.</b> Перед сном повтори карточки SM-2: на сегодня по плану <b>${due}</b> терминов. Сон 7–9 часов завершает консолидацию — без него дневная учёба «смывается».
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+      <button class="btn" style="background:var(--ok); color:#040714; font-weight:800" onclick="closeConsolidationScreen()">✓ Понял, иду гулять</button>
+      <button class="btn ghost" onclick="closeConsolidationScreen(); go('glossary'); if(typeof startSrsReviewSession==='function') startSrsReviewSession()">🧠 Повторить SM-2 сейчас</button>
+    </div>
+  `;
+}
+
+function closeConsolidationScreen(){
+  if(consolidationTimerId){ clearInterval(consolidationTimerId); consolidationTimerId = null; }
+  const ov = document.getElementById('consolidation_overlay');
+  if(ov) ov.remove();
+}
+
+// Оборачиваем завершение урока: экран консолидации показывается только при реальном зачёте
+const _origCLM_Consolidation = completeLessonWithMastery;
+completeLessonWithMastery = function(id){
+  const wasDone = lessonsDone[id] === 1;
+  const res = _origCLM_Consolidation.apply(this, arguments);
+  try{
+    if(!wasDone && lessonsDone[id] === 1){
+      setTimeout(() => showConsolidationScreen(id), 400);
+    }
+  }catch(e){}
+  return res;
+};
+
+/* =========================================================================
+   B5. МОДУЛЬ «ВАЙБКОДИНГ ДЛЯ КРИПТО-АРХИТЕКТОРА» (4 урока, Фаза 6 · Бонусы)
+   Закрывает разрыв между целью (торговля ботами через AI-инструменты) и
+   контентом: workflow с ИИ-агентом, ревью сгенерированного кода,
+   галлюцинации LLM, мини-проект «бэктест от ТЗ до теста».
+   ========================================================================= */
+const VIBECODING_LESSONS = [
+  {
+    "id": "vc_l1",
+    "phase": 6,
+    "num": "ВК1",
+    "title": "Вайбкодинг: управляй ИИ-агентом как архитектор, а не как заклинатель",
+    "cognitiveLoad": "easy",
+    "timeEst": "7 мин",
+    "lead": "ИИ-агент пишет код бота быстрее любого джуна, но без ТЗ, декомпозиции и ревью он уверенно соберёт тебе красивую ловушку. Вайбкодинг — это дисциплина управления, а не магия промптов.",
+    "termsCount": 3,
+    "terms": [
+      { "ru": "Вайбкодинг", "en": "vibe coding", "desc": "Стиль разработки, где код пишет ИИ-агент по твоим текстовым инструкциям, а ты — архитектор и ревьюер." },
+      { "ru": "Декомпозиция задачи", "en": "task decomposition", "desc": "Разбиение большой задачи на маленькие проверяемые шаги, каждый из которых агент может решить без фантазий." },
+      { "ru": "Контекстное окно", "en": "context window", "desc": "Объём текста, который модель «видит» одновременно; всё, что не влезло, агент забыл или выдумал." }
+    ],
+    "prerequisites": [],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "Представь, что ты нанял гениального стажёра, который пишет код со скоростью машинки, но: не знает твою биржу, не помнит вчерашний разговор и никогда не признаётся, что чего-то не знает — просто уверенно додумает. Это и есть ИИ-агент. Твоя работа — не «писать промпты», а управлять: поставить задачу, разбить на шаги, проверить результат.",
+        "level2": "Рабочий цикл вайбкодинга (каждый шаг обязателен):\n\n1. ТЗ человеком. Пишешь сам, текстом: что скрипт делает, какие данные на входе, что на выходе, какие комиссии и ограничения учесть. Правило: если ты не можешь сформулировать ТЗ — агент тем более не угадает.\n2. Декомпозиция. Разбиваешь ТЗ на шаги по 15–30 минут работы агента: «загрузи свечи», «посчитай сигнал», «добавь комиссии». Один шаг = один запрос.\n3. Промпт с контекстом. В каждый запрос вкладываешь: цель шага, формат данных, ограничения («не используй будущие данные», «учти taker-комиссию 0.05%»).\n4. Ревью результата (урок ВК2). Читаешь код как чужой: ищешь look-ahead, пропущенные издержки, отсутствие обработки ошибок API.\n5. Тест (урок ВК4). Прогоняешь на маленьком примере с известным ответом, потом на реальных данных.",
+        "level3": "Почему нельзя просить «напиши мне торгового бота» одним запросом: задача не влезает в контекстное окно целиком, агент начнёт экономить — выкинет обработку ошибок, «упростит» комиссии до нуля и подгонит результат под красивый ответ. Декомпозиция — это не бюрократия, а единственный способ удержать качество.",
+        "simpleAnalogy": "Управлять ИИ-агентом — как ставить задачи курьеру с фотографической памятью и нулевым жизненным опытом: «купи продукты» — привезёт что-то похожее на продукты; «купи 2 кг картофеля в «Пятёрочке» на углу, чек пришли фото» — получишь картофель."
+      },
+      {
+        "type": "warn",
+        "text": "Самая дорогая ошибка новичка-вайбкодера: принять первый же работающий («запустился!») код как готовый. «Запустился» ≠ «правильно считает». Бот с look-ahead bias запустится и покажет +300% на бэктесте — и сольёт реальный депозит."
+      },
+      {
+        "type": "list",
+        "title": "Минимальный ритуал перед каждым запросом к агенту",
+        "items": [
+          "Сформулировал ли я шаг одной фразой? (Если нет — дроби дальше.)",
+          "Вложил ли формат входных данных (пример строки/свечи)?",
+          "Указал ли издержки: комиссии, спред, проскальзывание?",
+          "Запретил ли подглядывать в будущее (данные после момента решения)?",
+          "Попросил ли агента написать тест к этому шагу?"
+        ]
+      },
+      {
+        "type": "recap",
+        "points": [
+          "Вайбкодинг = дисциплина управления: ТЗ → декомпозиция → промпт с контекстом → ревью → тест.",
+          "Большая задача одним запросом гарантирует «урезанный» и выдуманный код: контекстное окно конечно.",
+          "Ты — архитектор и ревьюер, агент — быстрый стажёр без памяти и без совести.",
+          "«Запустился» — это начало проверки, а не её конец."
+        ],
+        "english": [
+          { "ru": "Вайбкодинг", "en": "Vibe coding" },
+          { "ru": "Декомпозиция", "en": "Task decomposition" },
+          { "ru": "Контекстное окно", "en": "Context window" },
+          { "ru": "Техническое задание", "en": "Specification (spec)" }
+        ]
+      }
+    ],
+    "practice": [
+      { "text": "Возьми задачу «скрипт, который скачивает часовые свечи BTC/USDT и считает доходность стратегии пересечения скользящих средних». Разбей её на 5–7 шагов для ИИ-агента так, чтобы каждый шаг был проверяемым. Запиши шаги текстом.", "criteria": "Каждый шаг: одна фраза, известен вход, известен выход, можно проверить глазами. Хотя бы один шаг явно про комиссии и один — про запрет look-ahead." }
+    ],
+    "checks": [
+      "Я понимаю, почему «напиши бота» одним запросом — плохая идея",
+      "Я умею формулировать ТЗ до того, как открываю чат с агентом",
+      "Я знаю, что такое контекстное окно и чем грозит его переполнение"
+    ],
+    "quiz": {
+      "q": "Какой порядок действий правильный при работе с ИИ-агентом над кодом бота?",
+      "opts": [
+        "Промпт → сразу на реальный счёт → ревью при первом убытке",
+        "ТЗ → декомпозиция на проверяемые шаги → промпт с контекстом → ревью кода → тест на известном примере",
+        "Один большой промпт со всей задачей, чтобы агент видел картину целиком",
+        "Попросить агента самого написать ТЗ, код и тесты — он справится лучше"
+      ],
+      "a": 1,
+      "explain": "Декомпозиция и ревью — ядро вайбкодинга. Один большой запрос переполняет контекст и провоцирует «урезания» и галлюцинации; отсутствие теста превращает бэктест в художественную литературу."
+    }
+  },
+  {
+    "id": "vc_l2",
+    "phase": 6,
+    "num": "ВК2",
+    "title": "Ревью сгенерированного кода бота: чек-лист архитектора",
+    "cognitiveLoad": "medium",
+    "timeEst": "8 мин",
+    "lead": "Агент выдал 200 строк кода бэктеста. Где там зарыты look-ahead, нулевые комиссии и молчаливые ошибки API? Чек-лист из 7 пунктов, который находит 90% смертельных дефектов.",
+    "termsCount": 3,
+    "terms": [
+      { "ru": "Look-ahead bias", "en": "look-ahead bias", "desc": "Ошибка, при которой решение в бэктесте принимается по данным, которых в реальном моменте ещё не существовало." },
+      { "ru": "Идемпотентность", "en": "idempotency", "desc": "Свойство операции: повторный вызов с тем же ключом не создаёт дубликат (критично для отправки ордеров)." },
+      { "ru": "Обработка ошибок API", "en": "API error handling", "desc": "Реакция кода на таймауты, рейт-лимиты и обрывы соединения с биржей: ретраи, паузы, безопасная остановка." }
+    ],
+    "prerequisites": ["vc_l1"],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "Ревью — это чтение чужого кода с установкой «он врёт, пока не докажет обратное». Тебе не нужно понимать каждую строку: нужно проверить семь мест, где живут смертельные ошибки торгового кода. Это как техосмотр машины перед трассой: не разбираешь двигатель, но проверяешь тормоза.",
+        "level2": "Чек-лист ревью сгенерированного кода (по убыванию смертельности):\n\n1. Look-ahead. Сигнал на свече N считается по close[N], а сделка совершается по close[N] же — значит, бот «увидел» закрытие до его наступления. Правильно: сигнал N → вход на open[N+1].\n2. Издержки. Ищи в коде слова fee/commission/slippage. Нет их или нули — бэктест фальшивый. Минимум: taker 0.05% на сделку + проскальзывание.\n3. Ошибки API. Есть ли try/except, ретраи с паузой, реакция на HTTP 429 (рейт-лимит)? Молчаливая ошибка = бот думает, что ордер выставлен, а он нет.\n4. Идемпотентность ордеров. Повторная отправка после таймаута не должна создать вторую позицию (clientOrderId).\n5. Единицы измерения. bps vs %, секунды vs миллисекунды, base vs quote валюта — классическая путаница, которая «не падает», а тихо искажает.\n6. Деления на ноль и пустые данные. Пустой стакан, пропуски свечей, нулевой объём.\n7. Состояние. Что будет при перезапуске бота посреди позиции? Восстановится ли он по данным биржи или «забудет» позицию?",
+        "level3": "Приём «просветный тест»: попроси агента добавить логирование каждого решения (время, цена, сигнал, причина входа) и прогони на 50 свечах. Читая лог глазами, ты найдёшь look-ahead за минуты — время решения всегда раньше цены исполнения или нет.",
+        "simpleAnalogy": "Чек-лист — как список перед выходом из дома: газ, вода, ключи, документы. Ты можешь не понимать устройство газовой плиты, но ручку проверить обязан."
+      },
+      {
+        "type": "table",
+        "title": "Симптом → диагноз",
+        "head": ["Что видишь в коде/результате", "Вероятный диагноз"],
+        "rows": [
+          ["Equity растёт идеально плавно, без просадок", "Look-ahead или нулевые издержки"],
+          ["Вход по той же цене, что и сигнальная свеча close", "Look-ahead bias"],
+          ["Ни одного слова fee/commission в файле", "Бэктест без издержек — результат мнимый"],
+          ["requests.post(...) без try/except и таймаута", "Первый сбой сети = зависший или дублирующий бот"],
+          ["Sharpe > 5 на первом же бэктесте", "Ошибка в данных или в коде, а не «грааль»"]
+        ]
+      },
+      {
+        "type": "recap",
+        "points": [
+          "Ревью = проверка 7 смертельных мест, а не чтение каждой строки.",
+          "Look-ahead и нулевые издержки — два самых частых и самых опасных дефекта.",
+          "Идемпотентность и обработка ошибок API отличают игрушку от продакшн-кода.",
+          "Просветный тест с логом решений — самый быстрый способ поймать look-ahead."
+        ],
+        "english": [
+          { "ru": "Подглядывание в будущее", "en": "Look-ahead bias" },
+          { "ru": "Идемпотентность", "en": "Idempotency" },
+          { "ru": "Рейт-лимит", "en": "Rate limit" },
+          { "ru": "Проскальзывание", "en": "Slippage" }
+        ]
+      }
+    ],
+    "practice": [
+      { "text": "Попроси ИИ-агента: «Напиши бэктест стратегии пересечения EMA(9)/EMA(21) на часовых свечах BTC/USDT». Затем проревьюируй результат по 7-пунктному чек-листу из урока и выпиши каждый найденный дефект с номером строки. После — попроси агента исправить дефекты по одному.", "criteria": "Найдено и записано минимум 3 дефекта (типично: вход по close сигнальной свечи, отсутствие комиссий, нет обработки ошибок). После правок в коде явно видны fee и вход на следующей свече." }
+    ],
+    "checks": [
+      "Я могу найти look-ahead в чужом бэктесте за 2 минуты",
+      "Я проверяю наличие комиссий и проскальзывания до того, как смотрю на доходность",
+      "Я знаю, что такое идемпотентность ордера и зачем clientOrderId"
+    ],
+    "quiz": {
+      "q": "Бэктест от ИИ-агента показывает +180% за год с идеально плавной кривой. Первое действие архитектора?",
+      "opts": [
+        "Запустить на маленьком реальном депозите — раз бэктест такой чистый",
+        "Проверить look-ahead (вход vs сигнальная свеча) и наличие комиссий в коде",
+        "Увеличить плечо, пока стратегия «свежая»",
+        "Попросить агента переписать код «ещё красивее»"
+      ],
+      "a": 1,
+      "explain": "Слишком красивый бэктест — это симптом, а не достижение. Плавная кривая без просадок почти всегда означает look-ahead или нулевые издержки. Сначала ревью, потом любые разговоры о деньгах."
+    }
+  },
+  {
+    "id": "vc_l3",
+    "phase": 6,
+    "num": "ВК3",
+    "title": "Галлюцинации LLM в трейдинг-коде: где агент выдумывает реальность",
+    "cognitiveLoad": "medium",
+    "timeEst": "7 мин",
+    "lead": "Модель не «ошибается» — она уверенно додумывает: несуществующие методы API, «усреднённые» комиссии, данные из будущего. Карта типовых галлюцинаций и прививки против каждой.",
+    "termsCount": 3,
+    "terms": [
+      { "ru": "Галлюцинация LLM", "en": "LLM hallucination", "desc": "Уверенная генерация правдоподобного, но неверного факта: метода API, параметра, значения." },
+      { "ru": "Survivorship bias", "en": "survivorship bias", "desc": "Систематическая ошибка выжившего: бэктест только на «выживших» монетах завышает доходность." },
+      { "ru": "Ground truth", "en": "ground truth", "desc": "Проверяемый эталон: документация API, ручной расчёт на 10 свечах, известный исторический кейс." }
+    ],
+    "prerequisites": ["vc_l2"],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "Галлюцинация — это когда агент не знает ответа, но пишет его так же уверенно, как если бы знал. В трейдинг-коде это особенно ядовито: код выглядит профессионально, запускается без ошибок и тихо считает не то.",
+        "level2": "Пять типовых галлюцинаций в торговом коде:\n\n1. Выдуманные методы и поля API. `client.get_futures_candles()` — звучит логично, но в реальной библиотеке метод может называться иначе или не существовать. Прививка: сверяй каждый вызов с официальной документацией биржи, а не с «памятью» модели.\n2. «Усреднённые» издержки. Агент ставит комиссию 0.01% «как обычно», хотя у твоей биржи taker 0.05–0.075%. Прививка: реальные тарифы из личного кабинета — в ТЗ числом.\n3. Данные из будущего. Скользящая средняя «по центру окна», сигнал по close той же свечи. Прививка: правило «решение строго раньше исполнения» в каждый промпт.\n4. Выдуманная статистика. «По истории BTC эта стратегия даёт 40% годовых» — без источника это выдумка. Прививка: любое число из текста агента считается недоказанным, пока не посчитано кодом на реальных данных.\n5. Survivorship. Агент тестирует на топ-10 сегодняшних монет — а где те, что умерли? Прививка: требуй выборку «на дату решения», а не «по сегодняшнему топу».",
+        "level3": "Мета-приём «земля под ногами» (ground truth): для каждого числа, метода и факта из ответа агента у тебя должен быть внешний эталон — документация, ручной расчёт на крошечном примере, реальный тариф. Дисциплина: «не доверяй — сверяй с землёй».",
+        "simpleAnalogy": "Агент — как навигатор, который иногда рисует несуществующий мост и ведёт по нему с уверенным голосом. Мост красивый. Вода настоящая."
+      },
+      {
+        "type": "warn",
+        "text": "Особый случай — галлюцинация о самой торговле: агент может «подтвердить», что твоя идея стратегии исторически прибыльна, не имея никаких данных. LLM не является источником рыночных фактов. Факт — это только то, что посчитано из данных или взято из первичного источника."
+      },
+      {
+        "type": "recap",
+        "points": [
+          "Галлюцинация = уверенный выдуманный факт; в коде она не падает, а тихо врёт.",
+          "Топ-5: методы API, издержки, данные из будущего, выдуманная статистика, survivorship.",
+          "Прививка против каждой — ground truth: документация, ручной расчёт, реальные тарифы.",
+          "LLM — не источник рыночных фактов: только код на данных и первичные источники."
+        ],
+        "english": [
+          { "ru": "Галлюцинация", "en": "Hallucination" },
+          { "ru": "Ошибка выжившего", "en": "Survivorship bias" },
+          { "ru": "Эталон истины", "en": "Ground truth" },
+          { "ru": "Первичный источник", "en": "Primary source" }
+        ]
+      }
+    ],
+    "practice": [
+      { "text": "Спроси у ИИ-агента: «Какие методы есть у python-библиотеки твоей биржи для получения исторических свечей и выставления ордера?» Затем открой официальную документацию API и сверь каждый названный метод: существует ли он, те ли у него параметры. Выпиши расхождения.", "criteria": "Составлена таблица «метод из ответа агента → есть ли в документации → реальная сигнатура». Найдено минимум одно расхождение или подтверждено отсутствие расхождений по всем пунктам." }
+    ],
+    "checks": [
+      "Я сверяю методы API с документацией, а не с памятью модели",
+      "Любое число из текста агента я считаю недоказанным до пересчёта на данных",
+      "Я понимаю, чем опасен тест на «сегодняшнем топе монет»"
+    ],
+    "quiz": {
+      "q": "Агент написал код с вызовом `exchange.fetch_ohlcv('BTC/USDT', '1h', future=True)` и уверяет, что параметр future «ускоряет загрузку». Твоя реакция?",
+      "opts": [
+        "Оставить — раз запускается и ускоряет",
+        "Сверить с официальной документацией: параметра, скорее всего, не существует — это галлюцинация",
+        "Спросить агента ещё раз, уверен ли он",
+        "Заменить True на False на всякий случай"
+      ],
+      "a": 1,
+      "explain": "Повторный вопрос той же модели — не проверка: она с той же уверенностью подтвердит выдумку. Единственный эталон — первичный источник (документация API)."
+    }
+  },
+  {
+    "id": "vc_l4",
+    "phase": 6,
+    "num": "ВК4",
+    "title": "Мини-проект: бэктест с ИИ-агентом от ТЗ до теста за один вечер",
+    "cognitiveLoad": "hard",
+    "timeEst": "15 мин",
+    "lead": "Собираем полный цикл вайбкодинга на реальной задаче: ТЗ → 6 шагов → ревью по чек-листу → просветный тест → честный отчёт. Результат — не «прибыльная стратегия», а воспроизводимый процесс.",
+    "termsCount": 2,
+    "terms": [
+      { "ru": "Просветный тест", "en": "smoke test with known answer", "desc": "Прогон кода на крошечном примере с заранее известным правильным ответом — проверяет механику, а не рынок." },
+      { "ru": "Воспроизводимость", "en": "reproducibility", "desc": "Свойство процесса: те же входные данные дают тот же результат; без неё бэктест — одноразовая история." }
+    ],
+    "prerequisites": ["vc_l1", "vc_l2", "vc_l3"],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "Финальный экзамен вайбкодинга. Задача: скрипт, который скачивает 500 часовых свечей BTC/USDT, считает стратегию «пересечение EMA(9) и EMA(21)» с taker-комиссией и выдаёт честный отчёт. Не «заработать», а пройти весь цикл правильно.",
+        "level2": "План из 6 шагов (отправляй агенту по одному):\n\n1. «Загрузи 500 часовых свечей BTC/USDT с публичного API биржи, сохрани в CSV, покажи первые 5 строк». Проверка глазами: время, OHLC разумны.\n2. «Посчитай EMA(9) и EMA(21), добавь колонки в таблицу». Проверка: первые ~20 значений EMA(21) пустые — иначе look-ahead в разгоне.\n3. «Сигнал: лонг когда EMA9 пересекает EMA21 снизу вверх, выход — обратное пересечение. Вход на open СЛЕДУЮЩЕЙ свечи». Это ключевой анти-look-ahead пункт.\n4. «Добавь taker-комиссию 0.05% на каждую смену позиции и проскальзывание 2 bps». Проверка: в коде видны оба числа.\n5. «Считай equity-кривую, доходность, макс. просадку, число сделок, win rate». \n6. «Напиши просветный тест: на искусственном ряде из 30 свечей с известным ответом проверь, что сделок ровно столько, сколько ожидается вручную».",
+        "level3": "Отчёт по итогам (пишется тобой, не агентом): (1) итоговые метрики, (2) найденные при ревью дефекты и как исправлены, (3) вывод: есть ли у стратегии edge после издержек или её доходность съедена комиссиями. Помни: цель проекта — процесс; отрицательный честный результат ценнее положительного фальшивого.",
+        "simpleAnalogy": "Это как первая самостоятельная поездка с инструктором: цель — не доехать быстро, а ни разу не нарушить чек-лист зеркала-поворотники-полоса."
+      },
+      {
+        "type": "ai_agent_task",
+        "title": "Финальное ТЗ для ИИ-агента (дай ему шаги 1–6 по очереди)",
+        "spec": "Бэктест EMA(9)/EMA(21) на 500 часовых свечей BTC/USDT: вход на open следующей свечи после пересечения, taker-фи 0.05%, slippage 2 bps, отчёт: equity, доходность, max drawdown, число сделок, win rate + просветный тест на 30 искусственных свечах.",
+        "acceptanceCriteria": "Просветный тест проходит; в коде явно видны fee=0.0005 и вход на open[i+1]; отчёт содержит все 5 метрик; первые 20 значений EMA(21) — NaN."
+      },
+      {
+        "type": "recap",
+        "points": [
+          "Полный цикл: ТЗ → 6 проверяемых шагов → ревью → просветный тест → честный отчёт.",
+          "Вход на open следующей свечи — главный анти-look-ahead пункт ТЗ.",
+          "Просветный тест проверяет механику кода, а не качество стратегии.",
+          "Цель проекта — воспроизводимый процесс, а не «прибыльная» кривая."
+        ],
+        "english": [
+          { "ru": "Просветный тест", "en": "Smoke test" },
+          { "ru": "Воспроизводимость", "en": "Reproducibility" },
+          { "ru": "Кривая капитала", "en": "Equity curve" },
+          { "ru": "Максимальная просадка", "en": "Max drawdown" }
+        ]
+      }
+    ],
+    "practice": [
+      { "text": "Выполни проект полностью: прогони шаги 1–6 с ИИ-агентом, проревьюируй каждый шаг по чек-листу ВК2, собери итоговый отчёт из трёх частей (метрики / найденные дефекты / вывод об edge).", "criteria": "Отчёт содержит честный вывод о наличии или отсутствии edge после издержек; приложен список дефектов, найденных при ревью (минимум 2); просветный тест приложен скриншотом/логом." }
+    ],
+    "checks": [
+      "Я прошёл весь цикл от ТЗ до отчёта, не пропустив ревью",
+      "Мой бэктест учитывает комиссии, проскальзывание и запрет look-ahead",
+      "Я могу повторить процесс на любой другой стратегии без подсказок"
+    ],
+    "quiz": {
+      "q": "Чем завершается правильный мини-проект по вайбкодингу бэктеста?",
+      "opts": [
+        "Запуском стратегии на реальном счёте",
+        "Честным отчётом: метрики + найденные дефекты + вывод об edge после издержек",
+        "Публикацией красивой equity-кривой в чат",
+        "Увеличением плеча, если бэктест положительный"
+      ],
+      "a": 1,
+      "explain": "Продукт вайбкодинга — воспроизводимый процесс и честный ответ «есть ли edge». Запуск на деньги — отдельное решение после walk-forward и paper trading (Фаза 1), а не финал первого бэктеста."
+    }
+  }
+];
+
+LESSONS.push.apply(LESSONS, VIBECODING_LESSONS);
+
+/* =========================================================================
+   ПОТОК C — ВИЗУАЛИЗАЦИИ
+   C1. 3D-БЛОКЧЕЙН (Three.js): кубы-блоки, хеш-связи, частица транзакции,
+       переключатель «Атака 51%», OrbitControls. Для уроков 0.1–0.2.
+   ========================================================================= */
+var _threeLoadingPromise = null;
+function loadThreeJs(){
+  if(window.THREE) return Promise.resolve();
+  if(_threeLoadingPromise) return _threeLoadingPromise;
+  _threeLoadingPromise = new Promise(function(resolve, reject){
+    const s1 = document.createElement('script');
+    s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s1.onload = function(){
+      const s2 = document.createElement('script');
+      s2.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
+      s2.onload = function(){ resolve(); };
+      s2.onerror = function(){ resolve(); }; // контролы опциональны
+      document.head.appendChild(s2);
+    };
+    s1.onerror = function(){ reject(new Error('three.js CDN недоступен')); };
+    document.head.appendChild(s1);
+  });
+  return _threeLoadingPromise;
+}
+
+var BC3D_INSTANCES = {};
+
+function bc3dRandomHash(){
+  let h = '';
+  const chars = '0123456789abcdef';
+  for(let i = 0; i < 8; i++) h += chars[Math.floor(Math.random() * 16)];
+  return h;
+}
+
+function bc3dTextSprite(text, color){
+  const lines = text.split('\n');
+  const cv = document.createElement('canvas');
+  cv.width = 512; cv.height = 128;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = 'rgba(4,7,20,0)';
+  ctx.fillRect(0, 0, 512, 128);
+  ctx.font = 'bold 44px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = color || '#22d3ee';
+  lines.forEach((ln, i) => ctx.fillText(ln, 256, 52 + i * 52));
+  const tex = new THREE.CanvasTexture(cv);
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false });
+  const sp = new THREE.Sprite(mat);
+  sp.scale.set(3.2, 0.8, 1);
+  return sp;
+}
+
+function blockchain3DShellHTML(widgetId){
+  return `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px">
+        <span style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase">🧊 3D-Блокчейн: цепочка блоков в пространстве</span>
+        <span class="badge" id="${widgetId}_mode" style="background:rgba(255,255,255,.05); color:var(--mut)">Честная сеть</span>
+      </div>
+      <div id="${widgetId}_canvas" style="width:100%; height:420px; background:#040714; border-radius:10px; overflow:hidden; position:relative; cursor:grab">
+        <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--mut); font-size:13px" id="${widgetId}_loading">⏳ Загружаем 3D-движок…</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+        <button class="btn sm" style="background:var(--ok); color:#040714; font-weight:800" onclick="bc3dSendTransaction('${widgetId}')">🚀 Отправить транзакцию</button>
+        <button class="btn sm" id="${widgetId}_attack_btn" style="background:rgba(244,63,94,.2); color:var(--bad); border:1px solid var(--bad)" onclick="bc3dToggleAttack('${widgetId}')">😈 Атака 51%: ВКЛ</button>
+        <button class="btn sm ghost" onclick="bc3dReset('${widgetId}')">🔄 Сброс</button>
+      </div>
+      <div id="${widgetId}_status" style="margin-top:10px; font-size:12.5px; color:var(--txt); line-height:1.55; background:rgba(255,255,255,.03); border-left:3px solid var(--acc2); border-radius:6px; padding:10px 12px">
+        Каждый полупрозрачный куб — <b>блок</b> с пачкой транзакций. Линия между кубами — <b>хеш-связь</b>: каждый блок хранит отпечаток предыдущего, поэтому цепочку нельзя незаметно переписать. Вращай сцену мышью.
+      </div>
+    </div>
+  `;
+}
+
+function bc3dSetStatus(id, html){
+  const el = document.getElementById(id + '_status');
+  if(el) el.innerHTML = html;
+}
+
+function initBlockchain3D(widgetId){
+  const container = document.getElementById(widgetId + '_canvas');
+  if(!container) return;
+  if(BC3D_INSTANCES[widgetId]){ BC3D_INSTANCES[widgetId].dispose(); delete BC3D_INSTANCES[widgetId]; }
+
+  loadThreeJs().then(function(){
+    try{
+    const loading = document.getElementById(widgetId + '_loading');
+    if(loading) loading.remove();
+    if(!document.getElementById(widgetId + '_canvas')) return;
+
+    const W = container.clientWidth, H = 420;
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x040714);
+    scene.fog = new THREE.Fog(0x040714, 18, 40);
+
+    const camera = new THREE.PerspectiveCamera(55, W / H, 0.1, 100);
+    camera.position.set(2, 4.5, 11);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(W, H);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    let controls = null;
+    if(THREE.OrbitControls){
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.7;
+      controls.target.set(2, 0.5, 0);
+    }
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const dir = new THREE.DirectionalLight(0x88ccff, 0.9);
+    dir.position.set(5, 10, 7);
+    scene.add(dir);
+    const point = new THREE.PointLight(0x7c3aed, 0.8, 30);
+    point.position.set(-4, 4, 4);
+    scene.add(point);
+
+    // «Пол»-сетка
+    const grid = new THREE.GridHelper(40, 40, 0x1e293b, 0x0d1526);
+    grid.position.y = -1.4;
+    scene.add(grid);
+
+    const state = {
+      widgetId, scene, camera, renderer, controls,
+      blocks: [],        // {group, hash, index, attacker}
+      links: [],         // {line, pulse, from, to, attacker}
+      txs: [],           // летящие частицы {mesh, t, from, to, onArrive}
+      attackOn: false,
+      disposed: false,
+      honestTimer: 0,
+      attackerTimer: 0,
+      forked: false,
+      reorgDone: false
+    };
+    BC3D_INSTANCES[widgetId] = state;
+
+    function addBlock(attacker, animateIn){
+      const idx = attacker ? state.blocks.filter(b => b.attacker).length : state.blocks.filter(b => !b.attacker).length;
+      const hash = bc3dRandomHash();
+      const group = new THREE.Group();
+      const geo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+      const color = attacker ? 0xf43f5e : 0x06b6d4;
+      const cube = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0.26, roughness: 0.25, metalness: 0.15, emissive: color, emissiveIntensity: 0.12 }));
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: attacker ? 0xfb7185 : 0x22d3ee }));
+      group.add(cube); group.add(edges);
+      const label = bc3dTextSprite((attacker ? 'ФЕЙК #' : 'Блок #') + idx + '\n' + hash, attacker ? '#fb7185' : '#22d3ee');
+      label.position.set(0, 1.35, 0);
+      group.add(label);
+
+      let x, z;
+      if(attacker){
+        const forkIdx = 2; // форк от блока #2
+        x = forkIdx * 2.4 + (idx) * 2.4;
+        z = -3;
+      } else {
+        x = idx * 2.4;
+        z = 0;
+      }
+      group.position.set(x, 0, z);
+      if(animateIn){ group.scale.set(0.01, 0.01, 0.01); }
+      scene.add(group);
+      const rec = { group, hash, index: idx, attacker, born: performance.now() };
+      state.blocks.push(rec);
+
+      // хеш-связь с предыдущим блоком той же ветки (или с точкой форка)
+      let prev = null;
+      const sameBranch = state.blocks.filter(b => b.attacker === attacker && b !== rec);
+      if(attacker && idx === 0){
+        prev = state.blocks.filter(b => !b.attacker)[2] || null; // форк от блока #2
+      } else if(sameBranch.length){
+        prev = sameBranch[sameBranch.length - 1];
+      }
+      if(prev){
+        const g = new THREE.BufferGeometry().setFromPoints([prev.group.position.clone(), group.position.clone()]);
+        const line = new THREE.Line(g, new THREE.LineBasicMaterial({ color: attacker ? 0xf43f5e : 0x22d3ee, transparent: true, opacity: 0.55 }));
+        scene.add(line);
+        const pulse = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 8), new THREE.MeshBasicMaterial({ color: attacker ? 0xfda4af : 0x67e8f9 }));
+        scene.add(pulse);
+        state.links.push({ line, pulse, from: prev.group.position.clone(), to: group.position.clone(), t: Math.random() });
+      }
+      return rec;
+    }
+
+    // генезис + 4 честных блока
+    for(let i = 0; i < 5; i++) addBlock(false, false);
+    state.addBlock = addBlock;
+
+    // мемпул-облако
+    const mempool = new THREE.Mesh(new THREE.SphereGeometry(0.55, 16, 16), new THREE.MeshStandardMaterial({ color: 0xeab308, transparent: true, opacity: 0.35, emissive: 0xeab308, emissiveIntensity: 0.4 }));
+    mempool.position.set(-2.5, 2.2, 2.5);
+    scene.add(mempool);
+    const mpLabel = bc3dTextSprite('Мемпул', '#eab308');
+    mpLabel.position.set(-2.5, 3.2, 2.5);
+    scene.add(mpLabel);
+    state.mempool = mempool;
+
+    const clock = new THREE.Clock();
+    function animate(){
+      if(state.disposed) return;
+      requestAnimationFrame(animate);
+      const dt = clock.getDelta();
+      const t = clock.elapsedTime;
+
+      // появление новых блоков
+      state.blocks.forEach(b => {
+        if(b.group.scale.x < 1){
+          const s = Math.min(1, b.group.scale.x + dt * 2.2);
+          b.group.scale.set(s, s, s);
+        }
+        b.group.rotation.y += dt * 0.15;
+      });
+      // пульсы по хеш-связям
+      state.links.forEach(l => {
+        l.t = (l.t + dt * 0.5) % 1;
+        l.pulse.position.lerpVectors(l.from, l.to, l.t);
+      });
+      // мемпул дышит
+      mempool.scale.setScalar(1 + Math.sin(t * 2.4) * 0.08);
+
+      // летящие транзакции
+      for(let i = state.txs.length - 1; i >= 0; i--){
+        const tx = state.txs[i];
+        tx.t += dt * 0.9;
+        const k = Math.min(1, tx.t);
+        const arc = Math.sin(k * Math.PI) * 1.6;
+        tx.mesh.position.lerpVectors(tx.from, tx.to, k);
+        tx.mesh.position.y += arc;
+        if(k >= 1){
+          scene.remove(tx.mesh);
+          state.txs.splice(i, 1);
+          if(tx.onArrive) tx.onArrive();
+        }
+      }
+
+      // честная сеть время от времени добавляет блоки при атаке
+      if(state.attackOn){
+        state.honestTimer += dt;
+        state.attackerTimer += dt;
+        if(state.attackerTimer > 1.4 && !state.reorgDone){
+          state.attackerTimer = 0;
+          addBlock(true, true);
+        }
+        if(state.honestTimer > 2.6 && !state.reorgDone){
+          state.honestTimer = 0;
+          addBlock(false, true);
+        }
+        // проверка реорганизации
+        const honest = state.blocks.filter(b => !b.attacker).length;
+        const attack = state.blocks.filter(b => b.attacker).length;
+        if(!state.reorgDone && attack >= 3 && attack >= honest - 2){
+          state.reorgDone = true;
+          // честные блоки после форка «осиротели»
+          state.blocks.forEach(b => {
+            if(!b.attacker && b.index > 2){
+              b.group.children.forEach(ch => { if(ch.material){ ch.material.color && ch.material.color.set(0x64748b); if(ch.material.emissive) ch.material.emissive.set(0x000000); } });
+            }
+          });
+          bc3dSetStatus(widgetId, '⚠️ <b style="color:var(--bad)">Реорганизация!</b> Красная цепочка атакующего стала длиннее — сеть приняла её по правилу «самой длинной цепи», а честные блоки после форка стали <b>сиротами</b> (серые). Именно поэтому контроль 51% хешрейта позволяет переписывать историю — и именно поэтому он безумно дорог в больших сетях.');
+          const mode = document.getElementById(widgetId + '_mode');
+          if(mode){ mode.textContent = '⚠️ Реорганизация: атака удалась'; mode.style.color = 'var(--bad)'; }
+        }
+      }
+
+      if(controls) controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    state.dispose = function(){
+      state.disposed = true;
+      try{
+        renderer.dispose();
+        if(renderer.domElement && renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
+      }catch(e){}
+    };
+    }catch(err){
+      // WebGL недоступен (например, старый браузер/headless) — откат на 2D-версию
+      console.warn('[3D blockchain] fallback:', err);
+      if(typeof _origRenderPhase0Widget === 'function') _origRenderPhase0Widget(widgetId);
+    }
+  }).catch(function(){
+    const loading = document.getElementById(widgetId + '_loading');
+    if(loading) loading.innerHTML = '⚠️ Не удалось загрузить 3D-движок (нужен интернет для CDN three.js). Ниже — текстовая версия эксперимента.';
+    if(typeof _origRenderPhase0Widget === 'function') _origRenderPhase0Widget(widgetId);
+  });
+}
+
+function bc3dSendTransaction(widgetId){
+  const st = BC3D_INSTANCES[widgetId];
+  if(!st) return;
+  bc3dSetStatus(widgetId, '🚀 Транзакция подписана и улетает в <b>мемпул</b> (жёлтая сфера) — «зал ожидания» неподтверждённых переводов. Следом майнер упакует её в новый блок…');
+  const from = st.mempool.position.clone();
+  const honest = st.blocks.filter(b => !b.attacker);
+  const last = honest[honest.length - 1];
+  const to = last.group.position.clone().add(new THREE.Vector3(2.4, 0, 0));
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 12), new THREE.MeshBasicMaterial({ color: 0xfde047 }));
+  mesh.position.copy(from);
+  st.scene.add(mesh);
+  st.txs.push({ mesh, t: 0, from, to, onArrive: function(){
+    st.addBlock(false, true);
+    bc3dSetStatus(widgetId, '✅ <b>Блок добыты и прикован к цепочке!</b> Новый куб хранит хеш предыдущего — линия между ними. Транзакция Алисы теперь подтверждена: чтобы её подделать, придётся пересчитывать все блоки после неё на большинстве компьютеров сети.');
+  }});
+}
+
+function bc3dToggleAttack(widgetId){
+  const st = BC3D_INSTANCES[widgetId];
+  if(!st) return;
+  st.attackOn = !st.attackOn;
+  const btn = document.getElementById(widgetId + '_attack_btn');
+  const mode = document.getElementById(widgetId + '_mode');
+  if(st.attackOn){
+    if(btn) btn.textContent = '😈 Атака 51%: ВЫКЛ';
+    if(mode){ mode.textContent = '😈 Идёт атака 51%'; mode.style.color = 'var(--bad)'; }
+    bc3dSetStatus(widgetId, '😈 Атакующий захватил <b>51% мощности сети</b> и строит секретную <b style="color:var(--bad)">красную цепочку</b> (форк от блока #2) быстрее честной. Смотри, что произойдёт, когда она станет длиннее…');
+  } else {
+    if(btn) btn.textContent = '😈 Атака 51%: ВКЛ';
+    if(mode){ mode.textContent = 'Честная сеть'; mode.style.color = 'var(--mut)'; }
+    bc3dSetStatus(widgetId, '🛡️ Атака остановлена. Без <b>постоянного</b> контроля большинства хешрейта атакующий не успевает за честной сетью — поэтому одиночная вспышка не страшна, а устойчивые 51% в Bitcoin практически недостижимы экономически.');
+  }
+}
+
+function bc3dReset(widgetId){
+  const box = document.getElementById(widgetId);
+  if(!box) return;
+  box.innerHTML = blockchain3DShellHTML(widgetId);
+  initBlockchain3D(widgetId);
+}
+
+// Оборачиваем рендер виджетов: уроки 0.1 и 0.2 получают 3D-визуализацию
+var _origRenderPhase0Widget = renderPhase0Widget;
+renderPhase0Widget = function(widgetId){
+  if(typeof renderCStreamWidget === 'function' && renderCStreamWidget(widgetId)) return;
+  if(widgetId === 'widget_p0_l1'){
+    const box = document.getElementById(widgetId);
+    if(box){
+      box.innerHTML = blockchain3DShellHTML(widgetId);
+      initBlockchain3D(widgetId);
+      return;
+    }
+  }
+  if(widgetId === 'widget_p0_l2'){
+    const box = document.getElementById(widgetId);
+    if(box){
+      _origRenderPhase0Widget.apply(this, arguments);
+      box.insertAdjacentHTML('beforeend', blockchain3DShellHTML(widgetId));
+      initBlockchain3D(widgetId);
+      return;
+    }
+  }
+  return _origRenderPhase0Widget.apply(this, arguments);
+};
+
+/* =========================================================================
+   C2–C7. ВИДЖЕТЫ ВИЗУАЛИЗАЦИИ (привязка к урокам Фазы 0)
+   ========================================================================= */
+function cwCleanup(box){
+  if(box._cwTimers){ box._cwTimers.forEach(t => clearTimeout(t)); }
+  if(box._cwRaf){ cancelAnimationFrame(box._cwRaf); }
+  box._cwTimers = [];
+  box._cwRaf = null;
+}
+
+function renderCStreamWidget(widgetId){
+  const box = document.getElementById(widgetId);
+  if(!box) return false;
+  const map = {
+    widget_c2_lifecycle: renderC2Lifecycle,
+    widget_c3_liqmap: renderC3LiqMap,
+    widget_c5_spread: renderC5SpreadGame,
+    widget_c6_ruin: renderC6RuinGame,
+    widget_c7_candle: renderC7CandleAnim,
+    widget_c4_book3d: renderC4Book3D
+  };
+  if(!map[widgetId]) return false;
+  cwCleanup(box);
+  map[widgetId](box);
+  return true;
+}
+
+// Привязка виджетов к урокам (не затирая существующие интерактивы)
+(function attachCStreamWidgets(){
+  const ATT = [
+    ['p0_l9',  'widget_c2_lifecycle', '🎬 Жизненный цикл сделки: от кнопки «Купить» до свечи', 'Нажми «Запустить сделку» и проследи путь ордера: биржа → мэтчинг в стакане → принты сделок → новая свеча на графике.'],
+    ['p0_l16', 'widget_c3_liqmap',    '🗺️ Карта ликвидаций: плечо × движение цены', 'Тепловая карта потерь маржи. Двигай плечо и смотри, где проходит белая линия ликвидации — почему x25 умирает от движения в 4%.'],
+    ['p0_l4',  'widget_c5_spread',    '⚡ Мини-игра «Поймай спред»', 'Спред дышит: то сжимается, то разъезжается. Захватывай его в узком месте — 10 раундов на реакцию и чувство рынка.'],
+    ['p0_l12', 'widget_c6_ruin',      '🎲 Мини-игра «Выживание: риск разорения»', 'Одна и та же стратегия (55% побед, выплата 1:1) при разной ставке от депозита. Посмотри, какой размер ставки ведёт к разорению, а какой — к росту.'],
+    ['p0_l7',  'widget_c7_candle',    '🕯️ Анатомия свечи: рождение OHLC из тиков', 'Сделки-тики прилетают одна за другой и собираются в свечу: тело (open→close) и фитили (high/low). Затем свеча «запечатывается».'],
+    ['p0_l10', 'widget_c4_book3d',    '📚 3D-стакан: глубина и проскальзывание', 'Объёмы заявок как 3D-башни. Пошли крупный рыночный ордер и смотри, как он «проедает» уровни и уводит среднюю цену.']
+  ];
+  ATT.forEach(function(a){
+    const l = LESSONS.find(x => x.id === a[0]);
+    if(!l || !l.blocks) return;
+    if(l.blocks.some(b => b.id === a[1])) return;
+    // вставляем после последнего concept-блока
+    let pos = l.blocks.length;
+    for(let i = 0; i < l.blocks.length; i++){
+      if(l.blocks[i].type === 'recap'){ pos = i; break; }
+    }
+    l.blocks.splice(pos, 0, { type: 'interactive_inline', id: a[1], title: a[2], desc: a[3] });
+  });
+})();
+
+/* ---------- C2. Жизненный цикл сделки ---------- */
+function renderC2Lifecycle(box){
+  const stages = [
+    ['🖱️', 'Ты нажимаешь «Купить»', 'Маркет-ордер на 0.5 BTC сформирован на твоём устройстве.'],
+    ['🌐', 'Ордер летит на биржу', '30–80 мс по сети. За это время стакан уже мог измениться.'],
+    ['⚔️', 'Мэтчинг в стакане', 'Движок биржи сопоставляет ордер с лучшими лимитными продажами.'],
+    ['🧾', 'Принты сделок', 'Исполнение прошло частями по 3 уровням — средняя цена хуже лучшей.'],
+    ['🕯️', 'Новая свеча', 'Принты попали в текущую свечу: обновились High и Close.']
+  ];
+  box.innerHTML = `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; justify-content:space-between; gap:6px; margin-bottom:14px; flex-wrap:wrap" id="c2_stages">
+        ${stages.map((s, i) => `
+          <div id="c2_st_${i}" style="flex:1; min-width:100px; text-align:center; padding:10px 6px; border-radius:10px; border:1px solid var(--line); background:#040714; transition:all .4s; opacity:.45">
+            <div style="font-size:22px">${s[0]}</div>
+            <div style="font-size:11px; font-weight:700; color:var(--txt); margin-top:4px">${s[1]}</div>
+          </div>`).join('<div style="align-self:center; color:var(--mut)">→</div>')}
+      </div>
+      <div id="c2_book" style="font-family:var(--mono); font-size:11.5px; background:#040714; border-radius:8px; padding:10px 12px; min-height:86px; color:#64748b"></div>
+      <div id="c2_status" style="margin-top:10px; font-size:12.5px; color:var(--txt); min-height:38px; line-height:1.5">Нажми «Запустить сделку» — ордер пройдёт все 5 стадий за ~6 секунд.</div>
+      <button class="btn sm" style="margin-top:8px; background:var(--ok); color:#040714; font-weight:800" onclick="c2Run(this)">▶ Запустить сделку</button>
+    </div>`;
+}
+
+function c2Run(btn){
+  const box = btn.closest('[id^="widget_c2"]');
+  if(!box) return;
+  cwCleanup(box);
+  box._cwTimers = [];
+  const T = (fn, ms) => box._cwTimers.push(setTimeout(fn, ms));
+  const msgs = [
+    'Ордер: MARKET BUY 0.5 BTC. Подписан и готов к отправке.',
+    'latency = 47 мс. Пока ордер летел, лучший ask успел подняться на 2 bps.',
+    'Мэтчинг: 0.2 BTC по 67 431.0 · 0.2 BTC по 67 434.5 · 0.1 BTC по 67 440.0',
+    'Средняя цена: 67 434.8 вместо 67 431.0 — проскальзывание 3.8 bps. Это цена скорости маркет-ордера.',
+    'Свеча обновлена: High = 67 440.0, Close = 67 440.0. Каждая сделка на рынке — вот такой след в ленте и в свече.'
+  ];
+  const bookStates = [
+    'ASK  67 440.0 ▏ 0.8\nASK  67 434.5 ▏ 1.1\nASK  67 431.0 ▏ 0.9\n─── спред 1.5 ───\nBID  67 429.5 ▏ 1.4',
+    'ASK  67 440.0 ▏ 0.8\nASK  67 434.5 ▏ 1.1\nASK  67 431.0 ▏ 0.9   ← стакан уже другой!\n─── спред 3.0 ───\nBID  67 428.0 ▏ 1.2',
+    '⚔️ МЭТЧИНГ...\nASK  67 440.0 ▏ 0.8 ▶ едим 0.1\nASK  67 434.5 ▏ 1.1 ▶ едим 0.2\nASK  67 431.0 ▏ 0.9 ▶ едим 0.2',
+    '🧾 ПРИНТ 0.2 @ 67 431.0\n🧾 ПРИНТ 0.2 @ 67 434.5\n🧾 ПРИНТ 0.1 @ 67 440.0',
+    '🕯️ Текущая свеча:\nO 67 402 · H 67 440 · L 67 388 · C 67 440\nОбъём +0.5 BTC'
+  ];
+  for(let i = 0; i < 5; i++){
+    T(() => {
+      const st = document.getElementById('c2_st_' + i);
+      if(st){ st.style.opacity = '1'; st.style.borderColor = 'var(--acc2)'; st.style.background = 'rgba(6,182,212,.12)'; st.style.transform = 'scale(1.04)'; }
+      const bk = document.getElementById('c2_book');
+      if(bk) bk.innerHTML = bookStates[i].replace(/\n/g, '<br>');
+      const status = document.getElementById('c2_status');
+      if(status) status.textContent = msgs[i];
+    }, i * 1300);
+    T(() => {
+      const st = document.getElementById('c2_st_' + i);
+      if(st){ st.style.transform = 'scale(1)'; st.style.borderColor = 'var(--ok)'; st.style.background = 'rgba(34,197,94,.08)'; }
+    }, i * 1300 + 1100);
+  }
+}
+
+/* ---------- C3. Карта ликвидаций ---------- */
+function renderC3LiqMap(box){
+  box.innerHTML = `
+    <div style="background:rgba(244,63,94,.05); border:1.5px solid var(--bad); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:10px">
+        <label style="font-size:12.5px; color:var(--txt)">Плечо: <b id="c3_lev_label" style="color:var(--bad)">10x</b></label>
+        <input type="range" id="c3_lev" min="1" max="100" value="10" style="flex:1; min-width:160px" oninput="c3Draw(this.closest('[id^=widget_c3]'))">
+        <span id="c3_readout" style="font-size:12.5px; color:var(--txt)"></span>
+      </div>
+      <canvas id="c3_canvas" width="640" height="320" style="width:100%; border-radius:8px; background:#040714"></canvas>
+      <div style="font-size:12px; color:var(--mut); margin-top:8px">Ось X — плечо, ось Y — движение цены против позиции. Цвет — потеря маржи (зелёный → красный). <b style="color:#fff">Белая линия — граница ликвидации (потеря 100% маржи).</b> Плечо xN ликвидируется при движении ≈ 100/N % против позиции.</div>
+    </div>`;
+  c3Draw(box);
+}
+
+function c3Draw(box){
+  const cv = box.querySelector('#c3_canvas');
+  const lev = +box.querySelector('#c3_lev').value;
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const padL = 46, padB = 30, padT = 12, padR = 12;
+  const maxMove = 30; // %
+  for(let px = 0; px < W - padL - padR; px++){
+    const l = 1 + (px / (W - padL - padR)) * 99;
+    for(let py = 0; py < H - padT - padB; py++){
+      const move = (py / (H - padT - padB)) * maxMove;
+      const loss = Math.min(100, move * l);
+      const r = Math.round(Math.min(255, loss * 2.55));
+      const g = Math.round(Math.max(0, 200 - loss * 2));
+      ctx.fillStyle = `rgb(${r},${g},60)`;
+      ctx.fillRect(padL + px, padT + py, 1, 1);
+    }
+  }
+  // линия ликвидации: move = 100 / lev
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for(let px = 0; px < W - padL - padR; px++){
+    const l = 1 + (px / (W - padL - padR)) * 99;
+    const move = 100 / l;
+    const py = padT + (move / maxMove) * (H - padT - padB);
+    if(px === 0) ctx.moveTo(padL + px, py); else ctx.lineTo(padL + px, py);
+  }
+  ctx.stroke();
+  // маркер текущего плеча
+  const mx = padL + ((lev - 1) / 99) * (W - padL - padR);
+  const my = padT + ((100 / lev) / maxMove) * (H - padT - padB);
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.4)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(mx, padT); ctx.lineTo(mx, H - padB); ctx.stroke();
+  ctx.setLineDash([]);
+  // подписи осей
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('1x', padL, H - 10);
+  ctx.fillText('100x', W - padR - 30, H - 10);
+  ctx.fillText('0%', 6, padT + 8);
+  ctx.fillText('-30%', 6, H - padB);
+  ctx.fillText('Плечо →', W / 2 - 20, H - 10);
+  box.querySelector('#c3_lev_label').textContent = lev + 'x';
+  box.querySelector('#c3_readout').innerHTML = `Ликвидация при движении против позиции ≈ <b style="color:var(--bad)">${(100 / lev).toFixed(1)}%</b>`;
+}
+
+/* ---------- C5. Мини-игра «Поймай спред» ---------- */
+function renderC5SpreadGame(box){
+  box.innerHTML = `
+    <div style="background:rgba(234,179,8,.06); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px">
+        <div style="font-size:26px; font-weight:900; font-variant-numeric:tabular-nums"><span id="c5_spread" style="color:var(--warn)">—</span> <span style="font-size:13px; color:var(--mut)">bps</span></div>
+        <div style="font-size:12.5px; color:var(--txt)">Раунд: <b id="c5_round">0/10</b> · Очки: <b id="c5_score" style="color:var(--ok)">0</b></div>
+      </div>
+      <canvas id="c5_canvas" width="640" height="120" style="width:100%; border-radius:8px; background:#040714"></canvas>
+      <div style="display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap">
+        <button class="btn sm" id="c5_btn" style="background:var(--warn); color:#1c1400; font-weight:800" onclick="c5Start(this)">▶ Старт (10 раундов)</button>
+        <span id="c5_msg" style="font-size:12.5px; color:var(--txt)">Захватывай, когда спред УЗКИЙ (≤8 bps — зелёная зона). Широкий спред = плохая цена входа.</span>
+      </div>
+    </div>`;
+}
+
+function c5Start(btn){
+  const box = btn.closest('[id^="widget_c5"]');
+  if(!box) return;
+  cwCleanup(box);
+  const st = { round: 0, score: 0, playing: true, spread: 20, hist: [], t0: performance.now() };
+  box._c5 = st;
+  btn.textContent = '⚡ ЗАХВАТИТЬ!';
+  btn.onclick = () => c5Capture(box);
+  const cv = box.querySelector('#c5_canvas');
+  const ctx = cv.getContext('2d');
+  function frame(){
+    if(!st.playing) return;
+    const t = (performance.now() - st.t0) / 1000;
+    st.spread = 14 + 11 * Math.sin(t * 1.7) + 5 * Math.sin(t * 4.3) + (Math.random() - 0.5) * 2;
+    st.spread = Math.max(2, st.spread);
+    st.hist.push(st.spread);
+    if(st.hist.length > 160) st.hist.shift();
+    const el = box.querySelector('#c5_spread');
+    if(el){ el.textContent = st.spread.toFixed(1); el.style.color = st.spread <= 8 ? 'var(--ok)' : (st.spread >= 20 ? 'var(--bad)' : 'var(--warn)'); }
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    // зелёная зона ≤8 bps
+    const yOf = v => cv.height - (v / 32) * cv.height;
+    ctx.fillStyle = 'rgba(34,197,94,.12)';
+    ctx.fillRect(0, yOf(8), cv.width, cv.height - yOf(8));
+    ctx.strokeStyle = '#22d3ee';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    st.hist.forEach((v, i) => {
+      const x = (i / 160) * cv.width;
+      if(i === 0) ctx.moveTo(x, yOf(v)); else ctx.lineTo(x, yOf(v));
+    });
+    ctx.stroke();
+    box._cwRaf = requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function c5Capture(box){
+  const st = box._c5;
+  if(!st || !st.playing) return;
+  st.round++;
+  const s = st.spread;
+  let pts = 0, msg;
+  if(s <= 8){ pts = Math.round(100 - s * 5); msg = `🎯 Отличный захват: ${s.toFixed(1)} bps → +${pts} очков. Так выглядит вход по узкому спреду.`; }
+  else if(s <= 20){ pts = Math.round(40 - s); msg = `😐 Средне: ${s.toFixed(1)} bps → +${pts}. Терпение дало бы больше.`; }
+  else { pts = -20; msg = `💸 Проскальзывание! ${s.toFixed(1)} bps → −20. Широкий спред — деньги маркет-мейкеру.`; }
+  st.score += pts;
+  box.querySelector('#c5_round').textContent = st.round + '/10';
+  box.querySelector('#c5_score').textContent = st.score;
+  box.querySelector('#c5_msg').textContent = msg;
+  if(st.round >= 10){
+    st.playing = false;
+    cancelAnimationFrame(box._cwRaf);
+    const btn = box.querySelector('#c5_btn');
+    btn.textContent = '🔄 Ещё раз';
+    btn.onclick = () => c5Start(btn);
+    const verdict = st.score >= 500 ? 'Инстинкт маркет-мейкера! Ты чувствуешь ликвидность.' : (st.score >= 250 ? 'Неплохо! Главное — не входить на широком спреде.' : 'Пока спред бьёт тебя. Правило: узкий спред = дешёвый вход.');
+    box.querySelector('#c5_msg').innerHTML = `🏁 Итог: <b>${st.score}</b> очков. ${verdict}`;
+    if(typeof addFundCapital === 'function' && st.score > 0) addFundCapital(st.score * 50, 30, 'Мини-игра «Поймай спред»');
+  }
+}
+
+/* ---------- C6. Мини-игра «Выживание: риск разорения» ---------- */
+function renderC6RuinGame(box){
+  box.innerHTML = `
+    <div style="background:rgba(124,58,237,.06); border:1.5px solid var(--acc1); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="font-size:12.5px; color:var(--txt); margin-bottom:10px">Стратегия одинаковая: <b>55% побед, выплата 1:1, 300 сделок</b>. Разная только <b>ставка в % от депозита</b>. Запусти все варианты и сравни судьбы кривых (лог-шкала):</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px">
+        ${[1, 5, 10, 25, 50].map(f => `<button class="btn sm ghost" onclick="c6Run(this, ${f})">Ставка ${f}%</button>`).join('')}
+        <button class="btn sm" style="background:var(--acc1)" onclick="c6RunAll(this)">▶ Все сразу</button>
+      </div>
+      <canvas id="c6_canvas" width="640" height="300" style="width:100%; border-radius:8px; background:#040714"></canvas>
+      <div id="c6_msg" style="font-size:12.5px; color:var(--txt); margin-top:8px; line-height:1.5">Подсказка: оптимум Келли для p=55%, 1:1 — это 10% (2p−1). Всё, что сильно больше, — гонка к нулю, даже с перевесом.</div>
+    </div>`;
+}
+
+function c6Sim(frac){
+  let eq = 1000;
+  const curve = [eq];
+  for(let i = 0; i < 300; i++){
+    const win = Math.random() < 0.55;
+    eq += eq * frac * (win ? 1 : -1);
+    if(eq < 1) eq = 0; // разорение
+    curve.push(eq);
+    if(eq === 0) break;
+  }
+  return curve;
+}
+
+function c6Draw(box, curves){
+  const cv = box.querySelector('#c6_canvas');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const colors = { 1: '#22c55e', 5: '#06b6d4', 10: '#eab308', 25: '#fb923c', 50: '#f43f5e' };
+  const padL = 60, padB = 24, padT = 12;
+  const yOf = v => {
+    const lv = Math.log10(Math.max(1, v));
+    return padT + (1 - (lv - 0) / 6) * (cv.height - padT - padB); // 1 .. 1e6
+  };
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '10px sans-serif';
+  [1, 100, 10000, 1000000].forEach(v => ctx.fillText('$' + v.toLocaleString(), 4, yOf(v) + 3));
+  // стартовый уровень
+  ctx.strokeStyle = 'rgba(255,255,255,.25)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(padL, yOf(1000)); ctx.lineTo(cv.width, yOf(1000)); ctx.stroke();
+  ctx.setLineDash([]);
+  Object.keys(curves).forEach(f => {
+    const c = curves[f];
+    ctx.strokeStyle = colors[f];
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    c.forEach((v, i) => {
+      const x = padL + (i / 300) * (cv.width - padL - 10);
+      if(i === 0) ctx.moveTo(x, yOf(v)); else ctx.lineTo(x, yOf(v));
+    });
+    ctx.stroke();
+    const last = c[c.length - 1];
+    ctx.fillStyle = colors[f];
+    ctx.fillText(f + '% → ' + (last === 0 ? '💀 РАЗОРЕНИЕ' : '$' + Math.round(last).toLocaleString()), padL + 8, yOf(last) - 6 + (Object.keys(curves).indexOf(f) * 2));
+  });
+}
+
+function c6Run(btn, f){
+  const box = btn.closest('[id^="widget_c6"]');
+  const curves = box._c6curves || {};
+  curves[f] = c6Sim(f / 100);
+  box._c6curves = curves;
+  c6Draw(box, curves);
+  const last = curves[f][curves[f].length - 1];
+  box.querySelector('#c6_msg').innerHTML = f <= 10
+    ? `Ставка ${f}%: финал <b style="color:var(--ok)">$${Math.round(last).toLocaleString()}</b>. Медленно? Зато серия из 10 проигрышей подряд не смертельна.`
+    : `Ставка ${f}%: финал <b style="color:${last === 0 ? 'var(--bad)' : 'var(--warn)'}">${last === 0 ? '💀 разорение' : '$' + Math.round(last).toLocaleString()}</b>. При ставке ${f}% серия из ${Math.ceil(Math.log(0.001) / Math.log(1 - f / 100))} проигрышей обнуляет депозит — а такие серии при 300 сделках почти гарантированы.`;
+}
+
+function c6RunAll(btn){
+  const box = btn.closest('[id^="widget_c6"]');
+  const curves = {};
+  [1, 5, 10, 25, 50].forEach(f => curves[f] = c6Sim(f / 100));
+  box._c6curves = curves;
+  c6Draw(box, curves);
+  const ruined = [25, 50].filter(f => curves[f][curves[f].length - 1] === 0).length;
+  box.querySelector('#c6_msg').innerHTML = `Одна и та же стратегия, пять размеров ставки. Заметь: кривые 1–10% растут экспонентой, а 25–50% регулярно умирают (${ruined} из 2 в этом прогоне). <b>Размер позиции важнее процента побед</b> — это и есть суть Келли и риск-менеджмента.`;
+}
+
+/* ---------- C7. Анатомия свечи (SVG) ---------- */
+function renderC7CandleAnim(box){
+  box.innerHTML = `
+    <div style="background:rgba(34,197,94,.05); border:1.5px solid var(--ok); border-radius:12px; padding:16px; margin:16px 0">
+      <svg id="c7_svg" viewBox="0 0 640 260" style="width:100%; background:#040714; border-radius:8px"></svg>
+      <div style="display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap">
+        <button class="btn sm" style="background:var(--ok); color:#040714; font-weight:800" onclick="c7Start(this)">▶ Собрать свечу из тиков</button>
+        <span id="c7_ohlc" style="font-family:var(--mono); font-size:12px; color:var(--txt)">O — · H — · L — · C —</span>
+      </div>
+      <div id="c7_msg" style="font-size:12.5px; color:var(--mut); margin-top:6px">Каждый тик — реальная сделка. Первая цена станет <b style="color:var(--txt)">Open</b>, экстремумы — <b style="color:var(--txt)">фитилями</b>, последняя — <b style="color:var(--txt)">Close</b>.</div>
+    </div>`;
+}
+
+function c7Start(btn){
+  const box = btn.closest('[id^="widget_c7"]');
+  if(!box) return;
+  cwCleanup(box);
+  const svg = box.querySelector('#c7_svg');
+  const NS = 'http://www.w3.org/2000/svg';
+  svg.innerHTML = '';
+  const candles = [];
+  let price = 100;
+  const ticks = [];
+  for(let i = 0; i < 40; i++){ price += (Math.random() - 0.42) * 2.2; ticks.push(price); }
+  const all = [100].concat(ticks);
+  const min = Math.min(...all) - 1, max = Math.max(...all) + 1;
+  const yOf = v => 230 - ((v - min) / (max - min)) * 200;
+  const o = 100, h = Math.max(...all), l = Math.min(...all);
+  const ohlcEl = box.querySelector('#c7_ohlc');
+  // тело и фитиль текущей свечи
+  const wick = document.createElementNS(NS, 'line');
+  wick.setAttribute('stroke', '#94a3b8'); wick.setAttribute('stroke-width', '2');
+  const body = document.createElementNS(NS, 'rect');
+  body.setAttribute('width', '34');
+  svg.appendChild(wick); svg.appendChild(body);
+  const cx = 480;
+  let ti = 0;
+  function step(){
+    if(ti >= ticks.length){
+      // свеча запечатана
+      const c = ticks[ticks.length - 1];
+      const up = c >= o;
+      body.setAttribute('fill', up ? 'rgba(34,197,94,.85)' : 'rgba(244,63,94,.85)');
+      ohlcEl.textContent = `O ${o.toFixed(1)} · H ${h.toFixed(1)} · L ${l.toFixed(1)} · C ${c.toFixed(1)}`;
+      box.querySelector('#c7_msg').innerHTML = `🏁 Свеча запечатана: <b style="color:${up ? 'var(--ok)' : 'var(--bad)'}">${up ? 'зелёная (рост)' : 'красная (падение)'}</b>. Заметь: фитили показывают, куда цена ЗАЛЕТАЛА внутри периода, — простая линия этого не хранит.`;
+      return;
+    }
+    const p = ticks[ti];
+    const x = 40 + ti * 9;
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('cx', x); dot.setAttribute('cy', yOf(p)); dot.setAttribute('r', '3');
+    dot.setAttribute('fill', '#22d3ee');
+    svg.appendChild(dot);
+    const curH = Math.max(o, ...ticks.slice(0, ti + 1));
+    const curL = Math.min(o, ...ticks.slice(0, ti + 1));
+    wick.setAttribute('x1', cx + 17); wick.setAttribute('x2', cx + 17);
+    wick.setAttribute('y1', yOf(curH)); wick.setAttribute('y2', yOf(curL));
+    const top = Math.max(o, p), bot = Math.min(o, p);
+    body.setAttribute('x', cx); body.setAttribute('y', yOf(top));
+    body.setAttribute('height', Math.max(2, yOf(bot) - yOf(top)));
+    body.setAttribute('fill', p >= o ? 'rgba(34,197,94,.6)' : 'rgba(244,63,94,.6)');
+    ohlcEl.textContent = `O ${o.toFixed(1)} · H ${curH.toFixed(1)} · L ${curL.toFixed(1)} · C ${p.toFixed(1)}`;
+    ti++;
+    box._cwTimers.push(setTimeout(step, 140));
+  }
+  box._cwTimers = [];
+  step();
+}
+
+/* ---------- C4. 3D-стакан (глубина) ---------- */
+var OB3D_INSTANCES = {};
+function renderC4Book3D(box){
+  box.innerHTML = `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin:16px 0">
+      <div id="c4_canvas" style="width:100%; height:380px; background:#040714; border-radius:10px; position:relative; overflow:hidden">
+        <div id="c4_loading" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--mut); font-size:13px">⏳ Загружаем 3D…</div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center">
+        <button class="btn sm" style="background:var(--bad); color:#fff; font-weight:800" onclick="c4MarketOrder(this)">💥 Рыночная покупка 60 BTC</button>
+        <button class="btn sm ghost" onclick="c4Reset(this)">🔄 Сброс</button>
+        <span id="c4_msg" style="font-size:12.5px; color:var(--txt)">Зелёные башни — покупатели (bid), красные — продавцы (ask). Высота = объём.</span>
+      </div>
+    </div>`;
+  loadThreeJs().then(function(){
+    try{
+      const container = box.querySelector('#c4_canvas');
+      const loading = box.querySelector('#c4_loading');
+      if(loading) loading.remove();
+      if(OB3D_INSTANCES[box.id]){ OB3D_INSTANCES[box.id].dispose(); }
+      const W = container.clientWidth, H = 380;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x040714);
+      const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+      camera.position.set(0, 7, 14);
+      camera.lookAt(0, 1, 0);
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(W, H);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+      let controls = null;
+      if(THREE.OrbitControls){ controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true; }
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const dl = new THREE.DirectionalLight(0xffffff, 0.8);
+      dl.position.set(4, 10, 6);
+      scene.add(dl);
+      const grid = new THREE.GridHelper(30, 30, 0x1e293b, 0x0d1526);
+      scene.add(grid);
+
+      const st = { scene, camera, renderer, controls, bars: [], disposed: false, box };
+      OB3D_INSTANCES[box.id] = st;
+
+      function buildBook(){
+        st.bars.forEach(b => scene.remove(b.mesh));
+        st.bars = [];
+        let price = 67400;
+        for(let i = 0; i < 8; i++){
+          price -= 5 + Math.random() * 8;
+          const vol = 5 + Math.random() * 25;
+          const h = vol / 6;
+          const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.7, h, 1.2), new THREE.MeshStandardMaterial({ color: 0x22c55e, transparent: true, opacity: 0.75 }));
+          mesh.position.set(-1.2 - i * 1.1, h / 2, 0);
+          scene.add(mesh);
+          st.bars.push({ mesh, side: 'bid', price: Math.round(price), vol: Math.round(vol), baseH: h });
+        }
+        price = 67400;
+        for(let i = 0; i < 8; i++){
+          price += 5 + Math.random() * 8;
+          const vol = 5 + Math.random() * 25;
+          const h = vol / 6;
+          const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.7, h, 1.2), new THREE.MeshStandardMaterial({ color: 0xf43f5e, transparent: true, opacity: 0.75 }));
+          mesh.position.set(1.2 + i * 1.1, h / 2, 0);
+          scene.add(mesh);
+          st.bars.push({ mesh, side: 'ask', price: Math.round(price), vol: Math.round(vol), baseH: h });
+        }
+        st.bars.sort((a, b) => a.price - b.price);
+      }
+      buildBook();
+      st.buildBook = buildBook;
+
+      const clock = new THREE.Clock();
+      (function animate(){
+        if(st.disposed) return;
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        st.bars.forEach((b, i) => { b.mesh.position.y = b.mesh.scale.y * b.baseH / 2; });
+        if(controls) controls.update();
+        renderer.render(scene, camera);
+      })();
+
+      st.dispose = function(){
+        st.disposed = true;
+        try{ renderer.dispose(); if(renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement); }catch(e){}
+      };
+    }catch(err){
+      const loading = box.querySelector('#c4_loading');
+      if(loading) loading.textContent = '⚠️ WebGL недоступен в этом браузере.';
+      console.warn('[3D book] fallback', err);
+    }
+  }).catch(function(){
+    const loading = box.querySelector('#c4_loading');
+    if(loading) loading.textContent = '⚠️ Не удалось загрузить three.js (нужен интернет).';
+  });
+}
+
+function c4MarketOrder(btn){
+  const box = btn.closest('[id^="widget_c4"]');
+  const st = OB3D_INSTANCES[box.id];
+  if(!st) return;
+  const asks = st.bars.filter(b => b.side === 'ask').sort((a, b) => a.price - b.price);
+  let need = 60, cost = 0, filled = 0, i = 0;
+  const bestAsk = asks[0].price;
+  function eatLevel(){
+    if(need <= 0 || i >= asks.length){
+      const avg = cost / filled;
+      box.querySelector('#c4_msg').innerHTML = `💥 Исполнено ${filled.toFixed(0)} BTC. Лучшая цена была <b>${bestAsk}</b>, средняя — <b style="color:var(--bad)">${avg.toFixed(0)}</b>. Проскальзывание: <b style="color:var(--bad)">${((avg / bestAsk - 1) * 10000).toFixed(0)} bps</b> — крупный ордер «проел» ${i} уровней стакана.`;
+      return;
+    }
+    const lvl = asks[i];
+    const take = Math.min(need, lvl.vol);
+    need -= take; filled += take; cost += take * lvl.price;
+    const remain = (lvl.vol - take) / lvl.vol;
+    // анимация «проедания» уровня
+    const mesh = lvl.mesh;
+    const targetScale = Math.max(0.02, remain);
+    const shrink = setInterval(() => {
+      mesh.scale.y = Math.max(targetScale, mesh.scale.y - 0.08);
+      if(mesh.scale.y <= targetScale + 0.01) clearInterval(shrink);
+    }, 30);
+    box.querySelector('#c4_msg').textContent = `Едим уровень ${lvl.price}: забираем ${take.toFixed(0)} из ${lvl.vol} BTC…`;
+    i++;
+    setTimeout(eatLevel, 450);
+  }
+  eatLevel();
+}
+
+function c4Reset(btn){
+  const box = btn.closest('[id^="widget_c4"]');
+  const st = OB3D_INSTANCES[box.id];
+  if(st){ st.buildBook(); box.querySelector('#c4_msg').textContent = 'Стакан восстановлен. Зелёные — bid, красные — ask.'; }
+}
+
+
+
+/* =========================================================================
+   C2' — Каскад ликвидаций (урок 0.9)
+   C3' — Мини-игра «Maker или Taker?» (урок 0.10)
+   C4' — Walk-Forward + «пик vs плато» (урок p1_l9)
+   C5' — Корреляции в кризис (урок p3_l6)
+   C6' — Кривая забывания и SM-2 (Глоссарий)
+   C7' — Радар компетенций (Прогресс)
+   C9' — Тип блока {type:"image"} для инфографики
+   ========================================================================= */
+(function attachCStream2(){
+  const prev = renderCStreamWidget;
+  const map2 = {
+    widget_c2b_cascade: renderC2Cascade,
+    widget_c3b_makertaker: renderC3MakerTaker,
+    widget_c4b_walkforward: renderC4WalkForward,
+    widget_c5b_correlations: renderC5Correlations
+  };
+  renderCStreamWidget = function(widgetId){
+    const box = document.getElementById(widgetId);
+    if(box && map2[widgetId]){ cwCleanup(box); map2[widgetId](box); return true; }
+    return prev(widgetId);
+  };
+  const ATT2 = [
+    ['p0_l9',  'widget_c2b_cascade', '💥 Каскад ликвидаций: как плечи превращают падение в обвал', 'Двигай «начальное падение» и смотри, как позиции x5→x10→x25 взрываются по очереди, а каждая ликвидация давит цену ещё ниже.'],
+    ['p0_l10', 'widget_c3b_makertaker', '⚔️ Скоростная игра «Maker или Taker?»', '60 секунд: классифицируй ордера на Maker/Taker. Комбо-множитель за серию, игра кончается после 3 ошибок.'],
+    ['p1_l9',  'widget_c4b_walkforward', '🔬 Walk-Forward и «пик vs плато»: увидеть переобучение', 'Окна train/test ползут по истории, Sharpe in-sample vs out-of-sample; рядом — поверхность параметров: острый пик против устойчивого плато.'],
+    ['p3_l6',  'widget_c5b_correlations', '🌋 Корреляции в кризис: исчезновение диверсификации', 'Матрица корреляций 5 активов. Нажми «Флеш-крах» — и смотри, как «некоррелированные» активы сливаются в один.']
+  ];
+  ATT2.forEach(function(a){
+    const l = LESSONS.find(x => x.id === a[0]);
+    if(!l || !l.blocks) return;
+    if(l.blocks.some(b => b.id === a[1])) return;
+    let pos = l.blocks.length;
+    for(let i = 0; i < l.blocks.length; i++){
+      if(l.blocks[i].type === 'recap'){ pos = i; break; }
+    }
+    l.blocks.splice(pos, 0, { type: 'interactive_inline', id: a[1], title: a[2], desc: a[3] });
+  });
+})();
+
+/* ---------- C2'. Каскад ликвидаций ---------- */
+function renderC2Cascade(box){
+  box.innerHTML = `
+    <div style="background:rgba(244,63,94,.06); border:1.5px solid var(--bad); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:10px">
+        <label style="font-size:12.5px; color:var(--txt)">Начальное падение: <b id="c2b_drop_label" style="color:var(--bad)">−3%</b></label>
+        <input type="range" id="c2b_drop" min="1" max="8" value="3" style="flex:1; min-width:160px" oninput="document.getElementById('c2b_drop_label').textContent='−'+this.value+'%'">
+        <button class="btn sm" style="background:var(--bad); color:#fff; font-weight:800" onclick="c2bRun(this)">💥 Запустить каскад</button>
+        <button class="btn sm ghost" onclick="c2bReset(this)">🔄</button>
+      </div>
+      <canvas id="c2b_canvas" width="640" height="300" style="width:100%; border-radius:8px; background:#040714"></canvas>
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-top:8px">
+        <span style="font-size:12.5px; color:var(--txt)">Ликвидировано: <b id="c2b_vol" style="color:var(--bad)">$0 млн</b> · Итоговое падение: <b id="c2b_final" style="color:var(--bad)">0%</b></span>
+      </div>
+      <div id="c2b_msg" style="font-size:12.5px; color:var(--mut); margin-top:6px; line-height:1.5">Столбики справа — лонги с плечами x5, x10, x25 (высота = объём $). Уровень ликвидации xN — примерно −100/N %.</div>
+    </div>`;
+  c2bDraw(box, { drop: 3, phase: 'idle' });
+}
+
+function c2bLevels(){ return [{lev: 25, drop: 4, vol: 420}, {lev: 10, drop: 10, vol: 680}, {lev: 5, drop: 20, vol: 900}]; }
+
+function c2bDraw(box, st){
+  const cv = box.querySelector('#c2b_canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+  // цена (левая часть): линия падения
+  const priceW = 400;
+  const maxDrop = 26;
+  const yOf = d => 24 + (d / maxDrop) * (H - 70);
+  ctx.strokeStyle = '#94a3b8';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, yOf(0)); ctx.lineTo(priceW, yOf(0)); ctx.stroke();
+  ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif';
+  [0, 10, 20].forEach(d => ctx.fillText('−' + d + '%', 4, yOf(d) - 3));
+  // уровни ликвидации
+  c2bLevels().forEach(l => {
+    ctx.strokeStyle = 'rgba(244,63,94,.35)';
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(0, yOf(l.drop)); ctx.lineTo(priceW, yOf(l.drop)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(244,63,94,.8)';
+    ctx.fillText('ликвидация x' + l.lev + ' (−' + l.drop + '%)', 8, yOf(l.drop) - 4);
+  });
+  // траектория цены
+  if(st.path && st.path.length > 1){
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    st.path.forEach((d, i) => {
+      const x = (i / (st.path.length - 1)) * priceW;
+      if(i === 0) ctx.moveTo(x, yOf(d)); else ctx.lineTo(x, yOf(d));
+    });
+    ctx.stroke();
+    const lastD = st.path[st.path.length - 1];
+    const lastX = priceW;
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath(); ctx.arc(lastX - 1, yOf(lastD), 4, 0, Math.PI * 2); ctx.fill();
+  }
+  // столбики позиций (правая часть)
+  const lvls = st.levels || c2bLevels().map(l => Object.assign({}, l, { dead: false }));
+  lvls.forEach((l, i) => {
+    const x = priceW + 40 + i * 70;
+    const h = (l.vol / 900) * (H - 90);
+    const y = H - 40 - h;
+    ctx.fillStyle = l.dead ? 'rgba(100,116,139,.35)' : (l.dying ? '#f43f5e' : 'rgba(6,182,212,.7)');
+    ctx.fillRect(x, y, 44, h);
+    ctx.fillStyle = l.dead ? '#64748b' : '#e2e8f0';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('x' + l.lev, x + 22, H - 24);
+    ctx.font = '10px sans-serif';
+    ctx.fillText(l.dead ? '💀 −$' + l.vol + 'м' : '$' + l.vol + 'м', x + 22, y - 6);
+    ctx.textAlign = 'left';
+  });
+}
+
+function c2bRun(btn){
+  const box = btn.closest('[id^="widget_c2b"]');
+  if(!box) return;
+  cwCleanup(box);
+  box._cwTimers = [];
+  const initDrop = +box.querySelector('#c2b_drop').value;
+  const levels = c2bLevels().map(l => Object.assign({}, l, { dead: false }));
+  const path = [0];
+  let drop = 0, liqVol = 0, step = 0;
+  const totalSteps = 40;
+  function tick(){
+    // базовое падение + ускорение от ликвидаций
+    drop += (initDrop / 12) * (step < 12 ? 1 : 0) + liqVol * 0.004;
+    if(step >= 12) drop += liqVol * 0.002;
+    path.push(drop);
+    // ликвидации
+    levels.forEach(l => {
+      if(!l.dead && drop >= l.drop){
+        l.dead = true;
+        liqVol += l.vol;
+        box.querySelector('#c2b_msg').innerHTML = `💥 <b style="color:var(--bad)">Ликвидированы лонги x${l.lev}: $${l.vol} млн</b> — это принудительные РЫНОЧНЫЕ продажи, они давят цену ещё ниже → следующий эшелон плечей…`;
+      }
+    });
+    c2bDraw(box, { path, levels });
+    box.querySelector('#c2b_vol').textContent = '$' + liqVol + ' млн';
+    box.querySelector('#c2b_final').textContent = '−' + drop.toFixed(1) + '%';
+    step++;
+    if(step < totalSteps && drop < 26){
+      box._cwTimers.push(setTimeout(tick, 180));
+    } else {
+      const amp = drop / Math.max(initDrop, 0.1);
+      box.querySelector('#c2b_msg').innerHTML = `🏁 Начальное падение −${initDrop}% превратилось в <b style="color:var(--bad)">−${drop.toFixed(1)}%</b> (усиление ×${amp.toFixed(1)}). ${liqVol > 0 ? 'Ликвидации добавили топлива: $' + liqVol + ' млн принудительных продаж.' : 'Каскад не запустился — плечи пережили это движение.'} Именно так 10 октября 2025 обычная распродажа превратилась в $19 млрд ликвидаций.`;
+    }
+  }
+  tick();
+}
+
+function c2bReset(btn){
+  const box = btn.closest('[id^="widget_c2b"]');
+  cwCleanup(box);
+  c2bDraw(box, { drop: +box.querySelector('#c2b_drop').value, phase: 'idle' });
+  box.querySelector('#c2b_vol').textContent = '$0 млн';
+  box.querySelector('#c2b_final').textContent = '0%';
+  box.querySelector('#c2b_msg').textContent = 'Столбики справа — лонги с плечами x5, x10, x25. Уровень ликвидации xN ≈ −100/N %.';
+}
+
+/* ---------- C3'. Maker или Taker? ---------- */
+const C3B_SCENARIOS = [
+  ['Лимит-заявка ВНУТРИ спреда (между bid и ask)', 'maker', 'Ставишь новую цену — добавляешь ликвидность в стакан.'],
+  ['Маркет-покупка 1 BTC', 'taker', 'Съедаешь чужие лимитные заявки — забираешь ликвидность.'],
+  ['Лимит на покупку НИЖЕ текущего bid', 'maker', 'Твоя заявка встанет в очередь и будет ждать.'],
+  ['Лимит-продажа по цене лучшего bid', 'taker', 'Мгновенно исполнится о чужую заявку.'],
+  ['Стоп-маркет по достижении цены', 'taker', 'Стоп-триггер превращается в маркет-ордер.'],
+  ['Post-only лимит чуть лучше середины', 'maker', 'Флаг post-only отменит ордер, если он бы исполнился сразу.'],
+  ['Своп на DEX через пул ликвидности', 'taker', 'Ты забираешь ликвидность из пула AMM — аналог taker.'],
+  ['Сеточный бот ставит лимиты вокруг цены', 'maker', 'Грид-бот — классический маркет-мейкер.'],
+  ['Айсберг-ордер на продажу', 'maker', 'Показывает лишь часть объёма, но это лимитные заявки в стакане.'],
+  ['Рыночная продажа при панике', 'taker', 'Паника = платишь спред и проскальзывание за скорость.'],
+  ['Пополнение ликвидности в пул Uniswap', 'maker', 'LP — это «мейкер» в мире DeFi.'],
+  ['Перекрестный лимит, проходящий через весь стакан', 'taker', 'Такой лимит исполняется сразу как маркет-ордер.']
+];
+
+function renderC3MakerTaker(box){
+  box.innerHTML = `
+    <div style="background:rgba(124,58,237,.06); border:1.5px solid var(--acc1); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; font-size:12.5px; color:var(--txt)">
+        <span>⏱️ <b id="c3b_time">60</b>с · Очки: <b id="c3b_score" style="color:var(--ok)">0</b> · Комбо: <b id="c3b_combo" style="color:var(--warn)">×1</b> · Ошибки: <b id="c3b_mistakes" style="color:var(--bad)">0/3</b></span>
+        <span>🏆 Рекорд: <b id="c3b_best">0</b></span>
+      </div>
+      <div id="c3b_card" style="background:#040714; border-radius:12px; padding:24px 18px; text-align:center; min-height:110px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; color:var(--txt); line-height:1.45">Нажми «Старт» — будут карточки с ордерами, решай: это Maker (добавляет ликвидность) или Taker (забирает)?</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px">
+        <button class="btn" style="background:var(--acc2); font-weight:800" onclick="c3bAnswer(this,'maker')">🧱 MAKER<br><span style="font-size:10px; font-weight:400">добавляет в стакан · комиссия ниже/рибейт</span></button>
+        <button class="btn" style="background:var(--bad); font-weight:800" onclick="c3bAnswer(this,'taker')">⚡ TAKER<br><span style="font-size:10px; font-weight:400">забирает из стакана · комиссия выше</span></button>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:10px; align-items:center">
+        <button class="btn sm ghost" id="c3b_start" onclick="c3bStart(this)">▶ Старт</button>
+        <span id="c3b_msg" style="font-size:12.5px; color:var(--mut)"></span>
+      </div>
+    </div>`;
+  box.querySelector('#c3b_best').textContent = localStorage.getItem('cn_mt_best') || 0;
+}
+
+function c3bStart(btn){
+  const box = btn.closest('[id^="widget_c3b"]');
+  if(!box) return;
+  cwCleanup(box);
+  const st = { score: 0, combo: 1, mistakes: 0, t: 60, deck: C3B_SCENARIOS.slice().sort(() => Math.random() - 0.5), idx: 0, over: false };
+  box._c3b = st;
+  btn.style.display = 'none';
+  c3bNext(box);
+  box._cwTimers.push(setInterval(() => {
+    if(st.over) return;
+    st.t--;
+    box.querySelector('#c3b_time').textContent = st.t;
+    if(st.t <= 0) c3bEnd(box, '⏱️ Время вышло!');
+  }, 1000));
+}
+
+function c3bNext(box){
+  const st = box._c3b;
+  if(!st || st.over) return;
+  if(st.idx >= st.deck.length) st.deck = C3B_SCENARIOS.slice().sort(() => Math.random() - 0.5), st.idx = 0;
+  box.querySelector('#c3b_card').textContent = st.deck[st.idx][0];
+}
+
+function c3bAnswer(btn, side){
+  const box = btn.closest('[id^="widget_c3b"]');
+  const st = box && box._c3b;
+  if(!st || st.over) return;
+  const sc = st.deck[st.idx];
+  const card = box.querySelector('#c3b_card');
+  if(sc[1] === side){
+    st.score += 10 * st.combo;
+    st.combo = Math.min(5, st.combo + 1);
+    card.style.borderColor = 'var(--ok)';
+    box.querySelector('#c3b_msg').textContent = '✅ ' + sc[2];
+  } else {
+    st.mistakes++;
+    st.combo = 1;
+    card.style.borderColor = 'var(--bad)';
+    box.querySelector('#c3b_msg').textContent = '❌ Верно: ' + sc[1].toUpperCase() + '. ' + sc[2];
+    if(st.mistakes >= 3){ c3bEnd(box, '💀 Три ошибки — раунд окончен.'); return; }
+  }
+  box.querySelector('#c3b_score').textContent = st.score;
+  box.querySelector('#c3b_combo').textContent = '×' + st.combo;
+  box.querySelector('#c3b_mistakes').textContent = st.mistakes + '/3';
+  st.idx++;
+  setTimeout(() => c3bNext(box), 650);
+}
+
+function c3bEnd(box, why){
+  const st = box._c3b;
+  st.over = true;
+  cwCleanup(box);
+  const best = Math.max(st.score, +(localStorage.getItem('cn_mt_best') || 0));
+  localStorage.setItem('cn_mt_best', best);
+  box.querySelector('#c3b_best').textContent = best;
+  box.querySelector('#c3b_card').innerHTML = `${why}<br><span style="font-size:22px; margin-top:8px; display:inline-block">Итог: <b style="color:var(--ok)">${st.score}</b> очков</span>`;
+  box.querySelector('#c3b_msg').textContent = 'Правило большого пальца: если ордер может исполниться НЕМЕДЛЕННО — он taker. Если ждёт в стакане — maker.';
+  box.querySelector('#c3b_start').style.display = '';
+  if(typeof addFundCapital === 'function' && st.score > 0) addFundCapital(st.score * 100, 60, 'Игра «Maker или Taker»');
+}
+
+/* ---------- C4'. Walk-Forward + «пик vs плато» ---------- */
+function renderC4WalkForward(box){
+  box.innerHTML = `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px">
+        <button class="btn sm" style="background:var(--acc2); color:#040714; font-weight:800" onclick="c4bRun(this)">▶ Прогнать Walk-Forward (6 окон)</button>
+        <span id="c4b_msg" style="font-size:12.5px; color:var(--txt)">Окно обучения ползёт по истории. Смотри разрыв: Sharpe in-sample (на обучении) vs out-of-sample (на будущем).</span>
+      </div>
+      <canvas id="c4b_timeline" width="640" height="190" style="width:100%; border-radius:8px; background:#040714"></canvas>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px">
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--bad); margin-bottom:4px">⚠️ Острый пик (переобучение)</div>
+          <canvas id="c4b_peak" width="300" height="200" style="width:100%; border-radius:8px; background:#040714"></canvas>
+        </div>
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--ok); margin-bottom:4px">✅ Плато (робастная зона)</div>
+          <canvas id="c4b_plateau" width="300" height="200" style="width:100%; border-radius:8px; background:#040714"></canvas>
+        </div>
+      </div>
+    </div>`;
+  c4bDrawHeat(box.querySelector('#c4b_peak'), true);
+  c4bDrawHeat(box.querySelector('#c4b_plateau'), false);
+}
+
+function c4bDrawHeat(cv, peaked){
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const cx = peaked ? W * 0.72 : W / 2, cy = peaked ? H * 0.3 : H / 2;
+  const sigma = peaked ? 22 : 85;
+  for(let x = 0; x < W; x += 2){
+    for(let y = 0; y < H; y += 2){
+      const d2 = (x - cx) * (x - cx) + (y - cy) * (y - cy);
+      let v = Math.exp(-d2 / (2 * sigma * sigma));
+      v += (Math.random() - 0.5) * 0.06;
+      v = Math.max(0, Math.min(1, v));
+      const r = Math.round(20 + v * 220);
+      const g = Math.round(40 + v * (peaked ? 60 : 160));
+      const b = Math.round(90 - v * 40);
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(x, y, 2, 2);
+    }
+  }
+  ctx.fillStyle = '#fff';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('период →', W - 70, H - 8);
+  ctx.save();
+  ctx.translate(12, 90); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('порог сигнала →', 0, 0);
+  ctx.restore();
+  ctx.fillStyle = peaked ? '#fecaca' : '#bbf7d0';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText(peaked ? 'Sharpe 3.8 только в одной точке' : 'Sharpe 1.2–1.6 во всей области', 14, 18);
+}
+
+function c4bRun(btn){
+  const box = btn.closest('[id^="widget_c4b"]');
+  if(!box) return;
+  cwCleanup(box);
+  box._cwTimers = [];
+  const cv = box.querySelector('#c4b_timeline');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const windows = 6;
+  let w = 0;
+  const results = [];
+  function drawWin(){
+    ctx.clearRect(0, 0, W, H);
+    const segW = W / 8;
+    // историческая лента
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(0, 30, W, 44);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px sans-serif';
+    ctx.fillText('2019', 6, 26); ctx.fillText('2025', W - 34, 26);
+    for(let i = 0; i <= w; i++){
+      const x = i * segW * 0.9;
+      ctx.fillStyle = 'rgba(6,182,212,.45)';
+      ctx.fillRect(x, 32, segW * 1.6, 18); // train
+      ctx.fillStyle = 'rgba(244,63,94,.55)';
+      ctx.fillRect(x + segW * 1.6, 32, segW * 0.7, 18); // test
+    }
+    ctx.fillStyle = '#22d3ee'; ctx.fillText('▉ train (in-sample)', 8, 90);
+    ctx.fillStyle = '#f43f5e'; ctx.fillText('▉ test (out-of-sample)', 130, 90);
+    // бары Sharpe
+    results.forEach((r, i) => {
+      const bx = 60 + i * 90;
+      const isH = r.is * 22, oosH = Math.max(2, r.oos) * 22;
+      ctx.fillStyle = 'rgba(6,182,212,.8)';
+      ctx.fillRect(bx, 170 - isH, 26, isH);
+      ctx.fillStyle = r.oos >= 0.8 ? 'rgba(34,197,94,.85)' : 'rgba(244,63,94,.85)';
+      ctx.fillRect(bx + 30, 170 - oosH, 26, oosH);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('окно ' + (i + 1), bx + 28, 184);
+      ctx.fillText(r.is.toFixed(1), bx + 13, 166 - isH);
+      ctx.fillText(r.oos.toFixed(1), bx + 43, 166 - oosH);
+      ctx.textAlign = 'left';
+    });
+    w++;
+    if(w <= windows){
+      results.push({ is: 1.6 + Math.random() * 1.4, oos: Math.random() < 0.5 ? 0.2 + Math.random() * 0.5 : 0.8 + Math.random() * 0.5 });
+      box._cwTimers.push(setTimeout(drawWin, 700));
+    } else {
+      const avgIs = results.reduce((s, r) => s + r.is, 0) / results.length;
+      const avgOos = results.reduce((s, r) => s + r.oos, 0) / results.length;
+      const decay = (1 - avgOos / avgIs) * 100;
+      box.querySelector('#c4b_msg').innerHTML = `🏁 Средний Sharpe: in-sample <b>${avgIs.toFixed(1)}</b> → out-of-sample <b style="color:${decay > 50 ? 'var(--bad)' : 'var(--ok)'}">${avgOos.toFixed(1)}</b> (деградация ${decay.toFixed(0)}%). ${decay > 50 ? 'Это переобучение: модель запомнила шум прошлого. Смотри левую поверхность — «острый пик».' : 'Приемлемая деградация. Робастные параметры живут на «плато» (правая поверхность).'}`;
+    }
+  }
+  drawWin();
+}
+
+/* ---------- C5'. Корреляции в кризис ---------- */
+function renderC5Correlations(box){
+  box.innerHTML = `
+    <div style="background:rgba(234,179,8,.06); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin:16px 0">
+      <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap">
+        <button class="btn sm" style="background:var(--warn); color:#1c1400; font-weight:800" onclick="c5bCrash(this)">⚡ Флеш-крах!</button>
+        <button class="btn sm ghost" onclick="c5bNormal(this)">🌤️ Спокойный рынок</button>
+        <span id="c5b_dd" style="font-size:12.5px; color:var(--txt); align-self:center"></span>
+      </div>
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start">
+        <canvas id="c5b_heat" width="280" height="280" style="border-radius:8px; background:#040714"></canvas>
+        <canvas id="c5b_port" width="330" height="280" style="width:100%; border-radius:8px; background:#040714"></canvas>
+      </div>
+      <div id="c5b_msg" style="font-size:12.5px; color:var(--mut); margin-top:8px; line-height:1.5">Спокойный рынок: альты и DeFi живут своей жизнью, корреляции низкие, диверсификация «работает». Нажми «Флеш-крах»…</div>
+    </div>`;
+  c5bDraw(box, false);
+}
+
+function c5bDraw(box, crisis){
+  const assets = ['BTC', 'ETH', 'SOL', 'DeFi', 'Мемы'];
+  const base = [
+    [1, .85, .6, .5, .35],
+    [.85, 1, .7, .6, .4],
+    [.6, .7, 1, .65, .55],
+    [.5, .6, .65, 1, .5],
+    [.35, .4, .55, .5, 1]
+  ];
+  const cv = box.querySelector('#c5b_heat');
+  const ctx = cv.getContext('2d');
+  const n = 5, cell = (cv.width - 40) / n;
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.font = 'bold 11px sans-serif';
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
+      let v = base[i][j];
+      if(crisis && i !== j) v = Math.min(0.99, v + (1 - v) * 0.85);
+      const x = 34 + j * cell, y = 8 + i * cell;
+      // цвет: синий (низк.) → жёлтый → красный (высок.)
+      const r = Math.round(v * 240), g = Math.round((1 - v) * 170 + 20), b = Math.round((1 - v) * 200);
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(x, y, cell - 3, cell - 3);
+      ctx.fillStyle = v > 0.55 ? '#fff' : '#0d1022';
+      ctx.textAlign = 'center';
+      ctx.fillText(v.toFixed(2), x + cell / 2 - 1.5, y + cell / 2 + 4);
+    }
+    ctx.fillStyle = '#e2e8f0';
+    ctx.textAlign = 'right';
+    ctx.fillText(assets[i], 30, 8 + i * cell + cell / 2 + 4);
+    ctx.textAlign = 'center';
+    ctx.fillText(assets[i], 34 + i * cell + cell / 2, cv.height - 4);
+  }
+  ctx.textAlign = 'left';
+  // просадка портфеля
+  const pc = box.querySelector('#c5b_port');
+  const pctx = pc.getContext('2d');
+  pctx.clearRect(0, 0, pc.width, pc.height);
+  pctx.fillStyle = '#94a3b8';
+  pctx.font = 'bold 11px sans-serif';
+  pctx.fillText('Просадка портфеля', 10, 18);
+  const dd = crisis ? { btc: -22, port: -19.5 } : { btc: -22, port: -8 };
+  const maxDD = 24;
+  const bar = (y, v, color, label) => {
+    const w = Math.abs(v) / maxDD * (pc.width - 120);
+    pctx.fillStyle = color;
+    pctx.fillRect(70, y, w, 30);
+    pctx.fillStyle = '#e2e8f0';
+    pctx.fillText(label + '  ' + v + '%', 76, y + 20);
+  };
+  pctx.fillStyle = '#64748b';
+  pctx.fillText('BTC', 10, 60);
+  bar(42, dd.btc, 'rgba(251,146,60,.85)', 'Только BTC');
+  pctx.fillText('«Диверс.»', 10, 120);
+  bar(102, dd.port, crisis ? 'rgba(244,63,94,.85)' : 'rgba(34,197,94,.85)', '5 активов');
+  pctx.fillStyle = '#e2e8f0';
+  pctx.font = '11px sans-serif';
+  const gain = dd.port - dd.btc;
+  pctx.fillText(crisis
+    ? `Защита диверсификации растаяла: всего ${gain.toFixed(1)} п.п. вместо ожидаемых 14.`
+    : `В спокойные дни диверсификация «спасает» ${gain.toFixed(1)} п.п.`, 10, 170);
+  pctx.fillText(crisis
+    ? 'В кризис корреляции → 1: все риск-активы падают вместе.'
+    : '…но именно в кризис она нужна больше всего.', 10, 192);
+}
+
+function c5bCrash(btn){
+  const box = btn.closest('[id^="widget_c5b"]');
+  c5bDraw(box, true);
+  box.querySelector('#c5b_msg').innerHTML = '🌋 <b style="color:var(--bad)">Флеш-крах:</b> матрица «загорелась» — корреляции поползли к 1. BTC упал на −22%, «диверсифицированный» портфель — на −19.5%. Взаимосвязи, которые ты измерил в спокойные дни, в стресс не работают: в продажу идёт всё рисковое разом. Поэтому стресс-тест считают по корреляциям именно крах-дней.';
+}
+
+function c5bNormal(btn){
+  const box = btn.closest('[id^="widget_c5b"]');
+  c5bDraw(box, false);
+  box.querySelector('#c5b_msg').textContent = 'Спокойный рынок: корреляции умеренные, диверсификация вроде бы сглаживает. Но это иллюзия спокойствия.';
+}
+
+/* ---------- C6'. Кривая забывания и SM-2 ---------- */
+function renderForgettingCurve(){
+  const host = document.getElementById('forgetting_curve_box');
+  if(!host || !host.isConnected) return;
+  if(host.dataset.drawn === '1') return;
+  host.dataset.drawn = '1';
+  const cv = document.createElement('canvas');
+  cv.width = 640; cv.height = 240;
+  cv.style.cssText = 'width:100%; border-radius:8px; background:#040714';
+  host.appendChild(cv);
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height, padL = 40, padB = 26;
+  const days = 30;
+  const xOf = d => padL + (d / days) * (W - padL - 10);
+  const yOf = r => 14 + (1 - r) * (H - 14 - padB);
+  // ось
+  ctx.strokeStyle = '#334155';
+  ctx.beginPath(); ctx.moveTo(padL, 10); ctx.lineTo(padL, H - padB); ctx.lineTo(W - 6, H - padB); ctx.stroke();
+  ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif';
+  ctx.fillText('0 дн', padL - 8, H - 10);
+  ctx.fillText('30 дн', W - 44, H - 10);
+  ctx.fillText('100%', 4, 20);
+  ctx.fillText('помните', 4, 34);
+  // без повторений
+  ctx.strokeStyle = 'rgba(244,63,94,.7)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  for(let d = 0; d <= days; d += 0.5){
+    const r = Math.exp(-d / 2.2);
+    if(d === 0) ctx.moveTo(xOf(d), yOf(r)); else ctx.lineTo(xOf(d), yOf(r));
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f43f5e';
+  ctx.fillText('без повторений', xOf(9), yOf(Math.exp(-9 / 2.2)) - 8);
+  // с повторениями SM-2: дни 1,3,7,21
+  const reviewDays = [1, 3, 7, 21];
+  ctx.strokeStyle = '#22c55e';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(xOf(0), yOf(1));
+  let segStart = 0, stab = 2.2;
+  for(let k = 0; k <= reviewDays.length; k++){
+    const end = (k < reviewDays.length) ? reviewDays[k] : days;
+    // затухание от segStart до end
+    for(let d = segStart; d <= end; d += 0.2){
+      ctx.lineTo(xOf(d), yOf(Math.exp(-(d - segStart) / stab)));
+    }
+    if(k < reviewDays.length){
+      const rv = reviewDays[k];
+      // метка повторения и вертикальный скачок восстановления до 100%
+      ctx.lineTo(xOf(rv), yOf(Math.exp(-(rv - segStart) / stab)));
+      ctx.lineTo(xOf(rv), yOf(1));
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.arc(xOf(rv), yOf(1), 4, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#22c55e';
+      segStart = rv;
+      stab *= 2.1; // каждое повторение замедляет забывание
+      ctx.moveTo(xOf(rv), yOf(1));
+    }
+  }
+  ctx.stroke();
+  ctx.fillStyle = '#22c55e';
+  ctx.fillText('с SM-2 (повторения ●)', xOf(16), yOf(0.93));
+  // подпись
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('Каждое повторение в точке ● делает забывание медленнее — интервалы SM-2 (1/3/7/21 день) попадают как раз в моменты, когда память вот-вот «провалится».', padL, H - 2);
+}
+
+(function injectForgettingCurve(){
+  const sub = document.querySelector('#glossary p.sub');
+  if(sub && !document.getElementById('forgetting_curve_card')){
+    sub.insertAdjacentHTML('afterend', `
+      <div style="background:rgba(34,197,94,.05); border:1.5px solid var(--ok); border-radius:12px; padding:14px 16px; margin-bottom:18px">
+        <div style="font-size:12px; font-weight:800; color:var(--ok); text-transform:uppercase; margin-bottom:6px">📉 Зачем вообще SM-2: кривая забывания Эббингауза</div>
+        <div id="forgetting_curve_box"></div>
+      </div>`);
+  }
+  const origGo = window.go;
+  window.go = function(tab){
+    const r = origGo.apply(this, arguments);
+    if(tab === 'glossary') setTimeout(renderForgettingCurve, 60);
+    return r;
+  };
+  if(document.querySelector('#glossary.active')) renderForgettingCurve();
+})();
+
+/* ---------- C7'. Радар компетенций ---------- */
+const COMPETENCY_AXES = [
+  { key: 'blockchain', label: 'Блокчейн', cats: ['infra'], lessons: ['p0_l1', 'p0_l2', 'p0_l3'] },
+  { key: 'exchange', label: 'Биржа и ордера', cats: ['trading'], lessons: ['p0_l4', 'p0_l9', 'p0_l10', 'p0_l16'] },
+  { key: 'charts', label: 'Графики', cats: ['metrics'], lessons: ['p0_l6', 'p0_l7', 'p0_l8'] },
+  { key: 'risk', label: 'Риск', cats: ['risk'], lessons: ['p0_l12', 'p0_l13', 'p0_l14', 'p0_l15'] },
+  { key: 'quant', label: 'Вероятность и матстат', cats: ['quant'], lessons: ['p1_l1', 'p1_l2', 'p1_l3', 'p1_l4'] },
+  { key: 'infra', label: 'Инфраструктура', cats: ['infra'], lessons: ['p0_l17', 'p0_l18', 'p0_l19', 'p0_l20'] },
+  { key: 'law', label: 'Право РФ', cats: ['ru'], lessons: ['p4_l1', 'p4_l2', 'p4_l3'] }
+];
+
+function computeCompetencies(){
+  const done = (typeof lessonCheckState !== 'undefined' ? lessonCheckState : {}) || {};
+  return COMPETENCY_AXES.map(ax => {
+    let doneCnt = 0, total = ax.lessons.length;
+    ax.lessons.forEach(id => { if(done[id] && (done[id].done || done[id].checked || done[id])) doneCnt++; });
+    // ошибочные попытки по категории снижают уверенность
+    let errPenalty = 0;
+    if(typeof beginnerCategoryErrors !== 'undefined' && beginnerCategoryErrors){
+      ax.cats.forEach(c => {
+        const e = beginnerCategoryErrors[c];
+        if(e && e.attempts > 0) errPenalty += (e.errors / e.attempts) * 0.4;
+      });
+    }
+    const lessonScore = total ? doneCnt / total : 0;
+    const quizBonus = (typeof topicStats !== 'undefined' && topicStats[ax.key]) ? Math.min(0.3, (topicStats[ax.key].correct || 0) / 30) : 0;
+    return Math.max(0, Math.min(1, lessonScore + quizBonus - errPenalty));
+  });
+}
+
+function renderCompetencyRadar(){
+  const host = document.getElementById('competency_radar_box');
+  if(!host || !host.isConnected) return;
+  host.innerHTML = '';
+  const cv = document.createElement('canvas');
+  cv.width = 360; cv.height = 320;
+  cv.style.cssText = 'width:100%; max-width:360px; margin:0 auto; display:block; background:#040714; border-radius:10px';
+  host.appendChild(cv);
+  const ctx = cv.getContext('2d');
+  const cx = cv.width / 2, cy = cv.height / 2 + 6, R = 108;
+  const n = COMPETENCY_AXES.length;
+  const vals = computeCompetencies();
+  const angle = i => -Math.PI / 2 + (i / n) * Math.PI * 2;
+  // сетка
+  for(let ring = 1; ring <= 4; ring++){
+    ctx.strokeStyle = 'rgba(148,163,184,.18)';
+    ctx.beginPath();
+    for(let i = 0; i <= n; i++){
+      const a = angle(i % n), r = R * ring / 4;
+      const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+      if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  // оси и подписи
+  ctx.font = '11px sans-serif';
+  COMPETENCY_AXES.forEach((ax, i) => {
+    const a = angle(i);
+    ctx.strokeStyle = 'rgba(148,163,184,.25)';
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); ctx.stroke();
+    ctx.fillStyle = '#cbd5e1';
+    const lx = cx + Math.cos(a) * (R + 34), ly = cy + Math.sin(a) * (R + 16);
+    ctx.textAlign = Math.abs(Math.cos(a)) < 0.3 ? 'center' : (Math.cos(a) > 0 ? 'left' : 'right');
+    ctx.fillText(ax.label, lx, ly);
+    ctx.fillStyle = 'rgba(34,197,94,.9)';
+    ctx.fillText(Math.round(vals[i] * 100) + '%', lx, ly + 12);
+  });
+  // целевой контур выпускника (90%)
+  ctx.strokeStyle = 'rgba(234,179,8,.65)';
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  for(let i = 0; i <= n; i++){
+    const a = angle(i % n), r = R * 0.9;
+    const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+    if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+  // полигон пользователя
+  ctx.fillStyle = 'rgba(6,182,212,.25)';
+  ctx.strokeStyle = '#22d3ee';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for(let i = 0; i <= n; i++){
+    const a = angle(i % n), r = R * vals[i % n];
+    const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+    if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#eab308';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('- - цель «выпускник» (90%)', 8, cv.height - 8);
+}
+
+// инъекция радара в Прогресс
+(function injectRadar(){
+  if(typeof renderProgressStats === 'function'){
+    const orig = renderProgressStats;
+    renderProgressStats = function(){
+      const r = orig.apply(this, arguments);
+      let host = document.getElementById('competency_radar_card');
+      if(!host){
+        const stats = document.getElementById('stats');
+        if(stats){
+          stats.insertAdjacentHTML('afterbegin', `
+            <div class="lblock" id="competency_radar_card" style="background:#090d1f; border:1.5px solid var(--acc2); border-radius:14px; padding:20px; margin-bottom:20px">
+              <div style="font-size:13px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:4px">🧭 Радар компетенций крипто-архитектора</div>
+              <p style="font-size:12.5px; color:var(--mut); margin:0 0 10px">Семь осей мастерства по пройденным урокам и точности ответов. Пунктир — цель выпускника (90%).</p>
+              <div id="competency_radar_box"></div>
+            </div>`);
+        }
+      }
+      renderCompetencyRadar();
+      return r;
+    };
+  }
+})();
+
+/* ---------- C9'. Тип блока image (инфографика GPT Image) ---------- */
+// Реализовано веткой {type:"image"} прямо в рендере блоков урока (~стр. 13042).
+// Использование: {"type":"image","src":"assets/пример.png","alt":"…","caption":"…"}
+// Промты для генерации — в assets/README.md (план, шаг C8).
+
+// Привязка инфографики к урокам: файл появится в assets/ — картинка подхватится сама
+(function attachInfographics(){
+  const IMGS = [
+    ['p0_l1',  'assets/crypto_ecosystem_map.png', 'Карта крипто-экосистемы', 'Инфографика: пять зон экосистемы вокруг блокчейна — CEX, DEX/DeFi, кошельки, стейблкоины, NFT/мемкоины.'],
+    ['p0_l7',  'assets/candle_anatomy.png',       'Анатомия японской свечи', 'Инфографика: open/close/high/low, тело и фитили; как 5 тиков собираются в одну свечу.'],
+    ['p0_l16', 'assets/leverage_ladder.png',       'Лестница ликвидации плечей', 'Инфографика: x1…x25 — чем выше плечо, тем уже платформа над пропастью.'],
+    ['p1_l1',  'assets/bot_lifecycle.png',         'Жизненный цикл торгового бота', 'Инфографика: гипотеза → данные → бэктест → walk-forward → paper → микро-лайв, и где умирают стратегии.'],
+    ['p4_l3',  'assets/security_pyramid.png',      'Пирамида безопасности хранения капитала', 'Инфографика: холодный кошелёк в основании, «никогда» — на вершине.'],
+    ['p2_l1',  'assets/market_regimes.png',        'Режимы рынка и стратегии', 'Инфографика: тренд / боковик / чёрный лебедь — и какие стратегии живут в каждом режиме.']
+  ];
+  IMGS.forEach(function(a){
+    const l = LESSONS.find(x => x.id === a[0]);
+    if(!l || !l.blocks) return;
+    if(l.blocks.some(b => b.type === 'image' && b.src === a[1])) return;
+    let pos = l.blocks.length;
+    for(let i = 0; i < l.blocks.length; i++){
+      if(l.blocks[i].type === 'recap'){ pos = i; break; }
+    }
+    l.blocks.splice(pos, 0, { type: 'image', src: a[1], alt: a[2], caption: a[3] });
+  });
 })();
 
 </script>
