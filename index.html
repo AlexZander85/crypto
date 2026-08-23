@@ -6766,7 +6766,8 @@ const LESSONS = [
         "title": "Эксперимент: лучший Шарп на чистом шуме",
         "desc": "Выбери, сколько вариантов параметров «протестировать» на случайных данных, и посмотри, какой Шарп покажет лучший из них."
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p1_l10", "title": "📊 Интерактив: метрики эффективности", "desc": "Крути доходность, волатильность, просадку и Rf — смотри, как Sharpe и Calmar реагируют мгновенно.", "cfg": {"ret": 24, "vol": 35, "dd": 20, "rf": 4}},
+{
         "type": "simple",
         "text": "Оценивать стратегию только по чистой прибыли (% Return) — дилетантство. Кванты измеряют качество доходности относительно риска. Коэффициент Шарпа (Sharpe Ratio) показывает избыточную доходность на единицу общей волатильности. Коэффициент Сортино (Sortino) штрафует только за \"плохую\" волатильность (убытки). Максимальная просадка (Max Drawdown) показывает худшую историческую потерю от пика капитала."
       },
@@ -8001,7 +8002,8 @@ const LESSONS = [
         "type": "simple",
         "text": "Корреляция измеряет лишь сходство краткосрочных направлений движения двух цен (например, BTC и ETH идут вверх одновременно). Но два актива с корреляцией 0.95 могут со временем разойтись в цене навсегда. Коинтеграция (Cointegration) — это более глубокая математическая связь: существует такая линейная комбинация двух нестационарных рядов цен (спред = Price_A − β * Price_B), которая образует строго СТАЦИОНАРНЫЙ ряд, неизбежно возвращающийся к своему среднему."
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p3_l1", "title": "📊 Интерактив: профиль риска позиции", "desc": "Оцени профиль: какая просадка и волатильность терпимы для твоего портфеля.", "cfg": {"ret": 18, "vol": 45, "dd": 30, "rf": 4}},
+{
         "type": "analogy",
         "text": "Корреляция — это пьяный человек и пьяная собака, бредущие по широкой улице в одну сторону: иногда они рядом, но в любой момент собака может убежать в другой город. Коинтеграция — это собака на невидимом поводке: она может отбегать влево и вправо, но поводок (стационарный спред) всегда возвращает ее к хозяину."
       },
@@ -8407,7 +8409,8 @@ const LESSONS = [
         "type": "simple",
         "text": "Риск-паритет (Risk Parity) — это метод формирования портфеля, при котором капитал распределяется между стратегиями не поровну в долларах (50/50), а так, чтобы каждая стратегия вносила РАВНЫЙ ВКЛАД В ОБЩИЙ РИСК портфеля. Высоковолатильная стратегия получает меньший вес, а низковолатильная — больший вес: w_i ∝ 1 / σ_i. Это позволяет объединить несколько некоррелированных стратегий и получить суммарный Sharpe портфеля выше, чем у любой отдельной стратегии!"
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p3_l4", "title": "📊 Интерактив: Sharpe vs Calmar", "desc": "Метрики конфликтуют? Посмотри, как меняются обе при настройке профиля риска.", "cfg": {"ret": 30, "vol": 50, "dd": 40, "rf": 4}},
+{
         "type": "analogy",
         "text": "Если ты запрягаешь в одну повозку могучего тяжеловоза (волатильность 40%) и маленького пони (волатильность 10%), нельзя нагружать их одинаковыми мешками по 100 кг. Пони сломается, а тяжеловоз утащит повозку в канаву. Риск-паритет распределяет груз строго по силе тяги каждого."
       },
@@ -8668,7 +8671,8 @@ const LESSONS = [
         "type": "simple",
         "text": "Стресс-тестирование (Stress Testing) — это проверка устойчивости портфеля к экстремальным историческим шокам и гипотетическим сценариям (\"Черный лебедь\"). Мы берем наш собранный портфель алгоритмов и \"прогоняем\" его через худшие дни в истории крипторынка: крах биржи FTX в ноябре 2022 (BTC ≈ −25% за несколько дней), падение Terra/LUNA, мартовский ковид-дамп 12 марта 2020 года (≈ −37–40% за день, на внутридневном минимуме до −50%). Если в крах-день портфель теряет больше допустимого лимита — архитектура пересматривается."
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p3_l6", "title": "📊 Интерактив: портфель vs просадка", "desc": "Попробуй разные уровни доходности и проверь, при какой просадке Calmar рушится.", "cfg": {"ret": 40, "vol": 60, "dd": 50, "rf": 4}},
+{
         "type": "analogy",
         "text": "Стресс-тест — это краш-тест автомобиля Euro NCAP. Новую модель авто разгоняют и разбивают о бетонную стену на скорости 64 км/ч. Мы обязаны разбить наш портфель о виртуальную стену кризиса в коде, чтобы убедиться, что подушки безопасности (стоп-лоссы и риск-паритет) спасут реальные 5–6 млн рублей."
       },
@@ -13191,6 +13195,16 @@ function renderLessonDetail(l){
   // Render Blocks
   if(l.blocks && l.blocks.length){
     l.blocks.forEach(b => {
+      // 0.5. Risk-dashboard (V3-B2) — интерактивный виджет в контенте урока
+      if(b.type === 'interactive_risk_dash'){
+        const rdId = b.id || ('rd_' + l.id);
+        html += `
+          <div class="lblock" style="background:#040714; border:1px solid var(--acc2); border-radius:12px; padding:16px 18px; margin-bottom:20px">
+            <div style="font-size:11.5px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">${b.title || '📊 Интерактив: метрики риска'}</div>
+            <div style="font-size:12.5px; color:var(--mut); margin-bottom:10px">${b.desc || 'Крути доходность, волатильность, просадку — и смотри, как пересчитываются метрики.'}</div>
+            <div id="${rdId}"></div>
+          </div>`;
+      }
       // 1. Concept block with 4 levels & analogy
       if(b.type === 'microRecall'){
         const mrId = l.id + '_mr_' + (window._mrSeq = (window._mrSeq || 0) + 1);
@@ -13539,6 +13553,7 @@ function renderLessonDetail(l){
     l.blocks.forEach(b => {
       if(typeof b.type === 'string' && b.type.startsWith('interactive') && typeof renderPhase0Widget === 'function'){
         setTimeout(() => {
+          if(b.type === 'interactive_risk_dash'){ mountRiskDashboard(b.id, b.cfg || {}); return; }
           renderPhase0Widget(b.id);
         }, 20);
       }
@@ -26699,6 +26714,45 @@ completeLessonWithMastery=function(id){
  return res;
 };
 /* маунт виджетов: реестр вместо заглушки */
+// V3-B2: интерактивный дашборд риск-метрик в контенте урока
+window.mountRiskDashboard = function(rdId, cfg){
+  const box = document.getElementById(rdId);
+  if(!box) return;
+  cfg = cfg || {};
+  box.innerHTML = `
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:12px">
+      <div><label style="font-size:11.5px; color:var(--mut)">Годовая доходность %</label>
+        <input type="range" min="-40" max="120" value="${cfg.ret !== undefined ? cfg.ret : 24}" id="${rdId}_ret" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+      <div><label style="font-size:11.5px; color:var(--mut)">Волатильность %</label>
+        <input type="range" min="5" max="100" value="${cfg.vol !== undefined ? cfg.vol : 35}" id="${rdId}_vol" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+      <div><label style="font-size:11.5px; color:var(--mut)">Макс. просадка %</label>
+        <input type="range" min="2" max="80" value="${cfg.dd !== undefined ? cfg.dd : 20}" id="${rdId}_dd" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+      <div><label style="font-size:11.5px; color:var(--mut)">Безрисковая ставка %</label>
+        <input type="range" min="0" max="15" value="${cfg.rf !== undefined ? cfg.rf : 4}" id="${rdId}_rf" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+    </div>
+    <div id="${rdId}_out" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px; font-size:12.5px"></div>`;
+  window.recalcRiskDash(rdId);
+};
+window.recalcRiskDash = function(rdId){
+  const ret = parseFloat(document.getElementById(rdId + '_ret').value);
+  const vol = parseFloat(document.getElementById(rdId + '_vol').value);
+  const dd  = parseFloat(document.getElementById(rdId + '_dd').value);
+  const rf  = parseFloat(document.getElementById(rdId + '_rf').value);
+  const sharpe = (ret - rf) / vol;
+  const calmar = ret / dd;
+  const card = (label, val, good) => `
+    <div style="background:#090d1f; border:1px solid var(--line); border-radius:10px; padding:9px 12px">
+      <div style="font-size:10.5px; color:var(--mut); text-transform:uppercase; font-weight:700">${label}</div>
+      <div style="font-size:17px; font-weight:800; color:${good ? 'var(--ok)' : 'var(--warn)'}">${val}</div>
+    </div>`;
+  document.getElementById(rdId + '_out').innerHTML =
+    card('Sharpe', sharpe.toFixed(2), sharpe > 1) +
+    card('Calmar', calmar.toFixed(2), calmar > 1.5) +
+    card('Return', ret.toFixed(0) + '%', ret > 0) +
+    card('Vol', vol.toFixed(0) + '%', vol < 40) +
+    card('MaxDD', '−' + dd.toFixed(0) + '%', dd < 30);
+};
+
 window.mountMathWidget=function(id){
  if(typeof id==='string'&&id.indexOf('widget_m_')===0){
   const f=MATH_WIDGETS[id];
