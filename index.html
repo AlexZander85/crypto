@@ -35375,6 +35375,234 @@ LIVE.onUpdate(function(){
     };
   }
 })();
+
+/* =========================================================================
+   W2 · COACH: движок объяснений «Наставник»
+   Детекторы детерминированы: одни и те же данные → одно и то же объяснение.
+   Карточка: Уровень А «Где смотреть» → Б «Что это значит» → В «Чего НЕ значит».
+   ========================================================================= */
+
+/* ---------- карточка наблюдения ---------- */
+function coachCardHTML(obs){
+  const seen = COACH.seen[obs.id];
+  return '<div class="coach-card" id="coach_card_' + obs.id + '" style="background:var(--card);border:1px solid ' + (seen ? 'var(--line)' : 'var(--acc2)') + ';border-radius:12px;padding:14px 16px;margin-bottom:10px;transition:border-color .3s">' +
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">' +
+      '<div style="font-weight:800;font-size:13.5px;color:var(--txt)">' + obs.icon + ' ' + obs.title + '</div>' +
+      (seen ? '' : '<span style="font-size:10px;font-weight:800;color:var(--acc2);border:1px solid var(--acc2);border-radius:8px;padding:1px 7px;white-space:nowrap">НОВОЕ</span>') +
+    '</div>' +
+    '<div id="coach_lv_' + obs.id + '_a" style="margin-top:10px">' +
+      '<div style="font-size:10.5px;font-weight:800;color:var(--acc2);text-transform:uppercase;margin-bottom:3px">А · Где смотреть</div>' +
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">' + obs.look + '</div>' +
+      (obs.highlight ? '<button class="btn sm ghost" style="margin-top:6px" onclick="coachHighlight(\'' + obs.highlight + '\')">🎯 Подсветить на экране</button>' : '') +
+    '</div>' +
+    '<div id="coach_lv_' + obs.id + '_b" style="margin-top:10px;display:none">' +
+      '<div style="font-size:10.5px;font-weight:800;color:var(--acc2);text-transform:uppercase;margin-bottom:3px">Б · Что это значит</div>' +
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">' + obs.meaning + '</div>' +
+    '</div>' +
+    '<div id="coach_lv_' + obs.id + '_c" style="margin-top:10px;display:none">' +
+      '<div style="font-size:10.5px;font-weight:800;color:var(--warn);text-transform:uppercase;margin-bottom:3px">В · Чего это НЕ значит</div>' +
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">' + obs.caveat + '</div>' +
+    '</div>' +
+    '<div style="margin-top:10px;display:flex;gap:8px">' +
+      '<button class="btn sm" id="coach_next_' + obs.id + '" onclick="coachReveal(\'' + obs.id + '\')">Дальше: что это значит →</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function coachReveal(id){
+  const b = document.getElementById('coach_lv_' + id + '_b');
+  const c = document.getElementById('coach_lv_' + id + '_c');
+  const btn = document.getElementById('coach_next_' + id);
+  if(b && b.style.display === 'none'){
+    b.style.display = 'block';
+    if(btn) btn.textContent = 'Дальше: чего это НЕ значит →';
+  } else if(c && c.style.display === 'none'){
+    c.style.display = 'block';
+    if(btn) btn.style.display = 'none';
+    COACH.markSeen(id);
+    const card = document.getElementById('coach_card_' + id);
+    if(card){
+      card.style.borderColor = 'var(--line)';
+      const badge = card.querySelector('span');
+      if(badge) badge.remove();
+    }
+    if(typeof window.renderLiveCoachCounter === 'function') window.renderLiveCoachCounter();
+  }
+}
+window.coachReveal = coachReveal;
+
+function coachHighlight(sel){
+  const el = document.querySelector(sel);
+  if(!el) return;
+  el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  el.style.transition = 'box-shadow .3s';
+  el.style.boxShadow = '0 0 0 3px var(--acc2)';
+  setTimeout(() => { el.style.boxShadow = 'none'; }, 2400);
+}
+window.coachHighlight = coachHighlight;
+
+/* ---------- ядро COACH ---------- */
+const COACH = {
+  seen: (function(){ try{ return JSON.parse(localStorage.getItem('cn_live_seen') || '{}'); }catch(e){ return {}; } })(),
+  markSeen(id){
+    if(!this.seen[id]){
+      this.seen[id] = Date.now();
+      try{ localStorage.setItem('cn_live_seen', JSON.stringify(this.seen)); }catch(e){}
+    }
+  },
+  newToday(){
+    const today = new Date().toDateString();
+    return COACH_DETECTORS.filter(d => !this.seen[d.id]).length;
+  },
+  collect(){
+    const out = [];
+    COACH_DETECTORS.forEach(d => {
+      const snap = LIVE.data[d.src];
+      if(!snap) return;
+      try{
+        const obs = d.run(snap);
+        if(obs) out.push(Object.assign({ id: d.id, src: d.src }, obs));
+      }catch(e){}
+    });
+    return out;
+  }
+};
+window.COACH = COACH;
+
+function fngZone(v){
+  if(v < 25) return { ru: 'экстремальный страх', c: 'var(--bad)' };
+  if(v < 45) return { ru: 'страх', c: 'var(--warn)' };
+  if(v < 55) return { ru: 'нейтральная зона', c: 'var(--mut)' };
+  if(v < 75) return { ru: 'жадность', c: 'var(--ok)' };
+  return { ru: 'экстремальная жадность', c: 'var(--acc2)' };
+}
+function fngZoneOf(v){ return v < 25 ? 'ef' : v < 45 ? 'f' : v < 55 ? 'n' : v < 75 ? 'g' : 'eg'; }
+
+/* ---------- Детекторы W2: 7–8 (сентимент), 11 (комиссии), 12 (рынок) ---------- */
+const COACH_DETECTORS = [
+  { id: 'fng_zone', num: 7, src: 'fng', lessons: ['p2_l1'], run: function(fng){
+    const v = fng.current.value;
+    const z = fngZone(v);
+    const sameZone = fng.history.filter(h => fngZoneOf(h.value) === fngZoneOf(v)).length;
+    return {
+      icon: '😱', title: 'Индекс страха и жадности: ' + v + ' — ' + z.ru,
+      highlight: '#live_fng_value',
+      look: 'Большое число на панели «Страх и жадность» слева. Шкала 0–100: слева страх, справа жадность.',
+      meaning: 'Сейчас рынок в зоне «' + z.ru + '». За последние ' + fng.history.length + ' дней в этой же зоне рынок был ' + sameZone + ' ' + (sameZone % 10 === 1 && sameZone !== 11 ? 'день' : (sameZone % 10 >= 2 && sameZone % 10 <= 4 && (sameZone % 100 < 12 || sameZone % 100 > 14) ? 'дня' : 'дней')) + ' — это ' + (sameZone > fng.history.length / 2 ? 'обычное состояние' : 'не самое частое состояние') + ' для этого месяца.',
+      caveat: 'Это НЕ прогноз и НЕ сигнал «покупать в страхе». Индекс описывает настроение толпы прямо сейчас — оно может оставаться экстремальным неделями и становиться ещё экстремальнее.'
+    };
+  }},
+  { id: 'fng_shift', num: 8, src: 'fng', lessons: ['p2_l1'], run: function(fng){
+    if(!fng.history || fng.history.length < 8) return null;
+    const now = fng.current.value;
+    const weekAgo = fng.history[Math.min(7, fng.history.length - 1)].value;
+    const dz = fngZoneOf(now) !== fngZoneOf(weekAgo);
+    const dir = now > weekAgo ? 'спокойнее/жаднее' : 'нервнее';
+    return {
+      icon: '📆', title: 'За неделю: ' + weekAgo + ' → ' + now + (dz ? ' (смена зоны)' : ' (та же зона)'),
+      highlight: '#live_fng_value',
+      look: 'То же число индекса — но теперь сравни его с тем, что было 7 дней назад.',
+      meaning: 'Неделю назад индекс был ' + weekAgo + ' («' + fngZone(weekAgo).ru + '»), сейчас ' + now + ' («' + fngZone(now).ru + '»). Настроение толпы за неделю стало ' + dir + (dz ? ' — зона сменилась' : ', но зона та же') + '.',
+      caveat: 'Смена настроения НЕ значит смену тренда цены. Толпа нервничает и успокаивается постоянно — это фон, а не указание к действию.'
+    };
+  }},
+  { id: 'btc_fees', num: 11, src: 'fees', lessons: ['p2_l3', 'p4_l6'], run: function(fees){
+    const f = fees.fastest;
+    const level = f < 10 ? { t: 'дёшево', c: 'var(--ok)', why: 'очередь транзакций в сети сейчас маленькая' } :
+                  f <= 30 ? { t: 'обычно', c: 'var(--mut)', why: 'очередь транзакций обычная' } :
+                  { t: 'дорого', c: 'var(--warn)', why: 'в сети набег пользователей — очередь большая, место в блоке разыгрывается на аукционе' };
+    return {
+      icon: '⛓️', title: 'Комиссия сети BTC: ' + f + ' сат/vB — ' + level.t,
+      highlight: '#live_fees_value',
+      look: 'Панель «Комиссии сети BTC» слева: число «быстрая» — цена за место в ближайшем блоке.',
+      meaning: 'Отправить транзакцию с подтверждением в ближайшем блоке стоит ~' + f + ' сатоши за виртуальный байт — это ' + level.t + '. Причина: ' + level.why + '. Не торопящиеся платят меньше: ~' + fees.hour + ' сат/vB за час.',
+      caveat: 'Дорогая комиссия НЕ значит «цена BTC растёт» — она значит лишь, что много людей одновременно хотят записать транзакции. Иногда это ралли, иногда — выпуск новых токенов в сети.'
+    };
+  }},
+  { id: 'btc_dominance', num: 12, src: 'global', lessons: ['p2_l1'], run: function(g){
+    if(g.btcDominance == null) return null;
+    const d = Math.round(g.btcDominance * 10) / 10;
+    const ch = g.mcapChange24h != null ? (g.mcapChange24h >= 0 ? '+' : '') + (Math.round(g.mcapChange24h * 10) / 10) : null;
+    return {
+      icon: '🌐', title: 'Доля Биткоина на рынке: ' + d + '%',
+      highlight: '#live_global_value',
+      look: 'Панель «Рынок в целом» слева: процент — это доля Биткоина в общей капитализации всех криптовалют.',
+      meaning: 'Из каждых 100 условных рублей, вложенных сейчас в крипту, ~' + Math.round(d) + ' приходится на Биткоин. Весь рынок за сутки ' + (ch !== null ? 'изменился на ' + ch + '%' : 'обновился') + '.',
+      caveat: 'Рост доли BTC НЕ значит «покупай биткоин»: доля растёт и когда биткоин падает медленнее остальных. Это термометр распределения, а не рекомендация.'
+    };
+  }}
+];
+window.COACH_DETECTORS = COACH_DETECTORS;
+
+/* ---------- левая колонка: мини-панели источников W2 ---------- */
+function livePanel(title, id, inner){
+  return '<div style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px">' +
+    '<div style="font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;margin-bottom:8px">' + title + '</div>' +
+    '<div id="' + id + '" style="border-radius:8px">' + inner + '</div></div>';
+}
+function liveNoData(src){
+  return '<div style="font-size:12.5px;color:var(--mut)">Источник не подключён. Нажми «🌍 Подключить живые данные» или «🧪 Учебные данные».</div>';
+}
+
+window.renderLiveMarketCol = function(){
+  const col = document.getElementById('live_market_col');
+  if(!col) return;
+  let html = '';
+  // Страх и жадность
+  const fng = LIVE.data.fng;
+  if(fng){
+    const v = fng.current.value, z = fngZone(v);
+    html += livePanel('😱 Страх и жадность', 'live_fng_value',
+      '<div style="display:flex;align-items:baseline;gap:10px">' +
+        '<span style="font-size:34px;font-weight:800;font-family:var(--mono);color:' + z.c + '">' + v + '</span>' +
+        '<span style="font-size:13px;color:' + z.c + ';font-weight:700">' + z.ru + '</span></div>' +
+      '<div style="height:8px;border-radius:4px;background:linear-gradient(90deg,var(--bad),var(--warn),var(--ok),var(--acc2));margin-top:8px;position:relative">' +
+        '<div style="position:absolute;left:' + v + '%;top:-3px;width:3px;height:14px;background:var(--txt);border-radius:2px"></div></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-top:3px"><span>0 · страх</span><span>100 · жадность</span></div>');
+  } else html += livePanel('😱 Страх и жадность', 'live_fng_value', liveNoData('fng'));
+  // Комиссии BTC
+  const fees = LIVE.data.fees;
+  if(fees){
+    html += livePanel('⛓️ Комиссии сети BTC (сат/vB)', 'live_fees_value',
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">' +
+        '<div><div style="font-size:20px;font-weight:800;font-family:var(--mono);color:var(--txt)">' + fees.fastest + '</div><div style="font-size:10.5px;color:var(--mut)">~10 мин</div></div>' +
+        '<div><div style="font-size:20px;font-weight:800;font-family:var(--mono);color:var(--txt)">' + fees.halfHour + '</div><div style="font-size:10.5px;color:var(--mut)">~30 мин</div></div>' +
+        '<div><div style="font-size:20px;font-weight:800;font-family:var(--mono);color:var(--txt)">' + fees.hour + '</div><div style="font-size:10.5px;color:var(--mut)">~1 час</div></div>' +
+      '</div>');
+  } else html += livePanel('⛓️ Комиссии сети BTC (сат/vB)', 'live_fees_value', liveNoData('fees'));
+  // Рынок в целом
+  const g = LIVE.data.global;
+  if(g){
+    html += livePanel('🌐 Рынок в целом', 'live_global_value',
+      '<div style="font-size:13px;color:var(--txt);line-height:1.7">' +
+        'Доля BTC: <b style="font-family:var(--mono)">' + (Math.round(g.btcDominance * 10) / 10) + '%</b> · ETH: <b style="font-family:var(--mono)">' + (Math.round(g.ethDominance * 10) / 10) + '%</b><br>' +
+        'Капитализация рынка: <b style="font-family:var(--mono)">$' + (g.totalMcapUsd / 1e12).toFixed(2) + ' трлн</b>' +
+        (g.mcapChange24h != null ? ' <span style="color:' + (g.mcapChange24h >= 0 ? 'var(--ok)' : 'var(--bad)') + '">(' + (g.mcapChange24h >= 0 ? '+' : '') + (Math.round(g.mcapChange24h * 10) / 10) + '% за 24ч)</span>' : '') +
+      '</div>');
+  } else html += livePanel('🌐 Рынок в целом', 'live_global_value', liveNoData('global'));
+  col.innerHTML = html;
+};
+
+/* ---------- правая колонка: поток карточек наставника ---------- */
+window.renderLiveCoachCounter = function(){
+  const el = document.getElementById('live_coach_counter');
+  if(el) el.textContent = 'Новых наблюдений: ' + COACH.newToday() + ' из ' + COACH_DETECTORS.length;
+};
+
+window.renderLiveCoachCol = function(){
+  const col = document.getElementById('live_coach_col');
+  if(!col) return;
+  const obs = COACH.collect();
+  col.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
+      '<div style="font-weight:800;font-size:15px;color:var(--txt)">🎓 Наставник</div>' +
+      '<div id="live_coach_counter" style="font-size:11.5px;color:var(--acc2);font-weight:700">Новых наблюдений: ' + COACH.newToday() + ' из ' + COACH_DETECTORS.length + '</div>' +
+    '</div>' +
+    (obs.length
+      ? obs.map(coachCardHTML).join('')
+      : '<div style="background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:18px;font-size:13px;color:var(--mut);line-height:1.6">Наставник ждёт данные. Подключи живой рынок или учебный режим — и здесь появятся карточки: куда смотреть, что число значит и чего оно не значит.</div>');
+};
+
 /*__LIVE_APPEND__*/
 })();
 
