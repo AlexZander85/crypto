@@ -21075,7 +21075,8 @@ function renderFeynmanBox(lesson){
       <div style="font-size:12.5px; color:var(--txt); margin-bottom:10px">
         Попробуй в 1-2 предложениях сформулировать суть этого урока своими словами:
       </div>
-      <textarea id="feynman_input_${lesson.id}" rows="2" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение..."></textarea>
+      <textarea id="feynman_input_${lesson.id}" rows="2" oninput="window.checkFeynmanForbiddenWords('${lesson.id}')" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение..."></textarea>
+      <div id="feynman_forbidden_${lesson.id}" style="margin-top:6px; font-size:11.5px; min-height:16px"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
         <button class="btn sm" style="background:var(--acc1)" onclick="revealFeynmanModel('${lesson.id}')">
           ✨ Сверить с эталонным объяснением
@@ -26993,7 +26994,8 @@ renderFeynmanBox = function(lesson){
       <div style="font-size:12px; color:var(--acc2); background:rgba(6,182,212,.07); border-left:3px solid var(--acc2); border-radius:6px; padding:9px 12px; margin-bottom:10px; line-height:1.55">
         <b>Шаблон из 3 предложений:</b> ① «Это …» — скажи, что это за вещь одной фразой без жаргона. ② «Работает так: …» — опиши механику на бытовой аналогии. ③ «На практике я …» — скажи, что ты с этим делаешь (когда применяешь, чего избегаешь).
       </div>
-      <textarea id="feynman_input_${lesson.id}" rows="3" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение...">${saved ? saved.text.replace(/</g, '&lt;') : ''}</textarea>
+      <textarea id="feynman_input_${lesson.id}" rows="3" oninput="window.checkFeynmanForbiddenWords('${lesson.id}')" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение...">${saved ? saved.text.replace(/</g, '&lt;') : ''}</textarea>
+      <div id="feynman_forbidden_${lesson.id}" style="margin-top:6px; font-size:11.5px; min-height:16px"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px">
         <button class="btn sm" style="background:var(--acc1)" onclick="revealFeynmanCheck('${lesson.id}')">
           ✨ Сверить с эталоном и оценить себя
@@ -27138,12 +27140,20 @@ function renderConsolidationPhase1(){
       Условие одно: <b style="color:var(--txt)">никаких новых стимулов</b> — не открывай мессенджеры и ленты, отведи взгляд от экрана, сиди или лежи в тишине (NSDR-протокол).
     </p>
     <div id="consolidation_timer" style="font-size:46px; font-weight:900; color:var(--acc2); margin:10px 0 16px; font-variant-numeric:tabular-nums">10:00</div>
-    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:14px">
+    <div style="font-size:12px; color:var(--mut); margin-bottom:12px; line-height:1.5; text-align:left">Пока тишина — гиппокамп воспроизводит изученное в <b>SWR-рипплах (sharp-wave ripples)</b> и «прописывает» его в долговременную память. Можно включить метроном дыхания <b>4-4-6</b>: вдох 4 с → пауза 4 с → выдох 6 с (~0.07 Гц).</div>
+    <div id="breath_circle_wrap" style="display:none; margin:10px auto 16px; width:180px; height:180px; position:relative">
+      <div id="breath_circle" style="position:absolute; inset:30px; border-radius:50%; background:radial-gradient(circle, rgba(6,182,212,.35), rgba(124,58,237,.15)); border:2px solid var(--acc2); transition:transform 1.1s cubic-bezier(.4,0,.2,1)"></div>
+      <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--txt)"><span id="breath_label">—</span><span id="breath_secs" style="font-size:22px"></span></div>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:10px">
       <button class="btn sm ghost" onclick="setConsolidationMinutes(5)">5 мин</button>
       <button class="btn sm" style="background:var(--acc2)" onclick="setConsolidationMinutes(10)">10 мин</button>
-      <button class="btn" style="background:var(--ok); color:#040714; font-weight:800" onclick="startConsolidationTimer()">▶ Начать паузу</button>
+      <button class="btn sm ghost" onclick="setConsolidationMinutes(15)">15 мин</button>
+      <button class="btn sm ghost" id="breath_toggle" onclick="toggleConsolidationBreath()">😮💨 дыхание</button>
+      <button class="btn sm ghost" id="pinknoise_toggle" onclick="togglePinkNoise()">🔇 розовый шум</button>
     </div>
-    <button class="btn sm ghost" style="color:var(--mut); font-size:11.5px" onclick="renderConsolidationPhase2()">Пропустить паузу (не рекомендуется) →</button>
+    <button class="btn" style="background:var(--ok); color:#040714; font-weight:800" onclick="startConsolidationTimer()">▶ Начать паузу</button>
+    <div style="margin-top:10px"><button class="btn sm ghost" style="color:var(--mut); font-size:11.5px" onclick="renderConsolidationPhase2()">Пропустить паузу (не рекомендуется) →</button></div>
   `;
   window._consolidationSeconds = 600;
 }
@@ -27170,8 +27180,66 @@ function startConsolidationTimer(){
   }, 1000);
 }
 
+// V3-A4b: метроном дыхания 4-4-6 (~0.07 Гц) и розовый шум (опционально, WebAudio)
+window._breathOn = false; window._breathTimer = null; window._pinkNoiseSource = null; window._pinkAudioCtx = null;
+window.toggleConsolidationBreath = function(){
+  window._breathOn = !window._breathOn;
+  const wrap = document.getElementById('breath_circle_wrap');
+  const tgl = document.getElementById('breath_toggle');
+  if(tgl) tgl.textContent = window._breathOn ? '⏸ дыхание' : '😮💨 дыхание';
+  if(wrap) wrap.style.display = window._breathOn ? 'block' : 'none';
+  if(!window._breathOn){ if(window._breathTimer) clearInterval(window._breathTimer); return; }
+  const phases = [['Вдох', 4], ['Пауза', 4], ['Выдох', 6]];
+  let pi = 0, sec = phases[0][1];
+  function step(){
+    if(!window._breathOn) return;
+    const lbl = document.getElementById('breath_label');
+    const secsEl = document.getElementById('breath_secs');
+    const circle = document.getElementById('breath_circle');
+    if(lbl) lbl.textContent = phases[pi][0];
+    if(secsEl) secsEl.textContent = sec;
+    if(circle) circle.style.transform = 'scale(' + (pi === 0 ? 1.45 : pi === 1 ? 1.45 : 1) + ')';
+    sec--;
+    if(sec < 1){ pi = (pi + 1) % 3; sec = phases[pi][1]; }
+  }
+  step();
+  window._breathTimer = setInterval(step, 1000);
+};
+window.togglePinkNoise = function(){
+  const tgl = document.getElementById('pinknoise_toggle');
+  if(window._pinkNoiseSource){
+    try{ window._pinkNoiseSource.stop(); }catch(e){}
+    window._pinkNoiseSource = null;
+    if(tgl) tgl.textContent = '🔇 розовый шум';
+    return;
+  }
+  try{
+    window._pinkAudioCtx = window._pinkAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = window._pinkAudioCtx;
+    const len = ctx.sampleRate * 4;
+    const buffer = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let b0=0,b1=0,b2=0;
+    for(let i=0;i<len;i++){
+      const w = Math.random()*2-1;
+      b0=0.997*b0+0.029*w; b1=0.985*b1+0.032*w; b2=0.95*b2+0.048*w;
+      data[i]=(b0+b1+b2+w*0.05)*0.35;
+    }
+    const src0 = ctx.createBufferSource(); src0.buffer = buffer; src0.loop = true;
+    const gain = ctx.createGain(); gain.gain.value = 0.12;
+    src0.connect(gain); gain.connect(ctx.destination);
+    src0.start();
+    window._pinkNoiseSource = src0;
+    if(tgl) tgl.textContent = '🔊 розовый шум';
+    showToast('Розовый шум включён. Звук всегда опционален.', '🔊');
+  }catch(e){ console.log('pink noise unavailable', e); }
+};
+
 function renderConsolidationPhase2(){
   if(consolidationTimerId){ clearInterval(consolidationTimerId); consolidationTimerId = null; }
+  if(window._breathTimer){ clearInterval(window._breathTimer); window._breathTimer = null; }
+  window._breathOn = false;
+  if(window._pinkNoiseSource){ try{ window._pinkNoiseSource.stop(); }catch(e){} window._pinkNoiseSource = null; }
   const body = document.getElementById('consolidation_body');
   if(!body) return;
   const due = (typeof getSrsStats === 'function') ? getSrsStats().dueCount : 0;
@@ -27214,6 +27282,24 @@ completeLessonWithMastery = function(id){
 
 /* ---------- E5: Лестница рангов + наставник ---------- */
 // XP за понимание: самообъяснение Фейнмана (один раз на урок)
+// V3-A4: фильтр запретных слов-паразитов (объяснение слабо, если жонглирует терминами)
+window.FEYNMAN_FORBIDDEN = ['стационарность','матрица','энтропия','корреляция','волатильность','коэффициент','метрика','статистика','распределение','ликвидность','гипотеза','регрессия','модель','алгоритм','тренд','дельта','параметр'];
+window.checkFeynmanForbiddenWords = function(lessonId){
+  const ta = document.getElementById('feynman_input_' + lessonId);
+  const box = document.getElementById('feynman_forbidden_' + lessonId);
+  if(!ta || !box) return;
+  const text = ta.value.toLowerCase();
+  const hits = window.FEYNMAN_FORBIDDEN.filter(w => text.includes(w));
+  if(text.trim().length < 5){ box.innerHTML = ''; return; }
+  if(hits.length){
+    box.innerHTML = '<span style="color:var(--bad)">⚠️ Жаргон-паразит: <u>' + hits.join('</u>, <u>') + '</u>. Для 10-летнего объясняй «на пальцах» без терминов.</span>';
+    ta.style.borderColor = 'var(--bad)';
+  } else {
+    box.innerHTML = '<span style="color:var(--ok)">✓ Чистое объяснение без слов-паразитов.</span>';
+    ta.style.borderColor = 'var(--ok)';
+  }
+};
+
 window.revealFeynmanModel = function(lessonId){
   const el = document.getElementById('feynman_model_' + lessonId);
   if(el) el.style.display = 'block';
