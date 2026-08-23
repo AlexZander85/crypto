@@ -836,6 +836,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <span class="nav-group-label">🕹️ Практика</span>
     <button class="tab" data-tab="sims">Симуляторы</button>
     <button class="tab" data-tab="quiz">Викторина</button>
+    <button class="tab" data-tab="live">🌍 Живой рынок</button>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">📖 Справка</span>
@@ -2315,6 +2316,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
+<section id="live" class="view"></section>
 </main>
 
 <!-- Term Popup Modal -->
@@ -35091,6 +35093,289 @@ window.ART_checkBadges = ART_checkBadges;
     return prev(widgetId);
   };
 })();
+})();
+
+</script>
+
+<script>
+/* =========================================================================
+   ЖИВОЙ РЫНОК С НАСТАВНИКОМ (LIVE MARKET COACH)
+   Модули LIVE (данные) и COACH (объяснения). Учебная песочница +
+   необязательное подключение реальных данных. Урок никогда не ломается:
+   любой сбой источника → кэш-снимок → учебный режим.
+   ========================================================================= */
+(function(){
+'use strict';
+
+/* ---------- LIVE: загрузка снимков, кэш-штампы, статус источников ---------- */
+const LIVE_CACHE_PREFIX = 'cn_live_cache_';
+const LIVE_REFRESH_MS = 45000;
+
+function liveFetchJSON(url){
+  return fetch(url, { headers: { 'Accept': 'application/json' } }).then(r => {
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  });
+}
+
+/* Нормализаторы — те же, что в worker/live-proxy.js (единый формат) */
+function normOrderbookOKX(d){
+  const row = d.data && d.data[0];
+  if(!row) throw new Error('пустой стакан');
+  return { source: 'okx', ts: +row.ts || Date.now(),
+    bids: row.bids.map(x => [+x[0], +x[1]]), asks: row.asks.map(x => [+x[0], +x[1]]) };
+}
+function normKlinesOKX(d){
+  return { source: 'okx', ts: Date.now(),
+    candles: (d.data || []).slice().reverse().map(c => ({ t: +c[0], o: +c[1], h: +c[2], l: +c[3], c: +c[4], v: +c[5] })) };
+}
+function normFundingOKX(d){
+  const row = d.data && d.data[0];
+  if(!row) throw new Error('нет фандинга');
+  return { source: 'okx', ts: +row.fundingTime || Date.now(), rate: +row.fundingRate,
+    nextRate: row.nextFundingRate !== '' && row.nextFundingRate != null ? +row.nextFundingRate : null };
+}
+function normFNG(d){
+  const list = (d.data || []).map(x => ({ ts: +x.timestamp * 1000, value: +x.value, label: x.value_classification }));
+  if(!list.length) throw new Error('пустой индекс');
+  return { source: 'alternative.me', ts: list[0].ts, current: list[0], history: list };
+}
+function normFees(d){
+  return { source: 'mempool.space', ts: Date.now(),
+    fastest: d.fastestFee, halfHour: d.halfHourFee, hour: d.hourFee, economy: d.economyFee, minimum: d.minimumFee };
+}
+function normGlobal(d){
+  const g = d.data || {};
+  return { source: 'coingecko', ts: Date.now(),
+    btcDominance: g.market_cap_percentage && g.market_cap_percentage.btc,
+    ethDominance: g.market_cap_percentage && g.market_cap_percentage.eth,
+    totalMcapUsd: g.total_market_cap && g.total_market_cap.usd,
+    mcapChange24h: g.market_cap_change_percentage_24h_usd,
+    coins: g.active_cryptocurrencies };
+}
+
+/* Реестр источников: worker-путь + прямой режим (CORS открыт у всех) */
+const LIVE_SOURCES = {
+  fng: {
+    name: 'Страх и жадность', icon: '😱', path: '/api/live/fng',
+    direct: () => liveFetchJSON('https://api.alternative.me/fng/?limit=30&format=json').then(normFNG)
+  },
+  global: {
+    name: 'Рынок в целом', icon: '🌐', path: '/api/live/global',
+    direct: () => liveFetchJSON('https://api.coingecko.com/api/v3/global').then(normGlobal)
+  },
+  fees: {
+    name: 'Комиссии сети BTC', icon: '⛓️', path: '/api/live/btc-fees',
+    direct: () => liveFetchJSON('https://mempool.space/api/v1/fees/recommended').then(normFees)
+  },
+  orderbook: {
+    name: 'Стакан BTC/USDT', icon: '📖', path: '/api/live/orderbook',
+    direct: () => liveFetchJSON('https://www.okx.com/api/v5/market/books?instId=BTC-USDT&sz=50').then(normOrderbookOKX)
+  },
+  klines: {
+    name: 'Свечи BTC/USDT · 1ч', icon: '🕯️', path: '/api/live/klines',
+    direct: () => liveFetchJSON('https://www.okx.com/api/v5/market/candles?instId=BTC-USDT&bar=1H&limit=48').then(normKlinesOKX)
+  },
+  funding: {
+    name: 'Фандинг BTC', icon: '💸', path: '/api/live/funding',
+    direct: () => liveFetchJSON('https://www.okx.com/api/v5/public/funding-rate?instId=BTC-USDT-SWAP').then(normFundingOKX)
+  }
+};
+
+const LIVE = {
+  base: (function(){ try{ return localStorage.getItem('cn_live_api_base') || ''; }catch(e){ return ''; } })(),
+  connected: false,
+  status: {},   // src -> {state:'off'|'live'|'cache'|'fail'|'edu', ts, msg}
+  data: {},     // src -> снимок в едином формате
+  timer: null,
+  listeners: [],
+
+  onUpdate(fn){ this.listeners.push(fn); },
+  emit(){ this.listeners.forEach(fn => { try{ fn(); }catch(e){} }); },
+
+  cacheGet(src){
+    try{
+      const raw = localStorage.getItem(LIVE_CACHE_PREFIX + src);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  },
+  cacheSet(src, data){
+    try{ localStorage.setItem(LIVE_CACHE_PREFIX + src, JSON.stringify({ ts: Date.now(), data: data })); }catch(e){}
+  },
+
+  fetchSource(src){
+    const S = LIVE_SOURCES[src];
+    const req = this.base
+      ? liveFetchJSON(this.base.replace(/\/$/, '') + S.path)
+      : S.direct();
+    return req.then(data => {
+      this.data[src] = data;
+      this.status[src] = { state: 'live', ts: Date.now() };
+      this.cacheSet(src, data);
+    }).catch(err => {
+      const c = this.cacheGet(src);
+      if(c && c.data){
+        this.data[src] = c.data;
+        this.status[src] = { state: 'cache', ts: c.ts, msg: String(err && err.message || err) };
+      } else {
+        delete this.data[src];
+        this.status[src] = { state: 'fail', ts: Date.now(), msg: String(err && err.message || err) };
+      }
+    });
+  },
+
+  fetchAll(){
+    return Promise.all(Object.keys(LIVE_SOURCES).map(src => this.fetchSource(src))).then(() => this.emit());
+  },
+
+  connect(){
+    this.connected = true;
+    if(this.timer) clearInterval(this.timer);
+    this.timer = setInterval(() => this.fetchAll(), LIVE_REFRESH_MS);
+    return this.fetchAll();
+  },
+  disconnect(){
+    this.connected = false;
+    if(this.timer){ clearInterval(this.timer); this.timer = null; }
+    this.emit();
+  },
+
+  /* учебные (офлайн) снимки — детерминированные, чтобы вкладка работала всегда */
+  eduSnapshot(src){
+    const seed = (typeof mulberry32 === 'function') ? mulberry32(20260824) : Math.random;
+    if(src === 'fng'){
+      const hist = [];
+      let v = 45;
+      for(let i = 29; i >= 0; i--){
+        v = Math.max(8, Math.min(92, v + Math.round((seed() - 0.5) * 14)));
+        hist.push({ ts: Date.now() - i * 864e5, value: v, label: v < 25 ? 'Extreme Fear' : v < 45 ? 'Fear' : v < 55 ? 'Neutral' : v < 75 ? 'Greed' : 'Extreme Greed' });
+      }
+      return { source: 'edu', ts: Date.now(), current: hist[hist.length - 1], history: hist.reverse() };
+    }
+    if(src === 'global'){
+      return { source: 'edu', ts: Date.now(), btcDominance: 54.2, ethDominance: 13.1, totalMcapUsd: 2.61e12, mcapChange24h: 1.3, coins: 17200 };
+    }
+    if(src === 'fees'){
+      return { source: 'edu', ts: Date.now(), fastest: 12, halfHour: 9, hour: 7, economy: 4, minimum: 2 };
+    }
+    if(src === 'orderbook'){
+      const mid = 77000, bids = [], asks = [];
+      for(let i = 0; i < 25; i++){
+        bids.push([mid - 8 * (i + 1), 0.4 + seed() * 2.4 + (i === 7 ? 14 : 0)]);
+        asks.push([mid + 8 * (i + 1), 0.4 + seed() * 2.4 + (i === 5 ? 11 : 0)]);
+      }
+      return { source: 'edu', ts: Date.now(), bids: bids, asks: asks };
+    }
+    if(src === 'klines'){
+      const candles = [];
+      let p = 76200;
+      for(let i = 47; i >= 0; i--){
+        const o = p, ch = (seed() - 0.48) * 240;
+        const c = o + ch;
+        candles.push({ t: Date.now() - i * 36e5, o: o, h: Math.max(o, c) + seed() * 120, l: Math.min(o, c) - seed() * 120, c: c, v: 30 + seed() * 120 + (i === 2 ? 320 : 0) });
+        p = c;
+      }
+      return { source: 'edu', ts: Date.now(), candles: candles };
+    }
+    if(src === 'funding'){
+      return { source: 'edu', ts: Date.now(), rate: 0.0001, nextRate: null };
+    }
+    return null;
+  },
+  useEducational(){
+    Object.keys(LIVE_SOURCES).forEach(src => {
+      this.data[src] = this.eduSnapshot(src);
+      this.status[src] = { state: 'edu', ts: Date.now() };
+    });
+    this.connected = false;
+    this.emit();
+  }
+};
+window.LIVE = LIVE;
+window.LIVE_SOURCES = LIVE_SOURCES;
+
+function liveStateBadge(src){
+  const st = LIVE.status[src] || { state: 'off' };
+  const S = LIVE_SOURCES[src];
+  const map = {
+    off:   { c: 'var(--mut)',  t: '○ не подключён' },
+    live:  { c: 'var(--ok)',   t: '● в эфире' },
+    cache: { c: 'var(--warn)', t: '◐ снимок ' + new Date(st.ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) },
+    edu:   { c: 'var(--acc2)', t: '🧪 учебные данные' },
+    fail:  { c: 'var(--bad)',  t: '✕ недоступен' }
+  };
+  const m = map[st.state] || map.off;
+  return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;padding:7px 10px;background:#040714;border-radius:8px">' +
+    '<span style="color:var(--txt)">' + S.icon + ' ' + S.name + '</span>' +
+    '<span style="color:' + m.c + ';font-weight:700;white-space:nowrap">' + m.t + '</span></div>';
+}
+window.liveStateBadge = liveStateBadge;
+
+/* ---------- Вкладка «🌍 Живой рынок»: каркас ---------- */
+function renderLiveView(){
+  const view = document.getElementById('live');
+  if(!view) return;
+  const anyCacheBanner = Object.keys(LIVE_SOURCES).some(src => (LIVE.status[src] || {}).state === 'cache');
+  view.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">' +
+      '<div><h1 style="margin:0">🌍 Живой рынок с наставником</h1>' +
+      '<p class="sub" style="margin:6px 0 0">Настоящие рыночные данные — и рядом наставник, который объясняет, куда смотреть и что число значит. Не сигналы. Не прогнозы.</p></div>' +
+    '</div>' +
+    '<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.4);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--txt);margin-bottom:14px">⚠️ <b>Обучение чтению данных, не торговый сигнал.</b> Наставник объясняет механику чисел и никогда не говорит, что покупать или продавать.</div>' +
+    (anyCacheBanner ? '<div class="live-cache-banner" style="background:rgba(245,158,11,.08);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--txt);margin-bottom:14px">🕐 Часть источников недоступна — показан последний сохранённый снимок (время указано в статус-панели). Урок продолжается на снимке.</div>' : '') +
+    '<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px">' +
+      (LIVE.connected
+        ? '<button class="btn ghost" onclick="LIVE.disconnect()">⏸ Отключить живые данные</button>' +
+          '<button class="btn sm" onclick="LIVE.fetchAll()">🔄 Обновить сейчас</button>'
+        : '<button class="btn" onclick="LIVE.connect()">🌍 Подключить живые данные</button>' +
+          '<button class="btn sm ghost" onclick="LIVE.useEducational()">🧪 Учебные данные (офлайн)</button>') +
+      '<span style="font-size:11.5px;color:var(--mut)">обновление раз в 45 сек · лимиты источников бережём</span>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:18px" id="live_status_grid">' +
+      Object.keys(LIVE_SOURCES).map(liveStateBadge).join('') +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start" id="live_grid">' +
+      '<div id="live_market_col"></div>' +
+      '<div id="live_coach_col"></div>' +
+    '</div>' +
+    '<style>@media (max-width:860px){ #live_grid{ grid-template-columns:1fr !important } }</style>';
+  if(typeof window.renderLiveMarketCol === 'function') window.renderLiveMarketCol();
+  if(typeof window.renderLiveCoachCol === 'function') window.renderLiveCoachCol();
+}
+window.renderLiveView = renderLiveView;
+
+LIVE.onUpdate(function(){
+  const grid = document.getElementById('live_status_grid');
+  if(grid) grid.innerHTML = Object.keys(LIVE_SOURCES).map(liveStateBadge).join('');
+  if(typeof window.renderLiveMarketCol === 'function') window.renderLiveMarketCol();
+  if(typeof window.renderLiveCoachCol === 'function') window.renderLiveCoachCol();
+});
+
+/* Подключаем вкладку к навигации, не трогая существующий код */
+(function hookLiveTab(){
+  const prevGo = window.go;
+  if(typeof prevGo === 'function'){
+    window.go = function(t){
+      prevGo(t);
+      if(t === 'live') renderLiveView();
+    };
+    document.querySelectorAll('.tab').forEach(b => { b.onclick = () => window.go(b.dataset.tab); });
+  }
+  const prevSteps = window.renderTabNextSteps;
+  if(typeof prevSteps === 'function'){
+    window.renderTabNextSteps = function(tabName){
+      if(tabName === 'live'){
+        return '<div style="background:rgba(255,255,255,.02);border:1px dashed var(--line);border-radius:12px;padding:16px 20px;margin:28px 0 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">' +
+          '<div><div style="font-size:11px;font-weight:800;color:var(--acc2);text-transform:uppercase;margin-bottom:2px">🧭 ЧТО ДЕЛАТЬ ДАЛЬШЕ?</div>' +
+          '<div style="font-weight:700;font-size:14px;color:var(--txt)">Научился читать живые числа?</div>' +
+          '<div style="font-size:12.5px;color:var(--mut)">Закрепи механику на учебных симуляторах — там те же понятия в контролируемой песочнице.</div></div>' +
+          '<button class="btn sm" onclick="go(\'sims\')">🕹️ К симуляторам</button></div>';
+      }
+      return prevSteps(tabName);
+    };
+  }
+})();
+/*__LIVE_APPEND__*/
 })();
 
 </script>
