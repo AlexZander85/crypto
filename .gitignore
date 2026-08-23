@@ -24,6 +24,13 @@ err_only.mjs
 extracted_app.js
 p1_pack.js
 
+# Project docs and assets kept locally only (not for the repo)
+AUDIT_CONTENT_PEDAGOGY_2026-08-23.md
+ENGAGEMENT_DESIGN_PLAN.md
+VISUALS_AND_IMAGE_PROMPTS.md
+audit.md
+home-view.png
+
 # OS junk
 Thumbs.db
 .DS_Store
