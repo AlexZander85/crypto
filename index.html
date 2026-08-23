@@ -4010,6 +4010,13 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g02_mm_minute",
+        "title": "🎮 Маркетмейкер на минуту",
+        "desc": "Выставляй bid/ask вокруг дрейфующей справедливой цены. Часть потока «токсичная» — приходит перед движением. Счёт: заработанный спред минус инвентарные потери."
+      }
     ],
     "quiz": {
       "q": "Лучший покупатель предлагает за монету $99.50 (Bid), а лучший продавец хочет $100.00 (Ask). Чему равен спред?",
@@ -5575,6 +5582,13 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g05_fattails",
+        "title": "🎮 Слайдер толстых хвостов",
+        "desc": "Нормальное распределение против t-распределения: двигай степени свободы и смотри живой счётчик «ожидаемых дней ±15% за 10 лет»."
+      }
     ],
     "resources": [
       {
@@ -6283,6 +6297,13 @@ const LESSONS = [
             "en": "Point-in-time data"
           }
         ]
+      }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g06_leakdiff",
+        "title": "🎮 Найди утечку: diff-игра",
+        "desc": "20 строк кода бэктеста. Кликом помечай подозрительные — после сдачи подсветим настоящие утечки с разбором каждой."
       }
     ],
     "resources": [
@@ -7977,6 +7998,13 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g11_cointribbon",
+        "title": "🎮 Резиновая лента коинтеграции",
+        "desc": "Спред двух активов — лента вокруг среднего с z-score гейджем. Сценарий «breakdown коинтеграции» рвёт ленту и меняет среднее."
+      }
     ],
     "resources": [
       {
@@ -8640,6 +8668,13 @@ const LESSONS = [
           }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g12_corrstorm",
+        "title": "🎮 Матрица корреляций: штиль vs крах",
+        "desc": "Слайдер «стресс дня» морфит корреляции 6 активов к единице. Смотри, как «диверсифицированный» портфель превращается в одну позицию."
+      }
     ],
     "resources": [
       {
@@ -8896,6 +8931,13 @@ const LESSONS = [
             "en": "Heartbeat"
           }
         ]
+      }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g13_inframap",
+        "title": "🎮 Карта инфраструктуры: точка отказа",
+        "desc": "Граф бот→VPS→API→БД→алерты. Выбери узел и поломку — сценарий покажет, что заметит мониторинг и что спасёт kill-switch."
       }
     ],
     "resources": [
@@ -26959,6 +27001,412 @@ function g15Scenario(kind){
       <b>${name} недоступен на месяц.</b> Заморожено: <b style="color:var(--bad)">${(total * frozen / 100).toLocaleString('ru-RU')} ₽ (${frozen}%)</b>.<br>
       Доступный капитал: <b style="color:${frozen <= 20 ? 'var(--ok)' : 'var(--bad)'}">${avail.toLocaleString('ru-RU')} ₽</b>.
       <div style="margin-top:6px; color:var(--mut); font-size:12px">${frozen <= 20 ? 'Лимит 20% сработал: жизнь и обязательства не парализованы — в этом и смысл крепости.' : 'Доля выше лимита 20%: месяц без этой суммы бьёт по планам. Перераспредели.'}</div>
+    </div>`;
+}
+
+/* =========================================================================
+   D3.2 ВОЛНА 2 ИГР (G-02, G-05, G-06, G-11, G-12, G-13)
+   ========================================================================= */
+(function(){
+  const W2_IDS = ['widget_g02_mm_minute','widget_g05_fattails','widget_g06_leakdiff','widget_g11_cointribbon','widget_g12_corrstorm','widget_g13_inframap'];
+  const prev = window.renderPhase0Widget;
+  window.renderPhase0Widget = function(widgetId){
+    if(W2_IDS.indexOf(widgetId) !== -1){
+      const box = document.getElementById(widgetId);
+      if(box && !box.dataset.rendered){
+        box.dataset.rendered = '1';
+        if(widgetId === 'widget_g02_mm_minute') renderG02(box);
+        if(widgetId === 'widget_g05_fattails') renderG05(box);
+        if(widgetId === 'widget_g06_leakdiff') renderG06(box);
+        if(widgetId === 'widget_g11_cointribbon') renderG11(box);
+        if(widgetId === 'widget_g12_corrstorm') renderG12(box);
+        if(widgetId === 'widget_g13_inframap') renderG13(box);
+      }
+      return;
+    }
+    return prev(widgetId);
+  };
+})();
+
+/* ---------- G-02 «Маркетмейкер на минуту» ---------- */
+var g02 = null;
+function renderG02(box){
+  box.innerHTML = `
+    <div style="background:rgba(34,197,94,.05); border:1.5px solid var(--ok); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--ok); margin-bottom:6px">🎮 Маркетмейкер на минуту</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Справедливая цена дрейфует. Ты выставляешь bid/ask и зарабатываешь спред — но часть заявок «токсичная»: приходит прямо перед движением цены и обыгрывает тебя.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:13px; margin-bottom:8px">
+        <label>Ширина спреда: <b id="g02_w_lbl" style="color:var(--acc2)">$20</b></label>
+        <input type="range" id="g02_w" min="5" max="80" step="5" value="20" oninput="document.getElementById('g02_w_lbl').textContent='$'+this.value">
+        <button class="btn sm" onclick="g02Start()">▶ Старт (60 тиков)</button>
+      </div>
+      <div id="g02_board" style="font-size:13px"></div>
+      <canvas id="g02_cv" width="560" height="180" style="width:100%; background:#040714; border-radius:10px; margin-top:8px"></canvas>
+    </div>`;
+}
+function g02Start(){
+  g02 = { t: 0, fair: 95000, inv: 0, pnl: 0, toxicHits: 0, fills: 0, path: [] };
+  const board = document.getElementById('g02_board');
+  board.innerHTML = '<span style="color:var(--mut)">Раунд идёт…</span>';
+  const iv = setInterval(() => {
+    const w = +document.getElementById('g02_w').value;
+    // новостной тик с токсичным потоком
+    const toxic = Math.random() < 0.25;
+    const drift = toxic ? (Math.random() < 0.5 ? -1 : 1) * (15 + Math.random() * 30) : (Math.random() - 0.5) * 10;
+    const bid = g02.fair - w / 2, ask = g02.fair + w / 2;
+    // безобидный поток
+    if(Math.random() < 0.6){
+      const sideBuy = Math.random() < 0.5;
+      g02.pnl += w / 2; // заработали половину спреда
+      g02.inv += sideBuy ? 1 : -1;
+      g02.fills++;
+    }
+    // токсичный поток: покупает у нас перед ростом / продаёт перед падением
+    if(toxic){
+      g02.inv += drift > 0 ? -1 : 1;
+      g02.pnl += w / 2;
+      g02.fills++;
+      g02.toxicHits++;
+    }
+    g02.fair += drift;
+    // инвентарный PnL
+    g02.t++;
+    g02.path.push(g02.fair);
+    if(g02.t >= 60){
+      clearInterval(iv);
+      const invPnl = g02.inv * (g02.fair - g02.path[0]);
+      const total = g02.pnl + invPnl;
+      const narrow = +document.getElementById('g02_w').value <= 15;
+      board.innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px">
+          <div style="background:#040714; border-radius:8px; padding:8px 10px">Заработано на спреде: <b style="color:var(--ok)">+$${g02.pnl.toFixed(0)}</b></div>
+          <div style="background:#040714; border-radius:8px; padding:8px 10px">Инвентарный результат: <b style="color:${invPnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">${invPnl >= 0 ? '+' : ''}$${invPnl.toFixed(0)}</b></div>
+          <div style="background:#040714; border-radius:8px; padding:8px 10px">Итог: <b style="color:${total >= 0 ? 'var(--ok)' : 'var(--bad)'}">${total >= 0 ? '+' : ''}$${total.toFixed(0)}</b></div>
+          <div style="background:#040714; border-radius:8px; padding:8px 10px">Токсичных попаданий: <b style="color:var(--bad)">${g02.toxicHits}</b> из ${g02.fills} сделок</div>
+        </div>
+        <div style="margin-top:8px; padding:10px; background:#040714; border-left:3px solid var(--acc2); border-radius:6px; font-size:12px; color:var(--mut)">
+          <b style="color:var(--txt)">Дебрифинг:</b> спред — это плата за риск adverse selection: токсичный поток систематически покупает у тебя дёшево перед ростом и продаёт дорого перед падением.
+          ${narrow && g02.toxicHits > 5 ? 'Ты стоял с узким спредом на токсичном потоке — маркетмейкер с таким спредом разоряется: издержки инвентаря съедают заработок. Реальные ММ расширяют спред или снимают котировки при новостях.' : 'Чем шире спред, тем лучше компенсация токсичности — но тем реже исполнения. В этом весь баланс маркетмейкинга.'}
+        </div>`;
+    }
+    // draw
+    const cv = document.getElementById('g02_cv');
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    const mn = Math.min(...g02.path) - 20, mx = Math.max(...g02.path) + 20;
+    ctx.strokeStyle = 'var(--acc2)'; ctx.lineWidth = 2; ctx.beginPath();
+    g02.path.forEach((v, i) => {
+      const x = 8 + i * (cv.width - 16) / 60;
+      const y = cv.height - 8 - (v - mn) / (mx - mn) * (cv.height - 16);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    });
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = '11px sans-serif';
+    ctx.fillText(`тик ${g02.t}/60 · справедливая цена $${g02.fair.toFixed(0)} · инвентарь ${g02.inv > 0 ? '+' : ''}${g02.inv}`, 10, 14);
+  }, 120);
+}
+
+/* ---------- G-05 «Слайдер толстых хвостов» ---------- */
+function renderG05(box){
+  box.innerHTML = `
+    <div style="background:rgba(124,58,237,.05); border:1.5px solid var(--acc1); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--acc1); margin-bottom:6px">🎮 Слайдер толстых хвостов</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Двигай степени свободы t-распределения: чем они меньше, тем толще хвосты. Счётчик показывает, сколько дней с движением ≥15% ожидать за 10 лет торгов (~2520 дней, дневная вола 2.5%).</div>
+      <div style="font-size:13px; margin-bottom:8px">Степени свободы ν: <b id="g05_nu_lbl" style="color:var(--acc2)">3</b>
+        <input type="range" id="g05_nu" min="3" max="40" step="1" value="3" style="width:60%" oninput="g05Draw()"></div>
+      <canvas id="g05_cv" width="560" height="220" style="width:100%; background:#040714; border-radius:10px"></canvas>
+      <div id="g05_stat" style="margin-top:8px; font-size:13px"></div>
+    </div>`;
+  setTimeout(g05Draw, 50);
+}
+function g05TCdf(x, nu){
+  // приближение хвоста t-распределения: P(|T|>x) ~ c * x^-nu для больших x (для учебной визуализации)
+  const t = 1 / (1 + 0.05 * x * x);
+  return Math.pow(t, nu / 2);
+}
+function g05Draw(){
+  const nu = +document.getElementById('g05_nu').value;
+  document.getElementById('g05_nu_lbl').textContent = nu >= 40 ? '∞ (нормальное)' : nu;
+  const cv = document.getElementById('g05_cv');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const sigma = 2.5; // дневная вола %
+  const xOf = v => (v + 20) / 40 * cv.width;
+  const yOf = d => cv.height - 10 - d * (cv.height - 30);
+  const norm = x => Math.exp(-x * x / (2 * sigma * sigma)) / (sigma * Math.sqrt(2 * Math.PI));
+  const tdist = x => Math.pow(1 + x * x / (nu * sigma * sigma), -(nu + 1) / 2) / (sigma * Math.sqrt(nu) * 1.9);
+  ctx.strokeStyle = 'rgba(148,163,184,.8)'; ctx.lineWidth = 1.5; ctx.beginPath();
+  for(let px = 0; px <= cv.width; px += 2){
+    const x = px / cv.width * 40 - 20;
+    px ? ctx.lineTo(px, yOf(norm(x) / 0.16)) : ctx.moveTo(px, yOf(norm(x) / 0.16));
+  }
+  ctx.stroke();
+  ctx.strokeStyle = 'var(--warn)'; ctx.lineWidth = 2.5; ctx.beginPath();
+  for(let px = 0; px <= cv.width; px += 2){
+    const x = px / cv.width * 40 - 20;
+    px ? ctx.lineTo(px, yOf(tdist(x) / 0.16)) : ctx.moveTo(px, yOf(tdist(x) / 0.16));
+  }
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(239,68,68,.18)';
+  ctx.fillRect(0, 0, xOf(-15), cv.height);
+  ctx.fillRect(xOf(15), 0, cv.width - xOf(15), cv.height);
+  ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif';
+  ctx.fillText('серое — нормальное (гаусс)', 10, 14);
+  ctx.fillStyle = '#f59e0b';
+  ctx.fillText('янтарное — t-распределение (крипта)', 10, 28);
+  // счётчик дней ±15% за 10 лет
+  const z = 15 / sigma; // 6σ
+  const pNorm = Math.exp(-z * z / 2) / (z * Math.sqrt(2 * Math.PI));
+  const pT = g05TCdf(z, nu);
+  const daysNorm = pNorm * 2 * 2520;
+  const daysT = pT * 2 * 2520;
+  document.getElementById('g05_stat').innerHTML =
+    `Дней |движение| ≥ 15% за 10 лет: <b style="color:#94a3b8">нормальный мир ≈ ${daysNorm < 0.01 ? '0 (один раз в ~250 лет)' : daysNorm.toFixed(1)}</b> ·
+     <b style="color:var(--warn)">t(ν=${nu}) ≈ ${daysT < 10 ? daysT.toFixed(1) : Math.round(daysT)}</b>.` +
+    (nu <= 5 ? ' <span style="color:var(--bad)">При ν=3–5 крах «раз в 250 лет» случается раз в несколько лет — это и есть толстый хвост крипты.</span>' : '');
+}
+
+/* ---------- G-06 «Найди утечку: diff-игра» ---------- */
+var G06_LINES = [
+  { code: "import pandas as pd", leak: false },
+  { code: "df = pd.read_csv('btc_1h.csv')", leak: false },
+  { code: "df['ret'] = df['close'].pct_change()", leak: false },
+  { code: "df['target'] = df['ret'].shift(-1)", leak: true, why: "shift(-1) подглядывает в будущее: тарретом становится доходность СЛЕДУЮЩЕГО часа — допустимо как цель, но только если признаки строго из прошлого." },
+  { code: "mu = df['ret'].mean()   # среднее по ВСЕЙ выборке", leak: true, why: "Среднее по всей выборке использует будущие данные при обработке ранних строк. Считать rolling/expanding или только на train." },
+  { code: "sigma = df['ret'].std()", leak: true, why: "Та же утечка: σ по всему датасету. Z-score ниже нормирован глобальной статистикой." },
+  { code: "df['z'] = (df['ret'] - mu) / sigma", leak: false },
+  { code: "df['vol20'] = df['ret'].rolling(20).std()", leak: false },
+  { code: "df['zscore'] = df['close'] / df['close'].rolling(50).max()", leak: false },
+  { code: "train = df[df.date < '2025-01-01']", leak: false },
+  { code: "test  = df[df.date >= '2025-01-01']", leak: false },
+  { code: "df['label'] = df['target'] > 0", leak: false },
+  { code: "scaler.fit(df[['z','vol20','zscore']])", leak: true, why: "scaler.fit на всём датафрейме до сплита: статистики test- периода протекают в train. fit только на train." },
+  { code: "model.fit(train[feats], train['label'])", leak: false },
+  { code: "preds = model.predict(test[feats])", leak: false },
+  { code: "best = None", leak: false },
+  { code: "for w in range(5, 200):", leak: false },
+  { code: "    score = backtest(df, window=w)", leak: true, why: "Перебор 195 окон на одних и тех же данных с выбором лучшего — множественное тестирование: лучший результат почти гарантированно переобучен. Нужны holdout и поправка на число попыток." },
+  { code: "    if best is None or score > best: best = score", leak: false },
+  { code: "print('Sharpe:', sharpe)", leak: false }
+];
+var g06Marked = {};
+function renderG06(box){
+  g06Marked = {};
+  box.innerHTML = `
+    <div style="background:rgba(239,68,68,.05); border:1.5px solid var(--bad); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--bad); margin-bottom:6px">🎮 Найди утечку: diff-игра</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Кликай строки, где признак/статистика подглядывает в будущее. Потом сдай — покажем precision/recall и разбор.</div>
+      <pre id="g06_code" style="background:#040714; border-radius:10px; padding:12px; font-size:12px; line-height:1.7; overflow-x:auto; color:var(--txt)"></pre>
+      <button class="btn sm" style="margin-top:8px" onclick="g06Grade()">📤 Сдать разбор</button>
+      <div id="g06_out" style="margin-top:10px; font-size:12.5px"></div>
+    </div>`;
+  g06DrawCode(false);
+}
+function g06DrawCode(reveal){
+  const pre = document.getElementById('g06_code');
+  pre.innerHTML = G06_LINES.map((l, i) => {
+    let bg = 'transparent', fg = 'var(--txt)';
+    if(reveal){
+      if(l.leak){ bg = 'rgba(239,68,68,.25)'; fg = '#fca5a5'; }
+    } else if(g06Marked[i]){ bg = 'rgba(245,158,11,.2)'; fg = '#fcd34d'; }
+    return `<div onclick="g06Toggle(${i})" style="cursor:pointer; background:${bg}; color:${fg}; padding:0 6px; border-radius:4px">${String(i+1).padStart(2,' ')} │ ${l.code.replace(/</g,'&lt;')}</div>`;
+  }).join('');
+}
+function g06Toggle(i){ g06Marked[i] = !g06Marked[i]; g06DrawCode(false); }
+function g06Grade(){
+  let tp = 0, fp = 0, fn = 0;
+  G06_LINES.forEach((l, i) => {
+    if(l.leak && g06Marked[i]) tp++;
+    else if(!l.leak && g06Marked[i]) fp++;
+    else if(l.leak && !g06Marked[i]) fn++;
+  });
+  const prec = tp + fp ? Math.round(tp / (tp + fp) * 100) : 0;
+  const rec = tp + fn ? Math.round(tp / (tp + fn) * 100) : 0;
+  g06DrawCode(true);
+  document.getElementById('g06_out').innerHTML = `
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px">
+      <div style="background:#040714; border-radius:8px; padding:8px 12px">Precision: <b style="color:var(--acc2)">${prec}%</b></div>
+      <div style="background:#040714; border-radius:8px; padding:8px 12px">Recall: <b style="color:var(--acc2)">${rec}%</b></div>
+    </div>
+    <div style="background:#040714; border-left:3px solid var(--bad); border-radius:6px; padding:10px">
+      <b>Настоящие утечки (подсвечены красным):</b>
+      <ul style="margin:6px 0 0; padding-left:18px; line-height:1.7; color:var(--txt)">
+        ${G06_LINES.map((l, i) => l.leak ? `<li><b>строка ${i+1}:</b> ${l.why}</li>` : '').join('')}
+      </ul>
+    </div>
+    <button class="btn sm ghost" style="margin-top:8px" onclick="renderG06(document.getElementById('widget_g06_leakdiff'))">🔄 Играть снова</button>`;
+}
+
+/* ---------- G-11 «Резиновая лента коинтеграции» ---------- */
+var g11Scenario = 'normal';
+function renderG11(box){
+  box.innerHTML = `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--acc2); margin-bottom:6px">🎮 Резиновая лента коинтеграции</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Спред пары — лента вокруг оси среднего. Зелёные зоны |z|≥2 — вход, красная |z|>4 — стоп. Выбери сценарий и смотри поведение ленты.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px">
+        <button class="btn sm" onclick="g11Scenario='normal'; g11Run()">↩️ Нормальный ретёрн</button>
+        <button class="btn sm ghost" onclick="g11Scenario='diverge'; g11Run()">↔️ Расхождение</button>
+        <button class="btn sm" style="background:var(--bad)" onclick="g11Scenario='breakdown'; g11Run()">💥 Breakdown коинтеграции</button>
+      </div>
+      <canvas id="g11_cv" width="560" height="240" style="width:100%; background:#040714; border-radius:10px"></canvas>
+      <div id="g11_stat" style="margin-top:8px; font-size:12.5px"></div>
+    </div>`;
+  g11Run();
+}
+function g11Run(){
+  const cv = document.getElementById('g11_cv');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const midY = cv.height / 2, unit = 45;
+  // зоны
+  ctx.fillStyle = 'rgba(34,197,94,.10)';
+  ctx.fillRect(0, midY - 4*unit, cv.width, 2*unit); ctx.fillRect(0, midY + 2*unit, cv.width, 2*unit);
+  ctx.fillStyle = 'rgba(239,68,68,.15)';
+  ctx.fillRect(0, 0, cv.width, midY - 4*unit); ctx.fillRect(0, midY + 4*unit, cv.width, cv.height - midY - 4*unit);
+  ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.setLineDash([4,4]); ctx.beginPath();
+  ctx.moveTo(0, midY); ctx.lineTo(cv.width, midY); ctx.stroke(); ctx.setLineDash([]);
+  // траектория
+  let z = 0, meanShift = 0;
+  const pts = [];
+  for(let t = 0; t < 120; t++){
+    if(g11Scenario === 'normal') z = z * 0.9 + (Math.random() - 0.5) * 1.2;
+    else if(g11Scenario === 'diverge') z = z * 0.97 + (Math.random() - 0.5) * 1.0 + 0.03;
+    else {
+      if(t > 60) meanShift += 0.06;
+      z = z * 0.94 + (Math.random() - 0.5) * 1.1 + (t > 60 ? 0.05 : 0);
+    }
+    pts.push(z + meanShift);
+  }
+  const broke = g11Scenario === 'breakdown';
+  ctx.strokeStyle = broke ? 'var(--bad)' : 'var(--acc2)'; ctx.lineWidth = 2; ctx.beginPath();
+  pts.forEach((v, t) => {
+    const x = 10 + t * (cv.width - 20) / 120, y = midY - v * unit;
+    t ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  });
+  ctx.stroke();
+  const lastZ = pts[pts.length - 1];
+  const stat = document.getElementById('g11_stat');
+  const zone = Math.abs(lastZ) > 4 ? '<b style="color:var(--bad)">СТОП-ЗОНА |z|>4</b>' : Math.abs(lastZ) >= 2 ? '<b style="color:var(--ok)">зона входа |z|≥2</b>' : '<b style="color:var(--mut)">нейтральная зона</b>';
+  stat.innerHTML = `Текущий z-score: <b style="color:var(--acc2)">${lastZ.toFixed(2)}</b> — ${zone}. ` + (
+    g11Scenario === 'normal' ? 'Лента тянется к среднему: классический mean reversion, входы в зелёных зонах отыгрываются.' :
+    g11Scenario === 'diverge' ? 'Лента растягивается дольше обычного: half-life растёт, капитал замораживается — но связь пока жива.' :
+    '<span style="color:var(--bad)">💥 Лента порвана: среднее сместилось, z-score не возвращается. Breakdown коинтеграции — главный риск парного трейдинга; поэтому стоп на |z|>4.0 обязателен, а стратегия свернутого риска — нет.</span>');
+}
+
+/* ---------- G-12 «Матрица корреляций: штиль vs крах» ---------- */
+function renderG12(box){
+  box.innerHTML = `
+    <div style="background:rgba(239,68,68,.05); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--warn); margin-bottom:6px">🎮 Матрица корреляций: штиль vs крах</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Слайдер «стресс дня»: корреляции рисковых активов съезжаются к 1. Сравни портфель «диверсифицированный на бумаге» с его реальным поведением.</div>
+      <div style="font-size:13px; margin-bottom:8px">Стресс: <b id="g12_s_lbl" style="color:var(--acc2)">0%</b>
+        <input type="range" id="g12_s" min="0" max="100" step="5" value="0" style="width:60%" oninput="g12Draw()"></div>
+      <canvas id="g12_cv" width="560" height="240" style="width:100%; background:#040714; border-radius:10px"></canvas>
+      <div id="g12_stat" style="margin-top:8px; font-size:12.5px"></div>
+    </div>`;
+  setTimeout(g12Draw, 50);
+}
+function g12Draw(){
+  const s = +document.getElementById('g12_s').value / 100;
+  document.getElementById('g12_s_lbl').textContent = Math.round(s * 100) + '%';
+  const assets = ['BTC','ETH','SOL','ALT','DeFi','USDT'];
+  const baseCorr = [[1,.6,.55,.5,.4,0],[.6,1,.65,.55,.45,0],[.55,.65,1,.6,.5,0],[.5,.55,.6,1,.55,0],[.4,.45,.5,.55,1,0],[0,0,0,0,0,1]];
+  const cv = document.getElementById('g12_cv');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const cell = 30, x0 = 60, y0 = 20;
+  ctx.font = '11px sans-serif';
+  for(let i = 0; i < 6; i++){
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(assets[i], x0 - 34, y0 + i * cell + 19);
+    ctx.fillText(assets[i], x0 + i * cell + 9, y0 - 6);
+    for(let j = 0; j < 6; j++){
+      let c = baseCorr[i][j];
+      if(i < 5 && j < 5 && i !== j) c = c + (1 - c) * s; // стресс тянет рисковые к 1
+      const heat = Math.round(c * 255);
+      ctx.fillStyle = `rgb(${heat}, ${60 + Math.round((1-c)*80)}, ${255 - heat})`;
+      ctx.fillRect(x0 + j * cell, y0 + i * cell, cell - 2, cell - 2);
+    }
+  }
+  // портфельная кривая
+  const px = 290, pw = cv.width - px - 10;
+  ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.strokeRect(px, y0, pw, 6 * cell - 2);
+  ctx.strokeStyle = 'var(--acc2)'; ctx.lineWidth = 2; ctx.beginPath();
+  let div = 0, real = 0;
+  for(let t = 0; t <= 100; t++){
+    const shock = -Math.abs(Math.sin(t / 8)) * s * 40 - t * 0.05 * s * 10;
+    const x = px + t / 100 * pw;
+    const yDiv = y0 + 30 + t * 0.4 - shock * 0.35;
+    const yReal = y0 + 30 + t * 0.4 - shock * (0.35 + s * 0.55);
+    if(t){ ctx.lineTo(x, yReal); } else { ctx.moveTo(x, yReal); }
+    div = yDiv; real = yReal;
+  }
+  ctx.stroke();
+  ctx.strokeStyle = '#94a3b8'; ctx.setLineDash([4,4]); ctx.beginPath();
+  for(let t = 0; t <= 100; t++){
+    const shock = -Math.abs(Math.sin(t / 8)) * s * 40 - t * 0.05 * s * 10;
+    const x = px + t / 100 * pw;
+    const yDiv = y0 + 30 + t * 0.4 - shock * 0.35;
+    t ? ctx.lineTo(x, yDiv) : ctx.moveTo(x, yDiv);
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#94a3b8'; ctx.fillText('— — портфель на бумаге (корреляции штиля)', px, y0 + 6 * cell + 16);
+  ctx.fillStyle = 'var(--acc2)'; ctx.fillText('—— реальное поведение при стрессе', px, y0 + 6 * cell + 30);
+  document.getElementById('g12_stat').innerHTML = s > 0.6
+    ? '<span style="color:var(--bad)">В крах корреляции рисковых активов сходятся к ~0.95: «5 монет» ведут себя как одна позиция. Диверсификация исчезает именно тогда, когда нужна.</span>'
+    : s > 0.2 ? 'Корреляции ползут вверх: защита портфеля тает на глазах.' : 'Штиль: корреляции умеренные, диверсификация работает. Двигай слайдер вправо.';
+}
+
+/* ---------- G-13 «Карта инфраструктуры: точка отказа» ---------- */
+var G13_NODES = [
+  { id: 'bot', name: '🤖 Бот', x: 0 },
+  { id: 'vps', name: '🖥️ VPS (Docker)', x: 1 },
+  { id: 'api', name: '🔌 API биржи', x: 2 },
+  { id: 'db',  name: '🗄️ БД', x: 3 },
+  { id: 'tg',  name: '📨 Telegram-алерты', x: 4 }
+];
+var G13_SCEN = {
+  bot:  { 'WS отвалился': 'Бот перестаёт получать стакан; без kill-switch последние ордера висят на бирже. С kill-switch: trigger по потере heartbeat → cancel_all.', 'Диск полон': 'Логи переполняют диск → контейнер падает. Мониторинг видит restart-loop; позиция остаётся открытой — нужен автостоп по drawdown на стороне биржи.', 'Ключ истёк': 'API-ключ протух: все запросы 401. Бот в цикле ошибок. Алерт в Telegram спасает, если сам канал жив.' },
+  vps:  { 'WS отвалился': 'Сетевой сбой VPS: heartbeat пропал. VPS-сторож перезапускает контейнер; kill-switch на бирже гасит ордера.', 'Диск полон': 'Docker overlay2 съел диск. Вся нода встаёт. Урок: лимиты логов и ротация.', 'Ключ истёк': 'Провайдер VPS отключил машину за неоплату. Сценарий «бот упал ночью» — позиция без присмотра до утра.' },
+  api:  { 'WS отвалился': 'Биржа шлёт 418/429: rate-limit. Бот обязан уйти в backoff, а не долбить запросами.', 'Диск полон': 'Не твоя сторона — ничего не сделаешь. Именно поэтому риск контрагента диверсифицируют.', 'Ключ истёк': 'Биржа отозвала ключ после подозрительного IP. Trade-only ключ без вывода ограничивает ущерб.' },
+  db:   { 'WS отвалился': 'БД недоступна: бот не пишет состояние. Рестарт = потеря контекста позиций — храни state у биржи через запрос openOrders.', 'Диск полон': 'Классика: WAL разросся. Мониторинг диска — самый дешёвый алерт.', 'Ключ истёк': 'Пароль БД сменили, бот не подключается. Graceful degradation: торгуем без аналитики, но с kill-switch.' },
+  tg:   { 'WS отвалился': 'Telegram недоступен: ты не узнаешь об аварии. Дублируй канал (email/SMS) для критичных алертов.', 'Диск полон': 'Не применимо.', 'Ключ истёк': 'Токен бота отозван — молчание алертов = ложное спокойствие. Watchdog «нет алертов 24ч» — сам алерт.' }
+};
+var g13Sel = { node: null, fail: null };
+function renderG13(box){
+  g13Sel = { node: null, fail: null };
+  box.innerHTML = `
+    <div style="background:rgba(245,158,11,.05); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--warn); margin-bottom:6px">🎮 Карта инфраструктуры: точка отказа</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Выбери узел цепочки и тип поломки — сценарий покажет, что заметит мониторинг и где спасает kill-switch.</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px" id="g13_nodes">
+        ${G13_NODES.map((n, i) => `<button class="btn sm ghost" id="g13_n_${n.id}" onclick="g13Pick('${n.id}')">${n.name}</button>`).join(' <span style="color:var(--mut); align-self:center">→</span> ')}
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap" id="g13_fails">
+        <button class="btn sm ghost" onclick="g13Fail('WS отвалился')">WS отвалился</button>
+        <button class="btn sm ghost" onclick="g13Fail('Диск полон')">Диск полон</button>
+        <button class="btn sm ghost" onclick="g13Fail('Ключ истёк')">Ключ истёк</button>
+      </div>
+      <div id="g13_out" style="margin-top:10px; font-size:12.5px"></div>
+    </div>`;
+}
+function g13Pick(id){
+  g13Sel.node = id;
+  G13_NODES.forEach(n => {
+    document.getElementById('g13_n_' + n.id).className = 'btn sm ' + (n.id === id ? '' : 'ghost');
+    if(n.id === id) document.getElementById('g13_n_' + n.id).style.background = 'var(--warn)';
+  });
+  g13Play();
+}
+function g13Fail(f){ g13Sel.fail = f; g13Play(); }
+function g13Play(){
+  if(!g13Sel.node || !g13Sel.fail) return;
+  const txt = (G13_SCEN[g13Sel.node] || {})[g13Sel.fail] || 'Сценарий не описан.';
+  document.getElementById('g13_out').innerHTML = `
+    <div style="background:#040714; border-left:3px solid var(--warn); border-radius:6px; padding:10px">
+      <b>Узел «${g13Sel.node}» × поломка «${g13Sel.fail}»:</b><br>${txt}
+      <div style="margin-top:6px; color:var(--mut); font-size:12px">Отказоустойчивость — это цепочка: ломается одно звено, а умирает вся система, если нет наблюдаемости и аварийных триггеров на каждом уровне.</div>
     </div>`;
 }
 
