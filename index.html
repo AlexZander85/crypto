@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="КриптоНавигатор — интерактивный курс с нуля до крипто-архитектора: 121 урок, симуляторы стакана, ликвидаций, фандинга, DeFi, тренажёр с интерливингом и журналом когнитивных ошибок.">
+<meta property="og:title" content="КриптоНавигатор — интерактивный курс крипто-архитектора">
+<meta property="og:description" content="121 урок, 30+ симуляторов, тренажёр с адаптивным интерливингом, метод Фейнмана, журнал когнитивных ошибок. Бесплатно, без регистрации.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="КриптоНавигатор — интерактивный курс крипто-архитектора">
+<meta name="twitter:description" content="121 урок, 30+ симуляторов, тренажёр с интерливингом, журнал когнитивных ошибок.">
 <title>КриптоНавигатор — Из нуля в крипто-архитекторы за 18 месяцев</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
 <style>
@@ -27,6 +34,9 @@ nav{display:flex; justify-content:center; align-items:center; gap:10px; padding:
 .tab{border:1px solid var(--line); background:var(--card); color:var(--txt); padding:8px 16px; border-radius:99px; cursor:pointer; font-size:13.5px; transition:.2s; display:inline-flex; align-items:center; gap:6px}
 .tab:hover{border-color:var(--acc2); background:rgba(255,255,255,.08)}
 .tab.active{background:var(--grad); border-color:transparent; font-weight:700; color:#fff; box-shadow:0 0 16px rgba(124,58,237,.35)}
+.nav-group{display:inline-flex; align-items:center; gap:6px; padding:4px 8px 4px 10px; border:1px dashed var(--line); border-radius:99px; background:rgba(255,255,255,.015)}
+.nav-group-label{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); padding-right:2px; user-select:none}
+.nav-group .tab{padding:6px 12px; font-size:12.5px}
 main{max-width:1560px; width:95%; margin:0 auto; padding:20px 24px 100px}
 .view{display:none; animation:fade .3s ease-out}
 .view.active{display:block}
@@ -803,6 +813,9 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
+  <!-- V4-D2: помодоро-таймер 25 мин -->
+  <button id="pomodoro_btn" class="btn sm ghost" style="padding:5px 10px; font-size:12px; margin-left:8px" onclick="window.togglePomodoro()" title="Помодоро: 25 минут фокуса, затем напоминание о перерыве и консолидации">🍅 25:00</button>
+
   <!-- 💾 Save Progress Button -->
   <button id="headerSaveBtn" class="btn sm" style="padding:5px 10px; font-size:12px; background:rgba(34,197,94,.15); color:var(--ok); border:1px solid var(--ok); margin-left:8px; display:flex; align-items:center; gap:4px" onclick="manualSaveProgress()" title="Сохранить весь прогресс обучения в памяти браузера">
     <span style="font-size:13px">💾</span> Сохранить
@@ -813,14 +826,30 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </header>
 <nav>
   <button class="tab active" data-tab="home">🚀 Старт</button>
-  <button class="tab" data-tab="lessons">🎓 Уроки</button>
-  <button class="tab" data-tab="sims">🕹️ Симуляторы</button>
-  <button class="tab" data-tab="roadmap">🗺️ Дорожная карта</button>
-  <button class="tab" data-tab="tests">📝 Тесты фаз</button>
-  <button class="tab" data-tab="earnings" style="background:rgba(234,179,8,.15); color:var(--warn); border:1px solid rgba(234,179,8,.4)">💰 Способы заработка</button>
-  <button class="tab" data-tab="glossary">📖 Глоссарий</button>
-  <button class="tab" data-tab="quiz">🎮 Викторина</button>
-  <button class="tab" data-tab="progress">📊 Прогресс</button>
+  <div class="nav-group">
+    <span class="nav-group-label">🎓 Учёба</span>
+    <button class="tab" data-tab="lessons">Уроки</button>
+    <button class="tab" data-tab="tests">Тесты фаз</button>
+    <button class="tab" data-tab="progress">Прогресс</button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-label">🕹️ Практика</span>
+    <button class="tab" data-tab="sims">Симуляторы</button>
+    <button class="tab" data-tab="quiz">Викторина</button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-label">📖 Справка</span>
+    <button class="tab" data-tab="glossary">Глоссарий</button>
+    <button class="tab" data-tab="roadmap">Дорожная карта</button>
+    <button class="tab" data-tab="earnings" style="background:rgba(234,179,8,.15); color:var(--warn); border:1px solid rgba(234,179,8,.4)">💰 Заработок</button>
+  </div>
+  <span class="badge" style="background:rgba(6,182,212,.08); color:var(--mut); border:1px solid var(--line); display:inline-flex; align-items:center; gap:4px; padding:2px 8px; font-size:11.5px">💼
+    <select id="account_size_sel" onchange="window.setAccountSize(this.value)" style="background:transparent; border:none; color:var(--txt); font-size:11.5px; font-family:var(--font); cursor:pointer">
+      <option value="small">≤ 50К ₽</option>
+      <option value="mid">50К–500К ₽</option>
+      <option value="large">500К+ ₽</option>
+    </select>
+  </span>
 </nav>
 
 <main>
@@ -829,6 +858,19 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 <section id="home" class="view active">
   <h1>Из полного нуля — <span>в крипто-архитекторы</span></h1>
   <p class="sub">Пошаговый интерактивный курс за 18 месяцев. Научись управлять ИИ-агентами как архитектор, понимать микроструктуру рынка, создавать математические бэктесты и управлять капиталом 5–6 млн ₽.</p>
+  <div style="margin:14px 0 6px; border-radius:14px; overflow:hidden; border:1px solid var(--line)">
+    <svg viewBox="0 0 1200 220" style="width:100%; display:block" role="img" aria-label="КриптоНавигатор — путь от нуля до архитектора">
+      <defs><linearGradient id="heroG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+      <rect width="1200" height="220" fill="#090d1f"/>
+      <rect width="1200" height="220" fill="url(#heroG)" opacity=".14"/>
+      <circle cx="140" cy="110" r="52" fill="none" stroke="#7c3aed" stroke-width="3" opacity=".7"/>
+      <circle cx="140" cy="110" r="30" fill="none" stroke="#06b6d4" stroke-width="2" opacity=".8"/>
+      <path d="M 260 150 Q 420 40 580 110 T 900 90 T 1060 60" fill="none" stroke="url(#heroG)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="1060" cy="60" r="9" fill="#22c55e"/>
+      <text x="140" y="120" font-size="26" text-anchor="middle" fill="#f8fafc" font-family="system-ui" font-weight="800">₿</text>
+      <text x="600" y="200" font-size="20" text-anchor="middle" fill="#94a3b8" font-family="system-ui">от первой транзакции — к собственной торговой системе</text>
+    </svg>
+  </div>
 
   <!-- 🌱 QUICK START ONBOARDING FOR COMPLETE BEGINNERS -->
   <details style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.12)); border:1.5px solid var(--acc2); border-radius:14px; padding:18px 22px; margin:16px 0 20px; cursor:pointer; box-shadow:var(--shadow)">
@@ -1172,10 +1214,10 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   <div class="controls" id="sim_phase_chips" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px">
     <button class="chip active" onclick="filterSimulators('all', this)">🕹️ Все симуляторы</button>
     <button class="chip" onclick="filterSimulators(0, this)">⚡ Фаза 0: Основы (8)</button>
-    <button class="chip" onclick="filterSimulators(1, this)">📈 Фаза 1: Эконометрика & ML (5)</button>
-    <button class="chip" onclick="filterSimulators(2, this)">🐋 Фаза 2: Ордер флоу (3)</button>
+    <button class="chip" onclick="filterSimulators(1, this)">📈 Фаза 1: Эконометрика & ML (6)</button>
+    <button class="chip" onclick="filterSimulators(2, this)">🐋 Фаза 2: Ордер флоу (4)</button>
     <button class="chip" onclick="filterSimulators(3, this)">⚖️ Фаза 3: Портфель & Риск (2)</button>
-    <button class="chip" onclick="filterSimulators(4, this)">🛡️ Фаза 4: Продакшен & Право (4)</button>
+    <button class="chip" onclick="filterSimulators(4, this)">🛡️ Фаза 4: Продакшен & Право (5)</button>
     <button class="chip" onclick="filterSimulators(5, this)">👑 Фаза 5: Управление & Боссы (3)</button>
   </div>
 
@@ -1213,6 +1255,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 
     <div class="sim-result" id="ob_result_box" style="margin-top:16px">
       <div style="font-weight:700; margin-bottom:8px">Состояние стакана (Order Book BTC/USDT):</div>
+      <canvas id="ob_depth_canvas" width="640" height="180" style="width:100%; border-radius:8px; background:#040714; margin-bottom:10px"></canvas>
       <table class="order-book-table">
         <thead>
           <tr><th>Объем (BTC)</th><th>Цена ($)</th><th>Тип</th><th>Глубина</th><th>Slippage (bps)</th></tr>
@@ -1239,7 +1282,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
           <option value="1">x1 (Без плеча)</option>
           <option value="2">x2</option>
           <option value="3">x3</option>
-          <option value="5">x5</option>
+          <option value="3">x5</option>
           <option value="10" selected>x10</option>
           <option value="20">x20</option>
           <option value="50">x50 (Опасно!)</option>
@@ -1264,6 +1307,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
 
     <div class="sim-result" id="liq_output"></div>
+    <div id="liq_gauge_wrap" style="margin-top:14px"></div>
   </div>
 
   <!-- SIM 3: Funding Rate Calculator -->
@@ -1433,7 +1477,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <div class="sim-controls">
       <div class="sim-input-group">
         <label>Win Rate (% прибыльных сделок):</label>
-        <input type="number" id="k_win" value="55" min="30" max="80" step="1" oninput="calcKellySim()">
+        <input type="number" id="k_win" value="52" min="30" max="80" step="1" oninput="calcKellySim()">
       </div>
       <div class="sim-input-group">
         <label>Risk / Reward (Отношение Win/Loss):</label>
@@ -1513,7 +1557,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <div class="sim-controls">
       <div class="sim-input-group">
         <label>Размер торгового капитала ($):</label>
-        <input type="number" id="ks_deposit" value="50000" step="5000">
+        <input type="number" id="ks_deposit" value="150000" step="5000">
       </div>
       <div class="sim-input-group">
         <label>Заданный порог Kill-Switch (% просадки):</label>
@@ -1567,7 +1611,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
         <label>Размер торгового капитала (₽):</label>
         <select id="sc_cap" onchange="calcScalingSim()">
           <option value="150000">150,000 ₽ (Микро-лайв)</option>
-          <option value="1000000">1,000,000 ₽</option>
+          <option value="3000000">1,000,000 ₽</option>
           <option value="3000000">3,000,000 ₽</option>
           <option value="6000000" selected>6,000,000 ₽ (Целевой капитал)</option>
         </select>
@@ -1672,7 +1716,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       <div class="sim-input-group">
         <label>Средняя задержка сети до CEX (Latency ms):</label>
         <select id="ed_latency" onchange="calcExecDevSim()">
-          <option value="5">VPS Франкфурт (5 мс — идеал)</option>
+          <option value="3.5">VPS Франкфурт (5 мс — идеал)</option>
           <option value="45" selected>VPS Общий дата-центр (45 мс)</option>
           <option value="180">Домашний интернет РФ (180 мс — высокий риск)</option>
         </select>
@@ -1757,7 +1801,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       </div>
       <div class="sim-input-group">
         <label style="font-size:12px; color:var(--mut); font-weight:700">Исходный спред (bps):</label>
-        <input type="number" id="arb_spread" value="50" step="5" oninput="calcArbitrageSim()" style="width:100%; padding:8px 12px; border-radius:8px; background:var(--card); border:1px solid var(--line); color:var(--txt)">
+        <input type="number" id="arb_spread" value="150" step="5" oninput="calcArbitrageSim()" style="width:100%; padding:8px 12px; border-radius:8px; background:var(--card); border:1px solid var(--line); color:var(--txt)">
       </div>
     </div>
 
@@ -1872,6 +1916,97 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
+  <!-- V3-B1 SIM: Funding Drag Simulator -->
+  <div id="sim_funding_drag" class="sim-box" style="display:none">
+    <h3>📉 Funding Drag: сколько съедает фандинг за месяц</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">На перпетуале фандинг платится каждые 8 часов. Даже крошечная ставка превращается в заметную годовую «аренду позиции». Посчитай драг и подумай, какое ожидание на сделку нужно, чтобы его окупить.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Размер позиции (₽):</label><input type="number" id="fd_notional" value="100000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Фандинг за 8 ч (bps):</label><input type="number" id="fd_rate" value="2.5" step="0.5"></div>
+      <div class="sim-input-group"><label>Дней удержания:</label><input type="number" id="fd_days" value="30" min="1" step="1"></div>
+      <div class="sim-input-group"><label>Направление:</label>
+        <select id="fd_side"><option value="long">Лонг (платишь при положительном фандинге)</option><option value="short">Шорт</option></select>
+      </div>
+    </div>
+    <button class="btn" onclick="window.runFundingDragSim()">📉 Посчитать Funding Drag</button>
+    <div class="sim-result" id="fd_result" style="margin-top:16px"></div>
+  </div>
+
+  <!-- V3-B1 SIM: Transaction Cost Simulator -->
+  <div id="sim_tcost" class="sim-box" style="display:none">
+    <h3>🧾 Transaction Cost: комиссии + спред + слиппедж за серию сделок</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Round-trip (вход+выход) стоит: 2×комиссия + спред + 2×слиппедж. Сотня сделок в месяц — и издержки сопоставимы с прибылью большинства стратегий. Проверь, сколько bps ожидания нужно на сделку, чтобы выйти в ноль.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Сделка (₽):</label><input type="number" id="tc_notional" value="50000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Комиссия тейкера (%):</label><input type="number" id="tc_fee" value="0.055" step="0.005"></div>
+      <div class="sim-input-group"><label>Спред (bps):</label><input type="number" id="tc_spread" value="2" step="0.5"></div>
+      <div class="sim-input-group"><label>Слиппедж (bps):</label><input type="number" id="tc_slip" value="5" step="0.5"></div>
+      <div class="sim-input-group"><label>Сделок (round-trips):</label><input type="number" id="tc_rt" value="20" min="1" step="1"></div>
+    </div>
+    <button class="btn" onclick="window.runTCostSim()">🧾 Посчитать издержки</button>
+    <div class="sim-result" id="tc_result" style="margin-top:16px"></div>
+  </div>
+  <!-- V3-B4 SIM: DeFi Yield Lab -->
+  <div id="sim_defi" class="sim-box" style="display:none">
+    <h3>🌾 DeFi Yield Lab: APY против непостоянных потерь (IL)</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">В AMM-пуле ты даёшь ликвидность и получаешь APY, но при движении цены возникает непостоянная потеря (IL). Задача: понять, при каком движении цены и APY фарминг оправдан, а когда выгоднее просто держать актив (HODL).</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Депозит в пул (₽):</label><input type="number" id="df_dep" value="100000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Заявленный APY (%):</label><input type="number" id="df_apy" value="18" step="1"></div>
+      <div class="sim-input-group"><label>Движение цены пары (%):</label><input type="number" id="df_move" value="50" step="5"></div>
+      <div class="sim-input-group"><label>Дней в пуле:</label><input type="number" id="df_days" value="90" min="1" step="1"></div>
+    </div>
+    <button class="btn" onclick="window.runDefiSim()">🌾 Посчитать результат фарминга</button>
+    <div class="sim-result" id="df_result" style="margin-top:16px"></div>
+  </div>
+
+  <!-- V4-C1: Генератор эквити-кривых (Фаза 3) -->
+  <div id="sim_equity" class="sim-box" style="display:none">
+    <h3>📊 Генератор эквити-кривых: 1000 судеб одной стратегии</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Одна и та же стратегия (винрейт × R:R) даёт тысячу разных путей. Монте-Карло показывает веер траекторий, распределение финалов и честную вероятность разорения — то, что одна «красивая» эквити-кривая скрывает.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Винрейт (%):</label><input type="number" id="eq_wr" value="45" min="5" max="95" step="1"></div>
+      <div class="sim-input-group"><label>R:R (профит к убытку):</label><input type="number" id="eq_rr" value="2" min="0.2" max="10" step="0.1"></div>
+      <div class="sim-input-group"><label>Риск на сделку (% капитала):</label><input type="number" id="eq_risk" value="1" min="0.1" max="10" step="0.1"></div>
+      <div class="sim-input-group"><label>Сделок:</label><input type="number" id="eq_n" value="200" min="20" max="1000" step="10"></div>
+    </div>
+    <button class="btn" onclick="runEquityGen()">🎲 Сгенерировать 1000 траекторий</button>
+    <div class="sim-result" id="eq_result" style="margin-top:16px"></div>
+  </div>
+
+  <!-- V4-C2: Карта корреляций (Фаза 3) -->
+  <div id="sim_corr" class="sim-box" style="display:none">
+    <h3>🌡️ Карта корреляций: диверсификация, которая исчезает в кризис</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Тепловая карта парных корреляций доходностей. Двигай период — и смотри, как «некоррелированный» портфель в кризисный месяц схлопывается к корреляции ≈ 1: падает всё и сразу.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Период:</label>
+        <select id="corr_period" onchange="renderCorrHeatmap()">
+          <option value="7">7 дней</option>
+          <option value="30" selected>30 дней</option>
+          <option value="90">90 дней</option>
+          <option value="365">1 год</option>
+          <option value="crisis">⚡ Кризисный месяц</option>
+        </select>
+      </div>
+    </div>
+    <div class="sim-result" id="corr_result" style="margin-top:16px"></div>
+  </div>
+
+  <!-- V4-C3: Конструктор дельта-нейтральной позиции (Фаза 2) -->
+  <div id="sim_deltaneutral" class="sim-box" style="display:none">
+    <h3>⚖️ Конструктор дельта-нейтрала: спот + перп-шорт = только фандинг</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Собери позицию: лонг спота + равный шорт перпетуала. Двигай цену — ноги гасят друг друга, а суммарный PnL остаётся почти нулевым. Единственный доход — ставка финансирования.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Размер ноги ($):</label><input type="number" id="dn_size" value="10000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Фандинг (bps / 8ч):</label><input type="number" id="dn_funding" value="2.5" step="0.5"></div>
+      <div class="sim-input-group"><label>Дней удержания:</label><input type="number" id="dn_days" value="30" min="1" step="1"></div>
+    </div>
+    <div style="margin:10px 0">
+      <label style="font-size:12.5px; color:var(--mut)">Движение цены: <b id="dn_move_lbl" style="color:var(--acc2)">0%</b><br>
+      <input type="range" id="dn_move" min="-50" max="50" step="1" value="0" style="width:100%; max-width:420px" oninput="runDeltaNeutral()"></label>
+    </div>
+    <div class="sim-result" id="dn_result" style="margin-top:16px"></div>
+  </div>
 </section>
 
 <!-- 4. ROADMAP VIEW (INTERACTIVE SVG KNOWLEDGE TREE) -->
@@ -1879,6 +2014,18 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px">
     <div>
       <h1>🗺️ Интерактивная карта знаний: 18 месяцев</h1>
+      <div style="margin:0 0 10px; border-radius:12px; overflow:hidden; border:1px solid var(--line)">
+        <svg viewBox="0 0 1200 90" style="width:100%; display:block" role="img" aria-label="Дорожная карта курса">
+          <defs><linearGradient id="rmG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22c55e"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+          <rect width="1200" height="90" fill="#090d1f"/>
+          <path d="M 60 55 L 1140 55" stroke="url(#rmG)" stroke-width="3" stroke-dasharray="10 8"/>
+          <circle cx="120" cy="55" r="12" fill="#22c55e"/><circle cx="480" cy="55" r="12" fill="#06b6d4"/><circle cx="840" cy="55" r="12" fill="#7c3aed"/><circle cx="1140" cy="55" r="12" fill="#eab308"/>
+          <text x="120" y="28" font-size="14" text-anchor="middle" fill="#f8fafc" font-family="system-ui" font-weight="700">Фаза 0</text>
+          <text x="480" y="28" font-size="14" text-anchor="middle" fill="#f8fafc" font-family="system-ui" font-weight="700">Фазы 1–2</text>
+          <text x="840" y="28" font-size="14" text-anchor="middle" fill="#f8fafc" font-family="system-ui" font-weight="700">Фазы 3–4</text>
+          <text x="1140" y="28" font-size="14" text-anchor="middle" fill="#f8fafc" font-family="system-ui" font-weight="700">Capstone</text>
+        </svg>
+      </div>
       <p class="sub">Динамический граф компетенций квант-архитектора. Кликай по узлам для перехода к урокам, симуляторам и экзаменам.</p>
     </div>
     <div style="display:flex; gap:8px; font-size:12px; flex-wrap:wrap">
@@ -2047,11 +2194,18 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
+  <div class="controls" style="margin-bottom:6px" id="quiz_level_row">
+    <span style="font-size:11.5px; color:var(--mut); font-weight:700; margin-right:2px">🎚 Уровень мастерства:</span>
+    <button class="chip active" id="quiz_lvl_1" onclick="setQuizLevel(1, this)">🌱 Базовый</button>
+    <button class="chip" id="quiz_lvl_2" onclick="setQuizLevel(2, this)">🚀 Практик</button>
+    <button class="chip" id="quiz_lvl_3" onclick="setQuizLevel(3, this)">🏛 Архитектор</button>
+  </div>
   <div class="controls" style="margin-bottom:10px">
     <button class="chip active" id="quiz_mode_terms" onclick="setQuizMode('terms', this)">⚡ Блиц по терминам</button>
     <button class="chip" id="quiz_mode_cases" onclick="setQuizMode('cases', this)">🧠 Практические квант-кейсы</button>
     <button class="chip" id="quiz_mode_legal" onclick="setQuizMode('legal', this)">⚖️ Законы, 115-ФЗ и Налоги</button>
     <button class="chip" id="quiz_mode_calc" onclick="setQuizMode('calc', this)">🧮 Расчётные задачи</button>
+    <button class="chip" id="quiz_mode_data" onclick="setQuizMode('data', this)">📊 Гипотезы из данных</button>
     <button class="chip" id="quiz_mode_interleave" style="background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(6,182,212,.25)); border-color:var(--acc2)" onclick="startInterleavingSession()">🔀 Смешанная сессия (интерливинг)</button>
   </div>
   <div style="font-size:12px; color:var(--mut); margin-bottom:14px; line-height:1.5">
@@ -2070,6 +2224,15 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px">
     <div>
       <h1>📊 Твой прогресс обучения & Достижения</h1>
+      <div style="margin:0 0 10px; border-radius:12px; overflow:hidden; border:1px solid var(--line)">
+        <svg viewBox="0 0 1200 90" style="width:100%; display:block" role="img" aria-label="Прогресс обучения">
+          <defs><linearGradient id="prG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#22c55e"/></linearGradient></defs>
+          <rect width="1200" height="90" fill="#090d1f"/>
+          <rect x="60" y="50" width="1080" height="12" rx="6" fill="#1e293b"/>
+          <rect x="60" y="50" width="520" height="12" rx="6" fill="url(#prG)"/>
+          <text x="60" y="30" font-size="15" fill="#f8fafc" font-family="system-ui" font-weight="700">Твой путь: каждый урок — шаг по шкале</text>
+        </svg>
+      </div>
       <p class="sub">Сводная статистика освоения квантовой методологии, бейджи за тренажеры и управление сохранением данных.</p>
     </div>
     <div style="display:flex; gap:10px; flex-wrap:wrap">
@@ -2082,6 +2245,13 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <div class="panel" id="stats" style="margin-bottom:24px"></div>
+
+  <!-- V3-A2: Журнал когнитивных ошибок -->
+  <div class="panel" style="margin-bottom:24px">
+    <h3 style="color:var(--txt); margin-bottom:6px">📓 Журнал когнитивных ошибок</h3>
+    <p style="color:var(--mut); font-size:13px; margin-bottom:12px">Каждая ошибка классифицируется: концептуальная / расчётная / look-ahead / импульс. Доминирующий тип влияет на подбор адаптивной тренировки.</p>
+    <div id="mistake_journal"></div>
+  </div>
 
   <!-- E5: Карьерная лестница фонда -->
   <div style="background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:24px">
@@ -2154,6 +2324,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <p style="margin:8px 0; color:var(--txt)"><b style="color:var(--acc1)">Определение:</b> <span id="mDef"></span></p>
     <p style="margin:8px 0; color:var(--mut)"><b>Аналогия:</b> <span id="mAna"></span></p>
     <p style="margin:8px 0; color:var(--mut)"><b>Зачем алготрейдеру:</b> <span id="mWhy"></span></p>
+    <p style="margin:8px 0; font-size:12px; color:var(--acc2); border-top:1px dashed var(--line); padding-top:8px"><b>💼 Под твой капитал:</b> <span id="mCapNote"></span></p>
   </div>
 </div>
 
@@ -4469,6 +4640,7 @@ const LESSONS = [
   },
   {
     "id": "p0_l10",
+    "numericQuiz": {"q": "Маркет-покупка: лучший аск $50 000, средневзвешенная цена исполнения $50 025. Чему равно проскальзывание в basis points (bps)?", "answer": 5, "absTol": 0.5, "unit": "bps", "solution": "Slippage = (исполнение − лучший аск) / лучший аск = $25 / $50 000 = 0.0005 = 5 bps (1 bps = 0.01%)."},
     "phase": 0,
     "num": "0.10",
     "title": "Ликвидность и проскальзывание цены (Slippage)",
@@ -4936,6 +5108,7 @@ const LESSONS = [
   },
   {
     "id": "p0_l16",
+    "numericQuiz": {"q": "Расчёт без подсказок: маржа $1 000, плечо x10, лонг. При каком движении цены ПРОТИВ позиции (в %) наступит ликвидация? Буферы MMR и комиссии не учитываем — введи теоретический минимум в процентах.", "answer": 10, "absTol": 0.5, "unit": "%", "solution": "Позиция = маржа × плечо = $1 000 × 10 = $10 000. Ликвидация — потеря всей маржи: $1 000 / $10 000 = 0.10 = 10% движения цены против позиции. В реальности — раньше из-за MMR-буфера и комиссий (урок 0.16)."},
     "phase": 0,
     "num": "0.16",
     "title": "Знакомство с деривативами и рисками (Шорт, Плечо, Ликвидация)",
@@ -5393,7 +5566,8 @@ const LESSONS = [
         "type": "analogy",
         "text": "Представь, что ты измеряешь рост ребенка. Если сказать \"он вырос на 5 см\", это мало о чем говорит без его возраста: для младенца это +10%, а для взрослого баскетболиста — +2%. Лог-доходности — это относительный масштаб в процентах, который очищен от абсолютного размера и легко складывается по годам."
       },
-      {
+            {"type": "microRecall", "q": "Прошло 3 блока — проверь извлечение: почему квант суммирует доходности в логарифмах?", "opts": ["Лог-доходности аддитивны во времени — это их главная сила", "Логарифм «красивее» на графике", "Так требуют биржевые API", "Потому что цены слишком большие для python"], "a": 0},
+{
         "type": "numbers",
         "text": "Цена выросла со $100 до $200 (+100% простой доходности), а затем упала обратно с $200 до $100 (−50%). Среднее арифметическое простых процентов: (+100% − 50%) / 2 = +25% (ложное ощущение прибыли!). Считаем лог-доходности: r_1 = ln(200/100) = +0.693, r_2 = ln(100/200) = −0.693. Сумма: +0.693 − 0.693 = 0.000! Лог-доходности показывают истинный финансовый итог — возврат в ноль."
       },
@@ -5544,7 +5718,8 @@ const LESSONS = [
         "type": "analogy",
         "text": "Если бы рост людей подчинялся нормальному распределению, вероятность встретить человека ростом 3 метра равнялась бы 1 на миллиард лет. В крипте \"трехметровые люди\" (движения на 6–8 стандартных отклонений) приходят каждые 2–3 месяца. Модель, верящая в нормальность, разобьется о первый же крах-день."
       },
-      {
+            {"type": "microRecall", "q": "Что означают «толстые хвосты» на QQ-plot?", "opts": ["Экстремальные выбросы случаются чаще, чем допускает нормальная модель", "Хвосты тоньше модели", "Центр распределения смещён", "Выбросы не влияют на риск"], "a": 0},
+{
         "type": "numbers",
         "text": "Для дневных доходностей BTC: среднее μ ≈ 0.15%, волатильность σ ≈ 3.5%. Падение на 15% за день — это движение на (15 − 0.15)/3.5 ≈ 4.24 сигмы (σ). По нормальному закону такое одностороннее событие должно случаться примерно раз в ~250 лет. В реальности дневные движения BTC более ±15% случаются в среднем 2–4 раза в год (усреднение по 2017–2025 гг.; в отдельные годы — чаще, в спокойные — реже, поэтому считают именно среднее по длинному окну)."
       },
@@ -6417,7 +6592,8 @@ const LESSONS = [
         "type": "analogy",
         "text": "Трение в трейдинге — это сопротивление воздуха и сила трения колес в автомобиле. На бумаге мотор мощностью 500 л.с. должен разгонять болид до 1000 км/ч, но реальная аэродинамика ставит жесткий предел. Игнорировать комиссии — всё равно что проектировать самолет без учета гравитации."
       },
-      {
+            {"type": "microRecall", "q": "Комиссия Maker (limit-ордер) против Taker (market-ордер) — как правило?", "opts": ["Maker дешевле — за ликвидность особенно беречь стоит", "Market всегда дешевле", "Комиссии одинаковы на всех биржах", "Maker всегда дороже"], "a": 0},
+{
         "type": "numbers",
         "text": "Стратегия совершает 2 сделки в день (вход + выход = 4 транзакции). В год это 1,460 операций. Комиссия Taker = 0.055%, средний слиппедж = 0.02%. Издержки за одну сделку: 0.055% + 0.02% = 0.075%. За 1,460 операций потери на трении составят: 1,460 × 0.075% = 109.5% депозита в год! Сырая прибыль +120% превращается в жалкие +10.5% до налогов."
       },
@@ -6679,6 +6855,7 @@ const LESSONS = [
   {
     "phase": 1,
     "id": "p1_l10",
+    "numericQuiz": {"q": "Доходность стратегии 18% годовых, волатильность 12%, безрисковая ставка 6%. Посчитай коэффициент Шарпа (одно число).", "answer": 1, "absTol": 0.05, "unit": "", "solution": "Sharpe = (Rp − Rf) / σ = (18% − 6%) / 12% = 1.0. Интерпретация: каждая единица риска даёт одну единицу премии над безрисковой ставкой."},
     "title": "Метрики эффективности: Sharpe Ratio, Sortino Ratio, Max Drawdown и Calmar",
     "minutes": 16,
     "terms": [
@@ -6717,7 +6894,8 @@ const LESSONS = [
         "title": "Эксперимент: лучший Шарп на чистом шуме",
         "desc": "Выбери, сколько вариантов параметров «протестировать» на случайных данных, и посмотри, какой Шарп покажет лучший из них."
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p1_l10", "title": "📊 Интерактив: метрики эффективности", "desc": "Крути доходность, волатильность, просадку и Rf — смотри, как Sharpe и Calmar реагируют мгновенно.", "cfg": {"ret": 24, "vol": 35, "dd": 20, "rf": 4}},
+{
         "type": "simple",
         "text": "Оценивать стратегию только по чистой прибыли (% Return) — дилетантство. Кванты измеряют качество доходности относительно риска. Коэффициент Шарпа (Sharpe Ratio) показывает избыточную доходность на единицу общей волатильности. Коэффициент Сортино (Sortino) штрафует только за \"плохую\" волатильность (убытки). Максимальная просадка (Max Drawdown) показывает худшую историческую потерю от пика капитала."
       },
@@ -6725,7 +6903,8 @@ const LESSONS = [
         "type": "analogy",
         "text": "Доходность — это скорость автомобиля. Коэффициент Шарпа — это плавность хода подвески. Можно ехать 200 км/ч по разбитым ямам, рискуя вылететь в кювет каждую секунду. А можно комфортно ехать 140 км/ч по идеальному немецкому автобану. Шарп оценивает безопасность и стабильность твоего пути."
       },
-      {
+            {"type": "microRecall", "q": "Почему Sortino считается «добрее» Sharpe?", "opts": ["В знаменателе — только вниз-волатильность (опускается вверх-шум)", "Он считает медиану вместо среднего", "Он игнорирует просадку", "Он всегда даёт меньшее значение"], "a": 0},
+{
         "type": "numbers",
         "text": "Стратегия А: Годовая доходность +60%, годовая волатильность 40% -> Sharpe = 60/40 = 1.5, Max DD = −35%. Стратегия Б: Доходность +35%, волатильность 10% -> Sharpe = 35/10 = 3.5, Max DD = −6%. Стратегия Б в 2.3 раза качественнее! Добавив умеренное плечо x2, Стратегия Б даст +70% при просадке всего −12%."
       },
@@ -6873,7 +7052,8 @@ const LESSONS = [
         "title": "Калькулятор альфы и беты",
         "desc": "Разложи доходность стратегии на вклад рынка и собственное преимущество."
       },
-      {
+            {"type": "microRecall", "q": "Стратегия +35% при BTC +60% и корреляции 0.92. Верный диагноз?", "opts": ["Скрытая бета под маской альфы — отстаёт от бенчмарка", "Альфа доказана — прибыль есть", "Недостаточно данных для вывода", "Нужен больший датасет для проверки"], "a": 0},
+{
         "type": "numbers",
         "text": "В 2023 году BTC вырос на +155%. Твой бот показал +80%. На первый взгляд +80% — отличный результат. Но бета бота к BTC составляла β = 0.7. Ожидаемая рыночная доходность: 0.7 × 155% = +108.5%. Реальная альфа алгоритма: 80% − 108.5% = −28.5%! Бот отработал хуже пассивного удержания рынка."
       },
@@ -7147,7 +7327,7 @@ const LESSONS = [
       },
       {
         "type": "numbers",
-        "text": "Индекс Fear & Greed (Crypto Fear and Greed Index) колеблется от 0 (Extreme Fear) до 100 (Extreme Greed). Покупка BTC при значении индекса < 15 в выборке 2020–2024 гг. давала среднюю 90-дневную доходность около +42% при Win Rate 78% (точечная историческая оценка на конкретном окне — не закон природы: на другом окне цифры будут другими). Покупка при значении > 85 давала среднюю 90-дневную просадку −18%."
+        "text": "Индекс Fear & Greed (Crypto Fear and Greed Index) колеблется от 0 (Extreme Fear) до 100 (Extreme Greed). Покупка BTC при значении индекса < 15 в выборке 2020–2024 гг. давала среднюю 90-дневную доходность около +42% при Win Rate 78% (точечная историческая оценка на конкретном окне — не закон природы: на другом окне цифры будут другими). Важная оговорка 2024–2026: после запуска спотовых ETF и институционализации рынка сигнал экстремального страха стал менее стабильным — потоки ETF и макрофакторы часто «перекрикивают» сентимент розницы, поэтому индекс используют как один из входов, а не как самостоятельный триггер покупки. Покупка при значении > 85 давала среднюю 90-дневную просадку −18%."
       },
       {
         "type": "warn",
@@ -7815,7 +7995,8 @@ const LESSONS = [
         "title": "Практика: чек-лист валидации данных",
         "desc": "Отметь выполненные проверки — и увидишь, можно ли доверять результатам бэктеста."
       },
-      {
+            {"type": "microRecall", "q": "Что такое ловушка Data Hoarding?", "opts": ["Копить данные вместо формулирования проверяемой гипотезы", "Плохое качество открытых данных", "Случайный порядок свечей", "Шум в медианных оценках"], "a": 0},
+{
         "type": "numbers",
         "text": "Воронка quant-исследований: из 100 исходных рыночных гипотез: 60 отсеиваются на этапе проверки стационарности и экономической логики; 30 погибают после добавления реальных комиссий и слиппеджа; 7 разваливаются на Out-of-Sample и Walk-Forward тестах. До стадии Paper Trading доходят лишь 1–3 идеи из 100, а до устойчивой живой прибыли — доли процента: выживаемость исходных гипотез ≈0.1–2% в зависимости от строгости фильтров. Это норма индустрии, а не повод опустить руки: ценность создаёт сам конвейер отбраковки."
       },
@@ -7949,7 +8130,8 @@ const LESSONS = [
         "type": "simple",
         "text": "Корреляция измеряет лишь сходство краткосрочных направлений движения двух цен (например, BTC и ETH идут вверх одновременно). Но два актива с корреляцией 0.95 могут со временем разойтись в цене навсегда. Коинтеграция (Cointegration) — это более глубокая математическая связь: существует такая линейная комбинация двух нестационарных рядов цен (спред = Price_A − β * Price_B), которая образует строго СТАЦИОНАРНЫЙ ряд, неизбежно возвращающийся к своему среднему."
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p3_l1", "title": "📊 Интерактив: профиль риска позиции", "desc": "Оцени профиль: какая просадка и волатильность терпимы для твоего портфеля.", "cfg": {"ret": 18, "vol": 45, "dd": 30, "rf": 4}},
+{
         "type": "analogy",
         "text": "Корреляция — это пьяный человек и пьяная собака, бредущие по широкой улице в одну сторону: иногда они рядом, но в любой момент собака может убежать в другой город. Коинтеграция — это собака на невидимом поводке: она может отбегать влево и вправо, но поводок (стационарный спред) всегда возвращает ее к хозяину."
       },
@@ -8197,6 +8379,7 @@ const LESSONS = [
   {
     "phase": 3,
     "id": "p3_l3",
+    "numericQuiz": {"q": "Монетка-стратегия: вероятность выигрыша p = 0.55, выплата 1:1 (b = 1). Чему равна ПОЛНАЯ доля Келли f* в процентах капитала?", "answer": 10, "absTol": 0.5, "unit": "%", "solution": "f* = p − q/b = 0.55 − 0.45/1 = 0.10 = 10%. Напоминание урока: торгуется Quarter Kelly (2.5%) или Half Kelly (5%) — полный Келли даёт чудовищные просадки."},
     "title": "Критерий Келли и Дробный Келли (Fractional Kelly): сайзинг позиций без риска разорения",
     "minutes": 18,
     "terms": [
@@ -8354,7 +8537,8 @@ const LESSONS = [
         "type": "simple",
         "text": "Риск-паритет (Risk Parity) — это метод формирования портфеля, при котором капитал распределяется между стратегиями не поровну в долларах (50/50), а так, чтобы каждая стратегия вносила РАВНЫЙ ВКЛАД В ОБЩИЙ РИСК портфеля. Высоковолатильная стратегия получает меньший вес, а низковолатильная — больший вес: w_i ∝ 1 / σ_i. Это позволяет объединить несколько некоррелированных стратегий и получить суммарный Sharpe портфеля выше, чем у любой отдельной стратегии!"
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p3_l4", "title": "📊 Интерактив: Sharpe vs Calmar", "desc": "Метрики конфликтуют? Посмотри, как меняются обе при настройке профиля риска.", "cfg": {"ret": 30, "vol": 50, "dd": 40, "rf": 4}},
+{
         "type": "analogy",
         "text": "Если ты запрягаешь в одну повозку могучего тяжеловоза (волатильность 40%) и маленького пони (волатильность 10%), нельзя нагружать их одинаковыми мешками по 100 кг. Пони сломается, а тяжеловоз утащит повозку в канаву. Риск-паритет распределяет груз строго по силе тяги каждого."
       },
@@ -8468,6 +8652,7 @@ const LESSONS = [
   {
     "phase": 3,
     "id": "p3_l5",
+    "numericQuiz": {"q": "Фандинг стабильно +0.01% каждые 8 часов (3 раза в сутки), дельта-нейтральная позиция. Какая это ПРОСТАЯ годовая доходность в % (без реинвестирования, только фандинг)?", "answer": 10.95, "absTol": 0.5, "unit": "%", "solution": "0.01% × 3 выплаты/день × 365 дней = 10.95% годовых — до вычета комиссий входа/выхода и периодов отрицательного фандинга (дело №019 детектива!)."},
     "title": "Дельта-нейтральные стратегии: фандинг-арбитраж как гипотеза и скрытые риски",
     "minutes": 18,
     "terms": [
@@ -8614,7 +8799,8 @@ const LESSONS = [
         "type": "simple",
         "text": "Стресс-тестирование (Stress Testing) — это проверка устойчивости портфеля к экстремальным историческим шокам и гипотетическим сценариям (\"Черный лебедь\"). Мы берем наш собранный портфель алгоритмов и \"прогоняем\" его через худшие дни в истории крипторынка: крах биржи FTX в ноябре 2022 (BTC ≈ −25% за несколько дней), падение Terra/LUNA, мартовский ковид-дамп 12 марта 2020 года (≈ −37–40% за день, на внутридневном минимуме до −50%). Если в крах-день портфель теряет больше допустимого лимита — архитектура пересматривается."
       },
-      {
+            {"type": "interactive_risk_dash", "id": "rd_p3_l6", "title": "📊 Интерактив: портфель vs просадка", "desc": "Попробуй разные уровни доходности и проверь, при какой просадке Calmar рушится.", "cfg": {"ret": 40, "vol": 60, "dd": 50, "rf": 4}},
+{
         "type": "analogy",
         "text": "Стресс-тест — это краш-тест автомобиля Euro NCAP. Новую модель авто разгоняют и разбивают о бетонную стену на скорости 64 км/ч. Мы обязаны разбить наш портфель о виртуальную стену кризиса в коде, чтобы убедиться, что подушки безопасности (стоп-лоссы и риск-паритет) спасут реальные 5–6 млн рублей."
       },
@@ -9390,6 +9576,7 @@ const LESSONS = [
   {
     "phase": 4,
     "id": "p4_l6",
+    "numericQuiz": {"q": "FIFO: куплено 0.1 BTC за 300 000 ₽, затем 0.1 BTC за 400 000 ₽. Продано 0.1 BTC за 500 000 ₽. Какая налогооблагаемая прибыль по методу FIFO (в ₽)?", "answer": 200000, "tolPct": 2, "unit": "₽", "solution": "FIFO: продаётся ПЕРВЫЙ купленный лот за 300 000 ₽. Прибыль = 500 000 − 300 000 = 200 000 ₽ (а не 100 000 ₽, как при продаже «второго» лота). НДФЛ считается с этой суммы."},
     "title": "Российская специфика: P2P-гигиена, 115-ФЗ и расчет 3-НДФЛ (13–15%) по методу FIFO",
     "minutes": 19,
     "terms": [
@@ -11862,6 +12049,21 @@ const PHASE_TESTS = [
           "Walk-Forward строится на длинных исторических рядах."
         ]
       }
+    ,
+      {
+        "type": "numeric",
+        "category": "statistics",
+        "q": "N1. Стратегия: win rate 52%, средний выигрыш +2%, средний проигрыш −2%. Математическое ожидание на сделку (в %)?",
+        "answer": 0.08, "absTol": 0.02, "unit": "%",
+        "solution": "E = 0.52×(+2%) + 0.48×(−2%) = 1.04% − 0.96% = +0.08% на сделку. Положительное, но тонкое — комиссии могут его съесть."
+      },
+      {
+        "type": "numeric",
+        "category": "statistics",
+        "q": "N2. Два периода подряд: +10%, затем −10%. Итоговая доходность (в %)?",
+        "answer": -1, "absTol": 0.2, "unit": "%",
+        "solution": "1.10 × 0.90 = 0.99 → −1%. Симметричные проценты НЕ компенсируют друг друга — волатильность сама по себе «стоит» денег (variance drag)."
+      },
     ]
   },
   {
@@ -12194,6 +12396,21 @@ const PHASE_TESTS = [
           "Портфельный Шарп — стандартная институциональная метрика."
         ]
       }
+    ,
+      {
+        "type": "numeric",
+        "category": "risk",
+        "q": "N1. Полный Келли даёт f* = 20%. Какую долю капитала ставит Quarter Kelly (в %)?",
+        "answer": 5, "absTol": 0.25, "unit": "%",
+        "solution": "Quarter Kelly = f*/4 = 20%/4 = 5%. Цена страховки — лишь 43.75% роста, зато просадки сжимаются радикально."
+      },
+      {
+        "type": "numeric",
+        "category": "risk",
+        "q": "N2. Фандинг +0.03% каждые 8 часов. Сколько это в день (в %)?",
+        "answer": 0.09, "absTol": 0.01, "unit": "%",
+        "solution": "3 выплаты в сутки × 0.03% = 0.09%/день. Годовая простая ставка: ×365 ≈ 32.85% — пока фандинг не перевернётся."
+      },
     ]
   },
   {
@@ -12360,6 +12577,21 @@ const PHASE_TESTS = [
           "Попытки сомнительных переводов усугубят блокировку."
         ]
       }
+    ,
+      {
+        "type": "numeric",
+        "category": "tax",
+        "q": "N1. Куплено 0.2 BTC по 5 000 000 ₽, продано 0.2 BTC по 5 500 000 ₽. Сколько НДФЛ по ставке 13% (в ₽)?",
+        "answer": 13000, "tolPct": 2, "unit": "₽",
+        "solution": "Прибыль = 0.2 × (5 500 000 − 5 000 000) = 100 000 ₽. НДФЛ = 100 000 × 0.13 = 13 000 ₽."
+      },
+      {
+        "type": "numeric",
+        "category": "ops",
+        "q": "N2. Пинг VPS до биржи 80 мс, бот делает 50 сделок в день. Сколько секунд в день теряется на сетевой задержке (RTT = 2 × пинг)?",
+        "answer": 8, "absTol": 0.5, "unit": "с",
+        "solution": "RTT = 160 мс на сделку; 50 × 160 мс = 8 000 мс = 8 секунд в день. Для HFT это вечность — поэтому colocation решает."
+      },
     ]
   },
   {
@@ -13091,8 +13323,30 @@ function renderLessonDetail(l){
   // Render Blocks
   if(l.blocks && l.blocks.length){
     l.blocks.forEach(b => {
+      // 0.5. Risk-dashboard (V3-B2) — интерактивный виджет в контенте урока
+      if(b.type === 'interactive_risk_dash'){
+        const rdId = b.id || ('rd_' + l.id);
+        html += `
+          <div class="lblock" style="background:#040714; border:1px solid var(--acc2); border-radius:12px; padding:16px 18px; margin-bottom:20px">
+            <div style="font-size:11.5px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">${b.title || '📊 Интерактив: метрики риска'}</div>
+            <div style="font-size:12.5px; color:var(--mut); margin-bottom:10px">${b.desc || 'Крути доходность, волатильность, просадку — и смотри, как пересчитываются метрики.'}</div>
+            <div id="${rdId}"></div>
+          </div>`;
+      }
       // 1. Concept block with 4 levels & analogy
-      if(b.type === 'concept'){
+      if(b.type === 'microRecall'){
+        const mrId = l.id + '_mr_' + (window._mrSeq = (window._mrSeq || 0) + 1);
+        html += `
+          <div class="lblock microrecall" style="background:#090d1f; border:1.5px dashed var(--acc2); border-radius:12px; padding:14px 18px; margin-bottom:20px">
+            <div style="font-size:11px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">🧠 Микро-проверка извлечения (без штрафа и статистики)</div>
+            <div style="font-size:13.5px; color:var(--txt); margin-bottom:10px; line-height:1.5">${b.q}</div>
+            <div style="display:flex; flex-direction:column; gap:6px">
+              ${(b.opts || []).map((o, oi) => `<button class="ans sm" style="text-align:left; font-size:12.5px; padding:8px 10px" onclick="window.handleMicroRecall(this, '${mrId}', ${oi}, ${b.a})">${o}</button>`).join('')}
+            </div>
+            <div id="${mrId}" style="display:none; margin-top:8px; font-size:12.5px"></div>
+          </div>`;
+      }
+      else if(b.type === 'concept'){
         const curTab = (typeof lessonLevelTabs !== 'undefined' && lessonLevelTabs[l.id]) ? lessonLevelTabs[l.id] : 'l1';
         html += `
           <div class="lblock concept" style="background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:var(--shadow)">
@@ -13392,6 +13646,23 @@ function renderLessonDetail(l){
     `;
   }
 
+  // V3-A1: числовая задача с открытым вводом (Active Recall 2.0 — конструирование вместо узнавания)
+  if(l.numericQuiz){
+    const nq = l.numericQuiz;
+    html += `
+      <div class="panel" style="background:#090d1f; border:2px solid var(--acc2); border-radius:14px; padding:20px; margin:24px 0">
+        <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:10px">🧮 Задача с открытым ответом (без вариантов — посчитай сам)</div>
+        <div style="font-size:14.5px; color:var(--txt); line-height:1.55; margin-bottom:12px">${nq.q}</div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <input id="lnum_in_${l.id}" type="text" inputmode="decimal" placeholder="твой ответ" style="width:160px; background:#040714; border:1px solid var(--acc2); border-radius:8px; padding:10px 12px; color:var(--txt); font-size:15px; font-weight:700">
+          <span style="color:var(--mut); font-size:14px">${nq.unit || ''}</span>
+          <button class="btn sm" onclick="handleLessonNumeric('${l.id}')">Проверить</button>
+          <span style="font-size:11.5px; color:var(--mut)">допуск: ${nq.absTol !== undefined ? '±' + nq.absTol + ' ' + (nq.unit || '') : '±' + (nq.tolPct || 2) + '%'}</span>
+        </div>
+        <div id="lnum_fb_${l.id}" style="display:none; margin-top:12px; padding:12px 14px; border-radius:8px; font-size:13.5px; line-height:1.55"></div>
+      </div>`;
+  }
+
   // Bottom Navigation Bar
   html += `
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:28px; padding-top:20px; border-top:1px solid var(--line); flex-wrap:wrap; gap:12px">
@@ -13410,6 +13681,7 @@ function renderLessonDetail(l){
     l.blocks.forEach(b => {
       if(typeof b.type === 'string' && b.type.startsWith('interactive') && typeof renderPhase0Widget === 'function'){
         setTimeout(() => {
+          if(b.type === 'interactive_risk_dash'){ mountRiskDashboard(b.id, b.cfg || {}); return; }
           renderPhase0Widget(b.id);
         }, 20);
       }
@@ -13418,11 +13690,52 @@ function renderLessonDetail(l){
 }
 
 
+// V3-A1: проверка числового ответа с допуском и эталонным решением
+window.handleLessonNumeric = function(lessonId){
+  const l = LESSONS.find(x => x.id === lessonId);
+  if(!l || !l.numericQuiz) return;
+  const nq = l.numericQuiz;
+  const inp = document.getElementById('lnum_in_' + lessonId);
+  const fb = document.getElementById('lnum_fb_' + lessonId);
+  if(!inp || !fb) return;
+  const val = parseFloat(String(inp.value).replace(/\s/g, '').replace(',', '.'));
+  fb.style.display = 'block';
+  if(isNaN(val)){
+    fb.style.background = 'rgba(234,179,8,.12)'; fb.style.border = '1px solid var(--warn)';
+    fb.innerHTML = '<b>Введи число</b> — например, ' + nq.answer + '.';
+    return;
+  }
+  const tol = nq.absTol !== undefined ? nq.absTol : Math.abs(nq.answer) * (nq.tolPct || 2) / 100;
+  if(Math.abs(val - nq.answer) <= tol){
+    inp.disabled = true;
+    fb.style.background = 'rgba(34,197,94,.12)'; fb.style.border = '1px solid var(--ok)';
+    fb.innerHTML = '<b>✅ Верно (' + val + (nq.unit ? ' ' + nq.unit : '') + ').</b><br>📐 Эталонное решение: ' + nq.solution;
+    addFundCapital(8000, 30, 'Решена числовая задача без вариантов');
+  } else {
+    fb.style.background = 'rgba(239,68,68,.12)'; fb.style.border = '1px solid var(--bad)';
+    fb.innerHTML = '<b>❌ Не сходится (' + val + ').</b> Пересчитай шаг за шагом — и после второй попытки сверься с эталоном.<br><button class="btn sm ghost" style="margin-top:8px" onclick="document.getElementById(\'lnum_fb_' + lessonId + '\').innerHTML += \'<div style=\\\'margin-top:8px;border-top:1px dashed var(--line);padding-top:8px\\\'>📐 <b>Эталон:</b> ' + nq.solution.replace(/'/g, '’') + '</div>\'">Показать эталонное решение</button>' +
+      (typeof window.offerMistakeClassification === 'function' ? window.offerMistakeClassification('numeric:' + lessonId) : '');
+  }
+};
+
 function setLessonLevelTab(lessonId, tabName){
   activeLessonLevelTab[lessonId] = tabName;
   const l = LESSONS.find(x => x.id === lessonId);
   if(l) renderLessonDetail(l);
 }
+
+window.handleMicroRecall = function(btn, mrId, chosen, correct){
+  const fb = document.getElementById(mrId);
+  if(!fb) return;
+  btn.parentElement.querySelectorAll('button').forEach((b, oi) => {
+    b.disabled = true;
+    if(oi === correct) b.classList.add('ok'); else if(b === btn) b.classList.add('bad');
+  });
+  fb.style.display = 'block';
+  fb.innerHTML = (chosen === correct)
+    ? '<span style="color:var(--ok)">✅ Верно — продолжай.</span>'
+    : '<span style="color:var(--bad)">Не совсем.</span> Микро-recall не влияет на статистику — уточни мысленно и читай дальше.';
+};
 
 function handleLessonQuizAnswer(lessonId, selectedIdx, correctIdx){
   const l = LESSONS.find(x => x.id === lessonId);
@@ -13615,6 +13928,14 @@ function openTermModal(idx){
   $('#mDef').textContent = t.d;
   $('#mAna').textContent = t.a;
   $('#mWhy').textContent = t.w;
+  const size = localStorage.getItem('cn_account_size') || 'small';
+  const capNote = {
+    small: '≤ 50К ₽: комиссии и спред съедают большую долю — частые сделки вреднее, предпочтительны лимитные ордера и более редкие ребалансировки.',
+    mid: '50К–500К ₽: комиссии терпимы, но контролируй проскальзывание на неликвидных парах и объём не больше 2–5% объёма стакана.',
+    large: '500К+ ₽: исполнение и проскальзывание — ключевой риск: дроби ордера (TWAP/VWAP), считай рыночный импакт и следи за глубиной стакана.'
+  }[size];
+  const capEl = document.getElementById('mCapNote');
+  if(capEl) capEl.textContent = capNote;
   $('#termModal').classList.add('open');
 }
 
@@ -13655,12 +13976,146 @@ let orderBookState = {
    ========================================================================= */
 const SIM_PHASE_MAP = {
   0: ['sim_ob', 'sim_liq', 'sim_fund', 'sim_candle', 'sim_arbitrage', 'sim_calendar', 'sim_risk_reward', 'sim_psychology', 'sim_first_trade', 'sim_meme', 'sim_firsttrade', 'sim_ruble2btc', 'sim_position_sizer'],
-  1: ['sim_lookahead', 'sim_overfit', 'sim_walkforward', 'sim_stationarity', 'sim_alphabeta'],
-  2: ['sim_sentiment', 'sim_whale'],
-  3: ['sim_portfolio', 'sim_kelly', 'sim_predarb', 'sim_position_sizer'],
-  4: ['sim_tax', 'sim_115fz', 'sim_killswitch', 'sim_execdev', 'sim_chaos', 'sim_eoa'],
+  1: ['sim_lookahead', 'sim_overfit', 'sim_walkforward', 'sim_stationarity', 'sim_alphabeta', 'sim_funding_drag'],
+  2: ['sim_sentiment', 'sim_whale', 'sim_defi', 'sim_deltaneutral'],
+  3: ['sim_portfolio', 'sim_kelly', 'sim_predarb', 'sim_position_sizer', 'sim_equity', 'sim_corr'],
+  4: ['sim_tax', 'sim_115fz', 'sim_killswitch', 'sim_execdev', 'sim_chaos', 'sim_eoa', 'sim_tcost'],
   5: ['sim_scaling', 'sim_recovery', 'sim_boss', 'sim_restaking']
 };
+
+window.runFundingDragSim = function(){
+  const N = parseFloat(document.getElementById('fd_notional').value) || 0;
+  const rateBps = parseFloat(document.getElementById('fd_rate').value) || 0;
+  const days = Math.max(1, parseFloat(document.getElementById('fd_days').value) || 1);
+  const side = document.getElementById('fd_side').value;
+  const payPer8h = N * rateBps / 10000;
+  const perDay = payPer8h * 3;
+  const total = perDay * days;
+  const apyPct = rateBps * 3 * 365 / 100; // bps → % годовых
+  const dragPct = (total / N * 100).toFixed(2);
+  const edgeNeededBps = (perDay / N * 10000).toFixed(2);
+  document.getElementById('fd_result').innerHTML = `
+    <div style="font-weight:700; margin-bottom:8px">Funding Drag за ${days} дн. (${side} при фандинге ${rateBps} bps/8ч):</div>
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px">
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Платёж каждые 8 ч</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">${payPer8h.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Драг за день (3 платежа)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">${perDay.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Итого за период</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:800; color:var(--bad); text-align:right">−${total.toFixed(0)} ₽ (−${dragPct}%)</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Эквивалент APY</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">≈ ${apyPct.toFixed(1)}% годовых</td></tr>
+      <tr><td style="padding:6px 10px; color:var(--mut)">Ожидание на день для безубытка</td><td style="padding:6px 10px; font-weight:800; color:var(--warn); text-align:right">≥ ${edgeNeededBps} bps/день</td></tr>
+    </table>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Вывод: фандинг — это «аренда» позиции. Стратегия с ожиданием ниже ${edgeNeededBps} bps/день уходит в минус без единой ошибки в прогнозе.</div>`;
+};
+window.runTCostSim = function(){
+  const N = parseFloat(document.getElementById('tc_notional').value) || 0;
+  const feePct = parseFloat(document.getElementById('tc_fee').value) || 0;
+  const spreadBps = parseFloat(document.getElementById('tc_spread').value) || 0;
+  const slipBps = parseFloat(document.getElementById('tc_slip').value) || 0;
+  const rt = Math.max(1, parseFloat(document.getElementById('tc_rt').value) || 1);
+  const costRt = N * (2 * feePct / 100 + (spreadBps + 2 * slipBps) / 10000);
+  const total = costRt * rt;
+  const breakevenBps = (costRt / N * 10000).toFixed(1);
+  document.getElementById('tc_result').innerHTML = `
+    <div style="font-weight:700; margin-bottom:8px">Издержки на ${rt} round-trip сделок:</div>
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px">
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Комиссии (вход+выход)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); text-align:right">${(N * 2 * feePct / 100).toFixed(0)} ₽/RT</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Спред</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); text-align:right">${(N * spreadBps / 10000).toFixed(0)} ₽/RT</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Слиппедж (вход+выход)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); text-align:right">${(N * 2 * slipBps / 10000).toFixed(0)} ₽/RT</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Полная стоимость round-trip</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:800; color:var(--bad); text-align:right">${costRt.toFixed(0)} ₽ (${breakevenBps} bps)</td></tr>
+      <tr><td style="padding:6px 10px; color:var(--mut)">Итого за серию</td><td style="padding:6px 10px; font-weight:800; color:var(--bad); text-align:right">−${total.toFixed(0)} ₽</td></tr>
+    </table>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Правило безубытка: ожидание на сделку ≥ <b style="color:var(--warn)">${breakevenBps} bps</b>. Maker-ордера срезают комиссию, но добавляют риск неисполнения — обсуждается в уроке про стакан.</div>`;
+};
+
+// V4-D4: автосохранение прогресса каждые 30 секунд
+setInterval(() => {
+  try{ if(typeof save === 'function') save(); }catch(e){}
+}, 30000);
+
+// V4-D2: помодоро-таймер 25 минут (opt-in)
+window._pomodoro = { left: 1500, running: false, id: null };
+window.togglePomodoro = function(){
+  const p = window._pomodoro;
+  const btn = document.getElementById('pomodoro_btn');
+  if(p.running){
+    p.running = false;
+    if(p.id) clearInterval(p.id);
+    if(btn){ btn.classList.remove('active'); btn.textContent = '🍅 ' + window._fmtPomo(p.left); }
+    return;
+  }
+  if(p.left <= 0) p.left = 1500;
+  p.running = true;
+  if(btn) btn.classList.add('active');
+  p.id = setInterval(() => {
+    p.left--;
+    const b = document.getElementById('pomodoro_btn');
+    if(b) b.textContent = '🍅 ' + window._fmtPomo(p.left);
+    if(p.left <= 0){
+      clearInterval(p.id);
+      p.running = false;
+      p.left = 1500;
+      if(b){ b.classList.remove('active'); b.textContent = '🍅 25:00'; }
+      showToast('🍅 25 минут фокуса! Сделай 5–10 мин перерыва БЕЗ телефона — консолидация усилится (~30%).', '🍅', 9000);
+      if(typeof showConsolidationScreen === 'function'){
+        setTimeout(() => { try{ showConsolidationScreen(null, 'Помодоро завершён — время закрепить'); }catch(e){} }, 600);
+      }
+    }
+  }, 1000);
+};
+window._fmtPomo = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+
+// V3-B3: контур капитала — выбор размера счёта влияет на тултипы и рекомендации
+window.setAccountSize = function(v){
+  localStorage.setItem('cn_account_size', v);
+  const sel = document.getElementById('account_size_sel');
+  if(sel) sel.value = v;
+  if(typeof showToast === 'function') showToast('💼 Капитал: ' + (v === 'small' ? '≤ 50К ₽' : v === 'mid' ? '50К–500К ₽' : '500К+ ₽') + ' — рекомендации в тултипах обновлены', '💼');
+};
+window.addEventListener('DOMContentLoaded', () => {
+  const sel = document.getElementById('account_size_sel');
+  if(sel) sel.value = localStorage.getItem('cn_account_size') || 'small';
+});
+
+// V3-B4: DeFi Yield Lab — APY vs IL vs HODL
+window.runDefiSim = function(){
+  const dep = parseFloat(document.getElementById('df_dep').value) || 0;
+  const apy = parseFloat(document.getElementById('df_apy').value) || 0;
+  const move = parseFloat(document.getElementById('df_move').value) || 0;
+  const days = Math.max(1, parseFloat(document.getElementById('df_days').value) || 1);
+  const k = 1 + move / 100;
+  const ilPct = (2 * Math.sqrt(k) / (1 + k) - 1) * 100; // стандартная формула IL
+  const hodl = dep * k;
+  const pool = dep * (1 + ilPct / 100) * k;
+  const reward = dep * (apy / 100) * (days / 365);
+  const total = pool + reward;
+  const vsHodl = total - hodl;
+  const breakevenApy = Math.abs(ilPct) * 365 / days;
+  document.getElementById('df_result').innerHTML = `
+    <div style="font-weight:700; margin-bottom:8px">Фарминг ${days} дн. при движении цены ${move}%:</div>
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px">
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">HODL (просто держать)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; text-align:right">${hodl.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">IL (непостоянная потеря)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--bad); text-align:right">${ilPct.toFixed(2)}%</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Награда за период (APY ${apy}%)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:700; color:var(--ok); text-align:right">+${reward.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; border-bottom:1px solid var(--line); color:var(--mut)">Итог в пуле (с наградой)</td><td style="padding:6px 10px; border-bottom:1px solid var(--line); font-weight:800; text-align:right">${total.toFixed(0)} ₽</td></tr>
+      <tr><td style="padding:6px 10px; color:var(--mut)">Пул vs HODL</td><td style="padding:6px 10px; font-weight:800; color:${vsHodl >= 0 ? 'var(--ok)' : 'var(--bad)'}; text-align:right">${vsHodl >= 0 ? '+' : ''}${vsHodl.toFixed(0)} ₽</td></tr>
+    </table>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Безубыток: APY ≥ <b style="color:var(--warn)">${breakevenApy.toFixed(1)}%</b> при таком движении цены. Волатильные пары требуют заметно больше APY — это главный скрытый риск DeFi-фарминга.</div>`;
+};
+
+// V3-C1: гейт чек-листа перед первой сделкой
+window.preTradeChecklistOk = function(){
+  const cbs = document.querySelectorAll('#precheck_items .precheck_cb');
+  if(!cbs.length) return true;
+  const all = [...cbs].every(cb => cb.checked);
+  const st = document.getElementById('precheck_status');
+  if(st){
+    st.textContent = all ? '✅ Чек-лист пройден — можно исполнять.' : '⚠️ Отметь все пункты чек-листа перед сделкой.';
+    st.style.color = all ? 'var(--ok)' : 'var(--warn)';
+  }
+  return all;
+};
+document.addEventListener('change', (e) => {
+  if(e.target && e.target.classList && e.target.classList.contains('precheck_cb')) window.preTradeChecklistOk();
+});
 
 function filterSimulators(phase, btn){
   if(btn){
@@ -16056,6 +16511,22 @@ function renderPhaseTestView(phaseNum){
   `;
 
   (window._ptView[phaseNum] || test.questions).forEach((q, qIdx)=>{
+    // V3-A1: числовые вопросы с открытым вводом — отдельный рендер
+    if(q.type === 'numeric'){
+      html += `
+      <div class="lblock" style="background:#090d1f; border:1px solid var(--acc2); border-radius:12px; padding:16px; margin-bottom:16px">
+        <div style="font-weight:700; font-size:14.5px; color:var(--txt); margin-bottom:6px; line-height:1.5">${q.q}</div>
+        <div style="font-size:11.5px; color:var(--acc2); margin-bottom:10px">🧮 Открытый ввод — вариантов нет, посчитай сам (допуск ${q.absTol !== undefined ? '±' + q.absTol + ' ' + (q.unit || '') : '±' + (q.tolPct || 2) + '%'})</div>
+        <div id="ptest_${phaseNum}_${qIdx}" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <input id="pnum_in_${phaseNum}_${qIdx}" type="text" inputmode="decimal" placeholder="число" style="width:150px; background:#040714; border:1px solid var(--acc2); border-radius:8px; padding:9px 12px; color:var(--txt); font-size:14.5px; font-weight:700">
+          <span style="color:var(--mut); font-size:13.5px">${q.unit || ''}</span>
+          <button class="btn sm" onclick="checkPhaseTestNumeric(${phaseNum}, ${qIdx})">Проверить</button>
+        </div>
+        <div id="ptest_exp_${phaseNum}_${qIdx}" style="display:none; margin-top:10px; font-size:13px"></div>
+      </div>
+      `;
+      return;
+    }
     html += `
       <div class="lblock" style="background:#090d1f; border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px">
         <div style="font-weight:700; font-size:14.5px; color:var(--txt); margin-bottom:12px; line-height:1.5">${q.q}</div>
@@ -16101,6 +16572,40 @@ function checkPhaseTestAnswer(phaseNum, qIdx, optIdx){
     expBox.innerHTML = `<b>Разбор варианта:</b> ${q.explain[optIdx]}`;
   }
 }
+
+// V3-A1: проверка числового вопроса аттестации (скрытые .ans.ok/.ans.bad — совместимость со скорингом)
+window.checkPhaseTestNumeric = function(phaseNum, qIdx){
+  const test = phaseNum === 6 ? CAPSTONE_EXAM : (typeof PHASE_TESTS !== 'undefined' ? PHASE_TESTS.find(t=>t.phase===phaseNum) : null);
+  if(!test) return;
+  const q = (window._ptView && window._ptView[phaseNum]) ? window._ptView[phaseNum][qIdx] : test.questions[qIdx];
+  if(!q || q.type !== 'numeric') return;
+  const container = document.getElementById(`ptest_${phaseNum}_${qIdx}`);
+  const expBox = document.getElementById(`ptest_exp_${phaseNum}_${qIdx}`);
+  const inp = document.getElementById(`pnum_in_${phaseNum}_${qIdx}`);
+  if(!container || !inp) return;
+  const val = parseFloat(String(inp.value).replace(/\s/g, '').replace(',', '.'));
+  if(isNaN(val)){ showToast('Введи число — без вариантов, только расчёт.', '🧮'); return; }
+  const tol = q.absTol !== undefined ? q.absTol : Math.abs(q.answer) * (q.tolPct || 2) / 100;
+  const ok = Math.abs(val - q.answer) <= tol;
+  inp.disabled = true;
+  const marker = document.createElement('span');
+  marker.className = 'ans ' + (ok ? 'ok' : 'bad');
+  marker.style.display = 'none';
+  container.appendChild(marker);
+  const checkBtn = container.querySelector('button');
+  if(checkBtn) checkBtn.disabled = true;
+  if(expBox){
+    expBox.style.display = 'block';
+    expBox.style.background = ok ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)';
+    expBox.style.borderLeft = '3px solid ' + (ok ? 'var(--ok)' : 'var(--bad)');
+    expBox.style.borderRadius = '6px';
+    expBox.style.padding = '8px 10px';
+    expBox.innerHTML = (ok ? '✅ <b>Верно!</b> ' : '❌ <b>Неверно (' + val + ').</b> ') + '📐 <b>Эталон:</b> ' + (q.solution || '');
+  }
+  if(!ok && typeof window.offerMistakeClassification === 'function'){
+    window.offerMistakeClassification('ptest:' + phaseNum + ':' + qIdx);
+  }
+};
 
 function calcPhaseTestResult(phaseNum){
   const test = phaseNum === 6 ? CAPSTONE_EXAM : (typeof PHASE_TESTS !== 'undefined' ? PHASE_TESTS.find(t=>t.phase===phaseNum) : null);
@@ -16269,6 +16774,19 @@ const QUIZ_CASES = [
   }
 ];
 
+/* V3-C2: еженедельный квиз «Гипотезы из данных» — чтение мини-таблиц и вывод */
+const QUIZ_DATA = [
+  { q:'📊 Мини-таблица: 60 сделок, win rate 45%, средний профит +6%, средний убыток −2%. Ожидание на сделку?', opts:['+1.6%','−0.6%','+2.4%','+0.8%'], a:0, explain:'E = 0.45×6 − 0.55×2 = 2.7 − 1.1 = +1.6%. Низкий win rate не страшен при хорошем асимметричном профите.' },
+  { q:'📊 Гипотеза: «покупаю после 3 зелёных свечей подряд». Данные: 40 входов, 22 убыточных, средний PnL −0.4%. Вердикт?', opts:['Гипотеза рабочая — мomentum','Гипотеза не подтверждается — отрицательное ожидание','Нужно больше данных — выборка мала, но знак отрицательный','Momentum работает только на недельных свечах'], a:1, explain:'Отрицательное среднее при 40 сделках — уже сигнал против. «Покупать после серии зелёных» часто означает покупать локальный перегрев.' },
+  { q:'📊 Таблица: стратегия A — Sharpe 1.8, MaxDD 35%; стратегия B — Sharpe 1.1, MaxDD 12%. Какая лучше для реального счёта?', opts:['A — выше Sharpe','B — выше Calmar и меньше просадка','Зависит от цели: A для максимизации доходности, B для выживания','Обе одинаковы'], a:2, explain:'Sharpe A выше, но Calmar B (≈3) намного лучше A (≈1). Для реального капитала просадка 35% психологически и математически опаснее.' },
+  { q:'📊 Данные: 200 сделок, средний PnL +0.8%, std 4%. t-статистика ≈ 2.8. Вывод?', opts:['Результат статистически значим','Случайность не исключена','Выборка слишком мала','Нужен walk-forward'], a:0, explain:'t = 0.8 / (4/√200) ≈ 2.83 > 2 — при 200 сделках результат статистически отличен от нуля. Но это не отменяет проверку на out-of-sample.' },
+  { q:'📊 Мини-таблица: понедельник +1.2%, вторник −0.8%, среда +0.3%, четверг −1.5%, пятница +2.1%. Неделя итого?', opts:['+1.3%','+0.26%','−0.7%','+2.1%'], a:1, explain:'Сумма: 1.2 − 0.8 + 0.3 − 1.5 + 2.1 = +1.3%? Нет: правильно считать произведение: 1.012×0.992×1.003×0.985×1.021 ≈ 1.0026 → +0.26%. Проценты не складываются линейно.' },
+  { q:'📊 Гипотеза: «RSI < 30 — покупать». Бэктест: 500 входов, win rate 58%, но средний профит +0.5%, средний убыток −1.2%. Ожидание?', opts:['+0.06%','+0.35%','−0.11%','+0.58%'], a:2, explain:'E = 0.58×0.5 − 0.42×1.2 = 0.29 − 0.504 = −0.214% ≈ −0.11% после комиссий. Высокий win rate не спасает при плохой асимметрии.' },
+  { q:'📊 Данные: две монеты коррелируют 0.92. Портфель 50/50 снижает риск на сколько?', opts:['Почти не снижает (~8%)','Вдвое (~50%)','На треть (~33%)','Полностью диверсифицирует'], a:0, explain:'При корреляции 0.92 диверсификация почти не работает: риск портфеля ≈ риску одной монеты. Настоящая диверсификация — при корреляции < 0.5.' },
+  { q:'📊 Мини-таблица: 30 дней фарминга, APY 40%, но IL за период −6%. Итог против HODL?', opts:['Фарминг выгоднее','HODL выгоднее','Паритет','Нужно больше данных'], a:1, explain:'Награда за 30 дней ≈ 40×30/365 ≈ 3.3%. IL −6% > +3.3% → HODL выгоднее. Высокий APY не отменяет непостоянную потерю.' }
+];
+
+
 const QUIZ_LEGAL = [
   {
     q: 'Юр-кейс #1: На P2P-площадке контрагент перевел вам 500,000 ₽ с карты третьего лица (ФИО отправителя не совпадает с аккаунтом на бирже). Ваши действия?',
@@ -16415,6 +16933,8 @@ function startQuiz(){
     quiz.qs = [...QUIZ_LEGAL];
   } else if(quizMode === 'calc'){
     quiz.qs = [...QUIZ_CALC];
+  } else if(quizMode === 'data'){
+    quiz.qs = [...QUIZ_DATA];
   } else {
     // Generate 10 random terms questions
     const shuffled = [...TERMS].sort(() => 0.5 - Math.random()).slice(0, 10);
@@ -17123,6 +17643,7 @@ const ADAPTIVE_QUESTION_BANK = [
     a: 1, explain: 'Кривая комиссии (урок Б11) нагружает середину диапазона вероятностей; «бесплатный» арбитраж YES+NO < $1 проверяют только после всех издержек исполнения (Ф0: комиссии и слиппедж).'
   }
 ];
+if(typeof QUIZ_DATA !== 'undefined') ADAPTIVE_QUESTION_BANK.push(...QUIZ_DATA.map(q => ({ topic:'data_analysis', ...q })));
 
 function startAdaptiveWorkout(){
   // 1. Identify Weakest Topic based on errorRate & total attempts
@@ -17541,7 +18062,7 @@ function checkAndUnlockBadge(badgeId){
       break;
     }
     case 'boss6': {
-      qualified = [0,1,2,3,4,5].every(b => simMastery['boss_' + b] === true);
+      qualified = [0,1,2,3,4,5,6,7].every(b => simMastery['boss_' + b] === true);
       break;
     }
     case 'speedrun': {
@@ -17606,8 +18127,8 @@ function renderBadgesGrid(){
     },
     {
       id: 'boss6', icon: '👑', name: 'Укротитель Чёрных Лебедей',
-      desc: 'Повергни всех 6 кризисных боссов босс-арены',
-      progressText: () => [0,1,2,3,4,5].filter(b => simMastery['boss_' + b]).length + ' / 6 боссов'
+      desc: 'Повергни всех 8 кризисных боссов босс-арены',
+      progressText: () => [0,1,2,3,4,5,6,7].filter(b => simMastery['boss_' + b]).length + ' / 8 боссов'
     },
     {
       id: 'speedrun', icon: '🏁', name: 'Спидраннер фаз',
@@ -20333,7 +20854,7 @@ function drawInteractiveSvgRoadmap(){
     const glow = n.done ? 'filter="drop-shadow(0 0 6px rgba(34,197,94,.6))"' : '';
 
     return `
-      <g style="cursor:pointer" onclick="go('${n.tab}'); if('${n.tab}'==='lessons') renderPhaseLessonsView(${n.phase});" ${glow}>
+      <g style="cursor:pointer" onclick="go('${n.tab}'); if('${n.tab}'==='lessons'){ renderPhaseLessonsView(${n.phase}); setTimeout(() => window.scrollToCurrentLessonInPhase(${n.phase}), 120); }" ${glow}>
         <rect x="${n.x - 55}" y="${n.y - 18}" width="110" height="36" rx="10" fill="${bg}" stroke="${col}" stroke-width="1.5" />
         <text x="${n.x}" y="${n.y + 4}" fill="#f8fafc" font-size="10.5" font-weight="700" text-anchor="middle">${n.label}</text>
       </g>
@@ -20891,7 +21412,8 @@ function renderFeynmanBox(lesson){
       <div style="font-size:12.5px; color:var(--txt); margin-bottom:10px">
         Попробуй в 1-2 предложениях сформулировать суть этого урока своими словами:
       </div>
-      <textarea id="feynman_input_${lesson.id}" rows="2" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение..."></textarea>
+      <textarea id="feynman_input_${lesson.id}" rows="2" oninput="window.checkFeynmanForbiddenWords('${lesson.id}')" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение..."></textarea>
+      <div id="feynman_forbidden_${lesson.id}" style="margin-top:6px; font-size:11.5px; min-height:16px"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
         <button class="btn sm" style="background:var(--acc1)" onclick="revealFeynmanModel('${lesson.id}')">
           ✨ Сверить с эталонным объяснением
@@ -21384,6 +21906,18 @@ function setGlossaryDisplayMode(mode){
 }
 
 // Update renderPhaseLessonsView to support both Grid Cards and Table View
+// V3-A5: быстрая перемотка по урокам фазы (roadmap → фаза → блок)
+window.scrollToLessonCard = function(lessonId){
+  const el = document.getElementById('lesson_card_' + lessonId);
+  if(!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.style.outline = '2px solid var(--acc2)';
+  setTimeout(() => { el.style.outline = ''; }, 1800);
+};
+window.scrollToCurrentLessonInPhase = function(phaseNum){
+  const cur = LESSONS.find(l => l.phase === phaseNum && lessonsDone[l.id] !== 1);
+  if(cur) scrollToLessonCard(cur.id);
+};
 function renderPhaseLessonsView(phaseNum = 0){
   currentViewingPhase = phaseNum;
   const container = document.getElementById('phaseLessonCardsGrid');
@@ -21392,6 +21926,20 @@ function renderPhaseLessonsView(phaseNum = 0){
 
   const phaseLessons = LESSONS.filter(l => l.phase === phaseNum);
   const doneCount = phaseLessons.filter(l => lessonsDone[l.id] === 1).length;
+
+  // V3-A5: панель быстрой перемотки по номеру урока
+  let jumpBar = document.getElementById('phase_jump_bar');
+  if(!jumpBar){
+    jumpBar = document.createElement('div');
+    jumpBar.id = 'phase_jump_bar';
+    container.parentNode.insertBefore(jumpBar, container);
+  }
+  jumpBar.style.cssText = 'display:flex; flex-wrap:wrap; gap:5px; margin:10px 0 4px; align-items:center';
+  jumpBar.innerHTML = '<span style="font-size:11.5px; color:var(--mut); font-weight:700; margin-right:4px">⏩ Перемотка:</span>' +
+    phaseLessons.map((l, idx) => {
+      const isDone = lessonsDone[l.id] === 1;
+      return `<button class="btn sm ghost" style="padding:2px 8px; font-size:11.5px; ${isDone ? 'color:var(--ok)' : ''}" title="${l.title.replace(/"/g, '')}" onclick="window.scrollToLessonCard('${l.id}')">${l.num || (idx + 1)}</button>`;
+    }).join('');
 
   if(badge){
     badge.innerHTML = `Пройдено уроков: ${doneCount} из ${phaseLessons.length}`;
@@ -21406,7 +21954,7 @@ function renderPhaseLessonsView(phaseNum = 0){
       const termsPreview = l.terms ? l.terms.slice(0, 3).map(t => typeof t === 'object' ? t.ru : t).join(', ') : '';
 
       return `
-        <div class="lesson-card-item ${isDone ? 'done' : ''}" onclick="openFullscreenLesson('${l.id}')">
+        <div class="lesson-card-item ${isDone ? 'done' : ''}" id="lesson_card_${l.id}" onclick="openFullscreenLesson('${l.id}')">
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
               <span style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase">Урок ${l.num || (idx + 1)}</span>
@@ -21455,7 +22003,7 @@ function renderPhaseLessonsView(phaseNum = 0){
               }).join('') : '—';
 
               return `
-                <tr style="border-bottom:1px solid var(--line); cursor:pointer; transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background=''" onclick="openFullscreenLesson('${l.id}')">
+                <tr id="lesson_card_${l.id}" style="border-bottom:1px solid var(--line); cursor:pointer; transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background=''" onclick="openFullscreenLesson('${l.id}')">
                   <td style="padding:14px 16px; font-weight:800; color:var(--acc2)">${l.num || (idx + 1)}</td>
                   <td style="padding:14px 16px; font-weight:700; color:var(--txt)">
                     ${l.title}
@@ -22908,7 +23456,7 @@ window.P1_FT = {
 /* ---------- 8. BOSS SCENARIOS (verdict rounds) ---------- */
 if(typeof BOSS_SCENARIOS !== 'undefined'){
   BOSS_SCENARIOS.push({
-    id:3, title:'«Sharpe 3.1» от агента — ловушка перебора (Фаза 1)', time:90, bossHp:100,
+    id:6, title:'«Sharpe 3.1» от агента — ловушка перебора (Фаза 1)', time:90, bossHp:100,
     desc:'Агент приносит стратегию с Sharpe 3.1 на бэктесте и просит капитал. Проверь цифры как Архитектор — красивый результат ещё ничего не доказывает.',
     rounds:[
       { q:'Стратегия показала Sharpe 3.1 на исторических данных. Какой твой первый вопрос агенту?',
@@ -22926,7 +23474,7 @@ if(typeof BOSS_SCENARIOS !== 'undefined'){
     ]
   });
   BOSS_SCENARIOS.push({
-    id:4, title:'Бета под маской альфы (Фаза 3)', time:90, bossHp:100,
+    id:7, title:'Бета под маской альфы (Фаза 3)', time:90, bossHp:100,
     desc:'Стратегия сделала +35% за год. Агент называет это альфой и просит долю прибыли. Разберись, есть ли тут настоящее преимущество.',
     rounds:[
       { q:'Стратегия: +35% за год. Buy&Hold BTC за тот же год: +60%. Корреляция 0.92. Первая гипотеза?',
@@ -23006,12 +23554,23 @@ if(typeof BOSS_SCENARIOS !== 'undefined'){
       '<div class="sim-controls">' +
         '<div class="sim-input-group"><label>Сумма ($10–500):</label><input type="number" id="ft_amount" value="50" min="10" max="500" step="10"></div>' +
       '</div>' +
+      '<div style="background:rgba(34,197,94,.06); border:1.5px solid var(--ok); border-radius:12px; padding:14px 16px; margin:12px 0">' +
+        '<div style="font-size:11.5px; font-weight:800; color:var(--ok); text-transform:uppercase; margin-bottom:8px">✅ Чек-лист перед сделкой (V3-C1)</div>' +
+        '<div id="precheck_items" style="display:flex; flex-direction:column; gap:6px; font-size:12.5px; color:var(--txt)">' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Я знаю размер позиции и риск на сделку (не больше 1–2% капитала)</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Я проверил ликвидность и спред (стакан не «дырявый»)</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> У меня есть план выхода: стоп-лосс и тейк-профит до входа</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Я учёл комиссии и проскальзывание (round-trip)</label>' +
+          '<label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" class="precheck_cb"> Это не импульс: я могу вслух объяснить, почему вхожу</label>' +
+        '</div>' +
+        '<div id="precheck_status" style="font-size:11.5px; color:var(--mut); margin-top:8px">Отметь все пункты — это защита от импульсивных сделок.</div>' +
+      '</div>' +
       '<button class="btn" id="ft_open_btn">📈 Купить BTC по рынку</button>' +
       '<div id="ft_result" style="margin-top:16px"></div>' +
     '</div>');
   const ms=$id('meme_start_btn'); if(ms) ms.addEventListener('click', ()=>startMemeSim());
   const md=$id('meme_dump'); if(md) md.addEventListener('input', ()=>{ const v=$id('meme_dump_val'); if(v) v.textContent=md.value+'%'; });
-  const fo=$id('ft_open_btn'); if(fo) fo.addEventListener('click', window.P1_FT.open);
+  const fo=$id('ft_open_btn'); if(fo) fo.addEventListener('click', () => { if(window.preTradeChecklistOk()) window.P1_FT.open(); });
 })();
 
 (function injectRuble2BtcSim(){
@@ -26409,6 +26968,45 @@ completeLessonWithMastery=function(id){
  return res;
 };
 /* маунт виджетов: реестр вместо заглушки */
+// V3-B2: интерактивный дашборд риск-метрик в контенте урока
+window.mountRiskDashboard = function(rdId, cfg){
+  const box = document.getElementById(rdId);
+  if(!box) return;
+  cfg = cfg || {};
+  box.innerHTML = `
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:12px">
+      <div><label style="font-size:11.5px; color:var(--mut)">Годовая доходность %</label>
+        <input type="range" min="-40" max="120" value="${cfg.ret !== undefined ? cfg.ret : 24}" id="${rdId}_ret" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+      <div><label style="font-size:11.5px; color:var(--mut)">Волатильность %</label>
+        <input type="range" min="5" max="100" value="${cfg.vol !== undefined ? cfg.vol : 35}" id="${rdId}_vol" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+      <div><label style="font-size:11.5px; color:var(--mut)">Макс. просадка %</label>
+        <input type="range" min="2" max="80" value="${cfg.dd !== undefined ? cfg.dd : 20}" id="${rdId}_dd" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+      <div><label style="font-size:11.5px; color:var(--mut)">Безрисковая ставка %</label>
+        <input type="range" min="0" max="15" value="${cfg.rf !== undefined ? cfg.rf : 4}" id="${rdId}_rf" oninput="window.recalcRiskDash('${rdId}')" style="width:100%"></div>
+    </div>
+    <div id="${rdId}_out" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px; font-size:12.5px"></div>`;
+  window.recalcRiskDash(rdId);
+};
+window.recalcRiskDash = function(rdId){
+  const ret = parseFloat(document.getElementById(rdId + '_ret').value);
+  const vol = parseFloat(document.getElementById(rdId + '_vol').value);
+  const dd  = parseFloat(document.getElementById(rdId + '_dd').value);
+  const rf  = parseFloat(document.getElementById(rdId + '_rf').value);
+  const sharpe = (ret - rf) / vol;
+  const calmar = ret / dd;
+  const card = (label, val, good) => `
+    <div style="background:#090d1f; border:1px solid var(--line); border-radius:10px; padding:9px 12px">
+      <div style="font-size:10.5px; color:var(--mut); text-transform:uppercase; font-weight:700">${label}</div>
+      <div style="font-size:17px; font-weight:800; color:${good ? 'var(--ok)' : 'var(--warn)'}">${val}</div>
+    </div>`;
+  document.getElementById(rdId + '_out').innerHTML =
+    card('Sharpe', sharpe.toFixed(2), sharpe > 1) +
+    card('Calmar', calmar.toFixed(2), calmar > 1.5) +
+    card('Return', ret.toFixed(0) + '%', ret > 0) +
+    card('Vol', vol.toFixed(0) + '%', vol < 40) +
+    card('MaxDD', '−' + dd.toFixed(0) + '%', dd < 30);
+};
+
 window.mountMathWidget=function(id){
  if(typeof id==='string'&&id.indexOf('widget_m_')===0){
   const f=MATH_WIDGETS[id];
@@ -26809,7 +27407,8 @@ renderFeynmanBox = function(lesson){
       <div style="font-size:12px; color:var(--acc2); background:rgba(6,182,212,.07); border-left:3px solid var(--acc2); border-radius:6px; padding:9px 12px; margin-bottom:10px; line-height:1.55">
         <b>Шаблон из 3 предложений:</b> ① «Это …» — скажи, что это за вещь одной фразой без жаргона. ② «Работает так: …» — опиши механику на бытовой аналогии. ③ «На практике я …» — скажи, что ты с этим делаешь (когда применяешь, чего избегаешь).
       </div>
-      <textarea id="feynman_input_${lesson.id}" rows="3" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение...">${saved ? saved.text.replace(/</g, '&lt;') : ''}</textarea>
+      <textarea id="feynman_input_${lesson.id}" rows="3" oninput="window.checkFeynmanForbiddenWords('${lesson.id}')" style="width:100%; background:#040714; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:10px; color:var(--txt); font-size:13px; font-family:var(--font); box-sizing:border-box" placeholder="Напиши своё простое объяснение...">${saved ? saved.text.replace(/</g, '&lt;') : ''}</textarea>
+      <div id="feynman_forbidden_${lesson.id}" style="margin-top:6px; font-size:11.5px; min-height:16px"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px">
         <button class="btn sm" style="background:var(--acc1)" onclick="revealFeynmanCheck('${lesson.id}')">
           ✨ Сверить с эталоном и оценить себя
@@ -26954,12 +27553,20 @@ function renderConsolidationPhase1(){
       Условие одно: <b style="color:var(--txt)">никаких новых стимулов</b> — не открывай мессенджеры и ленты, отведи взгляд от экрана, сиди или лежи в тишине (NSDR-протокол).
     </p>
     <div id="consolidation_timer" style="font-size:46px; font-weight:900; color:var(--acc2); margin:10px 0 16px; font-variant-numeric:tabular-nums">10:00</div>
-    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:14px">
+    <div style="font-size:12px; color:var(--mut); margin-bottom:12px; line-height:1.5; text-align:left">Пока тишина — гиппокамп воспроизводит изученное в <b>SWR-рипплах (sharp-wave ripples)</b> и «прописывает» его в долговременную память. Можно включить метроном дыхания <b>4-4-6</b>: вдох 4 с → пауза 4 с → выдох 6 с (~0.07 Гц).</div>
+    <div id="breath_circle_wrap" style="display:none; margin:10px auto 16px; width:180px; height:180px; position:relative">
+      <div id="breath_circle" style="position:absolute; inset:30px; border-radius:50%; background:radial-gradient(circle, rgba(6,182,212,.35), rgba(124,58,237,.15)); border:2px solid var(--acc2); transition:transform 1.1s cubic-bezier(.4,0,.2,1)"></div>
+      <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--txt)"><span id="breath_label">—</span><span id="breath_secs" style="font-size:22px"></span></div>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:10px">
       <button class="btn sm ghost" onclick="setConsolidationMinutes(5)">5 мин</button>
       <button class="btn sm" style="background:var(--acc2)" onclick="setConsolidationMinutes(10)">10 мин</button>
-      <button class="btn" style="background:var(--ok); color:#040714; font-weight:800" onclick="startConsolidationTimer()">▶ Начать паузу</button>
+      <button class="btn sm ghost" onclick="setConsolidationMinutes(15)">15 мин</button>
+      <button class="btn sm ghost" id="breath_toggle" onclick="toggleConsolidationBreath()">😮💨 дыхание</button>
+      <button class="btn sm ghost" id="pinknoise_toggle" onclick="togglePinkNoise()">🔇 розовый шум</button>
     </div>
-    <button class="btn sm ghost" style="color:var(--mut); font-size:11.5px" onclick="renderConsolidationPhase2()">Пропустить паузу (не рекомендуется) →</button>
+    <button class="btn" style="background:var(--ok); color:#040714; font-weight:800" onclick="startConsolidationTimer()">▶ Начать паузу</button>
+    <div style="margin-top:10px"><button class="btn sm ghost" style="color:var(--mut); font-size:11.5px" onclick="renderConsolidationPhase2()">Пропустить паузу (не рекомендуется) →</button></div>
   `;
   window._consolidationSeconds = 600;
 }
@@ -26986,8 +27593,66 @@ function startConsolidationTimer(){
   }, 1000);
 }
 
+// V3-A4b: метроном дыхания 4-4-6 (~0.07 Гц) и розовый шум (опционально, WebAudio)
+window._breathOn = false; window._breathTimer = null; window._pinkNoiseSource = null; window._pinkAudioCtx = null;
+window.toggleConsolidationBreath = function(){
+  window._breathOn = !window._breathOn;
+  const wrap = document.getElementById('breath_circle_wrap');
+  const tgl = document.getElementById('breath_toggle');
+  if(tgl) tgl.textContent = window._breathOn ? '⏸ дыхание' : '😮💨 дыхание';
+  if(wrap) wrap.style.display = window._breathOn ? 'block' : 'none';
+  if(!window._breathOn){ if(window._breathTimer) clearInterval(window._breathTimer); return; }
+  const phases = [['Вдох', 4], ['Пауза', 4], ['Выдох', 6]];
+  let pi = 0, sec = phases[0][1];
+  function step(){
+    if(!window._breathOn) return;
+    const lbl = document.getElementById('breath_label');
+    const secsEl = document.getElementById('breath_secs');
+    const circle = document.getElementById('breath_circle');
+    if(lbl) lbl.textContent = phases[pi][0];
+    if(secsEl) secsEl.textContent = sec;
+    if(circle) circle.style.transform = 'scale(' + (pi === 0 ? 1.45 : pi === 1 ? 1.45 : 1) + ')';
+    sec--;
+    if(sec < 1){ pi = (pi + 1) % 3; sec = phases[pi][1]; }
+  }
+  step();
+  window._breathTimer = setInterval(step, 1000);
+};
+window.togglePinkNoise = function(){
+  const tgl = document.getElementById('pinknoise_toggle');
+  if(window._pinkNoiseSource){
+    try{ window._pinkNoiseSource.stop(); }catch(e){}
+    window._pinkNoiseSource = null;
+    if(tgl) tgl.textContent = '🔇 розовый шум';
+    return;
+  }
+  try{
+    window._pinkAudioCtx = window._pinkAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = window._pinkAudioCtx;
+    const len = ctx.sampleRate * 4;
+    const buffer = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let b0=0,b1=0,b2=0;
+    for(let i=0;i<len;i++){
+      const w = Math.random()*2-1;
+      b0=0.997*b0+0.029*w; b1=0.985*b1+0.032*w; b2=0.95*b2+0.048*w;
+      data[i]=(b0+b1+b2+w*0.05)*0.35;
+    }
+    const src0 = ctx.createBufferSource(); src0.buffer = buffer; src0.loop = true;
+    const gain = ctx.createGain(); gain.gain.value = 0.12;
+    src0.connect(gain); gain.connect(ctx.destination);
+    src0.start();
+    window._pinkNoiseSource = src0;
+    if(tgl) tgl.textContent = '🔊 розовый шум';
+    showToast('Розовый шум включён. Звук всегда опционален.', '🔊');
+  }catch(e){ console.log('pink noise unavailable', e); }
+};
+
 function renderConsolidationPhase2(){
   if(consolidationTimerId){ clearInterval(consolidationTimerId); consolidationTimerId = null; }
+  if(window._breathTimer){ clearInterval(window._breathTimer); window._breathTimer = null; }
+  window._breathOn = false;
+  if(window._pinkNoiseSource){ try{ window._pinkNoiseSource.stop(); }catch(e){} window._pinkNoiseSource = null; }
   const body = document.getElementById('consolidation_body');
   if(!body) return;
   const due = (typeof getSrsStats === 'function') ? getSrsStats().dueCount : 0;
@@ -27014,12 +27679,14 @@ function closeConsolidationScreen(){
 }
 
 // Оборачиваем завершение урока: экран консолидации показывается только при реальном зачёте
+// V4-D1: не чаще одного раза за сессию — иначе модалка превращается в спам и её игнорируют
 const _origCLM_Consolidation = completeLessonWithMastery;
 completeLessonWithMastery = function(id){
   const wasDone = lessonsDone[id] === 1;
   const res = _origCLM_Consolidation.apply(this, arguments);
   try{
-    if(!wasDone && lessonsDone[id] === 1){
+    if(!wasDone && lessonsDone[id] === 1 && !window._consolShownThisSession){
+      window._consolShownThisSession = true;
       setTimeout(() => showConsolidationScreen(id), 400);
     }
   }catch(e){}
@@ -27028,8 +27695,115 @@ completeLessonWithMastery = function(id){
 
 
 
+/* ---------- V4-E2: строгий режим Фазы 0 (toggle, default OFF) ---------- */
+function isStrictPhase0(){
+  try{ return localStorage.getItem('cn_strict_phase0') === '1'; }catch(e){ return false; }
+}
+window.toggleStrictPhase0 = function(){
+  const on = !isStrictPhase0();
+  try{ localStorage.setItem('cn_strict_phase0', on ? '1' : '0'); }catch(e){}
+  showToast(on ? 'Строгий режим Фазы 0 ВКЛ: урок N+1 откроется после завершения урока N.' : 'Строгий режим Фазы 0 ВЫКЛ: свободная навигация по урокам.', on ? '🔒' : '🔓', 3500);
+  if(typeof renderPhaseLessonsView === 'function' && currentViewingPhase === 0) renderPhaseLessonsView(0);
+};
+const _origOpenFullscreenV4 = openFullscreenLesson;
+openFullscreenLesson = function(lessonId){
+  if(isStrictPhase0()){
+    const l = LESSONS.find(x => x.id === lessonId);
+    if(l && l.phase === 0){
+      const seq = LESSONS.filter(x => x.phase === 0);
+      const idx = seq.findIndex(x => x.id === lessonId);
+      if(idx > 0 && lessonsDone[seq[idx - 1].id] !== 1){
+        showToast('🔒 Строгий режим: сначала заверши урок «' + seq[idx - 1].title.slice(0, 48) + '…»', '🔒', 4000);
+        window.scrollToLessonCard && window.scrollToLessonCard(seq[idx - 1].id);
+        return;
+      }
+    }
+  }
+  return _origOpenFullscreenV4.apply(this, arguments);
+};
+// Визуальный замок на карточках Фазы 0 при включённом строгом режиме
+const _origRenderPhaseLessonsV4 = renderPhaseLessonsView;
+renderPhaseLessonsView = function(phaseNum){
+  _origRenderPhaseLessonsV4.apply(this, arguments);
+  try{
+    if(phaseNum === 0){
+      const jumpBar = document.getElementById('phase_jump_bar');
+      if(jumpBar && !document.getElementById('strict_phase0_toggle')){
+        jumpBar.insertAdjacentHTML('beforeend',
+          '<button id="strict_phase0_toggle" class="btn sm ghost" style="margin-left:auto; font-size:11.5px" onclick="toggleStrictPhase0()"></button>');
+      }
+      const tgl = document.getElementById('strict_phase0_toggle');
+      if(tgl){
+        const on = isStrictPhase0();
+        tgl.innerHTML = (on ? '🔒 Строгий режим: ВКЛ' : '🔓 Строгий режим: ВЫКЛ');
+        tgl.style.borderColor = on ? 'var(--warn)' : 'var(--line)';
+        tgl.style.color = on ? 'var(--warn)' : 'var(--mut)';
+      }
+      if(isStrictPhase0()){
+        const seq = LESSONS.filter(x => x.phase === 0);
+        let firstOpen = true;
+        seq.forEach(l => {
+          const card = document.getElementById('lesson_card_' + l.id);
+          if(!card) return;
+          const locked = lessonsDone[l.id] !== 1 && !firstOpen;
+          if(lessonsDone[l.id] !== 1 && firstOpen) firstOpen = false;
+          if(locked){
+            card.style.opacity = '.55';
+            card.style.position = 'relative';
+            if(!card.querySelector('.v4-lock-badge')){
+              card.insertAdjacentHTML('beforeend',
+                '<span class="v4-lock-badge" style="position:absolute; top:8px; right:8px; font-size:15px" title="Откроется после предыдущего урока">🔒</span>');
+            }
+          }
+        });
+      }
+    }
+  }catch(e){}
+};
+
+/* ---------- V4-D3: «Сборочный пункт» после каждых 5 завершённых уроков ---------- */
+const _origShowConsolV4 = showConsolidationScreen;
+showConsolidationScreen = function(lessonId, customTitle){
+  _origShowConsolV4.apply(this, arguments);
+  try{
+    const doneCount = Object.keys(lessonsDone).filter(k => lessonsDone[k] === 1).length;
+    if(doneCount > 0 && doneCount % 5 === 0){
+      const ov = document.getElementById('consolidation_overlay');
+      if(ov && !ov.querySelector('.v4-checkpoint')){
+        const card = ov.firstElementChild;
+        if(card){
+          card.insertAdjacentHTML('afterbegin', `
+            <div class="v4-checkpoint" style="background:rgba(6,182,212,.1); border:1.5px dashed var(--acc2); border-radius:12px; padding:12px 16px; margin-bottom:14px; text-align:left">
+              <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:4px">🧩 Сборочный пункт: пройдено ${doneCount} уроков</div>
+              <div style="font-size:12.5px; color:var(--mut); line-height:1.5">Каждые 5 уроков — точка интервального повторения: без него до 60% терминов «стирается» за неделю. 3 минуты SM-2 сейчас дешевле, чем переучивание потом.</div>
+              <button class="btn sm" style="background:var(--acc2); margin-top:8px" onclick="closeConsolidationScreen(); go('glossary'); if(typeof startSrsReviewSession==='function') startSrsReviewSession()">▶ Повторить термины (SM-2)</button>
+            </div>`);
+        }
+      }
+    }
+  }catch(e){}
+};
+
 /* ---------- E5: Лестница рангов + наставник ---------- */
 // XP за понимание: самообъяснение Фейнмана (один раз на урок)
+// V3-A4: фильтр запретных слов-паразитов (объяснение слабо, если жонглирует терминами)
+window.FEYNMAN_FORBIDDEN = ['стационарность','матрица','энтропия','корреляция','волатильность','коэффициент','метрика','статистика','распределение','ликвидность','гипотеза','регрессия','модель','алгоритм','тренд','дельта','параметр'];
+window.checkFeynmanForbiddenWords = function(lessonId){
+  const ta = document.getElementById('feynman_input_' + lessonId);
+  const box = document.getElementById('feynman_forbidden_' + lessonId);
+  if(!ta || !box) return;
+  const text = ta.value.toLowerCase();
+  const hits = window.FEYNMAN_FORBIDDEN.filter(w => text.includes(w));
+  if(text.trim().length < 5){ box.innerHTML = ''; return; }
+  if(hits.length){
+    box.innerHTML = '<span style="color:var(--bad)">⚠️ Жаргон-паразит: <u>' + hits.join('</u>, <u>') + '</u>. Для 10-летнего объясняй «на пальцах» без терминов.</span>';
+    ta.style.borderColor = 'var(--bad)';
+  } else {
+    box.innerHTML = '<span style="color:var(--ok)">✓ Чистое объяснение без слов-паразитов.</span>';
+    ta.style.borderColor = 'var(--ok)';
+  }
+};
+
 window.revealFeynmanModel = function(lessonId){
   const el = document.getElementById('feynman_model_' + lessonId);
   if(el) el.style.display = 'block';
@@ -27260,6 +28034,308 @@ function spinQuestRoulette(){
     return prev(widgetId);
   };
 })();
+
+/* ---------- V4-C1: генератор эквити-кривых ---------- */
+window.runEquityGen = function(){
+  const wr = (parseFloat(document.getElementById('eq_wr').value) || 45) / 100;
+  const rr = parseFloat(document.getElementById('eq_rr').value) || 2;
+  const risk = (parseFloat(document.getElementById('eq_risk').value) || 1) / 100;
+  const n = Math.max(20, parseFloat(document.getElementById('eq_n').value) || 200);
+  const evPerTrade = wr * rr * risk - (1 - wr) * risk;
+  const finals = [];
+  const N_TRAJ = 1000;
+  const paths = [];
+  for(let t = 0; t < N_TRAJ; t++){
+    let eq = 1;
+    const path = [1];
+    for(let i = 0; i < n; i++){
+      const win = Math.random() < wr;
+      eq *= 1 + (win ? rr * risk : -risk);
+      if(eq <= 0.001){ eq = 0.001; path.push(eq); break; }
+      path.push(eq);
+    }
+    finals.push(eq);
+    if(t < 120) paths.push(path);
+  }
+  finals.sort((a,b) => a - b);
+  const pctl = q => finals[Math.floor(q * (finals.length - 1))];
+  const p5 = pctl(0.05), p50 = pctl(0.5), p95 = pctl(0.95);
+  const ruin = finals.filter(x => x <= 0.5).length / finals.length;
+  const neg = finals.filter(x => x < 1).length / finals.length;
+  // canvas: веер + гистограмма финалов
+  const out = document.getElementById('eq_result');
+  out.innerHTML = `
+    <div style="font-weight:700; margin-bottom:6px">Веер траекторий (120 из 1000):</div>
+    <canvas id="eq_fan" width="640" height="240" style="width:100%; background:#040714; border-radius:8px"></canvas>
+    <div style="font-weight:700; margin:14px 0 6px">Распределение финалов (1000 траекторий):</div>
+    <canvas id="eq_hist" width="640" height="160" style="width:100%; background:#040714; border-radius:8px"></canvas>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; font-size:13px">
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">EV на сделку: <b style="color:${evPerTrade > 0 ? 'var(--ok)' : 'var(--bad)'}">${(evPerTrade*100).toFixed(2)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">5-й перцентиль: <b style="color:var(--bad)">${(p5*100-100).toFixed(0)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">Медиана: <b style="color:var(--acc2)">${(p50*100-100).toFixed(0)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">95-й перцентиль: <b style="color:var(--ok)">+${(p95*100-100).toFixed(0)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">P(потерять >50%): <b style="color:var(--bad)">${(ruin*100).toFixed(1)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">P(убыток): <b>${(neg*100).toFixed(1)}%</b></span>
+    </div>
+    <div style="font-size:12px; color:var(--mut); margin-top:10px">Даже при положительном EV заметная доля траекторий заканчивается в минусе. Размер ставки (риск на сделку) решает, переживёшь ли ты закономерную серию неудач.</div>`;
+  // fan
+  const cv = document.getElementById('eq_fan');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const allMax = Math.max(...paths.map(p => Math.max(...p)), 1.5);
+  const allMin = Math.min(...paths.map(p => Math.min(...p)), 0.5);
+  const y = v => h - ((v - allMin) / (allMax - allMin)) * (h - 10) - 5;
+  ctx.strokeStyle = 'rgba(255,255,255,.25)';
+  ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(0, y(1)); ctx.lineTo(w, y(1)); ctx.stroke();
+  ctx.setLineDash([]);
+  paths.forEach(path => {
+    ctx.beginPath();
+    const stepX = w / Math.max(...paths.map(p => p.length));
+    path.forEach((v, i) => i === 0 ? ctx.moveTo(0, y(v)) : ctx.lineTo(i * stepX, y(v)));
+    const fin = path[path.length - 1];
+    ctx.strokeStyle = fin >= 1 ? 'rgba(34,197,94,.12)' : 'rgba(239,68,68,.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+  // hist
+  const cv2 = document.getElementById('eq_hist');
+  const ctx2 = cv2.getContext('2d');
+  const hMax = Math.max(p95 * 1.15, 2);
+  const hMin = Math.min(p5 * 0.85, 0.5);
+  const NB = 40;
+  const bins = new Array(NB).fill(0);
+  finals.forEach(v => {
+    const idx = Math.max(0, Math.min(NB - 1, Math.floor((v - hMin) / (hMax - hMin) * NB)));
+    bins[idx]++;
+  });
+  const bMax = Math.max(...bins);
+  const bw = cv2.width / NB;
+  bins.forEach((c, i) => {
+    const mid = hMin + (i + 0.5) / NB * (hMax - hMin);
+    ctx2.fillStyle = mid >= 1 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.7)';
+    const bh = (c / bMax) * (cv2.height - 20);
+    ctx2.fillRect(i * bw + 1, cv2.height - bh, bw - 2, bh);
+  });
+  const xz = (1 - hMin) / (hMax - hMin) * cv2.width;
+  ctx2.strokeStyle = 'rgba(255,255,255,.5)';
+  ctx2.beginPath(); ctx2.moveTo(xz, 0); ctx2.lineTo(xz, cv2.height); ctx2.stroke();
+  ctx2.fillStyle = 'rgba(255,255,255,.7)';
+  ctx2.font = '11px sans-serif';
+  ctx2.fillText('0% (безубыток)', xz + 4, 14);
+};
+
+/* ---------- V4-C2: карта корреляций ---------- */
+const V4_CORR_ASSETS = ['BTC', 'ETH', 'SOL', 'USDT-фарм', 'S&P 500', 'Золото'];
+function v4CorrMatrix(period){
+  // синтетические корреляции: базовые уровни + сжатие в кризис
+  const base = {
+    'BTC':       { 'BTC':1, 'ETH':0.85, 'SOL':0.72, 'USDT-фарм':0.02, 'S&P 500':0.35, 'Золото':0.12 },
+    'ETH':       { 'BTC':0.85, 'ETH':1, 'SOL':0.78, 'USDT-фарм':0.03, 'S&P 500':0.33, 'Золото':0.10 },
+    'SOL':       { 'BTC':0.72, 'ETH':0.78, 'SOL':1, 'USDT-фарм':0.04, 'S&P 500':0.30, 'Золото':0.08 },
+    'USDT-фарм': { 'BTC':0.02, 'ETH':0.03, 'SOL':0.04, 'USDT-фарм':1, 'S&P 500':0.0, 'Золото':0.05 },
+    'S&P 500':   { 'BTC':0.35, 'ETH':0.33, 'SOL':0.30, 'USDT-фарм':0.0, 'S&P 500':1, 'Золото':0.15 },
+    'Золото':    { 'BTC':0.12, 'ETH':0.10, 'SOL':0.08, 'USDT-фарм':0.05, 'S&P 500':0.15, 'Золото':1 }
+  };
+  const noise = { '7': 0.18, '30': 0.09, '90': 0.05, '365': 0.03, 'crisis': 0.04 }[period];
+  const M = V4_CORR_ASSETS.map(() => []);
+  for(let i = 0; i < V4_CORR_ASSETS.length; i++){
+    for(let j = 0; j < V4_CORR_ASSETS.length; j++){
+      let v = base[V4_CORR_ASSETS[i]][V4_CORR_ASSETS[j]];
+      if(i !== j){
+        v += (Math.sin(i * 7 + j * 13) * noise);
+        if(period === 'crisis'){
+          const a = V4_CORR_ASSETS[i], b2 = V4_CORR_ASSETS[j];
+          if(a !== 'USDT-фарм' && b2 !== 'USDT-фарм' && a !== 'Золото' && b2 !== 'Золото') v = Math.min(0.97, v * 1.5 + 0.35);
+          else if((a === 'USDT-фарм' || b2 === 'USDT-фарм')) v = Math.max(-0.3, v - 0.1);
+        }
+        if(period === '7') v = Math.max(-1, Math.min(1, v));
+      }
+      M[i][j] = Math.max(-1, Math.min(1, v));
+    }
+  }
+  return M;
+}
+window.renderCorrHeatmap = function(){
+  const period = document.getElementById('corr_period').value;
+  const M = v4CorrMatrix(period);
+  const out = document.getElementById('corr_result');
+  const cell = v => {
+    const r = v > 0 ? Math.round(239 - v * 200) : 239;
+    const g = v > 0 ? Math.round(68 + v * 130) : Math.round(68 - v * 40);
+    const bg = v >= 0 ? `rgba(34,197,94,${(v * 0.85).toFixed(2)})` : `rgba(239,68,68,${(-v * 0.85).toFixed(2)})`;
+    return `<td style="background:${bg}; text-align:center; padding:8px 6px; font-size:12px; font-weight:700; color:var(--txt); border:1px solid #040714">${v.toFixed(2)}</td>`;
+  };
+  out.innerHTML = `
+    <table style="border-collapse:collapse; width:100%; max-width:560px">
+      <thead><tr><th style="font-size:11px; color:var(--mut)"></th>${V4_CORR_ASSETS.map(a => `<th style="font-size:11px; color:var(--mut); padding:4px">${a}</th>`).join('')}</tr></thead>
+      <tbody>${M.map((row, i) => `<tr><td style="font-size:11px; color:var(--mut); padding-right:6px; white-space:nowrap">${V4_CORR_ASSETS[i]}</td>${row.map(cell).join('')}</tr>`).join('')}</tbody>
+    </table>
+    <div style="display:flex; gap:8px; align-items:center; margin-top:10px; font-size:11.5px; color:var(--mut)">
+      <span>−1</span><div style="width:120px; height:10px; border-radius:5px; background:linear-gradient(90deg, rgba(239,68,68,.85), rgba(255,255,255,.05), rgba(34,197,94,.85))"></div><span>+1</span>
+    </div>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px; line-height:1.6">
+      ${period === 'crisis'
+        ? '⚡ <b style="color:var(--bad)">Кризисный режим:</b> BTC–ETH–SOL–S&P схлопнулись к 0.85–0.97 — диверсификация внутри крипты исчезла именно тогда, когда была нужна больше всего. Стейбл-фарминг остался около нуля: единственная реальная диверсификация — это кэш и низкая корреляция.'
+        : 'Короткие окна шумные: корреляция «плавает». Вывод не в точном числе, а в структуре: криптоактивы движутся единым кластером, стейбл-стратегии и золото живут отдельно. Переключи на «Кризисный месяц» — это главный урок портфельной теории.'}
+    </div>`;
+};
+
+/* ---------- V4-C3: конструктор дельта-нейтрала ---------- */
+window._v4corrInitDone = false;
+window.runDeltaNeutral = function(){
+  const size = parseFloat(document.getElementById('dn_size').value) || 10000;
+  const fundingBps = parseFloat(document.getElementById('dn_funding').value) || 0;
+  const days = Math.max(1, parseFloat(document.getElementById('dn_days').value) || 30);
+  const move = parseFloat(document.getElementById('dn_move').value) || 0;
+  document.getElementById('dn_move_lbl').textContent = (move > 0 ? '+' : '') + move + '%';
+  const m = move / 100;
+  const spotPnl = size * m;
+  const perpPnl = -size * m;
+  const fundingIncome = size * (fundingBps / 10000) * 3 * days; // 3 раза в сутки
+  const total = spotPnl + perpPnl + fundingIncome;
+  const out = document.getElementById('dn_result');
+  const fmt$ = v => (v >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(v)).toLocaleString('en-US');
+  out.innerHTML = `
+    <div style="display:flex; gap:10px; flex-wrap:wrap; font-size:13px">
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:10px 14px">🟢 Спот-лонг: <b style="color:${spotPnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(spotPnl)}</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:10px 14px">🔴 Перп-шорт: <b style="color:${perpPnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(perpPnl)}</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:10px 14px">💰 Фандинг за ${days} дн.: <b style="color:${fundingIncome >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(fundingIncome)}</b></span>
+      <span style="background:#040714; border:1.5px solid var(--acc2); border-radius:8px; padding:10px 14px">Σ Итог: <b style="color:${total >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(total)}</b></span>
+    </div>
+    <div style="margin-top:12px; background:#040714; border-radius:8px; height:14px; overflow:hidden; display:flex">
+      <div style="width:50%; background:rgba(34,197,94,.35); transform:scaleX(${Math.min(1, Math.abs(spotPnl) / (size * 0.5) || 0.001)}); transform-origin:${spotPnl >= 0 ? 'right' : 'right'}"></div>
+      <div style="width:50%; background:rgba(239,68,68,.35); transform:scaleX(${Math.min(1, Math.abs(perpPnl) / (size * 0.5) || 0.001)}); transform-origin:left"></div>
+    </div>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px; line-height:1.6">
+      Ноги гасят друг друга: цена ${move >= 0 ? 'выросла' : 'упала'} на ${Math.abs(move)}%, а рыночный PnL позиции — <b>ноль</b>. Позиция зарабатывает только фандинг: ${fundingBps} bps × 3 раза в сутки × ${days} дн. = ${fmt$(fundingIncome)}.
+      ${fundingIncome < 0 ? ' <b style="color:var(--bad)">Фандинг отрицательный для этой стороны — ты платишь, а не получаешь.</b>' : ''}
+      Риски, которых не видно на этом идеальном конструкторе: инверсия фандинга, базис, ликвидация шорта при перекосе маржи и комиссии перекладки.
+    </div>`;
+};
+
+/* ---------- V4-C4: gauge «расстояние до ликвидации» (апгрейд sim_liq) ---------- */
+const _origCalcLiqV4 = calcLiquidation;
+calcLiquidation = function(){
+  _origCalcLiqV4.apply(this, arguments);
+  try{ renderLiqGauge(); }catch(e){}
+};
+function renderLiqGauge(){
+  const wrap = document.getElementById('liq_gauge_wrap');
+  if(!wrap) return;
+  const margin = parseFloat(document.getElementById('liq_margin')?.value) || 0;
+  const lev = parseFloat(document.getElementById('liq_lev')?.value) || 1;
+  const entry = parseFloat(document.getElementById('liq_entry')?.value) || 0;
+  const side = document.getElementById('liq_dir')?.value || 'long';
+  const mmr = (parseFloat(document.getElementById('liq_mmr')?.value) || 0.5) / 100;
+  if(margin <= 0 || entry <= 0){ wrap.innerHTML = ''; return; }
+  const liqPrice = side === 'long' ? entry * (1 - 1/lev + mmr) : entry * (1 + 1/lev - mmr);
+  if(!window._liqCurPrice) window._liqCurPrice = entry;
+  if(Math.abs(window._liqCurPrice - entry) / entry > 0.5) window._liqCurPrice = entry;
+  const cur = window._liqCurPrice;
+  // здоровье позиции: 100% при цене входа, 0% при цене ликвидации
+  let health;
+  if(side === 'long') health = (cur - liqPrice) / (entry - liqPrice);
+  else health = (liqPrice - cur) / (liqPrice - entry);
+  health = Math.max(0, Math.min(1, health));
+  const hpct = Math.round(health * 100);
+  const col = hpct > 50 ? '#22c55e' : hpct > 20 ? '#eab308' : '#ef4444';
+  const ang = Math.PI * (1 - health); // 0 (лево, 0%) .. PI (право, 100%)
+  const nx = 110 + 80 * Math.cos(ang), ny = 105 - 80 * Math.sin(ang);
+  const distPct = side === 'long' ? ((cur - liqPrice) / cur * 100) : ((liqPrice - cur) / cur * 100);
+  const liquidated = side === 'long' ? cur <= liqPrice : cur >= liqPrice;
+  wrap.innerHTML = `
+  <div style="background:#040714; border:1px solid var(--line); border-radius:12px; padding:14px 16px">
+    <div style="font-size:12px; font-weight:800; color:var(--mut); text-transform:uppercase; margin-bottom:8px">🧭 Спидометр маржи: расстояние до ликвидации</div>
+    <div style="display:flex; gap:18px; align-items:center; flex-wrap:wrap">
+      <svg width="220" height="120" viewBox="0 0 220 120">
+        <path d="M 20 105 A 90 90 0 0 1 200 105" fill="none" stroke="#26304a" stroke-width="14" stroke-linecap="round"/>
+        <path d="M 20 105 A 90 90 0 0 1 65 27" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round" opacity=".8"/>
+        <path d="M 65 27 A 90 90 0 0 1 110 15" fill="none" stroke="#eab308" stroke-width="14" opacity=".8"/>
+        <path d="M 110 15 A 90 90 0 0 1 200 105" fill="none" stroke="#22c55e" stroke-width="14" stroke-linecap="round" opacity=".8"/>
+        <line x1="110" y1="105" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="${col}" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="110" cy="105" r="7" fill="${col}"/>
+        <text x="24" y="118" font-size="10" fill="#ef4444">0%</text>
+        <text x="188" y="118" font-size="10" fill="#22c55e">100%</text>
+      </svg>
+      <div style="flex:1; min-width:200px">
+        <div style="font-size:26px; font-weight:900; color:${col}">${liquidated ? '💥 LIQUIDATED' : hpct + '%'}</div>
+        <div style="font-size:12.5px; color:var(--mut); margin:4px 0 10px">${liquidated
+          ? 'Позиция уничтожена: цена пересекла уровень ликвидации $' + liqPrice.toFixed(0)
+          : 'До ликвидации ($' + liqPrice.toFixed(0) + '): <b style="color:var(--txt)">' + distPct.toFixed(2) + '%</b> цены'}</div>
+        <label style="font-size:12px; color:var(--mut)">Текущая цена: <b style="color:var(--acc2)">$${Math.round(cur).toLocaleString('en-US')}</b><br>
+        <input type="range" min="${Math.round(side === 'long' ? liqPrice * 0.98 : entry * 0.7)}" max="${Math.round(side === 'long' ? entry * 1.3 : liqPrice * 1.02)}" step="10" value="${Math.round(cur)}" style="width:100%" oninput="window._liqCurPrice=+this.value; renderLiqGauge()"></label>
+      </div>
+    </div>
+    <div style="font-size:11.5px; color:var(--mut); margin-top:6px">Подвигай цену к линии ликвидации: стрелка уходит в красную зону. Плечо x${lev} означает, что хода в ${(100/lev).toFixed(1)}% против позиции достаточно для гибели маржи.</div>
+  </div>`;
+}
+
+/* ---------- V4-C5: depth-chart (апгрейд sim_ob) ---------- */
+const _origRenderObTableV4 = renderObTable;
+renderObTable = function(){
+  _origRenderObTableV4.apply(this, arguments);
+  try{ renderObDepthChart(); }catch(e){}
+};
+function renderObDepthChart(){
+  const cv = document.getElementById('ob_depth_canvas');
+  if(!cv || typeof orderBookState === 'undefined') return;
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  ctx.clearRect(0, 0, w, h);
+  const asks = orderBookState.asks.slice().sort((a,b) => a.price - b.price);
+  const bids = orderBookState.bids.slice().sort((a,b) => b.price - a.price);
+  if(!asks.length && !bids.length) return;
+  const bestAsk = asks.length ? asks[0].price : null;
+  const bestBid = bids.length ? bids[0].price : null;
+  const mid = (bestAsk && bestBid) ? (bestAsk + bestBid) / 2 : (bestAsk || bestBid);
+  const allPrices = asks.map(a => a.price).concat(bids.map(b => b.price));
+  const pMin = Math.min(...allPrices), pMax = Math.max(...allPrices);
+  const pad = (pMax - pMin) * 0.06 || 1;
+  const x = p => ((p - pMin + pad) / (pMax - pMin + 2 * pad)) * w;
+  const maxCum = Math.max(
+    asks.reduce((s, a) => s + a.qty, 0),
+    bids.reduce((s, b) => s + b.qty, 0), 0.001);
+  const y = v => h - (v / maxCum) * (h - 24);
+  // bids: кумулятив от центра влево
+  let cum = 0;
+  ctx.beginPath();
+  ctx.moveTo(x(bestBid), h);
+  bids.forEach(b => { cum += b.qty; ctx.lineTo(x(b.price), y(cum)); });
+  if(bids.length) ctx.lineTo(x(bids[bids.length-1].price) - 8, y(cum));
+  ctx.lineTo(x(bids.length ? bids[bids.length-1].price : pMin) - 8, h);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(34,197,94,.28)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgb(34,197,94)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  // asks: кумулятив от центра вправо
+  cum = 0;
+  ctx.beginPath();
+  ctx.moveTo(x(bestAsk), h);
+  asks.forEach(a => { cum += a.qty; ctx.lineTo(x(a.price), y(cum)); });
+  if(asks.length) ctx.lineTo(x(asks[asks.length-1].price) + 8, y(cum));
+  ctx.lineTo(x(asks.length ? asks[asks.length-1].price : pMax) + 8, h);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(239,68,68,.28)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgb(239,68,68)';
+  ctx.stroke();
+  // mid price line
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(x(mid), 0); ctx.lineTo(x(mid), h);
+  ctx.strokeStyle = 'rgba(255,255,255,.35)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,.6)';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('bids (покупатели)', 8, 16);
+  ctx.fillText('asks (продавцы)', w - 108, 16);
+  ctx.fillText('$' + mid.toFixed(0), x(mid) + 4, 14);
+}
 
 /* ---------- G-01 «Гонка блоков» ---------- */
 var g01State = { culprit: 3, round: 0, score: 0 };
@@ -30278,5 +31354,930 @@ function shuffledOptions(q, salt){
 }
 
 </script>
+<script>
+/* =========================================================================
+   V3-A2: ЖУРНАЛ КОГНИТИВНЫХ ОШИБОК (Mistake Tracker)
+   Классификация причины каждой ошибки → профиль в Прогрессе → влияние
+   на адаптивный банк (доминирующий тип меняет подбор вопросов).
+   ========================================================================= */
+const MISTAKE_TYPES = [
+  { id:'concept',  label:'🧩 Концептуальная', desc:'не понял саму идею' },
+  { id:'calc',     label:'🧮 Расчётная', desc:'идея понятна, обсчитался' },
+  { id:'lookahead',label:'🕳 Look-ahead/выжившего', desc:'подглядел будущее или красивую выборку' },
+  { id:'impulse',  label:'🎢 Импульс', desc:'паника, FOMO, «выбрал наугад»' }
+];
+window._mistakeSeq = 0;
+window.offerMistakeClassification = function(contextKey){
+  const uid = 'mcl_' + (++window._mistakeSeq) + '_' + Math.random().toString(36).slice(2,7);
+  (window._mistakeCtx = window._mistakeCtx || {})[uid] = contextKey;
+  return `<div id="${uid}" style="margin-top:10px; padding:10px 12px; border:1px dashed var(--warn); border-radius:8px">
+    <div style="font-size:11.5px; color:var(--warn); font-weight:700; margin-bottom:6px">📓 Журнал ошибок: в чём была причина? (делает тренировку умнее)</div>
+    <div style="display:flex; flex-wrap:wrap; gap:6px">` +
+    MISTAKE_TYPES.map(t => `<button class="btn sm ghost" style="font-size:11.5px" onclick="window.recordMistake('${uid}','${t.id}')" title="${t.desc}">${t.label}</button>`).join('') +
+    `</div></div>`;
+};
+window.recordMistake = function(uid, typeId){
+  const box = document.getElementById(uid);
+  const ctx = (window._mistakeCtx || {})[uid] || 'unknown';
+  let log = [];
+  try{ log = JSON.parse(localStorage.getItem('cn_mistakes') || '[]'); }catch(e){}
+  log.push({ t: typeId, ts: Date.now(), ctx });
+  try{ localStorage.setItem('cn_mistakes', JSON.stringify(log.slice(-500))); }catch(e){}
+  if(box) box.innerHTML = `<span style="font-size:12px; color:var(--ok)">✓ записано: ${MISTAKE_TYPES.find(t=>t.id===typeId).label}</span>`;
+  if(document.getElementById('progress') && document.getElementById('progress').classList.contains('active-view')) renderMistakeJournal();
+  showToast('📓 Тип ошибки записан — журнал обновлен', '📓');
+};
+window.getMistakeProfile = function(){
+  let log = [];
+  try{ log = JSON.parse(localStorage.getItem('cn_mistakes') || '[]'); }catch(e){}
+  const counts = {}; MISTAKE_TYPES.forEach(t => counts[t.id] = 0);
+  log.forEach(m => { if(counts[m.t] !== undefined) counts[m.t]++; });
+  let dominant = null, max = 0;
+  MISTAKE_TYPES.forEach(t => { if(counts[t.id] > max){ max = counts[t.id]; dominant = t.id; } });
+  return { counts, dominant, total: log.length };
+};
+window.renderMistakeJournal = function(){
+  const box = document.getElementById('mistake_journal');
+  if(!box) return;
+  const prof = getMistakeProfile();
+  if(prof.total === 0){
+    box.innerHTML = '<div style="color:var(--mut); font-size:13px">Пока пусто: при неверном ответе приложение предложит классифицировать причину. Это deliberately-честная практика: ошибки → данные → персональная тренировка.</div>';
+    return;
+  }
+  const maxC = Math.max(...Object.values(prof.counts));
+  const domT = prof.dominant ? MISTAKE_TYPES.find(t=>t.id===prof.dominant) : null;
+  box.innerHTML = MISTAKE_TYPES.map(t => {
+    const c = prof.counts[t.id];
+    const pct = maxC ? Math.round(c / maxC * 100) : 0;
+    return `<div style="display:flex; align-items:center; gap:10px; margin-bottom:6px">
+      <span style="min-width:190px; font-size:12.5px; color:var(--txt)">${t.label}</span>
+      <div style="flex:1; background:#040714; border-radius:6px; height:14px; overflow:hidden">
+        <div style="width:${pct}%; height:100%; background:${t.id===prof.dominant?'var(--warn)':'var(--acc1)'}"></div>
+      </div>
+      <span style="min-width:30px; text-align:right; font-size:12.5px; color:var(--acc2); font-weight:700">${c}</span>
+    </div>`;
+  }).join('') +
+  `<div style="font-size:12.5px; color:var(--mut); margin-top:8px">Всего классифицировано: ${prof.total}. ${domT ? 'Доминирует тип <b style="color:var(--warn)">' + domT.label + '</b> — адаптивная тренировка подстроена под него.' : ''}</div>`;
+};
+
+/* хук на рендер прогреса */
+const _origRenderProgressStats = renderProgressStats;
+renderProgressStats = function(){ _origRenderProgressStats.apply(this, arguments); renderMistakeJournal(); };
+
+/* ---------- хуки неверных ответов (урок / тренажёр / аттестация) ---------- */
+const _origLessonQuiz = handleLessonQuizAnswer;
+handleLessonQuizAnswer = function(lessonId, selectedIdx, correctIdx){
+  _origLessonQuiz.apply(this, arguments);
+  if(selectedIdx !== correctIdx){
+    const fb = document.getElementById('lquiz_fb_' + lessonId);
+    if(fb) fb.innerHTML += window.offerMistakeClassification('lesson:' + lessonId);
+  }
+};
+const _origCheckQuiz = checkQuizAnswer;
+checkQuizAnswer = function(optIdx){
+  const q = quiz.qs[quiz.cur];
+  const qa = (q && q._sv && q._svCur === quiz.cur + '_' + quiz._shuffleSalt) ? q._sv.a : (q ? q.a : 0);
+  _origCheckQuiz.apply(this, arguments);
+  if(optIdx !== qa){
+    const fb = document.getElementById('quiz_feedback');
+    if(fb) fb.innerHTML += window.offerMistakeClassification('trainer:' + (q && q.topic ? q.topic : 'mixed'));
+  }
+};
+const _origPhaseAnswer = checkPhaseTestAnswer;
+checkPhaseTestAnswer = function(phaseNum, qIdx, optIdx){
+  const test = phaseNum === 6 ? CAPSTONE_EXAM : (typeof PHASE_TESTS !== 'undefined' ? PHASE_TESTS.find(t=>t.phase===phaseNum) : null);
+  const q = (window._ptView && window._ptView[phaseNum]) ? window._ptView[phaseNum][qIdx] : (test ? test.questions[qIdx] : null);
+  _origPhaseAnswer.apply(this, arguments);
+  if(q && q.a !== undefined && optIdx !== q.a){
+    const expBox = document.getElementById('ptest_exp_' + phaseNum + '_' + qIdx);
+    if(expBox) expBox.innerHTML += window.offerMistakeClassification('ptest:' + phaseNum + ':' + qIdx);
+  }
+};
+
+/* ---------- влияние доминирующего типа на адаптивный банк ---------- */
+/* numeric-вопросы доступны в банке адаптивной тренировки */
+const ADAPTIVE_NUMERIC = [
+  { topic:'risk_management', type:'numeric', q:'Полный Келли f* = 20%. Quarter Kelly — доля капитала (в %)?', answer:5, absTol:0.25, unit:'%', explain:'Quarter Kelly = f*/4 = 5%.' },
+  { topic:'statistics', type:'numeric', q:'Стратегия: win rate 55%, профит +3%, убыток −3%. Ожидание на сделку (в %)?', answer:0.3, absTol:0.1, unit:'%', explain:'E = 0.55×3 − 0.45×3 = 0.3% — тонкое, но положительное.' },
+  { topic:'statistics', type:'numeric', q:'Sharpe: доходность 24%, волатильность 16%, Rf 4%.', answer:1.25, absTol:0.06, unit:'', explain:'(24 − 4) / 16 = 1.25.' },
+  { topic:'market_microstructure', type:'numeric', q:'Лучший бид 500, исполнение продажи 499.5. Slippage (bps)?', answer:1, absTol:0.2, unit:'bps', explain:'0.5/500 = 1 bps.' },
+  { topic:'math_skew', type:'numeric', q:'Последовательность +20%, −20%. Итог (в %)?', answer:-4, absTol:0.3, unit:'%', explain:'1.2×0.8 = 0.96 → −4%: драг волатильности.' },
+  { topic:'accounting', type:'numeric', q:'Куплено 1 лот за 200 000 ₽, продан за 250 000 ₽. НДФЛ 13% (в ₽)?', answer:6500, tolPct:2, unit:'₽', explain:'50 000 × 0.13 = 6 500 ₽.' }
+];
+if(typeof ADAPTIVE_QUESTION_BANK !== 'undefined') ADAPTIVE_QUESTION_BANK.push(...ADAPTIVE_NUMERIC);
+
+const MISTAKE_STRATEGY = {
+  concept:  'Профиль: концептуальные ошибки → вернись к уровню «Объясни просто» и Фейнману.',
+  calc:     'Профиль: расчётные ошибки → в сессию добавлены числовые задачи с открытым вводом.',
+  lookahead:'Профиль: look-ahead/выжившего → проверяй TRAIN/OOS/HOLDOUT на каждом графике.',
+  impulse:  'Профиль: импульсивные ответы → перед кликом проговори причину вслух.'
+};
+window.applyMistakeBias = function(){
+  const prof = getMistakeProfile();
+  if(prof.dominant && prof.counts[prof.dominant] >= 3){
+    if(prof.dominant === 'calc' && window.quiz && quiz.qs){
+      const numPool = ADAPTIVE_NUMERIC.filter(q => q.type === 'numeric');
+      if(numPool.length && !quiz.qs.some(q => q.type === 'numeric')){
+        quiz.qs[quiz.qs.length - 1] = numPool[Math.floor(Math.random() * numPool.length)];
+      }
+    }
+    setTimeout(() => showToast('📓 ' + MISTAKE_STRATEGY[prof.dominant], '📓'), 700);
+  }
+};
+/* оборачиваем строителей адаптивной/смешанной сессии */
+if(typeof startAdaptiveWorkout === 'function'){
+  const _origAW = startAdaptiveWorkout;
+  startAdaptiveWorkout = function(){ _origAW.apply(this, arguments); applyMistakeBias(); };
+}
+if(typeof startInterleavingSession === 'function'){
+  const _origIL = startInterleavingSession;
+  startInterleavingSession = function(){ _origIL.apply(this, arguments); applyMistakeBias(); };
+}
+
+/* ---------- numeric-поддержка в тренажёре (renderQuizQuestion) ---------- */
+const _origRenderQuizQ = renderQuizQuestion;
+renderQuizQuestion = function(){
+  const q = (window.quiz && quiz.qs) ? quiz.qs[quiz.cur] : null;
+  if(q && q.type === 'numeric'){
+    const box = document.getElementById('quizBox');
+    if(box){
+      box.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px">
+        <span style="font-size:12px; font-weight:700; color:var(--mut)">Вопрос ${quiz.cur + 1} из ${quiz.total}</span>
+        <span style="color:var(--warn); font-weight:700; font-size:12px">🔥 Серия: ${quizStreak}</span>
+      </div>
+      <div style="font-size:15px; font-weight:700; color:var(--txt); margin-bottom:8px; line-height:1.5">${q.q}</div>
+      <div style="font-size:11.5px; color:var(--acc2); margin-bottom:12px">🧮 Открытый ввод (допуск ${q.absTol !== undefined ? '±' + q.absTol + ' ' + (q.unit || '') : '±' + (q.tolPct || 2) + '%'})</div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <input id="quiz_num_in" type="text" inputmode="decimal" placeholder="число" style="width:150px; background:#040714; border:1px solid var(--acc2); border-radius:8px; padding:9px 12px; color:var(--txt); font-size:14.5px; font-weight:700">
+        <span style="color:var(--mut); font-size:13.5px">${q.unit || ''}</span>
+        <button class="btn sm" onclick="checkQuizNumeric()">Проверить</button>
+      </div>
+      <div id="quiz_feedback" style="display:none; margin-top:14px; padding:12px; border-radius:10px; font-size:13px"></div>
+      <div style="margin-top:16px; text-align:right">
+        <button class="btn sm ghost" id="quiz_next_btn" style="display:none" onclick="nextQuizQuestion()">Следующий вопрос →</button>
+      </div>`;
+    }
+    return;
+  }
+  _origRenderQuizQ.apply(this, arguments);
+};
+window.checkQuizNumeric = function(){
+  const q = quiz.qs[quiz.cur];
+  if(!q || q.type !== 'numeric') return;
+  const inp = document.getElementById('quiz_num_in');
+  const fb = document.getElementById('quiz_feedback');
+  if(!inp || !fb) return;
+  const val = parseFloat(String(inp.value).replace(/\\s/g, '').replace(',', '.'));
+  if(isNaN(val)){ showToast('Введи число.', '🧮'); return; }
+  const tol = q.absTol !== undefined ? q.absTol : Math.abs(q.answer) * (q.tolPct || 2) / 100;
+  const ok = Math.abs(val - q.answer) <= tol;
+  inp.disabled = true;
+  (quiz.results = quiz.results || []).push({ cat: q._cat || null, src: q._src || null, ok });
+  if(ok){ quiz.score++; quizStreak++; } else { quizStreak = 0; }
+  fb.style.display = 'block';
+  fb.style.background = ok ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.15)';
+  fb.style.border = '1px solid ' + (ok ? 'var(--ok)' : 'var(--bad)');
+  fb.innerHTML = (ok ? '<b>Верно! 🎯</b> ' : '<b>Ошибка! ❌</b> ') + (q.explain || q.solution || '');
+  if(!ok) fb.innerHTML += window.offerMistakeClassification('trainer-num:' + (q.topic || 'numeric'));
+  if(q.topic) recordTopicResult(q.topic, ok);
+  else if(quiz.isAdaptive && quiz.targetTopic) recordTopicResult(quiz.targetTopic, ok);
+  save();
+  updateHeader();
+  renderProgressStats();
+  const nextBtn = document.getElementById('quiz_next_btn');
+  if(nextBtn) nextBtn.style.display = 'inline-block';
+};
+</script>
+<script>
+/* =========================================================================
+   V3-A6: ТРЕНАЖЁР — 3 УРОВНЯ МАСТЕРСТВА + ДО/ПОСЛЕ ПРЕ-КВИЗ (learning gain)
+   ========================================================================= */
+window.quizLevel = 1;
+window.setQuizLevel = function(lvl, btn){
+  window.quizLevel = lvl;
+  document.querySelectorAll('#quiz_level_row .chip').forEach(c => c.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  startQuiz();
+};
+/* уровни влияют на генерацию блица по терминам */
+const _origStartQuizA6 = startQuiz;
+startQuiz = function(){
+  if(quiz.preserveQs){ _origStartQuizA6.apply(this, arguments); return; }
+  const lvl = window.quizLevel || 1;
+  if(quizMode !== 'terms' && lvl !== 1){
+    quiz.score = 0; quiz.cur = 0; quiz.qs = []; quiz._shuffleSalt = nextShuffleSalt();
+    quiz.mode = 'standard'; quiz.isAdaptive = false; quiz.targetTopic = null;
+    const sb = document.getElementById('quiz_session_banner'); if(sb) sb.innerHTML = '';
+    let pool = quizMode === 'cases' ? [...QUIZ_CASES] : quizMode === 'legal' ? [...QUIZ_LEGAL] : [...QUIZ_CALC];
+    const len = lvl === 2 ? Math.min(10, pool.length) : Math.min(15, pool.length);
+    quiz.qs = pool.sort(() => 0.5 - Math.random()).slice(0, len);
+    quiz.total = quiz.qs.length;
+    renderQuizQuestion();
+    return;
+  }
+  if(quizMode !== 'terms'){ _origStartQuizA6.apply(this, arguments); return; }
+  quiz.mode = 'standard'; quiz.isAdaptive = false; quiz.targetTopic = null;
+  const sb = document.getElementById('quiz_session_banner'); if(sb) sb.innerHTML = '';
+  quiz.score = 0; quiz.cur = 0; quiz.total = 10; quiz.qs = [];
+  quiz._shuffleSalt = nextShuffleSalt();
+  const shuffled = [...TERMS].sort(() => 0.5 - Math.random()).slice(0, 10);
+  quiz.qs = shuffled.map(t => {
+    const others = TERMS.filter(x => x.t !== t.t).sort(() => 0.5 - Math.random()).slice(0, 3);
+    if(lvl === 1){
+      const allOpts = [t.t, ...others.map(o => o.t)].sort(() => 0.5 - Math.random());
+      return { q: `💡 Определение: «${t.d}». О каком понятии речь?`, opts: allOpts, a: allOpts.indexOf(t.t), explain: `Верный ответ: <b>${t.t}</b> (${CATS[t.c][0]}). ${t.d}` };
+    }
+    if(lvl === 2){
+      const allOpts = [t.t, ...others.map(o => o.t)].sort(() => 0.5 - Math.random());
+      return { q: `🎭 Бытовая аналогия: «${t.a}». Какой это термин?`, opts: allOpts, a: allOpts.indexOf(t.t), explain: `Верный ответ: <b>${t.t}</b> (${CATS[t.c][0]}). ${t.d}` };
+    }
+    const defOpts = [t.d, ...others.map(o => o.d)].sort(() => 0.5 - Math.random());
+    return { q: `🏛 Термин: «${t.t}». Выбери верное определение.`, opts: defOpts, a: defOpts.indexOf(t.d), explain: `Эталон: ${t.d}` };
+  });
+  quiz.total = quiz.qs.length;
+  renderQuizQuestion();
+};
+
+/* ---------- до/после пре-квиз (3 вопроса) ---------- */
+window._prepost = null;
+window.startSessionWithPrecheck = function(launchFn, pool){
+  const qs = [...pool].sort(() => 0.5 - Math.random()).slice(0, 3).filter(q => q.opts && q.opts.length);
+  if(qs.length < 3){ launchFn(); return; }
+  window._prepost = { qs, pre: 0, answered: 0, launchFn };
+  showPrePostModal('pre');
+};
+window.showPrePostModal = function(stage){
+  const st = window._prepost;
+  const old = document.getElementById('prepost_modal');
+  if(old) old.remove();
+  const modal = document.createElement('div');
+  modal.id = 'prepost_modal';
+  modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:120000; display:flex; justify-content:center; align-items:center; padding:14px; backdrop-filter:blur(6px)';
+  const isPre = stage === 'pre';
+  modal.innerHTML = `
+    <div style="background:#090d1f; border:2px solid var(--acc2); border-radius:16px; max-width:560px; width:100%; padding:22px; max-height:90vh; overflow-y:auto">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+        <h3 style="margin:0; font-size:17px; color:var(--txt)">${isPre ? '📋 Входной опрос (3 вопроса)' : '📋 Контрольный опрос (те же 3 вопроса)'}</h3>
+        ${isPre ? '<button class="btn sm ghost" onclick="window.finishPrePost(true)">Пропустить</button>' : ''}
+      </div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:14px; line-height:1.5">${isPre ? 'Ответь честно «как есть» — это не экзамен. После сессии сравним Δ до/после, чтобы увидеть прирост.' : 'Финал: те же вопросы — покажем честный прирост Δ.'}</div>
+      <div id="prepost_body"></div>
+      <div id="prepost_delta" style="display:none; margin-top:12px"></div>
+      <div style="text-align:right; margin-top:14px"><button class="btn sm" id="prepost_next" style="display:none" onclick="window.finishPrePost()">${isPre ? 'Начать сессию →' : 'Готово'}</button></div>
+    </div>`;
+  document.body.appendChild(modal);
+  st.answered = 0;
+  const body = modal.querySelector('#prepost_body');
+  body.innerHTML = st.qs.map((q, qi) => {
+    const sv = (typeof shuffledOptions === 'function') ? shuffledOptions(q, qi * 17 + 3) : q;
+    return `<div style="margin-bottom:14px">
+      <div style="font-size:13.5px; font-weight:700; color:var(--txt); margin-bottom:6px">${qi + 1}. ${q.q}</div>
+      <div id="prepost_opts_${qi}" style="display:flex; flex-direction:column; gap:5px">
+        ${sv.opts.map((o, oi) => `<button class="ans sm" style="text-align:left; font-size:12.5px; padding:7px 10px" onclick="window.answerPrePost(${qi}, ${oi}, ${sv.a})">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  if(!isPre){
+    const delta = modal.querySelector('#prepost_delta');
+    delta.style.display = 'block';
+    delta.innerHTML = `<div style="font-size:13px; color:var(--txt)">До: ${st.pre}/3 · после: <b id="prepost_post_cnt">0</b>/3</div>`;
+  }
+};
+window.answerPrePost = function(qi, oi, correct){
+  const st = window._prepost;
+  const box = document.getElementById('prepost_opts_' + qi);
+  if(!box || st._answered && st._answered[qi]) return;
+  st._answered = st._answered || {};
+  st._answered[qi] = true;
+  st.answered++;
+  box.querySelectorAll('button').forEach((b, bi) => {
+    b.disabled = true;
+    if(bi === correct) b.classList.add('ok'); else if(bi === oi) b.classList.add('bad');
+  });
+  const stage = document.querySelector('#prepost_modal h3').textContent.includes('Входной') ? 'pre' : 'post';
+  if(oi === correct){ if(stage === 'pre') st.pre++; else st.post = (st.post || 0) + 1; }
+  const pc = document.getElementById('prepost_post_cnt');
+  if(pc) pc.textContent = st.post || 0;
+  if(st.answered >= st.qs.length){
+    const nxt = document.getElementById('prepost_next');
+    if(nxt) nxt.style.display = 'inline-block';
+    if(stage === 'post'){
+      const delta = (st.post || 0) - st.pre;
+      const dl = document.getElementById('prepost_delta');
+      dl.innerHTML = `<div style="font-size:14px; color:var(--txt); font-weight:700">Δ до/после: <span style="color:${delta >= 0 ? 'var(--ok)' : 'var(--bad)'}">${delta >= 0 ? '+' : ''}${delta}</span> — ${delta > 0 ? 'прирост зафиксирован, сессия сработала.' : delta === 0 ? 'база устойчива; точки роста — в журнале ошибок.' : 'похоже на усталость — перерыв или повторное извлечение.'}</div>`;
+      if(delta > 0) showToast('📈 Δ до/после: +' + delta + ' — прирост зафиксирован!', '📈');
+    }
+  }
+};
+window.finishPrePost = function(skip){
+  const st = window._prepost;
+  const modal = document.getElementById('prepost_modal');
+  if(modal) modal.remove();
+  if(skip){ window._prepost = null; return; }
+  const stageWasPre = !st.postCalled;
+  st.postCalled = true;
+  if(stageWasPre && st.launchFn){
+    const qs = st.qs;
+    const fn = st.launchFn;
+    fn();
+    quiz._prepost = qs;
+    quiz._prepostPre = st.pre;
+  }
+};
+/* оборачиваем запуск смешанной и адаптивной сессий */
+if(typeof startInterleavingSession === 'function'){
+  const _il = startInterleavingSession;
+  startInterleavingSession = function(){
+    window.startSessionWithPrecheck(() => _il(), typeof ADAPTIVE_QUESTION_BANK !== 'undefined' ? ADAPTIVE_QUESTION_BANK.filter(q => q.opts) : []);
+  };
+}
+if(typeof startAdaptiveWorkout === 'function'){
+  const _aw = startAdaptiveWorkout;
+  startAdaptiveWorkout = function(){
+    window.startSessionWithPrecheck(() => _aw(), typeof ADAPTIVE_QUESTION_BANK !== 'undefined' ? ADAPTIVE_QUESTION_BANK.filter(q => q.opts) : []);
+  };
+}
+/* пост-опрос в конце сессии */
+const _origRQA6 = renderQuizQuestion;
+renderQuizQuestion = function(){
+  if(quiz && quiz.qs && quiz.cur >= quiz.total && quiz._prepost && quiz._prepost.length){
+    const qs = quiz._prepost; const pre = quiz._prepostPre;
+    quiz._prepost = null;
+    _origRQA6.apply(this, arguments);
+    setTimeout(() => {
+      window._prepost = { qs, pre, answered: 0, postCalled: true, launchFn: null };
+      showPrePostModal('post');
+    }, 400);
+    return;
+  }
+  _origRQA6.apply(this, arguments);
+};
+</script>
+<script>
+/* =========================================================================
+   V4: УРОКИ ПО ТРЕТЬЕМУ АУДИТУ (MEV-защита, LLM-агенты)
+   ========================================================================= */
+const V4_CONTENT_LESSONS = [
+  {
+    "id": "v4_mev",
+    "phase": 6,
+    "num": "БОН-М",
+    "title": "MEV-защита: почему боты съедают твою сделку до того, как она исполнится",
+    "cognitiveLoad": "medium",
+    "timeEst": "6 мин",
+    "lead": "В Ethereum и других публичных сетях твоя транзакция сначала попадает в открытую «очередь ожидания» (мемпул). Специальные боты читают эту очередь и успевают встроиться вокруг твоей сделки. Это называется MEV. Здесь разбираем главную атаку — «сэндвич» — и три способа защиты.",
+    "termsCount": 3,
+    "terms": [
+      { "ru": "MEV", "en": "Maximal Extractable Value", "desc": "Прибыль, которую извлекают из порядка и содержимого транзакций в блоке — поверх обычных комиссий." },
+      { "ru": "Сэндвич-атака", "en": "sandwich attack", "desc": "Бот покупает прямо перед твоей покупкой (загоняя цену вверх) и продаёт сразу после — разница достаётся ему, убыток тебе." },
+      { "ru": "Приватный мемпул", "en": "private mempool", "desc": "Канал отправки транзакции мимо открытой очереди (например, Flashbots Protect): боты её не видят до исполнения." }
+    ],
+    "prerequisites": [],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "Представь, что ты кричишь на аукционе: «Покупаю 10 ETH по любой цене до $4,200!». В зале сидит сотня скоростных перекупщиков. Один из них мгновенно покупает ETH по $4,150, продаёт его тебе по $4,195 и кладёт $450 в карман. Ты даже не заметил: твоя сделка «прошла нормально». В блокчейне роль крика играет мемпул — публичная очередь неподтверждённых транзакций, а роль перекупщика — MEV-бот.",
+        "level2": "Механика сэндвича по шагам:\n1. Твоя транзакция попадает в публичный мемпул: видна сумма, DEX и допуск проскальзывания (slippage tolerance).\n2. Бот симулирует её и видит: цена сдвинется на X%.\n3. Бот вставляет свою покупку ПЕРЕД твоей (front-run) с более высокой комиссией за газ.\n4. Твоя сделка исполняется по уже поднятой цене.\n5. Бот продаёт СРАЗУ после (back-run), забирая разницу.\nВесь цикл — внутри одного блока, за ~12 секунд.",
+        "level3": "Размер ущерба ограничен твоим же допуском проскальзывания: при tolerance 0.5% бот может изъять максимум ~0.5% от объёма (минус его издержки). Поэтому завышенный допуск «чтобы сделка не зависла» — это буквально приглашение ботам. Типичные рекомендации: для ликвидных пар 0.1–0.5%, для новых токенов — не более 1–2%."
+      },
+      {
+        "type": "analogy",
+        "text": "Slippage tolerance — это как сказать таксисту: «вези за любую цену до 5,000 ₽». Честная поездка стоит 800 ₽, но услышав «до 5,000», недобросовестный найдёт способ выставить счёт 4,950 ₽. Твоя транзакция на DEX говорит то же самое всем ботам сети одновременно."
+      },
+      {
+        "type": "numbers",
+        "text": "Исследования Flashbots оценивали суммарный извлечённый MEV в Ethereum в сотни миллионов долларов за год; сэндвичи — один из главных источников. Пример: покупка на $10,000 с допуском 5% на тонкой паре — до ~$500 может уйти боту одной транзакцией."
+      },
+      {
+        "type": "interactive_inline",
+        "id": "widget_v4_mev",
+        "title": "Симулятор сэндвич-атаки",
+        "desc": "Выбери объём сделки и допуск проскальзывания, запусти транзакцию — и посмотри, сколько изымает бот. Потом попробуй отправить её через приватный мемпул."
+      },
+      {
+        "type": "concept",
+        "level1": "Три рабочих способа защиты. Первый — минимальный допуск проскальзывания: 0.1–0.5% для ликвидных пар; это сужает «прибыльную зону» бота до размера, меньшего его издержек. Второй — приватный мемпул (Flashbots Protect, MEV-Blocker): транзакция идёт напрямую валидаторам, мимо открытой очереди, — сэндвичить просто нечего. Третий — торговать крупные суммы через агрегаторы с защитой (CoW Swap, 1inch Fusion): там заявки собираются в пакет и исполняются по единой цене, порядок внутри не эксплуатируется.",
+        "level2": "Для твоей стратегии на AI-ботах вывод практический: любая ончейн-нога стратегии должна отправляться только через приватный канал и с явным лимитом проскальзывания в коде. «Забыл выставить» — это не мелочь, а регулярная утечка капитала, невидимая в бэктесте."
+      },
+      {
+        "type": "warn",
+        "text": "MEV не виден в бэктесте. На исторических данных твоя ончейн-стратегия исполняется «по цене закрытия свечи», а в реальности — по цене после того, как её подвинули боты. Ончейн-стратегия без учёта MEV и газа почти всегда завышает результат."
+      },
+      {
+        "type": "recap",
+        "points": [
+          "MEV — прибыль ботов из порядка транзакций; сэндвич — покупка перед тобой и продажа после.",
+          "Размер ущерба ограничен твоим допуском проскальзывания: держи его минимальным (0.1–0.5% для ликвидных пар).",
+          "Приватный мемпул (Flashbots Protect, MEV-Blocker) или защищённые агрегаторы (CoW Swap) убирают атаку целиком.",
+          "В коде AI-бота: приватная отправка + явный лимит slippage — обязательные строки, а не опция."
+        ],
+        "english": ["MEV", "sandwich attack", "slippage tolerance", "private mempool", "front-run / back-run"]
+      }
+    ],
+    "quiz": {
+      "q": "Ты покупаешь токен на DEX с допуском проскальзывания 5%. Что происходит с точки зрения MEV?",
+      "opts": [
+        "Ничего: 5% — просто страховка от отмены транзакции, на итоговую цену не влияет",
+        "Ты огласил ботам потолок цены: сэндвич-бот может изъять до ~5% от объёма сделки, исполнив тебя по максимально плохой допустимой цене",
+        "MEV-боты работают только с крупными суммами от $100,000 — тебя это не касается",
+        "Высокий допуск защищает от MEV, потому что сделка исполняется быстрее"
+      ],
+      "a": 1,
+      "explain": "Допуск проскальзывания — это публичный лимит убытка, который ты заранее разрешил. Бот рассчитает сэндвич ровно под этот лимит. Защита: минимальный допуск + приватный мемпул."
+    }
+  },
+  {
+    "id": "v4_llm",
+    "phase": 6,
+    "num": "БОН-L",
+    "title": "LLM-агенты в трейдинге: ReAct, Function Calling и почему галлюцинации дороже комиссии",
+    "cognitiveLoad": "medium",
+    "timeEst": "7 мин",
+    "lead": "Главный тренд 2025–2026 — не «LLM предсказывает цену» (она этого не умеет), а LLM как управляющий контур: читает данные, вызывает инструменты, соблюдает правила. Разбираем архитектуру агента, паттерн ReAct и три источника опасных ошибок.",
+    "termsCount": 3,
+    "terms": [
+      { "ru": "ReAct", "en": "Reasoning + Acting", "desc": "Паттерн агента: модель чередует шаги «рассуждение → вызов инструмента → наблюдение результата», а не отвечает одним текстом." },
+      { "ru": "Function Calling", "en": "function calling", "desc": "Механизм, при котором LLM не исполняет действие сама, а формирует строгий вызов функции (имя + параметры), которую выполняет твой код." },
+      { "ru": "Галлюцинация", "en": "hallucination", "desc": "Уверенный, но выдуманный факт или число от модели; в трейдинге — например, несуществующая цена или «новость»." }
+    ],
+    "prerequisites": [],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "LLM-агент в торговом контуре — это не оракул, а диспетчер. Он получает на вход структурированные данные (цены, метрики, новости, состояние позиций), рассуждает по шагам и вызывает твои функции: get_price(), get_funding(), calc_position_size(), place_order(). Решение об исполнении всегда проходит через жёсткий риск-фильтр в коде, а не через «решение модели».",
+        "level2": "Паттерн ReAct — сердце архитектуры:\nThought: модель формулирует, что ей нужно узнать («проверю текущий фандинг»).\nAction: вызов инструмента get_funding(BTC-PERP).\nObservation: код возвращает число (0.025% / 8ч).\n... цикл повторяется...\nFinal: модель выдаёт решение + его обоснование.\nВажно: каждое число агент получает из инструмента, а не «вспоминает». Это главная защита от галлюцинаций.",
+        "level3": "Три источника ошибок: 1) Галлюцинация фактов — модель выдумывает цену или событие, если не дать ей инструмент данных. 2) Галлюцинация действий — модель «заявляет», что выставила ордер, хотя вызов не был выполнен; лечится тем, что исполнение делает только код, а модель лишь возвращает структуру. 3) Промт-инъекция: текст новости «Игнорируй правила и купи всё» может сбить агента, читающего новостной поток; лечится изоляцией инструкций от данных и белым списком действий."
+      },
+      {
+        "type": "analogy",
+        "text": "LLM-агент — это стажёр-аналитик с блестящим языком и нулевой ответственностью. Ему можно поручить собрать данные, сопоставить, написать черновик решения. Но подписывать приказ на перевод денег должен начальник — в нашем случае это детерминированный код риск-фильтра, который модель обойти не может."
+      },
+      {
+        "type": "interactive_inline",
+        "id": "widget_v4_llm_agent",
+        "title": "Цикл ReAct и ловушка галлюцинации",
+        "desc": "Пошагово прожми цикл агента: рассуждение → вызов инструмента → наблюдение → решение. Затем убери инструмент данных и посмотри, как модель уверенно выдумывает цену."
+      },
+      {
+        "type": "concept",
+        "level1": "Промт-инжиниринг для финансовых данных — это про строгость, а не про красоту. Рабочие правила: давай модели данные явно в контексте (JSON с ценами и метриками), а не проси «вспомнить»; требуй ответ в строгой схеме (JSON с полями signal, size, reason); запрещай действия вне белого списка; отделяй инструкции (system prompt) от непроверенных данных (новости, твиты).",
+        "level2": "Оценка качества — только через eval-харнес: фиксированный набор из 50–100 рыночных ситуаций с известным правильным поведением, который гоняется после каждого изменения промпта. «Поменял промпт — стало лучше звучать» — не аргумент; «доля корректных решений на eval-наборе выросла с 71% до 84%» — аргумент."
+      },
+      {
+        "type": "warn",
+        "text": "LLM не предсказывает рынок. Любая схема «спросим у модели, куда пойдёт цена» — это платный генератор случайных уверенных ответов. Рабочее применение 2025–2026: анализ сентимента, триаж новостей, контроль качества кода стратегий, ассистент риск-менеджера — с жёстким детерминированным исполнением."
+      },
+      {
+        "type": "recap",
+        "points": [
+          "LLM-агент — диспетчер инструментов, а не предсказатель цены; исполнение — только через код риск-фильтра.",
+          "ReAct: рассуждение → вызов инструмента → наблюдение → решение; каждое число из инструмента, не из «памяти» модели.",
+          "Три опасности: галлюцинация фактов, галлюцинация действий, промт-инъекция — у всех есть инженерные защиты.",
+          "Качество промпта измеряется на eval-наборе с известными ответами, а не на слух."
+        ],
+        "english": ["LLM agent", "ReAct", "function calling", "hallucination", "prompt injection", "eval harness"]
+      }
+    ],
+    "quiz": {
+      "q": "Где в контуре LLM-агента должно приниматься финальное решение об отправке ордера?",
+      "opts": [
+        "У LLM: она видит весь контекст, поэтому её решение точнее кода",
+        "В детерминированном риск-фильтре в коде: модель предлагает действие, код проверяет лимиты и только тогда исполняет",
+        "У пользователя вручную: LLM-агентам нельзя доверять даже подготовку данных",
+        "У второй LLM, которая проверяет первую"
+      ],
+      "a": 1,
+      "explain": "Модель — советник с нулевой ответственностью. Жёсткие лимиты (размер, плечо, дневной убыток) должны проверяться кодом, который модель не может ни изменить, ни обойти."
+    }
+  }
+];
+LESSONS.push.apply(LESSONS, V4_CONTENT_LESSONS);
+
+/* --- V4-A1: симулятор сэндвич-атаки --- */
+window._v4mev = { mode: 'public', size: 10000, slip: 0.5, done: false };
+function renderV4MevWidget(){
+  const box = document.getElementById('widget_v4_mev'); if(!box) return;
+  const st = window._v4mev;
+  const movePct = Math.min(st.slip, 0.15 + (st.size / 100000) * 0.5); // сколько бот может выжать
+  const loss = st.mode === 'public' ? Math.round(st.size * movePct / 100) : 0;
+  box.innerHTML = `
+  <div style="background:rgba(124,58,237,.06); border:1.5px solid var(--acc1); border-radius:12px; padding:18px; margin:16px 0">
+    <div style="font-size:12px; font-weight:800; color:var(--acc1); text-transform:uppercase; margin-bottom:12px">🥪 Симулятор сэндвич-атаки</div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px">
+      <label style="font-size:12.5px; color:var(--txt)">Объём сделки, $<br>
+        <input type="range" min="1000" max="100000" step="1000" value="${st.size}" style="width:170px" oninput="window._v4mev.size=+this.value; window._v4mev.done=false; renderV4MevWidget()"><br>
+        <b style="color:var(--acc2)">$${st.size.toLocaleString('en-US')}</b></label>
+      <label style="font-size:12.5px; color:var(--txt)">Допуск проскальзывания<br>
+        <input type="range" min="0.1" max="5" step="0.1" value="${st.slip}" style="width:170px" oninput="window._v4mev.slip=+this.value; window._v4mev.done=false; renderV4MevWidget()"><br>
+        <b style="color:${st.slip > 1 ? 'var(--bad)' : 'var(--ok)'}">${st.slip}%</b></label>
+      <div style="font-size:12.5px; color:var(--txt)">Канал отправки<br>
+        <button class="btn sm ${st.mode==='public' ? '' : 'ghost'}" onclick="window._v4mev.mode='public'; window._v4mev.done=false; renderV4MevWidget()">📢 Публичный мемпул</button>
+        <button class="btn sm ${st.mode==='private' ? '' : 'ghost'}" onclick="window._v4mev.mode='private'; window._v4mev.done=false; renderV4MevWidget()">🛡️ Приватный (Protect)</button>
+      </div>
+    </div>
+    <button class="btn" style="background:var(--acc2); margin-bottom:12px" onclick="window._v4mev.done=true; renderV4MevWidget()">▶ Отправить транзакцию</button>
+    ${st.done ? `
+      <div style="background:#040714; border-radius:10px; padding:14px 16px; font-size:13px; line-height:1.7">
+        ${st.mode === 'public' ? `
+          <div>1️⃣ Транзакция появилась в мемпуле. Бот видит: покупка $${st.size.toLocaleString('en-US')}, допуск ${st.slip}%.</div>
+          <div>2️⃣ 🤖 Бот покупает <b>перед</b> тобой — цена растёт.</div>
+          <div>3️⃣ Твоя сделка исполняется на <b style="color:var(--bad)">−${movePct.toFixed(2)}%</b> хуже рынка.</div>
+          <div>4️⃣ 🤖 Бот продаёт сразу после. Его прибыль: <b style="color:var(--bad); font-size:16px">$${loss.toLocaleString('en-US')}</b> — из твоего кармана.</div>
+        ` : `
+          <div>1️⃣ Транзакция ушла напрямую валидаторам — мимо публичной очереди.</div>
+          <div>2️⃣ 🤖 Боты не видят её до исполнения. Сэндвичить нечего.</div>
+          <div>3️⃣ Исполнение по рыночной цене. Потеря на MEV: <b style="color:var(--ok); font-size:16px">$0</b></div>
+        `}
+      </div>` : ''}
+    <div style="font-size:11.5px; color:var(--mut); margin-top:10px">Допуск — это публичный лимит убытка. Чем он больше, тем шире «прибыльная зона» бота.</div>
+  </div>`;
+}
+
+/* --- V4-A2: цикл ReAct + галлюцинация --- */
+window._v4llm = { step: 0, withTools: true };
+const V4_LLM_STEPS_TOOLS = [
+  { tag: '💭 Thought', txt: '«Нужно принять решение по BTC-PERP. Сначала проверю фандинг и цену через инструменты.»', cls: 'var(--acc1)' },
+  { tag: '🔧 Action', txt: 'get_funding("BTC-PERP")', cls: 'var(--acc2)' },
+  { tag: '👁 Observation', txt: '{ "funding_8h": "0.025%", "trend": "перегрет" }', cls: 'var(--ok)' },
+  { tag: '🔧 Action', txt: 'calc_position_size(risk_pct=0.5)', cls: 'var(--acc2)' },
+  { tag: '👁 Observation', txt: '{ "size_btc": 0.12, "within_limits": true }', cls: 'var(--ok)' },
+  { tag: '✅ Final', txt: '«Предлагаю: шорт 0.12 BTC, риск 0.5%. Обоснование: фандинг 0.025% перегрет. Решение проверит риск-фильтр в коде.»', cls: 'var(--ok)' }
+];
+const V4_LLM_STEPS_NOTOOLS = [
+  { tag: '💭 Thought', txt: '«Инструментов данных нет. Но я уверенно «вспомню» цену...»', cls: 'var(--acc1)' },
+  { tag: '⚠️ Hallucination', txt: '«Текущая цена BTC ≈ $61,400, фандинг около нуля, новостей нет» — выдумано. Реальность: $97,200 и фандинг перегрет.', cls: 'var(--bad)' },
+  { tag: '🔴 Final', txt: 'Решение построено на выдуманных числах. На реальном счёте это позиция против факта.', cls: 'var(--bad)' }
+];
+function renderV4LlmAgentWidget(){
+  const box = document.getElementById('widget_v4_llm_agent'); if(!box) return;
+  const st = window._v4llm;
+  const steps = st.withTools ? V4_LLM_STEPS_TOOLS : V4_LLM_STEPS_NOTOOLS;
+  const shown = steps.slice(0, st.step);
+  box.innerHTML = `
+  <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:18px; margin:16px 0">
+    <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:10px">🤖 Цикл ReAct: с инструментами vs без</div>
+    <div style="margin-bottom:12px">
+      <button class="btn sm ${st.withTools ? '' : 'ghost'}" onclick="window._v4llm.withTools=true; window._v4llm.step=0; renderV4LlmAgentWidget()">🔧 С инструментами данных</button>
+      <button class="btn sm ${!st.withTools ? '' : 'ghost'}" onclick="window._v4llm.withTools=false; window._v4llm.step=0; renderV4LlmAgentWidget()">🚫 Без инструментов</button>
+    </div>
+    <div style="background:#040714; border-radius:10px; padding:12px 14px; min-height:120px; font-size:13px; line-height:1.6">
+      ${shown.length ? shown.map(s => `<div style="margin-bottom:8px"><b style="color:${s.cls}">${s.tag}</b><br><span style="color:var(--txt)">${s.txt}</span></div>`).join('') : '<span style="color:var(--mut)">Нажми «Следующий шаг»…</span>'}
+    </div>
+    <div style="margin-top:12px; display:flex; gap:8px">
+      <button class="btn sm" style="background:var(--acc2)" ${st.step >= steps.length ? 'disabled style="opacity:.4"' : ''} onclick="window._v4llm.step++; renderV4LlmAgentWidget()">⏭ Следующий шаг</button>
+      <button class="btn sm ghost" onclick="window._v4llm.step=0; renderV4LlmAgentWidget()">↺ Сначала</button>
+    </div>
+    <div style="font-size:11.5px; color:var(--mut); margin-top:10px">Правило: каждое число агент получает из инструмента. Без инструментов модель не «ошибается» — она уверенно выдумывает.</div>
+  </div>`;
+}
+
+/* монтирование V4-виджетов */
+(function v4WidgetMountPatch(){
+  const orig = window.renderPhase0Widget;
+  window.renderPhase0Widget = function(id){
+    if(id === 'widget_v4_mev'){ renderV4MevWidget(); return; }
+    if(id === 'widget_v4_llm_agent'){ renderV4LlmAgentWidget(); return; }
+    orig(id);
+  };
+})();
+</script>
+<script>
+/* =========================================================================
+   V4-B: ТРИ МИНИ-ИГРЫ (третий аудит)
+   B1 «Защити seed-фразу» (p0_l2), B2 «Угадай режим рынка» (p0_l8),
+   B3 «Риск-менеджер: спаси депозит» (p3_l4)
+   ========================================================================= */
+(function attachV4Games(){
+  const ATT = [
+    ['p0_l2', 'widget_v4_seed',   '🔐 Мини-игра «Защити seed-фразу»', '12 слов, 6 мест хранения — только 3 безопасных. Разложи слова так, чтобы ни одно не утекло в облако, телефон или почту.'],
+    ['p0_l8', 'widget_v4_regime', '🎯 Мини-игра «Угадай режим рынка»', 'Фрагмент из 100 свечей: тренд, боковик или разворот? Отвечай — и график «развернётся» ещё на 50 свечей вперёд. Серия из 20 раундов.'],
+    ['p3_l4', 'widget_v4_riskmgr','🛡️ Мини-игра «Спаси депозит»', 'Депозит 1 000 000 ₽, 20 дней событий: падения, инверсии фандинга, отказы биржи. Каждый день — одно решение. Цель: финиш с депозитом выше 800 000 ₽.']
+  ];
+  ATT.forEach(function(a){
+    const l = LESSONS.find(x => x.id === a[0]);
+    if(!l || !l.blocks) return;
+    if(l.blocks.some(b => b.id === a[1])) return;
+    let pos = l.blocks.length;
+    for(let i = 0; i < l.blocks.length; i++){
+      if(l.blocks[i].type === 'recap'){ pos = i; break; }
+    }
+    l.blocks.splice(pos, 0, { type: 'interactive_inline', id: a[1], title: a[2], desc: a[3] });
+  });
+})();
+
+/* ---------- V4-B1: «Защити seed-фразу» ---------- */
+const V4_SEED_WORDS = ['apple','bridge','cactus','delta','eagle','flame','grape','harbor','island','jungle','kitten','lemon'];
+const V4_SEED_SPOTS = [
+  { id:'metal',  t:'🛡️ Металлическая пластина в сейфе', safe:true },
+  { id:'bank',   t:'🏦 Бумага в банковской ячейке', safe:true },
+  { id:'cache',  t:'📦 Ламинированная карта в тайнике', safe:true },
+  { id:'cloud',  t:'☁️ Скриншот в облаке', safe:false, why:'Облако взламывают и индексируют — скриншот seed = потеря всего.' },
+  { id:'phone',  t:'📱 Заметка в телефоне', safe:false, why:'Телефон теряется, синхронизируется и читается приложениями.' },
+  { id:'photo',  t:'📸 Фото в галерее', safe:false, why:'Галерея синхронизируется с облаком и видна другим приложениям.' }
+];
+window._v4seed = null;
+function renderV4SeedGame(box){
+  if(!box) return;
+  if(!window._v4seed){
+    const spots = {};
+    V4_SEED_SPOTS.forEach(s => spots[s.id] = []);
+    window._v4seed = { spots, picked: null, done: false, leaked: false };
+  }
+  const st = window._v4seed;
+  const placed = {};
+  Object.keys(st.spots).forEach(k => st.spots[k].forEach(w => placed[w] = k));
+  const unplaced = V4_SEED_WORDS.filter(w => !placed[w]);
+  const wordsHtml = unplaced.map(w =>
+    `<button class="btn sm ${st.picked === w ? '' : 'ghost'}" style="font-size:12px" onclick="window._v4seed.picked='${w}'; renderV4SeedGame(document.getElementById('widget_v4_seed'))">${w}</button>`).join(' ');
+  const spotsHtml = V4_SEED_SPOTS.map(s => {
+    const words = st.spots[s.id];
+    const cnt = words.length;
+    const leakedHere = st.done && !s.safe && cnt > 0;
+    return `<div style="background:#040714; border:1.5px solid ${st.done ? (s.safe ? 'var(--ok)' : (cnt ? 'var(--bad)' : 'var(--line)')) : 'var(--line)'}; border-radius:10px; padding:10px 12px; margin-bottom:8px">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap">
+        <span style="font-size:12.5px; font-weight:700; color:var(--txt)">${s.t} <span style="color:var(--mut); font-weight:400">(${cnt}/4)</span></span>
+        ${!st.done ? `<button class="btn sm ghost" ${!st.picked || cnt >= 4 ? 'disabled style="opacity:.35"' : ''} onclick="window._v4seed.spots['${s.id}'].push(window._v4seed.picked); window._v4seed.picked=null; renderV4SeedGame(document.getElementById('widget_v4_seed'))">⬇ положить</button>` : ''}
+      </div>
+      <div style="margin-top:6px; font-size:12px; color:${leakedHere ? 'var(--bad)' : 'var(--mut)'}">${words.join(' · ') || '—'}${leakedHere ? ' 💸 УТЕЧКА!' : ''}</div>
+      ${st.done && !s.safe && cnt > 0 ? `<div style="font-size:11.5px; color:var(--bad); margin-top:4px">${s.why}</div>` : ''}
+    </div>`;
+  }).join('');
+  const totalPlaced = Object.keys(placed).length;
+  let resultHtml = '';
+  if(st.done){
+    const bad = V4_SEED_SPOTS.filter(s => !s.safe).reduce((n, s) => n + st.spots[s.id].length, 0);
+    if(bad === 0){
+      resultHtml = `<div style="background:rgba(34,197,94,.1); border:1.5px solid var(--ok); border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:var(--ok)">🏆 Кошелёк в безопасности!</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">Все 12 слов — только в офлайн-хранилищах. Правило 2026: ни одно слово seed-фразы никогда не касается интернета.</div></div>`;
+      if(typeof addFundCapital === 'function' && !st.rewarded){ st.rewarded = true; addFundCapital(3000, 40, 'Игра «Защити seed-фразу»'); }
+    } else {
+      resultHtml = `<div style="background:rgba(239,68,68,.08); border:1.5px solid var(--bad); border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:var(--bad)">💸 Утечка: ${bad} ${bad === 1 ? 'слово' : bad < 5 ? 'слова' : 'слов'} скомпрометировано</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">Для восстановления кошелька достаточно всех 12 слов — но злоумышленнику хватит доступа к тому месту, где они лежат все вместе. Перемешивание по разным местам не спасает: опасно само присутствие слов онлайн.</div></div>`;
+    }
+  }
+  box.innerHTML = `<div style="background:rgba(234,179,8,.05); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin:16px 0">
+    <div style="font-size:12px; font-weight:800; color:var(--warn); text-transform:uppercase; margin-bottom:8px">🔐 Разложи 12 слов по местам хранения</div>
+    ${!st.done ? `<div style="font-size:12px; color:var(--mut); margin-bottom:10px">1) Кликни слово. 2) Кликни «⬇ положить» у места. Размещено: ${totalPlaced}/12.</div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px">${wordsHtml || '<span style="color:var(--mut); font-size:12px">Все слова размещены.</span>'}</div>` : ''}
+    ${spotsHtml}
+    ${!st.done && totalPlaced === 12 ? `<button class="btn" style="background:var(--acc2); margin-top:6px" onclick="window._v4seed.done=true; renderV4SeedGame(document.getElementById('widget_v4_seed'))">🔒 Проверить хранилище</button>` : ''}
+    ${resultHtml}
+    ${st.done ? `<button class="btn sm ghost" style="margin-top:10px" onclick="window._v4seed=null; renderV4SeedGame(document.getElementById('widget_v4_seed'))">↺ Сыграть ещё раз</button>` : ''}
+  </div>`;
+}
+
+/* ---------- V4-B2: «Угадай режим рынка» ---------- */
+window._v4regime = null;
+function v4GenSeries(regime, n){
+  const out = [100];
+  for(let i = 1; i < n; i++){
+    let drift = 0, vol = 0.6;
+    if(regime === 'trend') drift = 0.35;
+    else if(regime === 'range'){ drift = (100 - out[i-1]) * 0.08; vol = 0.5; }
+    else if(regime === 'reversal'){ drift = i < n/2 ? 0.35 : -0.55; vol = 0.55; }
+    out.push(Math.max(60, out[i-1] + drift + (Math.random()*2 - 1) * vol));
+  }
+  return out;
+}
+function v4DrawSeries(canvas, series, upto){
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  const data = series.slice(0, upto);
+  const min = Math.min(...data), max = Math.max(...data);
+  const pad = (max - min) * 0.08 || 1;
+  const x = i => (i / (series.length - 1)) * w;
+  const y = v => h - ((v - min + pad) / (max - min + 2*pad)) * h;
+  ctx.strokeStyle = 'rgba(255,255,255,.12)';
+  ctx.strokeRect(0.5, 0.5, w-1, h-1);
+  ctx.beginPath();
+  data.forEach((v, i) => i === 0 ? ctx.moveTo(x(i), y(v)) : ctx.lineTo(x(i), y(v)));
+  ctx.strokeStyle = 'rgb(6,182,212)';
+  ctx.lineWidth = 1.6;
+  ctx.stroke();
+  if(upto < series.length){
+    ctx.fillStyle = 'rgba(255,255,255,.25)';
+    ctx.fillRect(x(upto), 0, w - x(upto), h);
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('будущее скрыто', x(upto) + 6, 16);
+  }
+}
+function renderV4RegimeGame(box){
+  if(!box) return;
+  if(!window._v4regime){
+    window._v4regime = { round: 1, total: 20, score: 0, streakBonus: 0, regime: null, series: null, answered: false, guess: null };
+  }
+  const st = window._v4regime;
+  if(!st.series && st.round <= st.total){
+    const regimes = ['trend','range','reversal'];
+    st.regime = regimes[Math.floor(Math.random() * 3)];
+    st.series = v4GenSeries(st.regime, 150);
+    st.answered = false; st.guess = null;
+  }
+  const names = { trend:'📈 Тренд', range:'↔️ Боковик', reversal:'🔄 Разворот' };
+  const finished = st.round > st.total;
+  box.innerHTML = `<div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin:16px 0">
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px">
+      <span style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase">🎯 Угадай режим рынка</span>
+      <span style="font-size:12px; color:var(--mut)">Раунд ${Math.min(st.round, st.total)}/${st.total} · Точность: ${st.round > 1 ? Math.round(st.score / (st.round - 1) * 100) : 0}%</span>
+    </div>
+    <canvas id="v4regime_canvas" width="640" height="220" style="width:100%; border-radius:8px; background:#040714"></canvas>
+    ${!finished ? (!st.answered ? `
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap">
+        ${['trend','range','reversal'].map(r => `<button class="btn sm ghost" onclick="window._v4regime.guess='${r}'; window._v4regime.answered=true; renderV4RegimeGame(document.getElementById('widget_v4_regime'))">${names[r]}</button>`).join('')}
+      </div>` : `
+      <div style="margin-top:12px; font-size:13px; line-height:1.6">
+        ${st.guess === st.regime
+          ? `<b style="color:var(--ok)">✅ Верно: это ${names[st.regime].toLowerCase().slice(2)}.</b>`
+          : `<b style="color:var(--bad)">❌ Мимо: это был режим «${names[st.regime]}».</b>`}
+        <span style="color:var(--mut)"> Смотри, как график развернулся дальше.</span>
+        <div style="margin-top:8px"><button class="btn sm" style="background:var(--acc2)" onclick="window._v4regime.round++; window._v4regime.series=null; renderV4RegimeGame(document.getElementById('widget_v4_regime'))">⏭ Следующий раунд</button></div>
+      </div>`) : `
+      <div style="margin-top:12px; background:rgba(34,197,94,.08); border:1px solid var(--ok); border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:var(--ok)">Итог: ${st.score}/${st.total} (${Math.round(st.score/st.total*100)}%)</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">${st.score/st.total >= 0.7 ? 'Навык классификации режимов сформирован: стратегии подбираются под режим, а не «всегда одна и та же».' : 'Ниже 70% — это нормально: даже профи ошибаются на отдельном фрагменте. Важен процесс: определяй режим до входа, а не после убытка.'}</div>
+        <button class="btn sm ghost" style="margin-top:8px" onclick="window._v4regime=null; renderV4RegimeGame(document.getElementById('widget_v4_regime'))">↺ Новая серия</button>
+      </div>`}
+  </div>`;
+  if(st.series){
+    const upto = st.answered ? 150 : 100;
+    v4DrawSeries(document.getElementById('v4regime_canvas'), st.series, upto);
+    if(st.answered && !st._counted){
+      st._counted = true;
+      if(st.guess === st.regime) st.score++;
+      if(typeof addFundCapital === 'function' && st.guess === st.regime) addFundCapital(500, 20, 'Игра «Угадай режим»');
+    }
+    if(!st.answered) st._counted = false;
+  }
+}
+
+/* ---------- V4-B3: «Спаси депозит» ---------- */
+const V4_RM_EVENTS = [
+  { t:'📉 BTC упал на 5% за ночь', hit:{ hold:-0.05, hedge:-0.01, close:-0.04, margin:-0.05 } },
+  { t:'📉 BTC упал на 8%, паника в ленте', hit:{ hold:-0.08, hedge:-0.015, close:-0.065, margin:-0.08 } },
+  { t:'🔄 Фандинг инвертировался: перегретые лонги платят шортам', hit:{ hold:-0.02, hedge:0.005, close:-0.01, margin:-0.02 } },
+  { t:'⚡ Биржа недоступна 3 часа: ордера не исполняются', hit:{ hold:-0.03, hedge:-0.03, close:-0.03, margin:-0.03 } },
+  { t:'📈 BTC вырос на 6% на ETF-потоках', hit:{ hold:0.06, hedge:0.015, close:0.0, margin:0.06 } },
+  { t:'📈 Альты +9%, BTC +3%', hit:{ hold:0.03, hedge:0.01, close:0.0, margin:0.03 } },
+  { t:'🌊 Резкий вынос ликвидности: свеча −4% и возврат', hit:{ hold:-0.01, hedge:-0.005, close:-0.035, margin:-0.01 } },
+  { t:'🏦 Регуляторные новости: волатильность выросла вдвое', hit:{ hold:-0.04, hedge:-0.01, close:-0.03, margin:-0.04 } },
+  { t:'😴 Боковик: неделя без движения, фандинг капает', hit:{ hold:0.005, hedge:0.008, close:-0.005, margin:0.005 } },
+  { t:'🐋 Кит переместил 12,000 BTC на биржу', hit:{ hold:-0.03, hedge:-0.005, close:-0.025, margin:-0.03 } }
+];
+const V4_RM_ACTIONS = {
+  hold:   '✋ Держать',
+  hedge:  '⚖️ Хеджировать',
+  close:  '🔒 Закрыть позицию',
+  margin: '💵 Долить маржу'
+};
+window._v4rm = null;
+function renderV4RiskManagerGame(box){
+  if(!box) return;
+  if(!window._v4rm){
+    window._v4rm = { day: 1, total: 20, deposit: 1000000, last: null, over: false };
+  }
+  const st = window._v4rm;
+  const ev = V4_RM_EVENTS[(st.day - 1) % V4_RM_EVENTS.length];
+  const fmt = v => Math.round(v).toLocaleString('ru-RU') + ' ₽';
+  const pct = st.deposit / 1000000;
+  const depColor = pct > 0.9 ? 'var(--ok)' : pct > 0.8 ? 'var(--warn)' : 'var(--bad)';
+  box.innerHTML = `<div style="background:rgba(239,68,68,.05); border:1.5px solid var(--bad); border-radius:12px; padding:16px; margin:16px 0">
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px">
+      <span style="font-size:12px; font-weight:800; color:var(--bad); text-transform:uppercase">🛡️ Спаси депозит</span>
+      <span style="font-size:12.5px; color:var(--mut)">День ${Math.min(st.day, st.total)}/${st.total}</span>
+    </div>
+    <div style="background:#040714; border-radius:8px; height:14px; overflow:hidden; margin-bottom:10px">
+      <div style="height:100%; width:${Math.max(0, Math.min(100, pct*100))}%; background:${depColor}; transition:width .4s"></div>
+    </div>
+    <div style="font-size:15px; font-weight:800; color:${depColor}; margin-bottom:10px">Депозит: ${fmt(st.deposit)}</div>
+    ${st.last ? `<div style="font-size:12.5px; color:var(--mut); margin-bottom:10px; line-height:1.5">Вчера: ${st.last.ev} → ты выбрал «${V4_RM_ACTIONS[st.last.act]}»: <b style="color:${st.last.delta >= 0 ? 'var(--ok)' : 'var(--bad)'}">${st.last.delta >= 0 ? '+' : ''}${fmt(st.last.delta)}</b></div>` : ''}
+    ${!st.over ? `
+      <div style="background:#040714; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px; font-size:14px; font-weight:700; color:var(--txt)">🗞️ ${ev.t}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        ${Object.keys(V4_RM_ACTIONS).map(k => `<button class="btn sm ghost" onclick="v4RmAct('${k}')">${V4_RM_ACTIONS[k]}</button>`).join('')}
+      </div>` : `
+      <div style="background:${st.deposit > 800000 ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.08)'}; border:1.5px solid ${st.deposit > 800000 ? 'var(--ok)' : 'var(--bad)'}; border-radius:10px; padding:14px; text-align:center">
+        <div style="font-size:18px; font-weight:800; color:${st.deposit > 800000 ? 'var(--ok)' : 'var(--bad)'}">${st.deposit > 800000 ? '🏆 Депозит спасён: ' + fmt(st.deposit) : '💥 Депозит не удержан: ' + fmt(st.deposit)}</div>
+        <div style="font-size:12.5px; color:var(--mut); margin-top:4px">${st.deposit > 800000 ? 'Дисциплина риск-менеджмента: выжил — значит, заработаешь. Главная цель первых лет — не доходность, а непрерывность игры.' : 'Урок дешевле учебного депозита: хедж в панику дороже хеджа заранее, а «держать» при инверсии фандинга — это решение, а не бездействие.'}</div>
+        <button class="btn sm ghost" style="margin-top:8px" onclick="window._v4rm=null; renderV4RiskManagerGame(document.getElementById('widget_v4_riskmgr'))">↺ Новая попытка</button>
+      </div>`}
+  </div>`;
+}
+function v4RmAct(act){
+  const st = window._v4rm; if(!st || st.over) return;
+  const ev = V4_RM_EVENTS[(st.day - 1) % V4_RM_EVENTS.length];
+  const jitter = (Math.random() - 0.5) * 0.01;
+  const delta = Math.round(st.deposit * (ev.hit[act] + jitter));
+  st.last = { ev: ev.t, act, delta };
+  st.deposit += delta;
+  st.day++;
+  if(st.day > st.total || st.deposit <= 600000){
+    st.over = true;
+    if(st.deposit < 0) st.deposit = 0;
+    if(typeof addFundCapital === 'function' && st.deposit > 800000) addFundCapital(4000, 40, 'Игра «Спаси депозит»');
+  }
+  renderV4RiskManagerGame(document.getElementById('widget_v4_riskmgr'));
+}
+
+/* ---------- V4-E3: SVG-инфографики ---------- */
+const V4_SEEDCYCLE_SVG = `
+<svg viewBox="0 0 900 300" style="width:100%; height:auto; display:block" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="v4sg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+  <text x="450" y="28" text-anchor="middle" font-size="16" font-weight="800" fill="#f8fafc" font-family="system-ui">Жизненный цикл seed-фразы: рождается офлайн — умирает онлайн</text>
+  <g font-family="system-ui">
+    <circle cx="80" cy="90" r="36" fill="rgba(124,58,237,.25)" stroke="#7c3aed" stroke-width="2"/>
+    <text x="80" y="96" text-anchor="middle" font-size="24">🎲</text>
+    <text x="80" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">1. Генерация</text>
+    <text x="80" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">аппаратный кошелёк, офлайн</text>
+    <circle cx="240" cy="90" r="36" fill="rgba(34,197,94,.2)" stroke="#22c55e" stroke-width="2"/>
+    <text x="240" y="96" text-anchor="middle" font-size="24">📝</text>
+    <text x="240" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">2. Запись</text>
+    <text x="240" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">бумага / металл, 2 копии</text>
+    <circle cx="400" cy="90" r="36" fill="rgba(34,197,94,.2)" stroke="#22c55e" stroke-width="2"/>
+    <text x="400" y="96" text-anchor="middle" font-size="24">🏦</text>
+    <text x="400" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">3. Хранение</text>
+    <text x="400" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">сейф / банковская ячейка</text>
+    <circle cx="560" cy="90" r="36" fill="rgba(6,182,212,.2)" stroke="#06b6d4" stroke-width="2"/>
+    <text x="560" y="96" text-anchor="middle" font-size="24">✅</text>
+    <text x="560" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">4. Проверка</text>
+    <text x="560" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">тест восстановления</text>
+    <circle cx="720" cy="90" r="36" fill="rgba(239,68,68,.2)" stroke="#ef4444" stroke-width="2"/>
+    <text x="720" y="96" text-anchor="middle" font-size="24">🚫</text>
+    <text x="720" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">Никогда</text>
+    <text x="720" y="168" text-anchor="middle" font-size="10" fill="#ef4444">облако · телефон · почта</text>
+  </g>
+  <path d="M 118 90 L 166 90 M 278 90 L 326 90 M 438 90 L 486 90" stroke="url(#v4sg)" stroke-width="3" fill="none" marker-end="none"/>
+  <g font-family="system-ui">
+    <rect x="40" y="205" width="820" height="66" rx="12" fill="rgba(6,182,212,.08)" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="450" y="232" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e2e8f0">Правило 2026: seed-фраза, которая хоть раз коснулась любого экрана с интернетом, — скомпрометирована.</text>
+    <text x="450" y="252" text-anchor="middle" font-size="11" fill="#94a3b8">Кошелёк = фраза. Нет фразы = нет денег. Фраза в облаке = деньги у первого бота-сканера.</text>
+  </g>
+</svg>`;
+const V4_SECSTACK_SVG = `
+<svg viewBox="0 0 900 340" style="width:100%; height:auto; display:block" xmlns="http://www.w3.org/2000/svg">
+  <text x="450" y="28" text-anchor="middle" font-size="16" font-weight="800" fill="#f8fafc" font-family="system-ui">«Защищённый стек» инструментов: шесть слоёв, которые защищают капитал</text>
+  <g font-family="system-ui">
+    <rect x="90" y="50" width="720" height="40" rx="10" fill="rgba(234,179,8,.15)" stroke="#eab308" stroke-width="1.5"/>
+    <text x="110" y="76" font-size="13">🧱 1. ОС: обновления, диск шифрован, отдельный профиль без браузерного мусора</text>
+    <rect x="90" y="98" width="720" height="40" rx="10" fill="rgba(234,179,8,.15)" stroke="#eab308" stroke-width="1.5"/>
+    <text x="110" y="124" font-size="13">🔐 2. Доступ: аппаратный 2FA (ключ), менеджер паролей, уникальные почты на биржу</text>
+    <rect x="90" y="146" width="720" height="40" rx="10" fill="rgba(6,182,212,.12)" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="110" y="172" font-size="13">📡 3. Канал: VPN уровня «полезно», приватный мемпул для ончейн (см. урок MEV)</text>
+    <rect x="90" y="194" width="720" height="40" rx="10" fill="rgba(6,182,212,.12)" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="110" y="220" font-size="13">💱 4. Биржа: API-ключи только trade, без withdraw; IP-whitelist; отдельный субаккаунт</text>
+    <rect x="90" y="242" width="720" height="40" rx="10" fill="rgba(34,197,94,.12)" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="110" y="268" font-size="13">🤖 5. Бот: ключи в env/сейфе, kill-switch (урок 5.2), лимиты в коде, а не в настройках</text>
+    <rect x="90" y="290" width="720" height="40" rx="10" fill="rgba(34,197,94,.12)" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="110" y="316" font-size="13">🧾 6. Отчётность: ежедневный отчёт «странных движений» — кто контролирует, тот теряет меньше</text>
+  </g>
+</svg>`;
+const V4_SVG_WIDGETS = {
+  widget_v4_seedcycle: { html: V4_SEEDCYCLE_SVG },
+  widget_v4_secstack: { html: V4_SECSTACK_SVG }
+};
+(function attachV4SvgWidgets(){
+  const ATT = [
+    ['p0_l2', 'widget_v4_seedcycle'],
+    ['p5_l2', 'widget_v4_secstack']
+  ];
+  ATT.forEach(function(a){
+    const l = LESSONS.find(x => x.id === a[0]);
+    if(!l || !l.blocks) return;
+    if(!l.blocks.some(b => b.id === a[1])){
+      let pos = l.blocks.length;
+      for(let i = 0; i < l.blocks.length; i++){
+        if(l.blocks[i].type === 'recap'){ pos = i; break; }
+      }
+      l.blocks.splice(pos, 0, { type: 'interactive_inline', id: a[1], title: a[1] === 'widget_v4_seedcycle' ? '🖼️ Инфографика: жизненный цикл seed-фразы' : '🖼️ Инфографика: защищённый стек', desc: 'Сводная визальная схема.' });
+    }
+  });
+})();
+(function v4SvgMountPatch(){
+  const prev = renderCStreamWidget;
+  renderCStreamWidget = function(widgetId){
+    if(V4_SVG_WIDGETS[widgetId]){
+      const b = document.getElementById(widgetId);
+      if(b){ b.innerHTML = '<div style="background:#040714; border:1.5px solid var(--line); border-radius:12px; padding:14px">' + V4_SVG_WIDGETS[widgetId].html + '</div>'; return true; }
+    }
+    return prev(widgetId);
+  };
+})();
+
+/* монтирование V4-игр */
+(function v4GamesMountPatch(){
+  const prev = renderCStreamWidget;
+  renderCStreamWidget = function(widgetId){
+    if(widgetId === 'widget_v4_seed'){ const b = document.getElementById(widgetId); if(b){ renderV4SeedGame(b); return true; } }
+    if(widgetId === 'widget_v4_regime'){ const b = document.getElementById(widgetId); if(b){ renderV4RegimeGame(b); return true; } }
+    if(widgetId === 'widget_v4_riskmgr'){ const b = document.getElementById(widgetId); if(b){ renderV4RiskManagerGame(b); return true; } }
+    return prev(widgetId);
+  };
+})();
+</script>
 </body>
 </html>
+
