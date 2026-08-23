@@ -1710,6 +1710,9 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       <button class="chip active" onclick="loadBossBattle(0, this)">🔥 Крах FTX & Паника (Ф0)</button>
       <button class="chip" onclick="loadBossBattle(1, this)">🛑 Рейд 115-ФЗ (Ф1)</button>
       <button class="chip" onclick="loadBossBattle(2, this)">📉 Flash Crash −40% (Ф2)</button>
+      <button class="chip" onclick="loadBossBattle(3, this)">🧲 Распад коинтеграции (Ф3)</button>
+      <button class="chip" onclick="loadBossBattle(4, this)">🧾 Заморозка + аудит (Ф4)</button>
+      <button class="chip" onclick="loadBossBattle(5, this)">🌉 Взлом моста (Ф5)</button>
     </div>
     <div id="boss_arena_content"></div>
   </div>
@@ -13033,7 +13036,7 @@ function renderLessonDetail(l){
             ${hTheme ? `<span class="badge" style="background:rgba(124,58,237,.15); color:var(--acc1); font-weight:700">🔮 Гипер-тема: ${hTheme}</span>` : ''}
           </div>
           <h2 style="margin:0 0 8px; font-size:22px; color:var(--txt); line-height:1.3">${l.title}</h2>
-          <p style="margin:0; font-size:14.5px; color:var(--mut); line-height:1.5">${l.lead || ''}</p>
+          ${l.lead ? `<div style="margin:0 0 4px; padding:10px 14px; background:rgba(6,182,212,.08); border-left:3px solid var(--acc2); border-radius:8px; font-size:14px; color:var(--txt); line-height:1.5"><span style="font-size:11px; font-weight:800; color:var(--acc2); text-transform:uppercase">💭 Зацепка урока</span><br>${l.lead}</div>` : ''}
         </div>
         <div>
           <button class="btn ${isDone ? 'success' : 'primary'}" id="lesson_complete_btn_${l.id}" ${(l.quiz && !isQuizPassed) ? 'disabled style="opacity:0.5; cursor:not-allowed"' : ''} onclick="completeLessonWithMastery('${l.id}')">
@@ -21678,6 +21681,7 @@ let bossTimeLeft = 90;
 const BOSS_SCENARIOS = [
   {
     id: 0,
+    debrief: ['Токсичный поток исполняется по твоей котировке первым — ликвидность уходит до новости.', 'Некастодиальное хранение исключает риск банкротства площадки.', 'Паника в мемпуле = скачок комиссий сети: вывод заранее дешевле.'],
     title: 'Крах FTX & Паника в мемпуле (Фаза 0)',
     time: 90,
     bossHp: 100,
@@ -21720,6 +21724,7 @@ const BOSS_SCENARIOS = [
   },
   {
     id: 1,
+    debrief: ['Банк замораживает счёт по косвенным признакам — отдельная карта под P2P снижает blast radius.', 'Чеки и назначения платежей без крипто-лексики — базовая гигиена.', 'Заморозка ≠ конфискация: пакет документов решает большинство кейсов.'],
     title: 'Рейд 115-ФЗ & Блокировка счета (Фаза 1)',
     time: 60,
     bossHp: 100,
@@ -21751,6 +21756,7 @@ const BOSS_SCENARIOS = [
   },
   {
     id: 2,
+    debrief: ['Шорт 1:1 к споту зануляет дельту без продажи актива.', 'Отрицательный фандинг на падающем рынке — плата за шорт, закладывай в хедж.', 'Хедж закрывается после нормализации, а не «на дне».'],
     title: 'Flash Crash -40% & Дельта-нейтральный щит (Фаза 2)',
     time: 60,
     bossHp: 100,
@@ -21779,6 +21785,102 @@ const BOSS_SCENARIOS = [
         dmg: 50
       }
     ]
+  },
+  {
+    id: 3,
+    title: 'Распад коинтеграции пары (Фаза 3)',
+    time: 90,
+    bossHp: 100,
+    desc: 'Твоя парная стратегия BTC/ETH жила на коинтеграции годами. Сегодня регуляторная новость разносит ноги пары в разные стороны: z-score спреда пробил +4 и не возвращается. Half-life растянулся с часов до недель. Капитал в позиции тает.',
+    debrief: ['z-score > 4 — не «ещё лучшая точка входа», а сигнал возможного распада связи.', 'Стоп по |z| обязателен: mean reversion без стопа — позиция без выхода.', 'Проверка коинтеграции — регулярный ритуал, а не разовый анализ.'],
+    rounds: [
+      {
+        q: 'Раунд 1: z-score спреда улетел за +4 и держится. Классический сигнал mean reversion кричит «доливай». Твой ход?',
+        opts: [
+          'Удвоить позицию — откат исторически неизбежен',
+          'Исполнить заранее заданный стоп по |z|>4 и выйти из пары до проверки коинтеграции',
+          'Перевернуть позицию на ходу',
+          'Увеличить плечо, чтобы быстрее отыграться'
+        ],
+        a: 1,
+        dmg: 50
+      },
+      {
+        q: 'Раунд 2: Перед повторным входом нужно подтвердить, что связь жива. Что проверяешь?',
+        opts: [
+          'Только график спреда — глазами видно',
+          'Свежий тест коинтеграции (Энгла–Грейнджера/полуроспад) на новых данных',
+          'Объёмы торгов обеих ног',
+          'Настроение в крипто-твиттере'
+        ],
+        a: 1,
+        dmg: 50
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: 'Заморозка площадки и налоговый аудит (Фаза 4)',
+    time: 90,
+    bossHp: 100,
+    desc: 'Основная биржа приостановила выводы «на техническое обслуживание» на 48 часов, а вечером из налоговой пришёл запрос о пояснении операций за 3 года. На площадке — 60% портфеля, выгрузки сделок не велись.',
+    debrief: ['Лимит 20–40% на площадку — не жадность, а выживание.', 'Экспорт сделок ежемесячно: CSV с биржи может стать недоступен внезапно.', 'FIFO-учёт ведётся с первой сделки, а не «когда попросят».'],
+    rounds: [
+      {
+        q: 'Раунд 1: Выводы заморожены на 48 часов, а на площадке 60% портфеля. Что было главной ошибкой ДО события?',
+        opts: [
+          'Не выбрана другая биржа',
+          'Превышен лимит хранения на одном контрагенте (правило 20–40%)',
+          'Не куплена страховка от заморозки',
+          'Не переведено всё в стейблкоины'
+        ],
+        a: 1,
+        dmg: 50
+      },
+      {
+        q: 'Раунд 2: Налоговая просит историю операций за 3 года, а выгрузок нет. Первый шаг?',
+        opts: [
+          'Проигнорировать запрос до разморозки',
+          'Запросить выписки у биржи/блокчейн-экспортеров и восстановить FIFO-учёт с документами',
+          'Удалить аккаунт биржи',
+          'Оценить всё «на глаз» текущим курсом'
+        ],
+        a: 1,
+        dmg: 50
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: 'Взлом моста и стресс-тест инфраструктуры (Фаза 5)',
+    time: 90,
+    bossHp: 100,
+    desc: 'Мост, через который твой бот переводил ликвидность между сетями, взломан: средства в транзите зависли, транзакции реорганизуются. Одновременно VPS бота перегружен алертами, kill-switch не подтверждает отмену ордеров.',
+    debrief: ['Мост — самое взламываемое звено экосистемы: ликвидность в транзите = риск контрагента.', 'Kill-switch тестируется нагрузкой заранее, а не в день взлома.', 'Средства в пути — отдельная строка риск-реестра.'],
+    rounds: [
+      {
+        q: 'Раунд 1: Средства зависли в транзите через взломанный мост. Правильная реакция?',
+        opts: [
+          'Отправить ещё одну транзакцию, чтобы «протолкнуть» первую',
+          'Зафиксировать состояние (txid, суммы), остановить новые переводы через мост и ждать официальных развязок',
+          'Панически продать весь портфель',
+          'Написать в поддержку моста требование вернуть деньги'
+        ],
+        a: 1,
+        dmg: 50
+      },
+      {
+        q: 'Раунд 2: Kill-switch не подтвердил отмену ордеров под нагрузкой. Что должно было быть сделано заранее?',
+        opts: [
+          'Более дорогой VPS',
+          'Регулярный стресс-тест kill-switch с проверкой подтверждения отмены ордеров на бирже',
+          'Переезд на другую биржу',
+          'Отключить все алерты навсегда'
+        ],
+        a: 1,
+        dmg: 50
+      }
+    ]
   }
 ];
 
@@ -21795,8 +21897,40 @@ function loadBossBattle(idx = 0, btn){
     document.querySelectorAll('#sim_boss .controls .chip').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
   }
+  window.curBossShields = 3;
 
   renderBossArena();
+}
+
+// E2: щит подсказки — гасит два неверных варианта (3 заряда за бой)
+window.useBossShield = function(){
+  if((window.curBossShields ?? 0) <= 0){ showToast('🛡 Щиты кончились: осталось полагаться на знания.', '⚠️'); return; }
+  const boss = BOSS_SCENARIOS[curBossIdx];
+  const round = boss.rounds[curBossRound];
+  if(!round) return;
+  const btns = document.querySelectorAll('#boss_arena_content .ans');
+  let hidden = 0;
+  btns.forEach((b, i) => {
+    if(i !== round.a && hidden < 2 && b.style.display !== 'none'){
+      b.style.display = 'none';
+      hidden++;
+    }
+  });
+  if(hidden > 0){
+    window.curBossShields--;
+    showToast(`🛡 Щит активирован: 2 ложных хода погашены. Осталось щитов: ${window.curBossShields}`, '🛡');
+    renderBossArenaShieldLabel();
+  }
+};
+function renderBossArenaShieldLabel(){
+  const boss = BOSS_SCENARIOS[curBossIdx];
+  const round = boss.rounds[curBossRound];
+  if(!round) return;
+  // перерисовываем только метку щитов без сброса скрытых кнопок
+  const arena = document.getElementById('boss_arena_content');
+  if(!arena) return;
+  const lbl = arena.querySelector('.boss-shield-lbl');
+  if(lbl) lbl.innerHTML = `🛡 Щиты подсказки: <b>${window.curBossShields}</b>`;
 }
 
 function renderBossArena(){
@@ -21812,9 +21946,12 @@ function renderBossArena(){
       <div style="text-align:center; padding:20px">
         <div style="font-size:54px; margin-bottom:12px">🏆 ⚔️</div>
         <h2 style="color:var(--ok); font-size:26px; margin:0 0 8px">БОСС ПОВЕРЖЕН! КРИЗИС ПРЕОДОЛЕН!</h2>
-        <p style="color:var(--txt); font-size:15px; max-width:550px; margin:0 auto 20px">
+        <p style="color:var(--txt); font-size:15px; max-width:550px; margin:0 auto 14px">
           Вы хладнокровно справились с катастрофическим рыночным сценарием <b>«${boss.title}»</b> и защитили средства фонда.
         </p>
+        ${boss.debrief ? `<div style="text-align:left; max-width:520px; margin:0 auto 20px; background:rgba(0,0,0,.4); border-left:3px solid var(--acc2); border-radius:8px; padding:12px 16px; font-size:13px; color:var(--txt); line-height:1.6">
+          <b style="color:var(--acc2)">📋 Дебрифинг:</b><ul style="margin:6px 0 0; padding-left:18px">${boss.debrief.map(d => `<li>${d}</li>`).join('')}</ul>
+        </div>` : ''}
         <button class="btn" style="background:var(--ok); color:#040714; font-weight:800; padding:12px 28px; font-size:15px" onclick="claimBossVictoryReward(${boss.id})">
           🎁 Забрать награду (+$250,000 AUM + Бейдж)
         </button>
@@ -21830,8 +21967,11 @@ function renderBossArena(){
         <h3 style="margin:2px 0 0; font-size:20px; color:var(--txt)">${boss.title}</h3>
       </div>
       <div style="text-align:right">
-        <div style="font-size:11.5px; color:var(--mut)">Здоровье Черного Лебедя:</div>
-        <div style="font-size:18px; font-weight:900; color:var(--bad)">❤️ ${curBossHp}% HP</div>
+        <div style="font-size:11.5px; color:var(--mut)">Здоровье Черного Лебедя (${curBossHp}% HP):</div>
+        <div style="display:flex; gap:3px; justify-content:flex-end; margin-top:3px">
+          ${[0,1,2,3,4].map(s => `<div style="width:22px; height:12px; border-radius:3px; background:${curBossHp > s * 20 ? 'var(--bad)' : 'rgba(255,255,255,.1)'}"></div>`).join('')}
+        </div>
+        <div class="boss-shield-lbl" style="font-size:11.5px; color:var(--warn); margin-top:4px">🛡 Щиты подсказки: <b>${window.curBossShields ?? 3}</b></div>
       </div>
     </div>
 
@@ -21840,7 +21980,10 @@ function renderBossArena(){
     </div>
 
     <div style="background:var(--card); border:1.5px solid var(--line); border-radius:12px; padding:18px; margin-bottom:16px">
-      <div style="font-size:12px; font-weight:800; color:var(--acc2); margin-bottom:8px">РАУНД ${curBossRound + 1} ИЗ ${boss.rounds.length}:</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+        <div style="font-size:12px; font-weight:800; color:var(--acc2)">РАУНД ${curBossRound + 1} ИЗ ${boss.rounds.length}:</div>
+        <button class="btn sm ghost" style="font-size:11px" onclick="useBossShield()">🛡 Щит (убрать 2 неверных)</button>
+      </div>
       <h4 style="margin:0 0 14px; font-size:16px; color:var(--txt); line-height:1.4">${round.q}</h4>
       <div style="display:flex; flex-direction:column; gap:10px">
         ${round.opts.map((opt, oIdx) => `
@@ -26655,11 +26798,22 @@ function showConsolidationScreen(lessonId, customTitle){
   overlay.style.cssText = 'position:fixed; inset:0; background:rgba(2,4,12,.94); z-index:999999; display:flex; justify-content:center; align-items:center; padding:20px; backdrop-filter:blur(10px)';
   overlay.innerHTML = `
     <div style="background:#090d1f; border:2px solid var(--acc2); border-radius:20px; max-width:560px; width:100%; padding:30px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.9)">
-      <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">🧘 Консолидация памяти</div>
+      <div style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase; margin-bottom:6px">🧘 Консолидация памяти · 🔥 стрик закреплений: <span id="consol_streak_lbl">0</span></div>
       <h2 style="margin:0 0 8px; font-size:20px; color:var(--txt)">${customTitle ? customTitle : ("Урок «" + (l ? l.title : '') + "» завершён")} — теперь самое важное</h2>
       <div id="consolidation_body"></div>
     </div>`;
   document.body.appendChild(overlay);
+  // E4: стрик закреплений (серия дней с консолидацией)
+  const today = new Date().toDateString();
+  let cs = load('cn_consol_streak', { count: 0, lastDay: '' });
+  if(cs.lastDay !== today){
+    const yesterday = new Date(Date.now() - 864e5).toDateString();
+    cs.count = (cs.lastDay === yesterday) ? cs.count + 1 : 1;
+    cs.lastDay = today;
+    save('cn_consol_streak', cs);
+  }
+  const lbl = overlay.querySelector('#consol_streak_lbl');
+  if(lbl) lbl.textContent = cs.count + (cs.count === 1 ? ' день' : cs.count < 5 ? ' дня' : ' дней');
   renderConsolidationPhase1();
 }
 
