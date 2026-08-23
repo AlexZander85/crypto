@@ -36974,8 +36974,11 @@ window.renderMentorActions = function(){
 };
 
 function mentorRun(action){
-  const lessonId = window._mentorLessonId;
+  const lessonId = window._mentorLessonId || (window.openFullscreenLesson && window.lessonsDone ? Object.keys(lessonsDone).slice(-1)[0] : '');
+  // если панель не открыта — открываем
+  if(!document.getElementById('mentor_panel')) mentorOpenPanel(lessonId);
   const out = document.getElementById('mentor_result');
+  if(!out) return;
   if(action === 'feynman') mentorF1(lessonId, out);
   else if(action === 'rephrase') mentorF2(lessonId, out);
   else if(action === 'socratic') mentorF3(lessonId, out);
@@ -37031,88 +37034,92 @@ window.mentorF2do = function(lessonId, kind){
   });
 };
 
+
+
 /* =========================================================================
-   M2 · F1 Проверка Фейнмана (JSON-вердикт) + F2 «Объясни иначе»
+   M3 · F3 Сократов режим (3 ступени) + F4 Генератор задач (правду считает КОД)
    ========================================================================= */
 
-/* ---------- рендер списка действий в панели ---------- */
-window.renderMentorActions = function(){
-  const lessonId = window._mentorLessonId;
-  const idWrapEl = document.getElementById('mentor_actions');
-  if(!idWrapEl) return;
-  const list = [
-    { id: 'feynman', label: '🧑‍🏫 Проверка Фейнмана', need: 'feynman_input_' + lessonId },
-    { id: 'rephrase', label: '🔄 Объясни иначе' },
-    { id: 'socratic', label: '🤔 Сократов режим' },
-    { id: 'tasker', label: '✍️ Генератор задач' }
-  ];
-  idWrapEl.innerHTML = list.map(a =>
-    '<button class="btn sm" style="text-align:left;justify-content:flex-start;font-size:12.5px" onclick="mentorRun(\'' + a.id + '\')">' + a.label + '</button>'
-  ).join('');
+/* ---------- F3: Сократов ---------- */
+window.mentorF3 = function(lessonId, out){
+  window._mentorSocStep = 0;
+  window._mentorSocHistory = [];
+  if(!document.getElementById('mentor_soc_in')){
+    out.innerHTML = '<input type="text" id="mentor_soc_in" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" placeholder="Твой вопрос/понимание...">' +
+      '<button class="btn sm" data-soc="1">Ответить</button><div id="mentor_soc_out" style="margin-top:10px"></div>';
+    const btn = out.querySelector('button[data-soc]');
+    if(btn) btn.onclick = () => window.mentorF3step(lessonId);
+  }
+};
+window.mentorF3step = function(lessonId){
+  const inEl = document.getElementById('mentor_soc_in');
+  const outEl = document.getElementById('mentor_soc_out');
+  if(!inEl || !outEl) return;
+  const val = (inEl.value || '').trim();
+  const step = ++window._mentorSocStep;
+  const isDone = /не знаю/i.test(val) && step >= 3;
+  MENTOR.ask('socratic', lessonId, { question: val, step: step, giveUp: isDone }).then(r => {
+    const color = isDone ? 'var(--ok)' : 'var(--acc2)';
+    outEl.innerHTML += '<div style="padding:10px 12px;background:#040714;border-left:3px solid ' + color + ';border-radius:6px;font-size:12.5px;color:var(--txt);margin-top:8px">' + r.text + '</div>';
+    if(inEl) inEl.value = '';
+    if(isDone) window._mentorSocHistory = [];
+  }).catch(e => {
+    outEl.innerHTML += '<div style="font-size:12.5px;color:var(--warn);margin-top:8px">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Не отвечает.') + '</div>';
+  });
 };
 
-function mentorRun(action){
-  const lessonId = window._mentorLessonId;
-  const out = document.getElementById('mentor_result');
-  if(action === 'feynman') mentorF1(lessonId, out);
-  else if(action === 'rephrase') mentorF2(lessonId, out);
-  else if(action === 'socratic') mentorF3(lessonId, out);
-  else if(action === 'tasker') mentorF4(lessonId, out);
-}
-window.mentorRun = mentorRun;
-
-/* ---------- F1: проверка Фейнмана ---------- */
-window.mentorF1 = function(lessonId, out){
-  const ta = document.getElementById('feynman_input_' + lessonId);
-  const explanation = ta ? ta.value : '';
-  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">🤖 Разбираю объяснение…</div>';
-  MENTOR.ask('feynman', lessonId, { explanation: explanation }).then(r => {
-    let verdict = null;
-    try{ verdict = r.json || JSON.parse(r.text); }catch(e){
-      out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">Наставник задумался, попробуй ещё раз.</div>';
+/* ---------- F4: генератор задач — правду считает КОД ---------- */
+window.mentorF4 = function(lessonId, out){
+  const lesson = LESSONS.find(x => x.id === lessonId);
+  const nq = lesson && lesson.numericQuiz;
+  if(!nq){
+    out.innerHTML = '<div style="font-size:12px;color:var(--mut)">✍️ В этом уроке нет параметризуемой числовой задачи — генератор скрыт.</div>';
+    return;
+  }
+  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">✍️ Модель пишет новую формулировку, код считает эталон…</div>';
+  MENTOR.ask('tasker', lessonId, { example: { q: nq.q, answer: nq.answer } }).then(r => {
+    let gen = null;
+    try{ gen = r.json || JSON.parse(r.text); }catch(e){ gen = null; }
+    if(!gen || !gen.story || !gen.params){
+      out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">Генератор не собрал задачу — попробуй ещё раз.</div>';
       return;
     }
-    const color = verdict.verdict === 'understood' ? 'var(--ok)' : verdict.verdict === 'partial' ? 'var(--warn)' : 'var(--bad)';
-    const label = verdict.verdict === 'understood' ? 'понял' : verdict.verdict === 'partial' ? 'частично' : 'пропущено';
-    out.innerHTML = '<div style="border-left:4px solid ' + color + ';padding:8px 12px;margin-bottom:10px;background:#040714;border-radius:6px">' +
-      '<div style="font-weight:800;color:' + color + ';margin-bottom:6px">' + label.toUpperCase() + '</div>' +
-      '<div style="font-size:11px;color:var(--mut);margin-bottom:6px">' + (verdict.advice || '') + '</div>' +
-      (verdict.gaps && verdict.gaps.length ? '<div style="font-size:12px;color:var(--txt)">Пробелы: ' + verdict.gaps.join(' · ') + '</div>' : '') +
-    '</div>';
-    // сохраняем в cn_feynman_ai
-    try{
-      const st = JSON.parse(localStorage.getItem('cn_feynman_ai') || '{}');
-      st[lessonId] = { verdict: verdict.verdict, gaps: verdict.gaps || [], ts: Date.now() };
-      localStorage.setItem('cn_feynman_ai', JSON.stringify(st));
-    }catch(e){}
+    const truth = mentorCompute(nq, gen.params);
+    if(truth == null || !isFinite(truth)){
+      out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">Эта формула не параметризуется в коде — генератор для урока скрыт.</div>';
+      return;
+    }
+    window._mentorTaskTruth = truth;
+    window._mentorTaskTol = nq.absTol != null ? nq.absTol : (nq.tolPct != null ? nq.tolPct : 0.5);
+    out.innerHTML = '<div style="font-size:12.5px;color:var(--txt);padding:10px 12px;background:#040714;border-radius:6px;margin-bottom:8px;line-height:1.55">' + gen.story + '</div>' +
+      '<input type="number" id="mentor_task_in" step="any" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" placeholder="Твой ответ"> ' +
+      '<button class="btn sm" data-task="1">Проверить</button>' +
+      '<div id="mentor_task_fb" style="margin-top:8px"></div>';
+    const btn = out.querySelector('button[data-task]');
+    if(btn) btn.onclick = () => mentorTaskCheck();
   }).catch(e => {
-    out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Дневной лимит исчерпан.' : 'Наставник не отвечает — повтори позже.') + '</div>';
+    out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Генератор не отвечает.') + '</div>';
   });
 };
 
-/* ---------- F2: три переупаковки (встроенный список, не кнопка-в-кнопке) ---------- */
-window.mentorF2 = function(lessonId, out){
-  const kinds = [ { id: 'simpler', label: 'Проще' }, { id: 'example', label: 'Пример из жизни' }, { id: 'shorter', label: 'Короче' } ];
-  // селектор по data-kind — без вложенных onclick
-  out.innerHTML = '<div style="display:flex;flex-direction:column;gap:6px">' + kinds.map(k =>
-    '<button class="btn sm ghost" style="font-size:12px;text-align:left" data-kind="' + k.id + '">' + k.label + '</button>'
-  ).join('') + '</div><div id="mentor_f2_out" style="margin-top:8px"></div>';
-  // назначаем обработчики после вставки
-  out.querySelectorAll('button[data-kind]').forEach(b => {
-    b.onclick = () => window.mentorF2do(lessonId, b.dataset.kind);
-  });
+window.mentorCompute = function(nq, params){
+  if(params.leverage != null) return 100 / params.leverage;
+  if(params.p != null && params.b != null) return (params.p - (1 - params.p) / params.b) * 100;
+  return null;
 };
-window.mentorF2do = function(lessonId, kind){
-  const out = document.getElementById('mentor_f2_out');
-  if(!out) return;
-  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">🤖 Переупаковываю…</div>';
-  MENTOR.ask('rephrase', lessonId, { kind: kind }).then(r => {
-    out.innerHTML = '<div style="padding:10px 12px;background:#040714;border-left:3px solid var(--acc2);border-radius:6px;font-size:12.5px;color:var(--txt);line-height:1.55">' +
-      '<div style="font-size:10px;color:var(--acc2);text-transform:uppercase;font-weight:800;margin-bottom:4px">перефраз от наставника</div>' + r.text + '</div>';
-  }).catch(e => {
-    out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит исчерпан.' : 'Наставник не отвечает.') + '</div>';
-  });
-};
+
+function mentorTaskCheck(){
+  const inp = document.getElementById('mentor_task_in');
+  const fb = document.getElementById('mentor_task_fb');
+  if(!inp || !fb || window._mentorTaskTruth == null) return;
+  const val = parseFloat(inp.value);
+  const tol = window._mentorTaskTol || 0.5;
+  const ok = Math.abs(val - window._mentorTaskTruth) <= tol;
+  fb.innerHTML = ok
+    ? '<div style="font-size:12.5px;color:var(--ok)">✅ Верно: ' + (Math.round(window._mentorTaskTruth * 1000) / 1000) + '. Эталон считал код — модель только оформила условие.</div>'
+    : '<div style="font-size:12.5px;color:var(--bad)">❌ Эталон: ' + (Math.round(window._mentorTaskTruth * 1000) / 1000) + ' (допуск ' + tol + '). Пересчитай.</div>';
+}
+window.mentorTaskCheck = mentorTaskCheck;
 /*__LIVE_APPEND__*/
 })();
 
