@@ -36259,10 +36259,10 @@ const NEWS = {
     });
   },
   feed(lang, worldOn){
-    let items = this.items.filter(it => it.reg || it.lang === lang || (worldOn && it.lang !== lang));
+    let items = this.items.filter(it => it.lang === lang || (worldOn && it.lang !== lang));
     if(!items.length){
       const c = this.cacheGet();
-      if(c && c.items) items = c.items.filter(it => it.reg || it.lang === lang || (worldOn && it.lang !== lang));
+      if(c && c.items) items = c.items.filter(it => it.lang === lang || (worldOn && it.lang !== lang));
     }
     return items;
   },
