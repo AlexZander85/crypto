@@ -32103,6 +32103,90 @@ function v4RmAct(act){
   renderV4RiskManagerGame(document.getElementById('widget_v4_riskmgr'));
 }
 
+/* ---------- V4-E3: SVG-инфографики ---------- */
+const V4_SEEDCYCLE_SVG = `
+<svg viewBox="0 0 900 300" style="width:100%; height:auto; display:block" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="v4sg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+  <text x="450" y="28" text-anchor="middle" font-size="16" font-weight="800" fill="#f8fafc" font-family="system-ui">Жизненный цикл seed-фразы: рождается офлайн — умирает онлайн</text>
+  <g font-family="system-ui">
+    <circle cx="80" cy="90" r="36" fill="rgba(124,58,237,.25)" stroke="#7c3aed" stroke-width="2"/>
+    <text x="80" y="96" text-anchor="middle" font-size="24">🎲</text>
+    <text x="80" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">1. Генерация</text>
+    <text x="80" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">аппаратный кошелёк, офлайн</text>
+    <circle cx="240" cy="90" r="36" fill="rgba(34,197,94,.2)" stroke="#22c55e" stroke-width="2"/>
+    <text x="240" y="96" text-anchor="middle" font-size="24">📝</text>
+    <text x="240" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">2. Запись</text>
+    <text x="240" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">бумага / металл, 2 копии</text>
+    <circle cx="400" cy="90" r="36" fill="rgba(34,197,94,.2)" stroke="#22c55e" stroke-width="2"/>
+    <text x="400" y="96" text-anchor="middle" font-size="24">🏦</text>
+    <text x="400" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">3. Хранение</text>
+    <text x="400" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">сейф / банковская ячейка</text>
+    <circle cx="560" cy="90" r="36" fill="rgba(6,182,212,.2)" stroke="#06b6d4" stroke-width="2"/>
+    <text x="560" y="96" text-anchor="middle" font-size="24">✅</text>
+    <text x="560" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">4. Проверка</text>
+    <text x="560" y="168" text-anchor="middle" font-size="10" fill="#94a3b8">тест восстановления</text>
+    <circle cx="720" cy="90" r="36" fill="rgba(239,68,68,.2)" stroke="#ef4444" stroke-width="2"/>
+    <text x="720" y="96" text-anchor="middle" font-size="24">🚫</text>
+    <text x="720" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">Никогда</text>
+    <text x="720" y="168" text-anchor="middle" font-size="10" fill="#ef4444">облако · телефон · почта</text>
+  </g>
+  <path d="M 118 90 L 166 90 M 278 90 L 326 90 M 438 90 L 486 90" stroke="url(#v4sg)" stroke-width="3" fill="none" marker-end="none"/>
+  <g font-family="system-ui">
+    <rect x="40" y="205" width="820" height="66" rx="12" fill="rgba(6,182,212,.08)" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="450" y="232" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e2e8f0">Правило 2026: seed-фраза, которая хоть раз коснулась любого экрана с интернетом, — скомпрометирована.</text>
+    <text x="450" y="252" text-anchor="middle" font-size="11" fill="#94a3b8">Кошелёк = фраза. Нет фразы = нет денег. Фраза в облаке = деньги у первого бота-сканера.</text>
+  </g>
+</svg>`;
+const V4_SECSTACK_SVG = `
+<svg viewBox="0 0 900 340" style="width:100%; height:auto; display:block" xmlns="http://www.w3.org/2000/svg">
+  <text x="450" y="28" text-anchor="middle" font-size="16" font-weight="800" fill="#f8fafc" font-family="system-ui">«Защищённый стек» инструментов: шесть слоёв, которые защищают капитал</text>
+  <g font-family="system-ui">
+    <rect x="90" y="50" width="720" height="40" rx="10" fill="rgba(234,179,8,.15)" stroke="#eab308" stroke-width="1.5"/>
+    <text x="110" y="76" font-size="13">🧱 1. ОС: обновления, диск шифрован, отдельный профиль без браузерного мусора</text>
+    <rect x="90" y="98" width="720" height="40" rx="10" fill="rgba(234,179,8,.15)" stroke="#eab308" stroke-width="1.5"/>
+    <text x="110" y="124" font-size="13">🔐 2. Доступ: аппаратный 2FA (ключ), менеджер паролей, уникальные почты на биржу</text>
+    <rect x="90" y="146" width="720" height="40" rx="10" fill="rgba(6,182,212,.12)" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="110" y="172" font-size="13">📡 3. Канал: VPN уровня «полезно», приватный мемпул для ончейн (см. урок MEV)</text>
+    <rect x="90" y="194" width="720" height="40" rx="10" fill="rgba(6,182,212,.12)" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="110" y="220" font-size="13">💱 4. Биржа: API-ключи только trade, без withdraw; IP-whitelist; отдельный субаккаунт</text>
+    <rect x="90" y="242" width="720" height="40" rx="10" fill="rgba(34,197,94,.12)" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="110" y="268" font-size="13">🤖 5. Бот: ключи в env/сейфе, kill-switch (урок 5.2), лимиты в коде, а не в настройках</text>
+    <rect x="90" y="290" width="720" height="40" rx="10" fill="rgba(34,197,94,.12)" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="110" y="316" font-size="13">🧾 6. Отчётность: ежедневный отчёт «странных движений» — кто контролирует, тот теряет меньше</text>
+  </g>
+</svg>`;
+const V4_SVG_WIDGETS = {
+  widget_v4_seedcycle: { html: V4_SEEDCYCLE_SVG },
+  widget_v4_secstack: { html: V4_SECSTACK_SVG }
+};
+(function attachV4SvgWidgets(){
+  const ATT = [
+    ['p0_l2', 'widget_v4_seedcycle'],
+    ['p5_l2', 'widget_v4_secstack']
+  ];
+  ATT.forEach(function(a){
+    const l = LESSONS.find(x => x.id === a[0]);
+    if(!l || !l.blocks) return;
+    if(!l.blocks.some(b => b.id === a[1])){
+      let pos = l.blocks.length;
+      for(let i = 0; i < l.blocks.length; i++){
+        if(l.blocks[i].type === 'recap'){ pos = i; break; }
+      }
+      l.blocks.splice(pos, 0, { type: 'interactive_inline', id: a[1], title: a[1] === 'widget_v4_seedcycle' ? '🖼️ Инфографика: жизненный цикл seed-фразы' : '🖼️ Инфографика: защищённый стек', desc: 'Сводная визальная схема.' });
+    }
+  });
+})();
+(function v4SvgMountPatch(){
+  const prev = renderCStreamWidget;
+  renderCStreamWidget = function(widgetId){
+    if(V4_SVG_WIDGETS[widgetId]){
+      const b = document.getElementById(widgetId);
+      if(b){ b.innerHTML = '<div style="background:#040714; border:1.5px solid var(--line); border-radius:12px; padding:14px">' + V4_SVG_WIDGETS[widgetId].html + '</div>'; return true; }
+    }
+    return prev(widgetId);
+  };
+})();
+
 /* монтирование V4-игр */
 (function v4GamesMountPatch(){
   const prev = renderCStreamWidget;
