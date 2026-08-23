@@ -20517,7 +20517,7 @@ function drawInteractiveSvgRoadmap(){
     const glow = n.done ? 'filter="drop-shadow(0 0 6px rgba(34,197,94,.6))"' : '';
 
     return `
-      <g style="cursor:pointer" onclick="go('${n.tab}'); if('${n.tab}'==='lessons') renderPhaseLessonsView(${n.phase});" ${glow}>
+      <g style="cursor:pointer" onclick="go('${n.tab}'); if('${n.tab}'==='lessons'){ renderPhaseLessonsView(${n.phase}); setTimeout(() => window.scrollToCurrentLessonInPhase(${n.phase}), 120); }" ${glow}>
         <rect x="${n.x - 55}" y="${n.y - 18}" width="110" height="36" rx="10" fill="${bg}" stroke="${col}" stroke-width="1.5" />
         <text x="${n.x}" y="${n.y + 4}" fill="#f8fafc" font-size="10.5" font-weight="700" text-anchor="middle">${n.label}</text>
       </g>
@@ -21569,6 +21569,18 @@ function setGlossaryDisplayMode(mode){
 }
 
 // Update renderPhaseLessonsView to support both Grid Cards and Table View
+// V3-A5: быстрая перемотка по урокам фазы (roadmap → фаза → блок)
+window.scrollToLessonCard = function(lessonId){
+  const el = document.getElementById('lesson_card_' + lessonId);
+  if(!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.style.outline = '2px solid var(--acc2)';
+  setTimeout(() => { el.style.outline = ''; }, 1800);
+};
+window.scrollToCurrentLessonInPhase = function(phaseNum){
+  const cur = LESSONS.find(l => l.phase === phaseNum && lessonsDone[l.id] !== 1);
+  if(cur) scrollToLessonCard(cur.id);
+};
 function renderPhaseLessonsView(phaseNum = 0){
   currentViewingPhase = phaseNum;
   const container = document.getElementById('phaseLessonCardsGrid');
@@ -21577,6 +21589,20 @@ function renderPhaseLessonsView(phaseNum = 0){
 
   const phaseLessons = LESSONS.filter(l => l.phase === phaseNum);
   const doneCount = phaseLessons.filter(l => lessonsDone[l.id] === 1).length;
+
+  // V3-A5: панель быстрой перемотки по номеру урока
+  let jumpBar = document.getElementById('phase_jump_bar');
+  if(!jumpBar){
+    jumpBar = document.createElement('div');
+    jumpBar.id = 'phase_jump_bar';
+    container.parentNode.insertBefore(jumpBar, container);
+  }
+  jumpBar.style.cssText = 'display:flex; flex-wrap:wrap; gap:5px; margin:10px 0 4px; align-items:center';
+  jumpBar.innerHTML = '<span style="font-size:11.5px; color:var(--mut); font-weight:700; margin-right:4px">⏩ Перемотка:</span>' +
+    phaseLessons.map((l, idx) => {
+      const isDone = lessonsDone[l.id] === 1;
+      return `<button class="btn sm ghost" style="padding:2px 8px; font-size:11.5px; ${isDone ? 'color:var(--ok)' : ''}" title="${l.title.replace(/"/g, '')}" onclick="window.scrollToLessonCard('${l.id}')">${l.num || (idx + 1)}</button>`;
+    }).join('');
 
   if(badge){
     badge.innerHTML = `Пройдено уроков: ${doneCount} из ${phaseLessons.length}`;
@@ -21591,7 +21617,7 @@ function renderPhaseLessonsView(phaseNum = 0){
       const termsPreview = l.terms ? l.terms.slice(0, 3).map(t => typeof t === 'object' ? t.ru : t).join(', ') : '';
 
       return `
-        <div class="lesson-card-item ${isDone ? 'done' : ''}" onclick="openFullscreenLesson('${l.id}')">
+        <div class="lesson-card-item ${isDone ? 'done' : ''}" id="lesson_card_${l.id}" onclick="openFullscreenLesson('${l.id}')">
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
               <span style="font-size:12px; font-weight:800; color:var(--acc2); text-transform:uppercase">Урок ${l.num || (idx + 1)}</span>
@@ -21640,7 +21666,7 @@ function renderPhaseLessonsView(phaseNum = 0){
               }).join('') : '—';
 
               return `
-                <tr style="border-bottom:1px solid var(--line); cursor:pointer; transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background=''" onclick="openFullscreenLesson('${l.id}')">
+                <tr id="lesson_card_${l.id}" style="border-bottom:1px solid var(--line); cursor:pointer; transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background=''" onclick="openFullscreenLesson('${l.id}')">
                   <td style="padding:14px 16px; font-weight:800; color:var(--acc2)">${l.num || (idx + 1)}</td>
                   <td style="padding:14px 16px; font-weight:700; color:var(--txt)">
                     ${l.title}
