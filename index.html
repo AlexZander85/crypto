@@ -35341,6 +35341,7 @@ function renderLiveView(){
     '<style>@media (max-width:860px){ #live_grid{ grid-template-columns:1fr !important } }</style>';
   if(typeof window.renderLiveMarketCol === 'function') window.renderLiveMarketCol();
   if(typeof window.renderLiveCoachCol === 'function') window.renderLiveCoachCol();
+  if(typeof window.newsSyncSubView === 'function') window.newsSyncSubView();
 }
 window.renderLiveView = renderLiveView;
 
@@ -36090,6 +36091,641 @@ window.goLiveFromLesson = goLiveFromLesson;
   };
 })();
 
+
+/* =========================================================================
+   NEWS LAYER · «Новости как учебный материал»
+   Ядро: классификатор 7 типов (словарь + наивный Байес), шаблоны карточек,
+   лента RSS через rss2json, субвкладка «Новости» внутри «Живого рынка».
+   ========================================================================= */
+
+/* ---------- реестр типов и источников ---------- */
+const NEWS_TYPES = {
+  regulatory: { icon: '⚖️', ru: 'Регуляторное', w: ['sec', 'иск', 'штраф', 'запрет', 'лицензи', 'закон', 'mica', 'суд', 'комиссия', 'регулятор', 'esma', 'approve', 'regulat', 'lawsuit', 'ban'] },
+  security:   { icon: '🔓', ru: 'Безопасность', w: ['взлом', 'эксплойт', 'украден', 'украли', 'мост', 'утечк', 'фишинг', 'hack', 'exploit', 'bridge', 'breach', 'phishing', 'stolen', 'drain'] },
+  macro:      { icon: '📉', ru: 'Макро',        w: ['ставк', 'инфляц', 'фрс', 'индекс потребительск', 'доллар', 'нефть', 'pmi', 'fed', 'rate', 'inflation', 'cpi'] },
+  tech:       { icon: '⚙️', ru: 'Технологическое', w: ['хардфорк', 'апгрейд', 'обновлени', 'тестнет', 'мейннет', 'hardfork', 'upgrade', 'testnet', 'mainnet'] },
+  market:     { icon: '💼', ru: 'Рынок капитала', w: ['etf', 'листинг', 'ipo', 'приток', 'отток', 'listing', 'inflow', 'outflow'] },
+  hype:       { icon: '📢', ru: 'Хайп/маркетинг', w: ['партнёрств', 'коллаборац', 'интеграц', 'миллионы пользовател', 'революц', 'partnership', 'collab', 'integrat', 'synergy'] },
+  scam:       { icon: '🚨', ru: 'Скам-маркеры', w: ['гарантирован', 'фиксированный процент', 'без риска', 'guaranteed', 'no risk', 'fixed return'] }
+};
+const NEWS_SRC_LIST = ['ForkLog', 'BeInCrypto RU', 'CoinDesk', 'Decrypt', 'SEC'];
+const NEWS_FEEDS = [
+  { id: 'forklog', name: 'ForkLog', lang: 'ru', url: 'https://forklog.com/feed' },
+  { id: 'beincrypto', name: 'BeInCrypto RU', lang: 'ru', url: 'https://ru.beincrypto.com/feed/' },
+  { id: 'coindesk', name: 'CoinDesk', lang: 'en', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+  { id: 'decrypt', name: 'Decrypt', lang: 'en', url: 'https://decrypt.co/feed' },
+  { id: 'sec', name: 'SEC', lang: 'en', reg: true, url: 'https://www.sec.gov/news/pressreleases.rss' }
+];
+window.NEWS_TYPES = NEWS_TYPES;
+window.NEWS_SRC_LIST = NEWS_SRC_LIST;
+window.NEWS_FEEDS = NEWS_FEEDS;
+
+/* ---------- классификатор: словарь + наивный Байес ---------- */
+function newsWordCounts(){
+  try{ return JSON.parse(localStorage.getItem('cn_news_word_counts') || '{}'); }catch(e){ return {}; }
+}
+function classifyNewsType(text, categories){
+  const t = ((text || '') + ' ' + (categories || []).join(' ')).toLowerCase().replace(/ё/g, 'е');
+  let best = null, bestScore = 0;
+  const scores = {};
+  Object.keys(NEWS_TYPES).forEach(k => {
+    let s = (categories || []).reduce((sum, c) => sum + (c.toLowerCase().includes(k) ? 2 : 0), 0);
+    NEWS_TYPES[k].w.forEach(w => { if(t.includes(w)) s += 1; });
+    const wc = newsWordCounts();
+    Object.keys(wc).forEach(word => { if(t.includes(word) && wc[word][k]) s += wc[word][k].n * 0.4; });
+    scores[k] = s;
+    if(s > bestScore){ best = k; bestScore = s; }
+  });
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+  return { type: best, score: bestScore, confident: bestScore >= 2, confidence: total ? Math.round(bestScore / total * 100) : 0, scores: scores };
+}
+window.classifyNewsType = classifyNewsType;
+
+/* ---------- извлечение чисел ---------- */
+function newsExtract(text){
+  const out = { money: '', percents: [], dates: [] };
+  const money = text.match(/\$\s?[\d,.]+\s?(млн|млрд|тыс)?/);
+  if(money) out.money = money[0].replace(/\s+/g, ' ');
+  const pc = text.match(/\d+([,.]\d+)?%/g);
+  if(pc) out.percents = pc;
+  const d = text.match(/(\d{1,2} [а-яА-Я]+ \d{4})|(\d{4}-\d{2}-\d{2})|(в \d{4} году)/);
+  if(d) out.dates = [d[0]];
+  return out;
+}
+window.newsExtract = newsExtract;
+
+/* ---------- 7 шаблонов карточек (написаны человеком) ---------- */
+const NEWS_TEMPLATES = {
+  regulatory: {
+    mechanic: 'Правила меняют доступ участников и издержки compliance — цена реагирует прежде всего на неопределённость правил, а не на сам факт.',
+    caveat: 'Сроки вступления, детали исполнения, реакция других регуляторов — этого заголовок не говорит.'
+  },
+  security: {
+    mechanic: 'Прямые потери конкретного протокола + рост требований к доходности за риск хранения на площадках в целом.',
+    caveat: 'Масштаб потерь, был ли страховой фонд, повторится ли эксплойт — всегда открытые вопросы в первые часы.'
+  },
+  macro: {
+    mechanic: 'Меняется цена денег: ставка, инфляция и сила валюты определяют, насколько дорого держать рисковые активы.',
+    caveat: 'Одна публикация данных — это один порт к маршруту, а не маршрут целиком; реакция рынка часто обратна «логике».'
+  },
+  tech: {
+    mechanic: 'Технический параметр сети меняется — цена/скорость/возможности; рынок оценивает, сдвигает ли это конкурентную привлекательность.',
+    caveat: 'Апгрейд ≠ рост: цена обычно двигалась до события, а в моменте реализуется «продай на новости».'
+  },
+  market: {
+    mechanic: 'Фактическое движение капитала — ETF, листинг, потоки фондов — показывает вкус институционалов к конкретному способу доступа.',
+    caveat: 'Приток ≠ рост цены: деньги в фонд и цена актива связаны, но обратная связь может занять недели.'
+  },
+  hype: {
+    mechanic: 'Словесное событие (партнёрство/интеграция) без аудита масштаба — инструмент привлечения внимания; цена реагирует на внимание, а не на факт пользы.',
+    caveat: '«Миллионы пользователей» без независимого аудита — маркетинговый посыл; проверяй только твёрдые цифры и даты.'
+  },
+  scam: {
+    mechanic: 'Заголовок использует ложный сигнал доверия (гарантия, требование регулятора, CAPS, отсутствие дат) — типичная структура скама.',
+    caveat: 'Даже если предложение мимикрирует под официальное, отсутствие реквизитов и точной формулировки = красная зона.'
+  }
+};
+window.NEWS_TEMPLATES = NEWS_TEMPLATES;
+
+/* ---------- карточка разбора одной новости ---------- */
+function newsCoachCard(item){
+  const cls = classifyNewsType((item.title || '') + ' ' + (item.snippet || ''), item.categories);
+  const T = cls.type || 'regulatory';
+  const tpl = NEWS_TEMPLATES[T];
+  const meta = NEWS_TYPES[T];
+  const ex = newsExtract(item.title + ' ' + (item.snippet || ''));
+  const fact = (item.snippet || item.title || '').trim();
+  return '<div class="news-coach" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:10px">' +
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">' +
+      '<div style="font-weight:800;font-size:13px;color:var(--txt)">' + meta.icon + ' ' + meta.ru + (cls.confident ? '' : ' <span style="font-size:10px;color:var(--mut)">(подсказка)</span>') + '</div>' +
+      '<span style="font-size:10px;color:var(--mut);white-space:nowrap">' + (item.source || '') + '</span>' +
+    '</div>' +
+    '<div style="font-size:12.5px;color:var(--txt);line-height:1.55;margin-bottom:8px">' + item.title + '</div>' +
+    (item.lang === 'en' ? '<div style="font-size:10px;color:var(--acc2);margin-bottom:6px">🌐 авто-перевод — оригинал</div>' : '') +
+    '<div style="border-left:3px solid var(--acc2);padding-left:10px;margin-bottom:8px">' +
+      '<div style="font-size:11px;color:var(--acc2);text-transform:uppercase;font-weight:800">Механика</div>' +
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">' + tpl.mechanic + (ex.money ? ' (' + ex.money + ')' : '') + '</div>' +
+    '</div>' +
+    '<div style="border-left:3px solid var(--bad);padding-left:10px">' +
+      '<div style="font-size:11px;color:var(--bad);text-transform:uppercase;font-weight:800">Чего не говорит</div>' +
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">' + tpl.caveat + '</div>' +
+    '</div>' +
+    (fact ? '<div style="margin-top:8px;font-size:11.5px;color:var(--mut)">Факт из текста: ' + fact.slice(0, 160) + (fact.length > 160 ? '…' : '') + '</div>' : '') +
+    (item.url ? '<div style="margin-top:6px"><a href="' + item.url + '" target="_blank" rel="noopener" style="font-size:11.5px;color:var(--acc2)">🔗 Источник ↗</a></div>' : '') +
+  '</div>';
+}
+window.newsCoachCard = newsCoachCard;
+
+/* ---------- модуль NEWS: загрузка, кэш, статусы ---------- */
+const NEWS = {
+  items: [],
+  status: {},
+  cacheKey: 'cn_news_cache',
+  subscribers: [],
+
+  subscribe(fn){ this.subscribers.push(fn); },
+  emit(){ this.subscribers.forEach(fn => { try{ fn(); }catch(e){} }); },
+  cacheGet(){ try{ const raw = localStorage.getItem(this.cacheKey); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } },
+  cacheSet(items){ try{ localStorage.setItem(this.cacheKey, JSON.stringify({ ts: Date.now(), items: items })); }catch(e){} },
+
+  parseFeed(feed, data){
+    return ((data && data.items) || []).slice(0, 15).map(it => ({
+      title: (it.title || '').trim(), url: it.link || '', source: feed.name, feedId: feed.id,
+      lang: feed.lang, reg: !!feed.reg, published_at: it.pubDate || Date.now(),
+      snippet: (it.description || it.contentSnippet || '').replace(/<[^>]+>/g, '').slice(0, 300),
+      categories: it.categories || []
+    }));
+  },
+  fetchFeed(feed){
+    const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed.url);
+    return fetch(url).then(r => { if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }).then(data => {
+      if(data.status !== 'ok') throw new Error(data.message || 'rss2json: не ok');
+      this.status[feed.id] = { state: 'live', ts: Date.now() };
+      return this.parseFeed(feed, data);
+    }).catch(err => {
+      this.status[feed.id] = { state: 'fail', ts: Date.now(), msg: String(err && err.message || err) };
+      return [];
+    });
+  },
+  fetchAll(){
+    return Promise.all(NEWS_FEEDS.map(f => this.fetchFeed(f))).then(list => {
+      const merged = [].concat.apply([], list);
+      if(merged.length){
+        merged.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+        this.items = merged;
+        this.cacheSet(merged);
+      }
+      this.emit();
+    });
+  },
+  feed(lang, worldOn){
+    let items = this.items.filter(it => it.lang === lang || (worldOn && it.lang !== lang));
+    if(!items.length){
+      const c = this.cacheGet();
+      if(c && c.items) items = c.items.filter(it => it.lang === lang || (worldOn && it.lang !== lang));
+    }
+    return items;
+  },
+  anyFail(){ return NEWS_FEEDS.some(f => (this.status[f.id] || {}).state === 'fail'); },
+  cacheAge(){ const c = this.cacheGet(); return c ? Math.round((Date.now() - c.ts) / 60000) : null; },
+
+  eduItems(){
+    const t = Date.now();
+    const mk = (title, source, lang, reg, hoursAgo, snip) => ({
+      title: title, url: '', source: source, feedId: source.toLowerCase().replace(/\s/g, ''),
+      lang: lang, reg: !!reg, published_at: t - hoursAgo * 36e5, snippet: snip || title, categories: []
+    });
+    return [
+      mk('SEC ввела новые правила отчётности для криптобирж', 'SEC', 'en', true, 2),
+      mk('Взлом моста: украдено около $12 млн', 'ForkLog', 'ru', false, 5),
+      mk('ФРС сохранила ставку 4.25%: инфляция замедляется', 'BeInCrypto RU', 'ru', false, 8),
+      mk('Апгрейд сети запущен в тестнете', 'ForkLog', 'ru', false, 12),
+      mk('Приток в спотовые ETF достиг $800 млн за неделю', 'BeInCrypto RU', 'ru', false, 16),
+      mk('Партнёрство протокола с платёжной сетью откроет новую эру', 'ForkLog', 'ru', false, 20),
+      mk('ГАРАНТИРОВАННЫЙ ДОХОД 25% в месяц для всех', 'BeInCrypto RU', 'ru', false, 24),
+      mk('Запрет на майнинг: суд удовлетворил иск регулятора', 'ForkLog', 'ru', false, 28),
+      mk('Мост обновлён: устранена уязвимость фишингом', 'ForkLog', 'ru', false, 32),
+      mk('Network upgrade: throughput x2 in new testnet', 'Decrypt', 'en', false, 36),
+      mk('ETF снова в плюсе: приток $300 млн', 'BeInCrypto RU', 'ru', false, 40),
+      mk('По требованию регулятора активы заморожены — подробности', 'ForkLog', 'ru', false, 44)
+    ];
+  },
+  newsUseEducational(){
+    this.items = this.eduItems();
+    NEWS_FEEDS.forEach(f => { this.status[f.id] = { state: 'edu', ts: Date.now() }; });
+    this.emit();
+  }
+};
+window.NEWS = NEWS;
+
+/* ---------- субвкладки «Наставник / Новости» ---------- */
+function newsSubsHTML(active){
+  const subs = [ { id: 'coach', label: '🎓 Наставник' }, { id: 'news', label: '📰 Новости' } ];
+  return '<div style="display:flex;gap:6px;margin-bottom:14px">' +
+    subs.map(s => '<button class="btn sm ' + (active === s.id ? '' : 'ghost') + '" style="' + (active === s.id ? '' : 'opacity:.7') + '" onclick="newsSwitchSub(\'' + s.id + '\')">' + s.label + '</button>').join('') +
+  '</div>';
+}
+window.newsSubsHTML = newsSubsHTML;
+
+function newsSwitchSub(id){
+  sessionStorage.setItem('cn_live_sub', id);
+  renderLiveView();
+  newsSyncSubView();
+}
+window.newsSwitchSub = newsSwitchSub;
+
+function newsSyncSubView(){
+  const sub = sessionStorage.getItem('cn_live_sub') || 'coach';
+  const view = document.getElementById('live');
+  if(!view || !view.classList.contains('active')) return;
+  const grid = document.getElementById('live_status_grid');
+  if(grid && !document.getElementById('live_sub_nav')){
+    grid.insertAdjacentHTML('beforebegin', '<div id="live_sub_nav">' + newsSubsHTML(sub) + '</div>');
+  }
+  if(sub === 'news'){
+    const market = document.getElementById('live_market_col');
+    const coachCol = document.getElementById('live_coach_col');
+    if(market) market.innerHTML = '';
+    if(coachCol){ coachCol.innerHTML = window.renderNewsView(); }
+    const nav = document.getElementById('live_sub_nav');
+    if(nav) nav.innerHTML = newsSubsHTML('news');
+  } else {
+    const nav = document.getElementById('live_sub_nav');
+    if(nav) nav.innerHTML = newsSubsHTML('coach');
+  }
+}
+window.newsSyncSubView = newsSyncSubView;
+LIVE.onUpdate(newsSyncSubView);
+
+function renderNewsView(){
+  const worldOn = localStorage.getItem('cn_news_world') === 'on';
+  const items = NEWS.feed('ru', worldOn);
+  const failCount = NEWS_FEEDS.filter(f => (NEWS.status[f.id] || {}).state === 'fail').length;
+  const cacheAge = NEWS.cacheAge();
+  return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">' +
+      '<div style="font-weight:800;font-size:15px;color:var(--txt)">📰 Лента новостей</div>' +
+      '<div style="display:flex;gap:8px;align-items:center">' +
+        '<label style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--txt);cursor:pointer;user-select:none">' +
+          '<input type="checkbox" ' + (worldOn ? 'checked' : '') + ' onchange="newsWorldToggle(this.checked)" style="accent-color:var(--acc2)"> 🌐 показывать мировые' +
+        '</label>' +
+        '<button class="btn sm ghost" onclick="NEWS.fetchAll().then(renderLiveView)" style="font-size:11px;padding:4px 10px">🔄</button>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:11px;color:var(--mut);margin-bottom:10px">Источники: ' + NEWS_SRC_LIST.join(' · ') + '. Атрибуция на каждой карточке.</div>' +
+    (failCount === NEWS_FEEDS.length && !items.length ? '<div style="background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:14px;font-size:12.5px;color:var(--mut)">Лента недоступна (нет сети). Нажми «🧪 Учебные данные» — всё работает офлайн.</div>' : '') +
+    (cacheAge !== null && failCount ? '<div style="font-size:11.5px;color:var(--warn);margin-bottom:8px">🕐 Снимок ленты от ' + cacheAge + ' мин назад — часть источников недоступна.</div>' : '') +
+    items.slice(0, 20).map(it => newsCoachCard(it)).join('') +
+    (items.length ? '' : '<div style="font-size:12.5px;color:var(--mut)">Пока пусто: подключи «🌍 живые данные» или «🧪 учебные».</div>');
+}
+window.renderNewsView = renderNewsView;
+
+function newsWorldToggle(v){
+  localStorage.setItem('cn_news_world', v ? 'on' : 'off');
+  renderLiveView();
+  newsSyncSubView();
+}
+window.newsWorldToggle = newsWorldToggle;
+
+/* подключаем NEWS к LIVE-кнопкам */
+(function hookNewsToLive(){
+  const prevConnect = LIVE.connect;
+  LIVE.connect = function(){
+    const p = prevConnect.apply(this, arguments);
+    NEWS.fetchAll();
+    return p;
+  };
+  const prevEdu = LIVE.useEducational;
+  LIVE.useEducational = function(){
+    prevEdu.apply(this, arguments);
+    NEWS.newsUseEducational();
+  };
+  NEWS.subscribe(() => { if(sessionStorage.getItem('cn_live_sub') === 'news') newsSyncSubView(); });
+})();
+
+/* =========================================================================
+   N3 · Упражнения: «Угадай тип» + «История знает ответ» + «Анти-FUD»
+   Ответы → cn_news_stats; Байес пополняется; Brier — в cn_brier (coach=true)
+   ========================================================================= */
+
+/* ---------- cn_news_stats ---------- */
+function newsStatsLoad(){
+  try{ return JSON.parse(localStorage.getItem('cn_news_stats') || '{"guess":[],"history":[],"antifud":[]}'); }catch(e){ return { guess: [], history: [], antifud: [] }; }
+}
+function newsStatsSave(st){
+  try{ localStorage.setItem('cn_news_stats', JSON.stringify(st)); }catch(e){}
+}
+function newsBayesAdd(title, type){
+  try{
+    const wc = newsWordCounts();
+    title.toLowerCase().replace(/ё/g, 'е').split(/[^a-zа-яё0-9]+/i).forEach(w => {
+      if(!w || w.length < 4) return;
+      if(!wc[w]) wc[w] = {};
+      if(!wc[w][type]) wc[w][type] = { n: 0 };
+      wc[w][type].n++;
+    });
+    localStorage.setItem('cn_news_word_counts', JSON.stringify(wc));
+  }catch(e){}
+}
+
+/* ---------- режим «Угадай тип» ---------- */
+let newsGuessCurrent = null;
+function newsGuessHTML(){
+  const items = NEWS.items.length ? NEWS.items : NEWS.eduItems();
+  const idx = Math.floor(Date.now() / 36e5) % items.length; // ротация по часу
+  newsGuessCurrent = items[idx];
+  const st = newsStatsLoad();
+  const done = st.guess.length;
+  const hit = st.guess.filter(g => g.ok).length;
+  const types = Object.keys(NEWS_TYPES);
+  return '<div style="background:var(--card);border:1px solid var(--acc2);border-radius:12px;padding:14px 16px;margin-bottom:14px">' +
+    '<div style="font-weight:800;font-size:13.5px;color:var(--txt);margin-bottom:4px">🎯 Угадай тип новости</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">Определи категорию заголовка ДО раскрытия. Точность по типам — карта твоих слепых зон. Система учится на твоих ответах.</div>' +
+    (done ? '<div style="font-size:11px;color:var(--acc2);margin-bottom:8px">Точность: ' + hit + '/' + done + ' (' + Math.round(hit / done * 100) + '%)</div>' : '') +
+    '<div style="font-size:13px;color:var(--txt);line-height:1.55;padding:10px 12px;background:#040714;border-radius:8px;margin-bottom:10px">«' + newsGuessCurrent.title + '»</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px">' +
+      types.map(t => '<button class="btn sm ghost" style="font-size:11px" onclick="newsGuessAnswer(\'' + t + '\')">' + NEWS_TYPES[t].icon + ' ' + NEWS_TYPES[t].ru + '</button>').join('') +
+    '</div>' +
+    '<div id="news_guess_fb" style="margin-top:10px"></div>' +
+  '</div>';
+}
+window.newsGuessHTML = newsGuessHTML;
+
+function newsGuessAnswer(picked){
+  if(!newsGuessCurrent) return;
+  const cls = classifyNewsType(newsGuessCurrent.title + ' ' + (newsGuessCurrent.snippet || ''), newsGuessCurrent.categories);
+  const truth = cls.type || 'regulatory';
+  const ok = picked === truth;
+  const st = newsStatsLoad();
+  st.guess.push({ t: Date.now(), title: newsGuessCurrent.title.slice(0, 80), picked: picked, truth: truth, ok: ok });
+  newsStatsSave(st);
+  newsBayesAdd(newsGuessCurrent.title, truth);
+  const fb = document.getElementById('news_guess_fb');
+  if(fb){
+    fb.innerHTML =
+      '<div style="font-size:12.5px;line-height:1.55;color:' + (ok ? 'var(--ok)' : 'var(--bad)') + ';margin-bottom:8px">' +
+        (ok ? '✅ Верно: ' : '❌ Эталон: ') + NEWS_TYPES[truth].icon + ' ' + NEWS_TYPES[truth].ru + ' (уверенность системы: ' + cls.confidence + '%)' +
+      '</div>' +
+      newsCoachCard(newsGuessCurrent) +
+      '<button class="btn sm" onclick="renderLiveView()">Следующая →</button>';
+  }
+}
+window.newsGuessAnswer = newsGuessAnswer;
+
+/* ---------- режим «История знает ответ» ---------- */
+const NEWS_HISTORY_CASES = [
+  { title: 'FTX объявил о банкротстве', date: '11.11.2022', type: 'security', before: 'BTC: ~$17 000. FTT обрушился на 90% за дни.', after: 'BTC упал до ~$15 500 (−9% за неделю), стейблкоины отошли от $1, биржи начали публиковать proof-of-reserves.', lesson: 'Даже зная про банкротство, направление всего рынка угадать сложно: падение было не мгновенным, а волнами неделями.' },
+  { title: 'SEC одобрила спотовые Bitcoin-ETF', date: '10.01.2024', type: 'regulatory', before: 'BTC: ~$46 000. Рынок ждал решения месяцами.', after: 'BTC сначала вырос до $49 000, затем за неделю упал до $41 500 («продай на новости»), и лишь через месяцы ушёл к $70 000+.', lesson: 'Хорошая новость ≠ рост сразу: «покупай на слухах, продавай на факте» работает чаще, чем логика новичка.' },
+  { title: 'USDC потерял привязку к доллару (SVB)', date: '11.03.2023', type: 'security', before: 'USDC — второй стейблкоин, «безопасная гавань».', after: 'USDC упал до $0.88 (−12%), дегены в панике меняли на USDT; через 3 дня привязка восстановилась после гарантий ФРС.', lesson: 'Стейблкоин — не банковский вклад: «стабильность» держится на качестве резервов и доверии, а не на законе.' },
+  { title: 'Четвёртый халвинг Биткоина', date: '20.04.2024', type: 'tech', before: 'BTC: ~$64 000. Все ждали ралли после халвинга.', after: 'BTC болтался $58 000–72 000 ещё 4 месяца. Ралли случилось, но в ноябре, и катализатором стали выборы в США, а не сам халвинг.', lesson: 'Халвинг меняет предложение на годы вперёд, а не цену в этот четверг: рынок заранее включает известные события в цену.' },
+  { title: 'Взлом моста Ronin: украдено $625 млн', date: '29.03.2022', type: 'security', before: 'Крупнейший DeFi-взлом на тот момент.', after: 'Токен AXS упал на 8% за день, RON — на 22%. BTC почти не заметил. Через неделю рынок забыл — кроме жертв протокола.', lesson: 'Взлом бьёт точечно по протоколу, но почти не двигает рынок в целом: «криптовалюта» ≠ «всё падает вместе».' },
+  { title: 'Сальвадор сделал BTC официальной валютой', date: '07.09.2021', type: 'regulatory', before: 'Первая страна в мире. Все ждали «принятие = рост».', after: 'BTC упал на 10% в тот же день (флеш-крах до $43 000). Ликвидации составили $3 млрд за час.', lesson: '«Принятие государством» — не катализатор мгновенного роста: рынок смотрит на ликвидность и левередж, а не на флаги.' },
+  { title: 'Terra/LUNA начала крах (depeg UST)', date: '09.05.2022', type: 'security', before: 'UST — «стабильный» алгоритмический стейблкоин, TVL $18 млрд.', after: 'LUNA упала с $60 до $0.0001 за 4 дня (−99.99%). UST потерял $1 навсегда. Общий рынок потерял $400 млрд за неделю.', lesson: 'Алгоритмическая «стабильность» без избыточного резерва — это банк-ран, записанный в код: ловушка была видна в механике заранее.' },
+  { title: 'BlackRock подала заявку на спотовый Bitcoin-ETF', date: '15.06.2023', type: 'market', before: 'BTC: ~$25 000. Рынок в депрессии после FTX.', after: 'BTC вырос на 20% за неделю (до $30 000). Заявка ≠ одобрение, но сигнал крупнейшего управляющего мира сместил настроения.', lesson: 'Одна заявка крупного игрока двигает рынок сильнее десяти реальных апгрейдов: деньги реагируют на ожидание доступа капитала.' },
+  { title: 'Китай объявил транзакции с криптовалютой незаконными', date: '24.09.2021', type: 'regulatory', before: 'Новый запрет из Китая — уже не первый.', after: 'BTC упал на 9% за день, но через 3 недели обновил исторический максимум ($67 000).', lesson: 'Повторные запреты из одного источника теряют силу: рынок выучил, что «запрет Китая» не равен концу Биткоина.' },
+  { title: 'SEC подала иск против Binance и Coinbase', date: '05.06.2023', type: 'regulatory', before: 'Два исключительных иска за 2 дня подряд.', after: 'BNB упал на 9%, BTC — на 5%. Через 6 месяцев BTC вырос в 1.7 раза (иск ≠ запрет).', lesson: 'Даже самые громкие регуляторные удары могут быть шумом на пути к развязке: цена боялась неопределённости, а не самой статьи.' }
+];
+window.NEWS_HISTORY_CASES = NEWS_HISTORY_CASES;
+
+let newsHistoryCurrent = null;
+function newsHistoryHTML(){
+  const idx = Math.floor(Date.now() / 864e5) % NEWS_HISTORY_CASES.length;
+  newsHistoryCurrent = NEWS_HISTORY_CASES[idx];
+  const st = newsStatsLoad();
+  const done = st.history.length;
+  const hit = st.history.filter(h => Math.abs(h.p - (h.outcome ? 1 : 0)) < 0.25).length;
+  return '<div style="background:var(--card);border:1px solid var(--warn);border-radius:12px;padding:14px 16px;margin-bottom:14px">' +
+    '<div style="font-weight:800;font-size:13.5px;color:var(--txt);margin-bottom:4px">📜 История знает ответ</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">Архивный кейс. Спорим, ты уверен в исходе сильнее, чем реальность? Прогноз → факт → Brier-калибровка.</div>' +
+    (done ? '<div style="font-size:11px;color:var(--warn);margin-bottom:8px">Твоя калибровка на истории: ' + hit + '/' + done + '</div>' : '') +
+    '<div style="font-size:13px;color:var(--txt);line-height:1.55;padding:10px 12px;background:#040714;border-radius:8px;margin-bottom:6px">«' + newsHistoryCurrent.title + '»</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">' + newsHistoryCurrent.date + ' · ' + newsHistoryCurrent.before + '</div>' +
+    '<div id="news_hist_q">' +
+      '<div style="font-size:12.5px;color:var(--txt);margin-bottom:6px">Как отреагировал рынок через неделю?</div>' +
+      '<button class="btn sm ghost" style="margin-right:6px" onclick="newsHistoryOutcome(true)">📈 Рос</button>' +
+      '<button class="btn sm ghost" onclick="newsHistoryOutcome(false)">📉 Падал или боковик</button>' +
+    '</div>' +
+    '<div id="news_hist_fb"></div>' +
+  '</div>';
+}
+window.newsHistoryHTML = newsHistoryHTML;
+
+function newsHistoryOutcome(isUp){
+  const q = document.getElementById('news_hist_q');
+  const fb = document.getElementById('news_hist_fb');
+  if(!q || !fb) return;
+  q.innerHTML = '<div style="font-size:12.5px;color:var(--txt)">Ты выбрал: <b>' + (isUp ? '📈 Рос' : '📉 Падал') + '</b>. Насколько уверен? <b id="news_hist_p_lbl" style="color:var(--acc2)">75%</b></div>' +
+    '<input type="range" id="news_hist_p" min="50" max="100" step="5" value="75" style="width:100%" oninput="document.getElementById(\'news_hist_p_lbl\').textContent=this.value+\'%\'">' +
+    '<button class="btn sm" style="margin-top:6px" onclick="newsHistoryCommit(' + isUp + ')">Показать факт</button>';
+  fb.innerHTML = '';
+}
+window.newsHistoryOutcome = newsHistoryOutcome;
+
+function newsHistoryCommit(predictedUp){
+  if(!newsHistoryCurrent) return;
+  const p = +(document.getElementById('news_hist_p') || { value: 75 }).value / 100;
+  // эталон: была ли неделя растущей? извлекаем из after
+  const after = newsHistoryCurrent.after.toLowerCase();
+  const wasUp = after.includes('вырос') || after.includes('обновил') || after.includes('ушёл к') || after.includes('восстановил');
+  const truthUp = wasUp && !after.includes('упал');
+  const correct = predictedUp === truthUp;
+  const st = newsStatsLoad();
+  st.history.push({ t: Date.now(), case: newsHistoryCurrent.title.slice(0, 50), p: p, predictedUp: predictedUp, truthUp: truthUp, outcome: correct });
+  newsStatsSave(st);
+  // Brier — в общую калибровку с пометкой coach
+  if(typeof coachBrierPush === 'function') coachBrierPush(p, correct);
+  document.getElementById('news_hist_q').innerHTML = '';
+  document.getElementById('news_hist_fb').innerHTML =
+    '<div style="font-size:12.5px;line-height:1.6;color:' + (correct ? 'var(--ok)' : 'var(--bad)') + ';margin-top:10px">' +
+      (correct ? '✅ Верно. ' : '❌ Факт другой. ') + 'Твоя уверенность была ' + Math.round(p * 100) + '%; Brier: ' + Math.pow(p - (correct ? 1 : 0), 2).toFixed(3) + '.</div>' +
+    '<div style="font-size:12.5px;color:var(--txt);line-height:1.6;margin-top:8px;padding:10px 12px;background:#040714;border-radius:8px">' +
+      '<b>Факт:</b> ' + newsHistoryCurrent.after + '</div>' +
+    '<div style="font-size:12px;color:var(--warn);line-height:1.6;margin-top:8px;border-left:3px solid var(--warn);padding-left:10px">' +
+      '<b>Вывод:</b> ' + newsHistoryCurrent.lesson + '</div>' +
+    '<button class="btn sm" style="margin-top:10px" onclick="renderLiveView()">Следующий кейс →</button>';
+}
+window.newsHistoryCommit = newsHistoryCommit;
+
+/* ---------- режим «Анти-FUD / анти-хайп» ---------- */
+const NEWS_ANTIFUD = [
+  { pair: [
+    { source: 'Канал A', title: 'КРАХ! Биткоин ОБРУШИЛСЯ на 12% — это конец, всё на ноль!' },
+    { source: 'Канал B', title: 'BTC снизился на 12% за сутки: ликвидации $2 млрд, индекс страха и жадности упал до 22' }
+  ], truth: 'B', markers: ['CAPS', 'восклицательные знаки', '«это конец»', 'отсутствие цифр контекста'], lesson: 'Эмоциональная подача усиливает восприятие события в разы: одно и то же движение описано как катастрофа и как статистика.' },
+  { pair: [
+    { source: 'Канал A', title: 'Партнёрство с гигантом: миллионы новых пользователей уже скоро!' },
+    { source: 'Канал B', title: 'Протокол подписал пилотное соглашение: тест на 50 000 аккаунтах до конца года' }
+  ], truth: 'B', markers: ['«миллионы» без источника', '«уже скоро» вместо даты', 'отсутствие деталей'], lesson: 'Маркетинговая вода (партнёрства, «миллионы») — не данные: проверяй цифры, даты, независимый аудит.' },
+  { pair: [
+    { source: 'Канал A', title: 'БЕГИТЕ! Регулятор ЗАПРЕЩАЕТ крипту — выводите всё СРОЧНО' },
+    { source: 'Канал B', title: 'Регулятор предложил ограничить рекламу деривативов для розницы: консультации до 30 числа' }
+  ], truth: 'B', markers: ['паника и императив', '«СРОЧНО»', 'обобщение «запрещает всё»'], lesson: 'FUD работает на спешке: реальные регуляторные документы всегда содержат сроки, процедуры и конкретику.' }
+];
+window.NEWS_ANTIFUD = NEWS_ANTIFUD;
+
+let newsAntifudCurrent = null;
+function newsAntifudLockedHTML(){
+  return '<div style="background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:16px;text-align:center">' +
+    '<div style="font-size:24px;margin-bottom:6px">🔒</div>' +
+    '<div style="font-weight:700;font-size:13px;color:var(--txt);margin-bottom:4px">Анти-FUD откроется после урока 0.18</div>' +
+    '<div style="font-size:11.5px;color:var(--mut)">Там разобрана анатомия манипулятивных заголовков.</div>' +
+  '</div>';
+}
+window.newsAntifudLockedHTML = newsAntifudLockedHTML;
+
+function newsAntifudHTML(){
+  const g = newsGateCheck();
+  if(!g.antiOpen) return newsAntifudLockedHTML();
+  const idx = Math.floor(Date.now() / 864e5) % NEWS_ANTIFUD.length;
+  newsAntifudCurrent = NEWS_ANTIFUD[idx];
+  const st = newsStatsLoad();
+  const done = st.antifud.filter(a => a.ok).length;
+  return '<div style="background:var(--card);border:1px solid var(--bad);border-radius:12px;padding:14px 16px;margin-bottom:14px">' +
+    '<div style="font-weight:800;font-size:13.5px;color:var(--txt);margin-bottom:4px">🛡️ Анти-FUD / анти-хайп</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:10px">Два заголовка об одном событии. Один — эмоция, второй — факты. Найди фактологический и назови маркеры манипуляции.</div>' +
+    (done ? '<div style="font-size:11px;color:var(--ok);margin-bottom:8px">Найдено верно: ' + done + '</div>' : '') +
+    newsAntifudCurrent.pair.map((p, i) =>
+      '<div style="font-size:12.5px;color:var(--txt);line-height:1.55;padding:10px 12px;background:#040714;border-radius:8px;margin-bottom:6px">' +
+        '<div style="font-size:10px;color:var(--mut);margin-bottom:3px">' + p.source + '</div>«' + p.title + '»</div>'
+    ).join('') +
+    '<div style="display:flex;gap:8px;margin-bottom:8px">' +
+      '<button class="btn sm ghost" onclick="newsAntifudAnswer(\'A\')">A — фактологический</button>' +
+      '<button class="btn sm ghost" onclick="newsAntifudAnswer(\'B\')">B — фактологический</button>' +
+    '</div>' +
+    '<div id="news_antifud_fb"></div>' +
+  '</div>';
+}
+window.newsAntifudHTML = newsAntifudHTML;
+
+function newsAntifudAnswer(picked){
+  if(!newsAntifudCurrent) return;
+  const ok = picked === newsAntifudCurrent.truth;
+  const st = newsStatsLoad();
+  st.antifud.push({ t: Date.now(), ok: ok });
+  newsStatsSave(st);
+  document.getElementById('news_antifud_fb').innerHTML =
+    '<div style="font-size:12.5px;line-height:1.6;color:' + (ok ? 'var(--ok)' : 'var(--bad)') + ';margin-bottom:8px">' +
+      (ok ? '✅ Верно: фактологический — ' : '❌ Фактологический — ') + newsAntifudCurrent.truth + '.</div>' +
+    '<div style="font-size:12px;color:var(--txt);line-height:1.6">Маркеры манипуляции в другом: ' + newsAntifudCurrent.markers.join(' · ') + '.</div>' +
+    '<div style="font-size:12px;color:var(--warn);margin-top:6px;border-left:3px solid var(--warn);padding-left:10px">' + newsAntifudCurrent.lesson + '</div>';
+}
+window.newsAntifudAnswer = newsAntifudAnswer;
+
+/* ---------- режимы в ленту: блок упражнений ---------- */
+function newsExercisesHTML(){
+  return '<div style="margin-top:20px;border-top:1px solid var(--line);padding-top:14px">' +
+    '<div style="font-weight:800;font-size:14px;color:var(--txt);margin-bottom:12px">🧠 Упражнения</div>' +
+    newsGuessHTML() + newsHistoryHTML() + newsAntifudHTML() +
+  '</div>';
+}
+window.newsExercisesHTML = newsExercisesHTML;
+
+/* патчим renderNewsView: добавляем упражнения в конец ленты */
+(function patchNewsViewForExercises(){
+  const prev = window.renderNewsView;
+  window.renderNewsView = function(){
+    return prev() + newsExercisesHTML();
+  };
+})();
+
+/* =========================================================================
+   N4 · Гейтинг и таймер внимания: лента открывается после уроков 2.1–2.2,
+   анти-FUD после 0.18; таймер чтения 10 мин → карточка П6 «тяга к движению»
+   ========================================================================= */
+
+/* ---------- гейтинг ---------- */
+function newsGateCheck(){
+  // если LESSONS не содержит id — гейт снимается (безопасный fallback)
+  const need = ['p2_l1', 'p2_l2'];
+  const missing = need.filter(id => !(typeof lessonsDone === 'object' && lessonsDone[id] === 1));
+  const antiNeed = ['p0_l18'];
+  const antiMissing = antiNeed.filter(id => !(typeof lessonsDone === 'object' && lessonsDone[id] === 1));
+  return {
+    open: missing.length === 0,
+    missing: missing,
+    antiOpen: antiMissing.length === 0,
+    antiMissing: antiMissing
+  };
+}
+window.newsGateCheck = newsGateCheck;
+
+/* ---------- таймер внимания ---------- */
+const NEWS_TIMER_KEY = 'cn_news_timer';
+function newsTimerGet(){
+  try{ return JSON.parse(localStorage.getItem(NEWS_TIMER_KEY) || '{"elapsed":0,"started":null}'); }catch(e){ return { elapsed: 0, started: null }; }
+}
+function newsTimerSave(st){
+  try{ localStorage.setItem(NEWS_TIMER_KEY, JSON.stringify(st)); }catch(e){}
+}
+let newsTimerId = null;
+function newsTimerStart(){
+  if(newsTimerId) return;
+  newsTimerId = setInterval(function(){
+    const st = newsTimerGet();
+    if(!st.started) st.started = Date.now();
+    st.elapsed += 30;
+    newsTimerSave(st);
+    const el = document.getElementById('news_attention_banner');
+    if(st.elapsed >= 600 && !el){ // 10 минут = 600 сек
+      const view = document.getElementById('live');
+      if(view && view.classList.contains('active') && sessionStorage.getItem('cn_live_sub') === 'news'){
+        const coachCol = document.getElementById('live_coach_col');
+        if(coachCol){
+          coachCol.insertAdjacentHTML('afterbegin',
+            '<div id="news_attention_banner" style="background:rgba(245,158,11,.1);border:1px solid var(--warn);border-radius:12px;padding:12px 16px;margin-bottom:12px">' +
+              '<div style="font-weight:800;font-size:12.5px;color:var(--warn);margin-bottom:4px">🧘 Тяга к движению растёт — 10 минут ленты</div>' +
+              '<div style="font-size:12px;color:var(--txt);line-height:1.55;margin-bottom:8px">Длинная лента кормит тягу к движению: информационный поток кажется обязательным, а 90% заголовков — шум. Остаточная привычка: фиксируй понятные и закрывай.</div>' +
+              '<div style="display:flex;gap:8px">' +
+                '<button class="btn sm ghost" onclick="newsTimerDismiss()">Закрыть ленту</button>' +
+                '<button class="btn sm ghost" onclick="newsTimerDismiss(this)">Записать в журнал</button>' +
+              '</div>' +
+            '</div>');
+        }
+      }
+    }
+    const lbl = document.getElementById('news_timer_lbl');
+    if(lbl){
+      const m = Math.floor(st.elapsed / 60);
+      lbl.textContent = '⏱ лента: ' + m + ' мин';
+      if(m >= 10) lbl.style.color = 'var(--warn)';
+    }
+  }, 30000);
+}
+window.newsTimerStart = newsTimerStart;
+
+function newsTimerDismiss(btn){
+  const el = document.getElementById('news_attention_banner');
+  if(el) el.remove();
+  const st = newsTimerGet();
+  st.elapsed = 0; st.started = Date.now();
+  newsTimerSave(st);
+  if(btn && btn.textContent.includes('журнал')){
+    if(typeof showToast === 'function') showToast('📝 Отмечено: тяга к движению зафиксирована до следующего раза', '🧘');
+    else alert('Записано в журнальные заметки');
+  }
+  const lbl = document.getElementById('news_timer_lbl');
+  if(lbl){ lbl.textContent = '⏱ лента: 0 мин'; lbl.style.color = ''; }
+}
+window.newsTimerDismiss = newsTimerDismiss;
+
+/* старт/стоп таймера при переходе на субвкладку «Новости» */
+(function patchNewsSwitchForTimer(){
+  const prev = window.newsSwitchSub;
+  window.newsSwitchSub = function(id){
+    prev(id);
+    if(id === 'news'){
+      const st = newsTimerGet();
+      if(!st.started){ st.started = Date.now(); newsTimerSave(st); }
+      newsTimerStart();
+    } else if(newsTimerId){
+      clearInterval(newsTimerId);
+      newsTimerId = null;
+    }
+  };
+})();
+
+/* ---------- патч renderNewsView: гейтинг + таймер-лейбл + скрытие анти-FUD ---------- */
+(function patchNewsViewForGate(){
+  const prev = window.renderNewsView;
+  window.renderNewsView = function(){
+    const g = newsGateCheck();
+    if(!g.open){
+      return '<div style="background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:20px;text-align:center">' +
+        '<div style="font-size:32px;margin-bottom:8px">🔒</div>' +
+        '<div style="font-weight:800;font-size:14px;color:var(--txt);margin-bottom:6px">Лента новостей откроется после уроков</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);line-height:1.6;margin-bottom:10px">Сначала пройди: ' + g.missing.map(id => '«' + id.replace('p', '').replace('_l', '.') + '»').join(' и ') + ' — там объясняется, как читать информационный поток без ущерба.</div>' +
+        '<button class="btn sm" onclick="go(\'lessons\')">🎓 К урокам</button>' +
+      '</div>';
+    }
+    let html = prev();
+    // лейбл таймера в заголовок
+    html = html.replace('📰 Лента новостей</div>', '📰 Лента новостей</div><div id="news_timer_lbl" style="font-size:11px;color:var(--mut)"></div>');
+    // если antiFud не открыт — показываем замок вместо упражнения
+    if(!g.antiOpen){
+      html = html.replace('🛡️ Анти-FUD / анти-хайп', '🔒 Анти-FUD');
+    }
+    return html;
+  };
+})();
 /*__LIVE_APPEND__*/
 })();
 

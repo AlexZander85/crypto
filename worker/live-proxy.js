@@ -117,6 +117,29 @@ async function route(path, q) {
       return normFees(await getJSON('https://mempool.space/api/v1/fees/recommended'));
     case '/api/live/global':
       return normGlobal(await getJSON('https://api.coingecko.com/api/v3/global'));
+    case '/api/live/news': {
+      const FEEDS = [
+        { id: 'forklog', name: 'ForkLog', lang: 'ru', url: 'https://forklog.com/feed' },
+        { id: 'beincrypto', name: 'BeInCrypto RU', lang: 'ru', url: 'https://ru.beincrypto.com/feed/' },
+        { id: 'coindesk', name: 'CoinDesk', lang: 'en', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+        { id: 'decrypt', name: 'Decrypt', lang: 'en', url: 'https://decrypt.co/feed' },
+        { id: 'sec', name: 'SEC', lang: 'en', reg: true, url: 'https://www.sec.gov/news/pressreleases.rss' }
+      ];
+      const items = [];
+      for (const f of FEEDS) {
+        try {
+          const rss = await getJSON('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(f.url));
+          if (rss.status !== 'ok') continue;
+          (rss.items || []).slice(0, 15).forEach(it => items.push({
+            title: (it.title || '').trim(), url: it.link || '', source: f.name, feedId: f.id,
+            lang: f.lang, reg: !!f.reg, published_at: it.pubDate || '',
+            snippet: (it.description || '').replace(/<[^>]+>/g, '').slice(0, 300), categories: it.categories || []
+          }));
+        } catch (e) {}
+      }
+      items.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+      return { source: 'worker', ts: Date.now(), items: items };
+    }
     default:
       return null;
   }
