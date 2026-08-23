@@ -37021,7 +37021,7 @@ window.mentorF1 = function(lessonId, out){
 window.mentorF2 = function(lessonId, out){
   const kinds = [ { id: 'simpler', label: 'Проще' }, { id: 'example', label: 'Пример из жизни' }, { id: 'shorter', label: 'Короче' } ];
   out.innerHTML = '<div style="display:flex;flex-direction:column;gap:6px">' + kinds.map(k =>
-    '<button class="btn sm ghost" style="font-size:12px;text-align:left" onclick="mentorF2do(\'' + lessonId + '\',\'' + k.id + '\')">' + k.label + '</button>'
+    '<button class="btn sm ghost" style="font-size:12px;text-align:left" data-kind="' + k.id + '">' + k.label + '</button>'
   ).join('') + '</div><div id="mentor_f2_out" style="margin-top:8px"></div>';
 };
 window.mentorF2do = function(lessonId, kind){
