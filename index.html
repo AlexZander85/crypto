@@ -37120,6 +37120,221 @@ function mentorTaskCheck(){
     : '<div style="font-size:12.5px;color:var(--bad)">❌ Эталон: ' + (Math.round(window._mentorTaskTruth * 1000) / 1000) + ' (допуск ' + tol + '). Пересчитай.</div>';
 }
 window.mentorTaskCheck = mentorTaskCheck;
+
+/* =========================================================================
+   M4 · H1 Универсальная подсказка «🤖 Подскажи» в каждом тренажёре (3 ступени)
+   + счётчик cn_hints (название ответа НИКОГДА не попадает в подсказку)
+   ========================================================================= */
+
+function hintGetCount(lessonId){
+  try{ return JSON.parse(localStorage.getItem('cn_hints') || '{}')[lessonId] || 0; }catch(e){ return 0; }
+}
+function hintAddCount(lessonId){
+  try{
+    const wc = JSON.parse(localStorage.getItem('cn_hints') || '{}');
+    wc[lessonId] = (wc[lessonId] || 0) + 1;
+    localStorage.setItem('cn_hints', JSON.stringify(wc));
+  }catch(e){}
+}
+window.hintGetCount = hintGetCount;
+
+function mentorHintStepRender(lessonId, step, out){
+  const lesson = LESSONS.find(x => x.id === lessonId);
+  const nq = lesson && lesson.numericQuiz;
+  // даю модели контекст без эталонного ответа (не включаем answer!)
+  const example = nq ? { q: nq.q, unit: nq.unit } : null;
+  return MENTOR.ask('hint', lessonId, { step: step, title: lesson ? lesson.title : '', example: example }).then(r => {
+    // дополн. фильтр: удаляем условные числа, совпадающие с эталонным ответом (H1 момент)
+    let txt = r.text;
+    if(nq && nq.answer != null){
+      const ansStr = String(Math.round(nq.answer * 1000) / 1000);
+      if(txt.includes(ansStr)){
+        txt = txt.replace(new RegExp(ansStr.replace(/[.]/g, '[.]'), 'g'), '[скрыто]').replace('[скрыто]', '[скрыто по экономике подсказок]');
+      }
+    }
+    hintAddCount(lessonId);
+    const titles = { 1: 'на что смотреть', 2: 'какая идея работает', 3: 'разбор соседнего примера' };
+    return '<div style="padding:10px 12px;background:#040714;border-left:3px solid var(--warn);border-radius:6px;font-size:12.5px;color:var(--txt);margin-top:8px"><div style="font-size:10px;color:var(--warn);text-transform:uppercase;font-weight:800;margin-bottom:4px">подсказка ' + step + '/' + ' 3: ' + (titles[step] || '') + '</div>' + txt + '</div>';
+  }).catch(e => {
+    return '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Подсказок нет — панель откроется.') + '</div>';
+  });
+}
+
+/* в каждом тренажёре-виджете: хелпер вставляет кнопку «🤖 Подскажи» */
+function mentOrHintBtnHTML(lessonId, widgetEl){
+  // одна точка правки: все widgets в catalog mount
+  return '<button class="btn sm ghost mentor-hint-btn" style="font-size:11px;padding:4px 10px;margin-top:8px" onclick="mentorHint(\'' + lessonId + '\')">🤖 Подскажи</button>';
+}
+window.mentorHintBtnHTML = mentOrHintBtnHTML;
+
+function mentorHint(lessonId){
+  if(!mentorIsMax()){
+    mentorUpsellModal();
+    return;
+  }
+  window._mentorHintSteps = (window._mentorHintSteps || {});
+  const step = window._mentorHintSteps[lessonId] || 1;
+  let panel = document.getElementById('mentor_panel');
+  if(!panel){
+    mentorOpenPanel(lessonId);
+    panel = document.getElementById('mentor_panel');
+  }
+  if(!panel) return;
+  const widgetBtns = document.querySelectorAll('.mentor-hint-btn');
+  if(widgetBtns.length) widgetBtns[0].remove();
+  const out = document.getElementById('mentor_result');
+  if(!out) return;
+  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">🤖 Подскажу…</div>';
+  mentorHintStepRender(lessonId, step, out).then(html => {
+    out.innerHTML = html + '<div id="mentor_widget_hint" style="margin-top:10px"></div>';
+    window._mentorHintSteps[lessonId] = Math.min(3, step + 1);
+    const total = hintGetCount(lessonId);
+    const hintTotal = document.getElementById('mentor_widget_hint');
+    if(hintTotal){
+      hintTotal.innerHTML = '<div style="font-size:11.5px;color:var(--mut)">Подсказок использовано по уроку: <b>' + total + '</b>' +
+        (total > 2 ? ' — бейдж мастерства не будет выдан' : ' (для бейджа мастерства: ≤2)') + '</div>';
+    }
+  });
+}
+window.mentorHint = mentorHint;
+
+/* вставляем кнопку в каждом виджете при открытии урока */
+(function patchLessonWidgetHints(){
+  const orig = window.openFullscreenLesson;
+  if(typeof orig !== 'function') return;
+  window.openFullscreenLesson = function(id){
+    const r = orig.apply(this, arguments);
+    setTimeout(() => {
+      try{
+        if(!MISTAKE_TYPES) return; // no-op fallback
+        const modal = document.getElementById('lessonFullscreenReaderModal');
+        if(!modal) return;
+        // в каждый виджет (interactive) в хэлпере — добавляем кнопку hint
+        const widgets = modal.querySelectorAll('.lblock.widget-block, .lblock.interactive, [id^="widget"]');
+        widgets.forEach(w => {
+          if(w.querySelector('.mentor-hint-btn')) return;
+          const btn = document.createElement('button');
+          btn.className = 'btn sm ghost mentor-hint-btn';
+          btn.style.cssText = 'font-size:11px;padding:4px 10px;margin:8px auto;display:block';
+          btn.innerHTML = '🤖 Подскажи';
+          btn.onclick = () => mentorHint(id);
+          w.appendChild(btn);
+        });
+      }catch(e){}
+    }, 150);
+    return r;
+  };
+})();
+
+/* =========================================================================
+   M5 · H2 Критик гипотез (5 измерений JSON) + H3 Ревизор устава (словарный скан)
+   ========================================================================= */
+
+/* ---------- H2: критик гипотез ---------- */
+function mentorCritique(lessonId, hypothesisText){
+  if(!mentorIsMax()){ mentorUpsellModal(); return Promise.resolve('<div>Гейт</div>'); }
+  return MENTOR.ask('critique', lessonId, { hypothesis: hypothesisText }).then(r => {
+    let data = null;
+    try{ data = r.json || JSON.parse(r.text); }catch(e){ data = null; }
+    if(!data){ return '<div style="font-size:12.5px;color:var(--warn)">Критик задумался — повтори позже.</div>'; }
+    const dims = [
+      ['falsifiable', 'Проверяемость'],
+      ['data_needed', 'Данные'],
+      ['edge_source', 'Преимущество'],
+      ['capacity', 'Ёмкость'],
+      ['regime_risk', 'Режимный риск']
+    ];
+    const icon = v => v === 'ok' ? '✅' : v === 'warn' ? '⚠️' : '❌';
+    let html = '<div style="margin-top:8px">' + dims.map(([k, title]) => {
+      const row = data[k];
+      if(!row) return '';
+      return '<div style="border-left:2px solid ' + (row.verdict === 'ok' ? 'var(--ok)' : row.verdict === 'warn' ? 'var(--warn)' : 'var(--bad)') + ';padding-left:8px;margin-bottom:6px;font-size:11.5px">' +
+        '<b>' + icon(row.verdict) + ' ' + title + '</b> — ' + (row.note || '') + '</div>';
+    }).join('') + '<div style="font-size:11px;color:var(--mut);margin-top:6px">' + (data.summary || '') + '</div></div>';
+    return html;
+  }).catch(e => '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Не отвечает.') + '</div>');
+}
+window.mentorCritique = mentorCritique;
+
+/* ---------- H3: ревизор устава — словарный скан КОДОМ, модель только по потемам ---------- */
+function mentorRevise(lessonId, charterText){
+  if(!mentorIsMax()){ mentorUpsellModal(); return Promise.resolve('<div>Гейт</div>'); }
+  // 1) словарный скан — код, не модель
+  const vagueMarkers = ['обычно', 'крупн', 'значительн', 'по возможности', 'примерно', 'иногда', 'около', 'в основном', 'достаточно'];
+  const lines = charterText.split('\n');
+  const flagged = [];
+  lines.forEach((ln, i) => {
+    const lower = ln.toLowerCase();
+    const hit = vagueMarkers.find(m => lower.includes(m)) || (ln.replace(/[\d%\.\s:$]/g, '').length > 10 && !/\d/.test(ln));
+    if(hit) flagged.push({ line: i + 1, text: ln });
+  });
+  // 2) модель получает только flagged + всё же весь текст (как в ТЗ)
+  return MENTOR.ask('revise', lessonId, { flagged: flagged, full: charterText }).then(r => {
+    let data = null;
+    try{ data = r.json || JSON.parse(r.text); }catch(e){ data = null; }
+    if(!data){ return '<div style="font-size:12.5px;color:var(--warn)">Ревизор задумался — повтори позже.</div>'; }
+    let html = '<div style="margin-top:8px">' +
+      (data.loopholes && data.loopholes.length ? data.loopholes.map(l =>
+        '<div style="border-left:2px solid var(--warn);padding-left:8px;margin-bottom:8px;font-size:11.5px">' +
+          '<b>«' + (l.quote || '') + '»</b> — ' + (l.why_vague || '') + '<br>➜ ' + (l.fix_suggestion || '') +
+        '</div>').join('') : '<div style="font-size:11.5px;color:var(--ok)">расплывчатых маркеров не найдено</div>') +
+      (data.solid && data.solid.length ? '<div style="font-size:11px;color:var(--ok);margin-top:6px">✅ ' + data.solid.join(' · ') + '</div>' : '') +
+    '</div>';
+    return html;
+  }).catch(e => '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Ревизор не отвечает.') + '</div>');
+}
+window.mentorRevise = mentorRevise;
+
+/* встраиваем кнопки H2/H3 в панель действие: расширяем список */
+(function patchMentorActionsExt(){
+  if(typeof window.renderMentorActions !== 'function') return;
+  const prev = window.renderMentorActions;
+  window.renderMentorActions = function(){
+    prev();
+    const wrap = document.getElementById('mentor_actions');
+    if(!wrap) return;
+    // добавляем H2/H3/H4/H5 поскольку есть
+    const extra = [
+      { id: 'critique', label: '🔍 Критик гипотезы', title: 'H2' },
+      { id: 'revise', label: '📜 Ревизор устава', title: 'H3' },
+      { id: 'diagnose', label: '📓 Диагноз ошибки', title: 'H4' },
+      { id: 'spar', label: '⚔️ Спарринг убеждений', title: 'H5' }
+    ];
+    extra.forEach(x => {
+      if(wrap.querySelector('[data-action="' + x.id + '"]')) return;
+      const btn = document.createElement('button');
+      btn.className = 'btn sm';
+      btn.setAttribute('data-action', x.id);
+      btn.style.cssText = 'text-align:left;justify-content:flex-start;font-size:12.5px';
+      btn.innerHTML = x.label;
+      btn.onclick = () => mentorRunExt(x.id);
+      wrap.appendChild(btn);
+    });
+  };
+})();
+
+function mentorRunExt(action){
+  const lessonId = window._mentorLessonId || 'generic';
+  const out = document.getElementById('mentor_result');
+  if(action === 'critique'){
+    // поле ввода гипотезы
+    out.innerHTML = '<textarea id="mentor_hypo_in" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" rows="4" placeholder="Твоя гипотеза..."></textarea>' +
+      '<button class="btn sm" onclick="mentorCritique(\'' + lessonId + '\', document.getElementById(\'mentor_hypo_in\').value).then(html => { document.getElementById(\'mentor_result\').innerHTML = html; })">Критика</button>' +
+      '<div id="mentor_crit_out" style="margin-top:8px"></div>';
+  } else if(action === 'revise'){
+    // берёт устав из интерактивного charter виджет-элемента, если открыт
+    const charterEl = document.getElementById('widget_art_charter') || document.querySelector('[id*="charter"]') || document.getElementById('mentor_result');
+    const text = (charterEl && charterEl.textContent) || 'charter: задай текст';
+    out.innerHTML = '<div style="font-size:11.5px;color:var(--mut);margin-bottom:6px">Сканирую текст устава из открытого виджета…</div>' +
+      '<button class="btn sm" onclick="mentorRevise(\'' + lessonId + '\', this.parentElement.previousElementSibling.textContent).then(html => { document.getElementById(\'mentor_result\').innerHTML = html; })">Ревизор</button>';
+  } else if(action === 'diagnose'){
+    // перехват window.offerMistakeClassification — одна точка
+    out.innerHTML = '<div style="font-size:11.5px;color:var(--mut);margin-bottom:6px">Диагноз ошибки доступен при неверном ответе квиза — работает в интеграции.</div>';
+  } else if(action === 'spar'){
+    mentorSparInit(out);
+  }
+}
+window.mentorRunExt = mentorRunExt;
 /*__LIVE_APPEND__*/
 })();
 
