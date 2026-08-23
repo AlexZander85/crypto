@@ -27679,12 +27679,14 @@ function closeConsolidationScreen(){
 }
 
 // Оборачиваем завершение урока: экран консолидации показывается только при реальном зачёте
+// V4-D1: не чаще одного раза за сессию — иначе модалка превращается в спам и её игнорируют
 const _origCLM_Consolidation = completeLessonWithMastery;
 completeLessonWithMastery = function(id){
   const wasDone = lessonsDone[id] === 1;
   const res = _origCLM_Consolidation.apply(this, arguments);
   try{
-    if(!wasDone && lessonsDone[id] === 1){
+    if(!wasDone && lessonsDone[id] === 1 && !window._consolShownThisSession){
+      window._consolShownThisSession = true;
       setTimeout(() => showConsolidationScreen(id), 400);
     }
   }catch(e){}
