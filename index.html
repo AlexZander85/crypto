@@ -1947,6 +1947,54 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="btn" onclick="window.runDefiSim()">🌾 Посчитать результат фарминга</button>
     <div class="sim-result" id="df_result" style="margin-top:16px"></div>
   </div>
+
+  <!-- V4-C1: Генератор эквити-кривых (Фаза 3) -->
+  <div id="sim_equity" class="sim-box" style="display:none">
+    <h3>📊 Генератор эквити-кривых: 1000 судеб одной стратегии</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Одна и та же стратегия (винрейт × R:R) даёт тысячу разных путей. Монте-Карло показывает веер траекторий, распределение финалов и честную вероятность разорения — то, что одна «красивая» эквити-кривая скрывает.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Винрейт (%):</label><input type="number" id="eq_wr" value="45" min="5" max="95" step="1"></div>
+      <div class="sim-input-group"><label>R:R (профит к убытку):</label><input type="number" id="eq_rr" value="2" min="0.2" max="10" step="0.1"></div>
+      <div class="sim-input-group"><label>Риск на сделку (% капитала):</label><input type="number" id="eq_risk" value="1" min="0.1" max="10" step="0.1"></div>
+      <div class="sim-input-group"><label>Сделок:</label><input type="number" id="eq_n" value="200" min="20" max="1000" step="10"></div>
+    </div>
+    <button class="btn" onclick="runEquityGen()">🎲 Сгенерировать 1000 траекторий</button>
+    <div class="sim-result" id="eq_result" style="margin-top:16px"></div>
+  </div>
+
+  <!-- V4-C2: Карта корреляций (Фаза 3) -->
+  <div id="sim_corr" class="sim-box" style="display:none">
+    <h3>🌡️ Карта корреляций: диверсификация, которая исчезает в кризис</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Тепловая карта парных корреляций доходностей. Двигай период — и смотри, как «некоррелированный» портфель в кризисный месяц схлопывается к корреляции ≈ 1: падает всё и сразу.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Период:</label>
+        <select id="corr_period" onchange="renderCorrHeatmap()">
+          <option value="7">7 дней</option>
+          <option value="30" selected>30 дней</option>
+          <option value="90">90 дней</option>
+          <option value="365">1 год</option>
+          <option value="crisis">⚡ Кризисный месяц</option>
+        </select>
+      </div>
+    </div>
+    <div class="sim-result" id="corr_result" style="margin-top:16px"></div>
+  </div>
+
+  <!-- V4-C3: Конструктор дельта-нейтральной позиции (Фаза 2) -->
+  <div id="sim_deltaneutral" class="sim-box" style="display:none">
+    <h3>⚖️ Конструктор дельта-нейтрала: спот + перп-шорт = только фандинг</h3>
+    <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Собери позицию: лонг спота + равный шорт перпетуала. Двигай цену — ноги гасят друг друга, а суммарный PnL остаётся почти нулевым. Единственный доход — ставка финансирования.</p>
+    <div class="sim-controls">
+      <div class="sim-input-group"><label>Размер ноги ($):</label><input type="number" id="dn_size" value="10000" min="1000" step="1000"></div>
+      <div class="sim-input-group"><label>Фандинг (bps / 8ч):</label><input type="number" id="dn_funding" value="2.5" step="0.5"></div>
+      <div class="sim-input-group"><label>Дней удержания:</label><input type="number" id="dn_days" value="30" min="1" step="1"></div>
+    </div>
+    <div style="margin:10px 0">
+      <label style="font-size:12.5px; color:var(--mut)">Движение цены: <b id="dn_move_lbl" style="color:var(--acc2)">0%</b><br>
+      <input type="range" id="dn_move" min="-50" max="50" step="1" value="0" style="width:100%; max-width:420px" oninput="runDeltaNeutral()"></label>
+    </div>
+    <div class="sim-result" id="dn_result" style="margin-top:16px"></div>
+  </div>
 </section>
 
 <!-- 4. ROADMAP VIEW (INTERACTIVE SVG KNOWLEDGE TREE) -->
@@ -13917,8 +13965,8 @@ let orderBookState = {
 const SIM_PHASE_MAP = {
   0: ['sim_ob', 'sim_liq', 'sim_fund', 'sim_candle', 'sim_arbitrage', 'sim_calendar', 'sim_risk_reward', 'sim_psychology', 'sim_first_trade', 'sim_meme', 'sim_firsttrade', 'sim_ruble2btc', 'sim_position_sizer'],
   1: ['sim_lookahead', 'sim_overfit', 'sim_walkforward', 'sim_stationarity', 'sim_alphabeta', 'sim_funding_drag'],
-  2: ['sim_sentiment', 'sim_whale', 'sim_defi'],
-  3: ['sim_portfolio', 'sim_kelly', 'sim_predarb', 'sim_position_sizer'],
+  2: ['sim_sentiment', 'sim_whale', 'sim_defi', 'sim_deltaneutral'],
+  3: ['sim_portfolio', 'sim_kelly', 'sim_predarb', 'sim_position_sizer', 'sim_equity', 'sim_corr'],
   4: ['sim_tax', 'sim_115fz', 'sim_killswitch', 'sim_execdev', 'sim_chaos', 'sim_eoa', 'sim_tcost'],
   5: ['sim_scaling', 'sim_recovery', 'sim_boss', 'sim_restaking']
 };
@@ -27883,6 +27931,185 @@ function spinQuestRoulette(){
     return prev(widgetId);
   };
 })();
+
+/* ---------- V4-C1: генератор эквити-кривых ---------- */
+window.runEquityGen = function(){
+  const wr = (parseFloat(document.getElementById('eq_wr').value) || 45) / 100;
+  const rr = parseFloat(document.getElementById('eq_rr').value) || 2;
+  const risk = (parseFloat(document.getElementById('eq_risk').value) || 1) / 100;
+  const n = Math.max(20, parseFloat(document.getElementById('eq_n').value) || 200);
+  const evPerTrade = wr * rr * risk - (1 - wr) * risk;
+  const finals = [];
+  const N_TRAJ = 1000;
+  const paths = [];
+  for(let t = 0; t < N_TRAJ; t++){
+    let eq = 1;
+    const path = [1];
+    for(let i = 0; i < n; i++){
+      const win = Math.random() < wr;
+      eq *= 1 + (win ? rr * risk : -risk);
+      if(eq <= 0.001){ eq = 0.001; path.push(eq); break; }
+      path.push(eq);
+    }
+    finals.push(eq);
+    if(t < 120) paths.push(path);
+  }
+  finals.sort((a,b) => a - b);
+  const pctl = q => finals[Math.floor(q * (finals.length - 1))];
+  const p5 = pctl(0.05), p50 = pctl(0.5), p95 = pctl(0.95);
+  const ruin = finals.filter(x => x <= 0.5).length / finals.length;
+  const neg = finals.filter(x => x < 1).length / finals.length;
+  // canvas: веер + гистограмма финалов
+  const out = document.getElementById('eq_result');
+  out.innerHTML = `
+    <div style="font-weight:700; margin-bottom:6px">Веер траекторий (120 из 1000):</div>
+    <canvas id="eq_fan" width="640" height="240" style="width:100%; background:#040714; border-radius:8px"></canvas>
+    <div style="font-weight:700; margin:14px 0 6px">Распределение финалов (1000 траекторий):</div>
+    <canvas id="eq_hist" width="640" height="160" style="width:100%; background:#040714; border-radius:8px"></canvas>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; font-size:13px">
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">EV на сделку: <b style="color:${evPerTrade > 0 ? 'var(--ok)' : 'var(--bad)'}">${(evPerTrade*100).toFixed(2)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">5-й перцентиль: <b style="color:var(--bad)">${(p5*100-100).toFixed(0)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">Медиана: <b style="color:var(--acc2)">${(p50*100-100).toFixed(0)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">95-й перцентиль: <b style="color:var(--ok)">+${(p95*100-100).toFixed(0)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">P(потерять >50%): <b style="color:var(--bad)">${(ruin*100).toFixed(1)}%</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:8px 12px">P(убыток): <b>${(neg*100).toFixed(1)}%</b></span>
+    </div>
+    <div style="font-size:12px; color:var(--mut); margin-top:10px">Даже при положительном EV заметная доля траекторий заканчивается в минусе. Размер ставки (риск на сделку) решает, переживёшь ли ты закономерную серию неудач.</div>`;
+  // fan
+  const cv = document.getElementById('eq_fan');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const allMax = Math.max(...paths.map(p => Math.max(...p)), 1.5);
+  const allMin = Math.min(...paths.map(p => Math.min(...p)), 0.5);
+  const y = v => h - ((v - allMin) / (allMax - allMin)) * (h - 10) - 5;
+  ctx.strokeStyle = 'rgba(255,255,255,.25)';
+  ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(0, y(1)); ctx.lineTo(w, y(1)); ctx.stroke();
+  ctx.setLineDash([]);
+  paths.forEach(path => {
+    ctx.beginPath();
+    const stepX = w / Math.max(...paths.map(p => p.length));
+    path.forEach((v, i) => i === 0 ? ctx.moveTo(0, y(v)) : ctx.lineTo(i * stepX, y(v)));
+    const fin = path[path.length - 1];
+    ctx.strokeStyle = fin >= 1 ? 'rgba(34,197,94,.12)' : 'rgba(239,68,68,.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+  // hist
+  const cv2 = document.getElementById('eq_hist');
+  const ctx2 = cv2.getContext('2d');
+  const hMax = Math.max(p95 * 1.15, 2);
+  const hMin = Math.min(p5 * 0.85, 0.5);
+  const NB = 40;
+  const bins = new Array(NB).fill(0);
+  finals.forEach(v => {
+    const idx = Math.max(0, Math.min(NB - 1, Math.floor((v - hMin) / (hMax - hMin) * NB)));
+    bins[idx]++;
+  });
+  const bMax = Math.max(...bins);
+  const bw = cv2.width / NB;
+  bins.forEach((c, i) => {
+    const mid = hMin + (i + 0.5) / NB * (hMax - hMin);
+    ctx2.fillStyle = mid >= 1 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.7)';
+    const bh = (c / bMax) * (cv2.height - 20);
+    ctx2.fillRect(i * bw + 1, cv2.height - bh, bw - 2, bh);
+  });
+  const xz = (1 - hMin) / (hMax - hMin) * cv2.width;
+  ctx2.strokeStyle = 'rgba(255,255,255,.5)';
+  ctx2.beginPath(); ctx2.moveTo(xz, 0); ctx2.lineTo(xz, cv2.height); ctx2.stroke();
+  ctx2.fillStyle = 'rgba(255,255,255,.7)';
+  ctx2.font = '11px sans-serif';
+  ctx2.fillText('0% (безубыток)', xz + 4, 14);
+};
+
+/* ---------- V4-C2: карта корреляций ---------- */
+const V4_CORR_ASSETS = ['BTC', 'ETH', 'SOL', 'USDT-фарм', 'S&P 500', 'Золото'];
+function v4CorrMatrix(period){
+  // синтетические корреляции: базовые уровни + сжатие в кризис
+  const base = {
+    'BTC':       { 'BTC':1, 'ETH':0.85, 'SOL':0.72, 'USDT-фарм':0.02, 'S&P 500':0.35, 'Золото':0.12 },
+    'ETH':       { 'BTC':0.85, 'ETH':1, 'SOL':0.78, 'USDT-фарм':0.03, 'S&P 500':0.33, 'Золото':0.10 },
+    'SOL':       { 'BTC':0.72, 'ETH':0.78, 'SOL':1, 'USDT-фарм':0.04, 'S&P 500':0.30, 'Золото':0.08 },
+    'USDT-фарм': { 'BTC':0.02, 'ETH':0.03, 'SOL':0.04, 'USDT-фарм':1, 'S&P 500':0.0, 'Золото':0.05 },
+    'S&P 500':   { 'BTC':0.35, 'ETH':0.33, 'SOL':0.30, 'USDT-фарм':0.0, 'S&P 500':1, 'Золото':0.15 },
+    'Золото':    { 'BTC':0.12, 'ETH':0.10, 'SOL':0.08, 'USDT-фарм':0.05, 'S&P 500':0.15, 'Золото':1 }
+  };
+  const noise = { '7': 0.18, '30': 0.09, '90': 0.05, '365': 0.03, 'crisis': 0.04 }[period];
+  const M = V4_CORR_ASSETS.map(() => []);
+  for(let i = 0; i < V4_CORR_ASSETS.length; i++){
+    for(let j = 0; j < V4_CORR_ASSETS.length; j++){
+      let v = base[V4_CORR_ASSETS[i]][V4_CORR_ASSETS[j]];
+      if(i !== j){
+        v += (Math.sin(i * 7 + j * 13) * noise);
+        if(period === 'crisis'){
+          const a = V4_CORR_ASSETS[i], b2 = V4_CORR_ASSETS[j];
+          if(a !== 'USDT-фарм' && b2 !== 'USDT-фарм' && a !== 'Золото' && b2 !== 'Золото') v = Math.min(0.97, v * 1.5 + 0.35);
+          else if((a === 'USDT-фарм' || b2 === 'USDT-фарм')) v = Math.max(-0.3, v - 0.1);
+        }
+        if(period === '7') v = Math.max(-1, Math.min(1, v));
+      }
+      M[i][j] = Math.max(-1, Math.min(1, v));
+    }
+  }
+  return M;
+}
+window.renderCorrHeatmap = function(){
+  const period = document.getElementById('corr_period').value;
+  const M = v4CorrMatrix(period);
+  const out = document.getElementById('corr_result');
+  const cell = v => {
+    const r = v > 0 ? Math.round(239 - v * 200) : 239;
+    const g = v > 0 ? Math.round(68 + v * 130) : Math.round(68 - v * 40);
+    const bg = v >= 0 ? `rgba(34,197,94,${(v * 0.85).toFixed(2)})` : `rgba(239,68,68,${(-v * 0.85).toFixed(2)})`;
+    return `<td style="background:${bg}; text-align:center; padding:8px 6px; font-size:12px; font-weight:700; color:var(--txt); border:1px solid #040714">${v.toFixed(2)}</td>`;
+  };
+  out.innerHTML = `
+    <table style="border-collapse:collapse; width:100%; max-width:560px">
+      <thead><tr><th style="font-size:11px; color:var(--mut)"></th>${V4_CORR_ASSETS.map(a => `<th style="font-size:11px; color:var(--mut); padding:4px">${a}</th>`).join('')}</tr></thead>
+      <tbody>${M.map((row, i) => `<tr><td style="font-size:11px; color:var(--mut); padding-right:6px; white-space:nowrap">${V4_CORR_ASSETS[i]}</td>${row.map(cell).join('')}</tr>`).join('')}</tbody>
+    </table>
+    <div style="display:flex; gap:8px; align-items:center; margin-top:10px; font-size:11.5px; color:var(--mut)">
+      <span>−1</span><div style="width:120px; height:10px; border-radius:5px; background:linear-gradient(90deg, rgba(239,68,68,.85), rgba(255,255,255,.05), rgba(34,197,94,.85))"></div><span>+1</span>
+    </div>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px; line-height:1.6">
+      ${period === 'crisis'
+        ? '⚡ <b style="color:var(--bad)">Кризисный режим:</b> BTC–ETH–SOL–S&P схлопнулись к 0.85–0.97 — диверсификация внутри крипты исчезла именно тогда, когда была нужна больше всего. Стейбл-фарминг остался около нуля: единственная реальная диверсификация — это кэш и низкая корреляция.'
+        : 'Короткие окна шумные: корреляция «плавает». Вывод не в точном числе, а в структуре: криптоактивы движутся единым кластером, стейбл-стратегии и золото живут отдельно. Переключи на «Кризисный месяц» — это главный урок портфельной теории.'}
+    </div>`;
+};
+
+/* ---------- V4-C3: конструктор дельта-нейтрала ---------- */
+window._v4corrInitDone = false;
+window.runDeltaNeutral = function(){
+  const size = parseFloat(document.getElementById('dn_size').value) || 10000;
+  const fundingBps = parseFloat(document.getElementById('dn_funding').value) || 0;
+  const days = Math.max(1, parseFloat(document.getElementById('dn_days').value) || 30);
+  const move = parseFloat(document.getElementById('dn_move').value) || 0;
+  document.getElementById('dn_move_lbl').textContent = (move > 0 ? '+' : '') + move + '%';
+  const m = move / 100;
+  const spotPnl = size * m;
+  const perpPnl = -size * m;
+  const fundingIncome = size * (fundingBps / 10000) * 3 * days; // 3 раза в сутки
+  const total = spotPnl + perpPnl + fundingIncome;
+  const out = document.getElementById('dn_result');
+  const fmt$ = v => (v >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(v)).toLocaleString('en-US');
+  out.innerHTML = `
+    <div style="display:flex; gap:10px; flex-wrap:wrap; font-size:13px">
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:10px 14px">🟢 Спот-лонг: <b style="color:${spotPnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(spotPnl)}</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:10px 14px">🔴 Перп-шорт: <b style="color:${perpPnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(perpPnl)}</b></span>
+      <span style="background:#040714; border:1px solid var(--line); border-radius:8px; padding:10px 14px">💰 Фандинг за ${days} дн.: <b style="color:${fundingIncome >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(fundingIncome)}</b></span>
+      <span style="background:#040714; border:1.5px solid var(--acc2); border-radius:8px; padding:10px 14px">Σ Итог: <b style="color:${total >= 0 ? 'var(--ok)' : 'var(--bad)'}">${fmt$(total)}</b></span>
+    </div>
+    <div style="margin-top:12px; background:#040714; border-radius:8px; height:14px; overflow:hidden; display:flex">
+      <div style="width:50%; background:rgba(34,197,94,.35); transform:scaleX(${Math.min(1, Math.abs(spotPnl) / (size * 0.5) || 0.001)}); transform-origin:${spotPnl >= 0 ? 'right' : 'right'}"></div>
+      <div style="width:50%; background:rgba(239,68,68,.35); transform:scaleX(${Math.min(1, Math.abs(perpPnl) / (size * 0.5) || 0.001)}); transform-origin:left"></div>
+    </div>
+    <div style="font-size:12.5px; color:var(--mut); margin-top:10px; line-height:1.6">
+      Ноги гасят друг друга: цена ${move >= 0 ? 'выросла' : 'упала'} на ${Math.abs(move)}%, а рыночный PnL позиции — <b>ноль</b>. Позиция зарабатывает только фандинг: ${fundingBps} bps × 3 раза в сутки × ${days} дн. = ${fmt$(fundingIncome)}.
+      ${fundingIncome < 0 ? ' <b style="color:var(--bad)">Фандинг отрицательный для этой стороны — ты платишь, а не получаешь.</b>' : ''}
+      Риски, которых не видно на этом идеальном конструкторе: инверсия фандинга, базис, ликвидация шорта при перекосе маржи и комиссии перекладки.
+    </div>`;
+};
 
 /* ---------- V4-C4: gauge «расстояние до ликвидации» (апгрейд sim_liq) ---------- */
 const _origCalcLiqV4 = calcLiquidation;
