@@ -5243,6 +5243,12 @@ const LESSONS = [
         "desc": "Четыре стадии схемы: накопление → разгон → эйфория → дамп. На каждой стадии ты решаешь: купить, продать или ждать. В финале — подробный разбор против результатов инсайдеров."
       },
       {
+      "type": "interactive_inline",
+      "id": "widget_art_memecoin_3click",
+      "title": "🐸 Мемкоин в три клика: что ты на самом деле запустил",
+      "desc": "Создай мемкоин за три клика и проживи его первые 48 часов. Развилка «добавить или забрать ликвидность» — обе ветки."
+      },
+            {
         "type": "recap",
         "points": [
           "Большинство мемкоинов не имеют фундаментальной ценности — их курс держится в основном на притоке новых денег и внимании толпы.",
@@ -9843,6 +9849,12 @@ const LESSONS = [
         "simpleAnalogy": "CEX — торговля в банке с охраной и сейфом; Perp-DEX — сделка через умный замок на твоей двери: посредника нет, но замок исполняет ровно то, что написано, даже если ты не дочитал."
       },
       {
+      "type": "interactive_inline",
+      "id": "widget_art_oracle_feed",
+      "title": "📡 Оракул врёт?",
+      "desc": "Ты — поставщик цены для контракта залога. Три режима потока и кнопка «падение рынка»."
+      },
+            {
         "type": "recap",
         "points": [
           "Perp-DEX = вечные фьючерсы в самокастодии через смарт-контракт.",
@@ -10075,6 +10087,12 @@ const LESSONS = [
         ]
       },
       {
+      "type": "interactive_inline",
+      "id": "widget_art_fund_manager",
+      "title": "🏦 Токенизированный фонд: деньги доверяют тебе",
+      "desc": "10 млн и 40 вкладчиков. Обещай доходность, проживи год — и посмотри на разрыв «обещал − сделал»."
+      },
+            {
         "type": "recap",
         "points": [
           "Ёмкость — максимальный капитал, при котором стратегия сохраняет доходность.",
@@ -10808,6 +10826,12 @@ const LESSONS = [
         "id": "widget_g15_vault",
         "title": "🎮 Строитель крепости хранения",
         "desc": "Распредели 6 млн ₽ по ячейкам хранения. Валидатор правил 5.7 проверит лимиты, а сценарий «биржа заморожена» — живучесть схемы."
+      },
+      {
+      "type": "interactive_inline",
+      "id": "widget_art_bot_assembler",
+      "title": "🤖 Собери торгового бота (выпускной конструктор)",
+      "desc": "Семь слотов конвейера × три варианта. Симуляция года с двумя кризисами. Проходной балл — без критических ошибок."
       }
     ],
     "practice": [
@@ -11019,6 +11043,65 @@ const LESSONS = [
     }
   },
   {
+    "id": "p6_l14",
+    "phase": 6,
+    "num": "Б3+",
+    "title": "Почему стейблкоин может потерять доллар",
+    "cognitiveLoad": "easy",
+    "timeEst": "5 мин",
+    "lead": "«Стейбл» — это обещание, а не свойство. Держится оно либо на ликвидных резервах, либо на вере в механизм. У каждой модели есть порог набега, после которого доллар отлипает.",
+    "termsCount": 4,
+    "terms": [
+      { "ru": "Стейблкоин", "en": "stablecoin", "desc": "Токен, который обещает держать цену номинала (обычно 1 доллар); обещание обеспечивается резервами или алгоритмом." },
+      { "ru": "Отвязка", "en": "depeg", "desc": "Потеря привязки к номиналу: стейблкоин торгуется заметно ниже или выше обещанной цены." },
+      { "ru": "Набег владельцев", "en": "bank run", "desc": "Массовое одновременное предъявление монет к обмену; проверяет ликвидность резервов, а не их размер в отчёте." },
+      { "ru": "Спираль смерти", "en": "death spiral", "desc": "Каскад алгоритмической модели: стейбл падает → балансир печатается → балансир дешевеет → стейбл падает быстрее." }
+    ],
+    "prerequisites": ["p6_l3"],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "Стейблкоин — это токен с обещанием: «одна монета всегда равна одному доллару». Обещание исполняется двумя способами. Обеспеченная модель: на каждую монету в резерве лежит чуть больше доллара (например, 105%), и любой владелец может предъявить монету к обмену. Алгоритмическая модель: резервов нет, есть вторая монета-балансир, которую печатают или сжигают, чтобы удерживать цену первой. Первый способ ломается, когда резервы нельзя быстро продать; второй — когда кончается вера в балансир.",
+        "level2": "Ключевое слово — ликвидность резерва. Набег идёт в реальном времени: платить нужно сейчас. Если 40% резерва лежит в бумагах, которые продаются три дня, то мгновенно доступны только ~60–65% — это и есть порог выживания. Алгоритмическая модель устроена жёстче: её порог — не процент резервов, а скорость, с которой рынок готов скупать свеженапечатанный балансир. Когда покупать перестают, механизм ускоряет печать — и ускоряет падение. Поэтому обеспеченный стейблкоин при пробое «проседает и возвращается со шрамом», а алгоритмический «обрывается в ноль».",
+        "level3": "Историческая подпись отвязок: обеспеченные модели теряли номинал на часы–дни и восстанавливались с потерей части доверия; крупнейший алгоритмический коллапс (связка из двух монет в мае 2022) сжёг десятки миллиардов долларов за неделю, потому что спираль печати балансира размывала его быстрее, чем рынок успевал выкупать. Практический вывод: вопрос не «потеряет ли стейблкоин доллар», а «при каком размере набега» — и этот порог можно прикинуть, зная структуру резервов.",
+        "level4": "reserve_model_survives(run) = run <= instantly_liquid_reserves_share\nalgo_model_survives(run) = market_absorbs_newly_minted_balancer(run)  # вера, не процент",
+        "simpleAnalogy": "Обеспеченный стейблкоин — гардероб, где на каждый номерок есть пальто, но часть пальто в химчистке: выдадут всем, но не всем сразу. Алгоритмический — гардероб, где пальто «существуют», пока все верят табличке на двери."
+      },
+      {
+        "type": "interactive_inline",
+        "id": "widget_art_stable_lab",
+        "title": "⚖️ Стейблкоин под набегом",
+        "desc": "Запусти набег владельцев на обеих моделях и найди порог, за которым доллар отлипает."
+      },
+      {
+        "type": "recap",
+        "points": [
+          "Стейблкоин — обещание номинала, а не его гарантия.",
+          "Обеспеченная модель выживает, пока набег меньше мгновенно ликвидной части резервов.",
+          "Алгоритмическая держится на вере в монету-балансир; конец веры — спираль в ноль.",
+          "Вопрос анализа: не «если», а «при каком набеге» отлипнет доллар."
+        ],
+        "english": [
+          { "ru": "Стейблкоин", "en": "Stablecoin" },
+          { "ru": "Отвязка от номинала", "en": "Depeg" },
+          { "ru": "Набег владельцев", "en": "Bank run" },
+          { "ru": "Спираль смерти", "en": "Death spiral" }
+        ]
+      }
+    ],
+    "quiz": {
+      "q": "У обеспеченного стейблкоина резерв 105%, но 40% резерва — в бумагах, которые продаются 3 дня. Что произойдёт при набеге в 70% за час?",
+      "opts": [
+        "Ничего: резерв больше 100%, значит, денег хватит всем",
+        "Номинал просядет: мгновенно доступна лишь ~60–65% резерва, остальные владельцы будут ждать продажи бумаг",
+        "Монета мгновенно обнулится, как алгоритмическая",
+        "Набег остановится сам, когда владельцы увидят отчёт о резервах"
+      ],
+      "a": 1,
+      "explain": "Набег проверяет скорость резерва, а не его размер: платить нужно сейчас. Пока бумаги продаются, номинал проседает; после продажи — обычно восстанавливается, в отличие от алгоритмической спирали."
+    }
+  },
+  {
     "id": "p6_l4",
     "phase": 6,
     "num": "Б4",
@@ -11044,6 +11127,12 @@ const LESSONS = [
         "simpleAnalogy": "Автограф знаменитости ценен, пока звезда на виду. Ушёл хайп — бумажка осталась, но очередь желающих купить рассосалась."
       },
       {
+      "type": "interactive_inline",
+      "id": "widget_art_nft_market",
+      "title": "🖼️ NFT: выпустил — теперь продай",
+      "desc": "Создай коллекцию и выставь цену против видимой лестницы заявок. Сколько из «оценки» станет деньгами?"
+      },
+            {
         "type": "recap",
         "points": [
           "NFT = запись владения в блокчейне; файл обычно вне цепочки.",
@@ -11347,6 +11436,65 @@ const LESSONS = [
     }
   },
   {
+    "id": "p6_l15",
+    "phase": 6,
+    "num": "Б8+",
+    "title": "Как рождается токен: пять решений создателя",
+    "cognitiveLoad": "easy",
+    "timeEst": "6 мин",
+    "lead": "Выпустить токен технически просто. Сложно другое: каждый параметр запуска — это публичное обещание, которое рынок проверит первым делом. Пройди путь создателя — и чужие проекты ты будешь читать как открытую книгу.",
+    "termsCount": 4,
+    "terms": [
+      { "ru": "Эмиссия", "en": "supply", "desc": "Общее число выпущенных монет; само по себе ничего не говорит о ценности — важно, как они распределены." },
+      { "ru": "Доля команды", "en": "team allocation", "desc": "Процент эмиссии, закреплённый за создателями; большая доля без ограничений — главный красный флаг." },
+      { "ru": "Блокировка", "en": "lockup / vesting", "desc": "Срок, в течение которого доля команды не может быть продана; превращает «доверьтесь нам» в проверяемый факт." },
+      { "ru": "Проверка кода", "en": "contract verification", "desc": "Публикация исходного кода контракта с независимым подтверждением; без неё покупатель видит чёрный ящик." }
+    ],
+    "prerequisites": ["p6_l8"],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "Токен рождается из пяти решений. (1) Сеть-хостинг: от неё зависят цена выпуска и стартовая аудитория. (2) Стандарт: сменяемые монеты (как рубли) или коллекция уникальных экземпляров. (3) Параметры: имя, символ, эмиссия, доля команды и её блокировка. (4) Публиковать ли открытый код с проверкой. (5) Нажать «Выпустить». Всё вместе занимает вечер — и создаёт актив, в который чужие люди могут вложить реальные деньги.",
+        "level2": "Парадокс: техническая простота — это и есть проблема. Раз создать токен может кто угодно, ценность определяется не фактом существования, а структурой обещаний. Доля команды выше 30% без блокировки читается рынком как заготовленный сброс: создатель может обрушить цену в любой момент. Открытый код — единственный способ доказать, что в контракте нет скрытого «отключения продаж» для всех, кроме владельца. Каждое решение создателя — это зеркальный пункт чек-листа должной проверки из урока 0.19.",
+        "level3": "Судьба токена после запуска почти механически следует из этих решений. Честная конфигурация (скромная доля команды, длинная блокировка, проверенный код) не гарантирует успеха продукта, но резко повышает шанс пережить первый год: проект перестаёт тратить доверие на доказательство того, что он не скам. Красная конфигурация имеет короткий и предсказуемый сценарий: хайп, разблокировка, сброс, ноль. Рынок научился читать эти конфигурации быстрее, чем их успевают запустить.",
+        "level4": "survival_chance = f(team_share, lockup_months, code_verified)\nred_flag = team_share > 0.30 AND lockup_months == 0  # конфигурация сброса",
+        "simpleAnalogy": "Открыть кафе может каждый — вопрос в вывеске: «повара едят из той же кухни» (команда в той же лодке), «кухня с прозрачными стенами» (открытый код), «владелец не продаст здание год» (блокировка). Без этих вывесок клиент правильно делает выводы."
+      },
+      {
+        "type": "interactive_inline",
+        "id": "widget_art_token_factory",
+        "title": "🏭 Запусти свой токен за пять шагов",
+        "desc": "Выбери сеть, стандарт и параметры, нажми «Выпустить» — и посмотри судьбу своего токена на 12 месяцев вперёд."
+      },
+      {
+        "type": "recap",
+        "points": [
+          "Токен технически создаётся за вечер — поэтому факт существования ничего не стоит.",
+          "Доля команды >30% без блокировки — конфигурация сброса; проверяется первой.",
+          "Открытый проверенный код — единственное доказательство отсутствия ловушек.",
+          "Пять решений создателя = пять пунктов чек-листа проверки чужого проекта."
+        ],
+        "english": [
+          { "ru": "Эмиссия", "en": "Supply" },
+          { "ru": "Доля команды", "en": "Team allocation" },
+          { "ru": "Блокировка доли", "en": "Lockup / vesting" },
+          { "ru": "Проверка кода", "en": "Contract verification" }
+        ]
+      }
+    ],
+    "quiz": {
+      "q": "Проект выпустил токен: доля команды 35%, блокировки нет, код закрыт. Что это значит для проверяющего?",
+      "opts": [
+        "Нормальная стартовая конфигурация — команда должна зарабатывать",
+        "Три красных флага сразу: команда может обрушить цену в любой момент, а ловушки в коде невозможно исключить",
+        "Главное — красивая картинка и активный чат, остальное вторично",
+        "Нужно ждать год, чтобы понять, честный ли проект"
+      ],
+      "a": 1,
+      "explain": "Большая доля без блокировки даёт создателю возможность сброса в любой момент, а закрытый код не позволяет проверить отсутствие скрытых механизмов. Проверяющий из урока 0.19 останавливается на этом экране."
+    }
+  },
+  {
     "id": "p6_l9",
     "phase": 6,
     "num": "Б9",
@@ -11568,6 +11716,66 @@ const LESSONS = [
       "explain": "В DeFi риск сосредоточен в коде и ликвидности; у RWA добавляется целый офчейн-слой доверия: реальность актива, юрисдикция, хранитель, аудит и поведение эмитента в стрессе."
     }
   },
+  {
+    "id": "p6_l16",
+    "phase": 6,
+    "num": "Б13",
+    "title": "Кто управляет проектом после запуска: голосования держателей",
+    "cognitiveLoad": "easy",
+    "timeEst": "6 мин",
+    "lead": "«Управляет сообщество» звучит красиво. На практике это голосования, где вес равен токенам, розница спит, а крупные держатели пишут предложения под себя. Пройди три раунда — и поймёшь, за что на самом деле отвечает твой голос.",
+    "termsCount": 4,
+    "terms": [
+      { "ru": "Управление сообществом", "en": "on-chain governance", "desc": "Принятие решений о проекте голосованием держателей токенов; вес голоса обычно равен доле токенов." },
+      { "ru": "Кворум", "en": "quorum", "desc": "Минимальная доля голосов, необходимая для действительности решения; низкий кворум + сонная розница = власть меньшинства." },
+      { "ru": "Делегирование", "en": "delegation", "desc": "Передача своего веса другому участнику; удобно, но делегат голосует без тебя — во всех раундах." },
+      { "ru": "Покупка голосов", "en": "vote buying / bribe", "desc": "Прямое или косвенное вознаграждение за «правильный» голос; признак того, что управление проектом фикция." }
+    ],
+    "prerequisites": [],
+    "blocks": [
+      {
+        "type": "concept",
+        "level1": "После запуска многие проекты переходят «под управление сообщества»: решения о комиссиях, наградах и тратах казны принимаются голосованием держателей токенов. Вес голоса равен количеству токенов. Формально это демократия; фактически — акционерное общество, где у крупного держателя тысячи голосов, а у тебя — десятки. Плюс два смягчающих обстоятельства для крупных: розница редко голосует (явка часто ниже 10%), а решение считается принятым при достижении кворума — минимальной доли участников.",
+        "level2": "Три типовые судьбы одного предложения. Безобидное (ремонт инфраструктуры) проходит тихо — и твой голос там действительно мало что меняет. Спорное (перекройка наград под крупных) проходит на сонной явке: киты и команда голосуют всегда, розница — почти никогда. Вредоносное (вывод казны «на маркетинг» подконтрольной фирме) готовится заранее: покупкой голосов и рассылкой «личных предложений». Единственный рабочий инструмент защиты — явка: когда розница просыпается, вредоносные предложения не собирают ни перевеса, ни легитимности.",
+        "level3": "Отдельная ловушка — делегирование. Передать голос «профессионалам» удобно, но делегат голосует во всех раундах без тебя, включая те, о которых ты не узнаешь. Предложение «продай голос» — диагностический признак: если голоса покупаются, значит, результат голосования решён заранее, а управление — декорация. В таком проекте твои токены стоят ровно столько, сколько продержится видимость.",
+        "level4": "proposal_passes = for_votes > against_votes AND turnout >= quorum\n# критический случай: turnout_retail = 8%, киты голосуют всегда → кворум собирает меньшинство",
+        "simpleAnalogy": "Собрание жильцов дома: дворник, управляющая компания и три жильца с половиной квартир решают судьбу дома, пока остальные спят. А если управляющий предлагает «не ходи на собрание, я отблагодарю» — дом уже фактически продан."
+      },
+      {
+        "type": "interactive_inline",
+        "id": "widget_art_dao_vote",
+        "title": "🏛️ Одно предложение — три судьбы",
+        "desc": "У тебя 4% голосов. Три раунда голосований: безобидное, спорное и вредоносное. Голосуй, делегируй или воздержись — и смотри на последствия."
+      },
+      {
+        "type": "recap",
+        "points": [
+          "Вес голоса равен токенам: «управление сообществом» — это власть крупных держателей, пока спит розница.",
+          "Низкая явка + кворум позволяют меньшинству проводить решения.",
+          "Делегирование — подпись вслепую: делегат голосует без тебя во всех раундах.",
+          "Покупка голосов = управление фикция; такой проект уже продан."
+        ],
+        "english": [
+          { "ru": "Управление сообществом", "en": "On-chain governance" },
+          { "ru": "Кворум", "en": "Quorum" },
+          { "ru": "Делегирование голоса", "en": "Delegation" },
+          { "ru": "Покупка голосов", "en": "Vote buying" }
+        ]
+      }
+    ],
+    "quiz": {
+      "q": "Перед голосованием о выводе 40% казны крупный держатель предлагает тебе «бонус» за воздержание. Что это означает?",
+      "opts": [
+        "Щедрость сообщества — можно брать",
+        "Покупку голосов: результат решён заранее, управление — декорация, а «бонус» обесценится вместе с проектом",
+        "Обычную практику мотивации участников",
+        "Повод проголосовать «за» из благодарности"
+      ],
+      "a": 1,
+      "explain": "Если голоса покупаются, голосование — театр. «Бонус» выплачивается токенами проекта, который теряет казну: премия обесценивается быстрее, чем получается. Единственный адекватный ответ — пометить как красный флаг и голосовать против."
+    }
+  },
+
 
 ];
 
@@ -33540,6 +33748,1351 @@ const PSY_WIDGET_IDS = [
 })();
 
 </script>
+
+<script>
+/* =========================================================================
+   V6-ART: ТРЕНАЖЁРЫ «КОНСТРУКТОР АРТЕФАКТОВ» (8 штук, ванильный JS)
+   Виртуальное создание и испытание объектов криптоэкосистемы.
+   Прогресс: localStorage cn_art_progress (id виджета → {passed,best,ts}).
+   Общая статистика мемкоинов (с sim_meme): cn_meme_runs {sim, art2}.
+   ГСЧ с фиксированным зерном (mulberry32 из ядра) — прохождение воспроизводимо.
+   ========================================================================= */
+(function(){
+'use strict';
+
+const ART_LS_KEY = 'cn_art_progress';
+function artLoad(){ try{ return JSON.parse(localStorage.getItem(ART_LS_KEY) || '{}'); }catch(e){ return {}; } }
+function artStore(st){ try{ localStorage.setItem(ART_LS_KEY, JSON.stringify(st)); }catch(e){} }
+function artMark(wid, score, passed){
+  const st = artLoad();
+  const prev = st[wid] || {};
+  st[wid] = {
+    best: Math.max(prev.best || 0, score),
+    passed: !!(prev.passed) || !!passed,
+    ts: Date.now()
+  };
+  artStore(st);
+  ART_checkBadges();
+}
+function artGet(wid){ const st = artLoad(); return st[wid] || null; }
+function artPassedBadge(wid){
+  const st = artLoad();
+  if(st[wid] && st[wid].passed){
+    return '<span class="badge" style="background:rgba(34,197,94,.15);color:var(--ok);font-weight:800">✓ Пройдено</span>';
+  }
+  return '<span class="badge" style="background:rgba(255,255,255,.06);color:var(--mut)">не пройдено</span>';
+}
+function artEsc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function artShell(box, wid, icon, title, sub){
+  box.innerHTML =
+    '<div style="background:#090d1f;border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;max-width:100%">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">' +
+        '<b style="color:var(--txt);font-size:15px">' + icon + ' ' + title + '</b>' + artPassedBadge(wid) +
+      '</div>' +
+      '<div style="font-size:12.5px;color:var(--mut);line-height:1.5;margin-bottom:12px">' + sub + '</div>' +
+      '<div id="' + wid + '_stage"></div>' +
+    '</div>';
+  return document.getElementById(wid + '_stage');
+}
+function artBtn(label, extra, style){
+  return '<button class="ans" data-art-choice="1" ' + (extra || '') +
+    ' style="' + (style || 'text-align:left;padding:11px 14px;font-size:13.5px;border-radius:8px;border:1px solid var(--line);background:#040714;color:var(--txt);cursor:pointer;width:100%;transition:all .2s') + '">' + label + '</button>';
+}
+function artChip(label, active, extra){
+  return '<button class="chip' + (active ? ' active' : '') + '" data-art-chip="1" ' + (extra || '') + ' style="transition:all .2s">' + label + '</button>';
+}
+function artFinal(wid, html){
+  return '<div id="' + wid + '_final" style="background:#040714;border:1.5px solid var(--acc2);border-radius:12px;padding:16px 18px;margin-top:6px">' + html + '</div>';
+}
+function artAgain(wid){
+  return '<button class="btn sm ghost" style="margin-top:12px" onclick="window.ART_render_' + wid + '(document.getElementById(\'' + wid + '\'))">🔄 Пройти ещё раз</button>';
+}
+const ART_FMTS = {};
+window.__ART_FMTS = ART_FMTS;
+function artSlider(id, min, max, val, step, labelFmt){
+  const fmt = (typeof labelFmt === 'function') ? labelFmt : eval('(' + labelFmt + ')');
+  ART_FMTS[id] = fmt;
+  return '<input type="range" id="' + id + '" min="' + min + '" max="' + max + '" value="' + val + '" step="' + (step || 1) + '"' +
+    ' style="width:100%;accent-color:var(--acc2);transition:all .2s" oninput="document.getElementById(\'' + id + '_v\').textContent=window.__ART_FMTS[\'' + id + '\'](this.value)">' +
+    '<div style="text-align:center;font-weight:800;color:var(--acc2);font-family:var(--mono);font-size:14px" id="' + id + '_v">' + fmt(val) + '</div>';
+}
+function artCanvas(wid, h){
+  return '<canvas id="' + wid + '_cv" width="640" height="' + (h || 220) + '" style="width:100%;max-width:100%;height:auto;background:#040714;border:1px solid var(--line);border-radius:10px;display:block"></canvas>';
+}
+function artAxes(ctx, W, H, pad){
+  ctx.strokeStyle = 'rgba(255,255,255,.08)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad, pad); ctx.lineTo(pad, H - pad); ctx.lineTo(W - pad, H - pad);
+  ctx.stroke();
+}
+function artLine(ctx, pts, color, width){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width || 2;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  pts.forEach(function(p, i){ if(i === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); });
+  ctx.stroke();
+}
+function artRefreshHeaderBadge(box, wid){
+  const hdr = box.querySelector('.badge');
+  if(hdr) hdr.outerHTML = artPassedBadge(wid);
+}
+function artStepper(total, cur){
+  let s = '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">';
+  for(let i = 0; i < total; i++){
+    s += '<div style="flex:1;min-width:24px;height:5px;border-radius:3px;background:' + (i < cur ? 'var(--ok)' : (i === cur ? 'var(--acc2)' : 'rgba(255,255,255,.1)')) + ';transition:background .3s"></div>';
+  }
+  return s + '</div>';
+}
+function artSeedFrom(str){
+  let h = 2166136261;
+  for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function artFmtMoney(v){
+  const sign = v < 0 ? '−' : '';
+  return sign + Math.abs(Math.round(v)).toLocaleString('ru-RU') + ' ₽';
+}
+
+
+/* ---------- ART-1. «Запусти свой токен за пять шагов» ----------
+   Мастер из 5 шагов: сеть → стандарт → параметры → аудит → выпуск.
+   Судьба токена вычисляется из честности токеномики. */
+const ART1_NETS = [
+  { id: 'eth', name: 'Эфириум', cost: 'дорого: ~120 000 ₽', aud: 'самая большая аудитория и привычные инструменты проверки' },
+  { id: 'bnb', name: 'BNB Chain', cost: 'средне: ~25 000 ₽', aud: 'большая розничная аудитория, много «быстрых» проектов' },
+  { id: 'sol', name: 'Солана', cost: 'дёшево: ~6 000 ₽', aud: 'быстрые транзакции, аудитория любит эксперименты' }
+];
+const ART1_STANDARDS = [
+  { id: 'fungible', name: 'Сменяемый токен', desc: 'все монеты одинаковые, как рубли: для платежей, голосований, наград' },
+  { id: 'unique', name: 'Коллекция уникальных', desc: 'каждый экземпляр со своим номером: сертификаты, членство, предметы' }
+];
+
+function ART_render_widget_art_token_factory(box){
+  if(!box) return;
+  const wid = 'widget_art_token_factory';
+  const stage = artShell(box, wid, '🏭', 'Запусти свой токен за пять шагов',
+    'Пройди путь создателя токена от выбора сети до кнопки «Выпустить» — и посмотри, как твои решения определят его судьбу. Каждый твой шаг здесь — это пункт чек-листа проверки чужого проекта из урока 0.19, только глазами создателя.');
+  const st = { step: 0, net: null, standard: null, name: '', symbol: '', supply: 1000000, teamPct: 15, lockMonths: 12, audit: null };
+
+  function step(){
+    if(st.step === 0){
+      stage.innerHTML = artStepper(5, 0) +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Шаг 1 из 5. Выбери сеть-хостинг</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);margin-bottom:12px">Сети отличаются ценой выпуска и аудиторией. Это первое, что проверяющий увидит в эксплорере.</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px">' +
+        ART1_NETS.map(function(n, i){
+          return artBtn('<b>' + n.name + '</b><br><span style="font-size:12px;color:var(--mut)">Выпуск: ' + n.cost + ' · ' + n.aud + '</span>', ' data-i="' + i + '"');
+        }).join('') + '</div>';
+      stage.querySelectorAll('[data-art-choice]').forEach(function(b){
+        b.onclick = function(){ st.net = ART1_NETS[parseInt(b.getAttribute('data-i'))]; st.step = 1; step(); };
+      });
+    } else if(st.step === 1){
+      stage.innerHTML = artStepper(5, 1) +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Шаг 2 из 5. Выбери стандарт</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px">' +
+        ART1_STANDARDS.map(function(s, i){
+          return artBtn('<b>' + s.name + '</b><br><span style="font-size:12px;color:var(--mut)">' + s.desc + '</span>', ' data-i="' + i + '"');
+        }).join('') + '</div>';
+      stage.querySelectorAll('[data-art-choice]').forEach(function(b){
+        b.onclick = function(){ st.standard = ART1_STANDARDS[parseInt(b.getAttribute('data-i'))]; st.step = 2; step(); };
+      });
+    } else if(st.step === 2){
+      stage.innerHTML = artStepper(5, 2) +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Шаг 3 из 5. Параметры токена</div>' +
+        '<div style="display:flex;flex-direction:column;gap:10px">' +
+          '<label style="font-size:12.5px;color:var(--mut)">Имя токена<input id="art1_name" maxlength="24" placeholder="Например, Северный Ветер" style="width:100%;margin-top:4px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:#040714;color:var(--txt);font-size:13.5px"></label>' +
+          '<label style="font-size:12.5px;color:var(--mut)">Символ (3–5 букв)<input id="art1_symbol" maxlength="5" placeholder="SVTR" style="width:100%;margin-top:4px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:#040714;color:var(--txt);font-size:13.5px;text-transform:uppercase"></label>' +
+          '<div style="font-size:12.5px;color:var(--mut)">Всего монет (эмиссия)' + artSlider('art1_supply', 1000, 1000000000, 1000000, 1000, "function(v){return Number(v).toLocaleString('ru-RU')}") + '</div>' +
+          '<div style="font-size:12.5px;color:var(--mut)">Доля команды, % от эмиссии' + artSlider('art1_team', 0, 50, 15, 1, "function(v){return v+'%'}") + '</div>' +
+          '<div style="font-size:12.5px;color:var(--mut)">Блокировка доли команды<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px" id="art1_locks">' +
+            [0, 6, 12, 24].map(function(m){ return artChip(m === 0 ? 'без блокировки' : m + ' мес', m === 12, ' data-m="' + m + '"'); }).join('') +
+          '</div></div>' +
+          '<div id="art1_err" style="font-size:12px;color:var(--bad);min-height:16px"></div>' +
+          '<button class="btn sm" id="art1_next">Дальше ➔</button>' +
+        '</div>';
+      st.lockMonths = 12;
+      stage.querySelectorAll('#art1_locks [data-art-chip]').forEach(function(ch){
+        ch.onclick = function(){
+          stage.querySelectorAll('#art1_locks [data-art-chip]').forEach(function(x){ x.classList.remove('active'); });
+          ch.classList.add('active');
+          st.lockMonths = parseInt(ch.getAttribute('data-m'));
+        };
+      });
+      document.getElementById('art1_next').onclick = function(){
+        const name = document.getElementById('art1_name').value.trim();
+        const symbol = document.getElementById('art1_symbol').value.trim().toUpperCase();
+        if(name.length < 2){ document.getElementById('art1_err').textContent = 'Дай токену имя (минимум 2 символа).'; return; }
+        if(!/^[A-ZА-ЯЁ0-9]{3,5}$/.test(symbol)){ document.getElementById('art1_err').textContent = 'Символ: 3–5 букв или цифр.'; return; }
+        st.name = name; st.symbol = symbol;
+        st.supply = parseInt(document.getElementById('art1_supply').value);
+        st.teamPct = parseInt(document.getElementById('art1_team').value);
+        st.step = 3; step();
+      };
+    } else if(st.step === 3){
+      stage.innerHTML = artStepper(5, 3) +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Шаг 4 из 5. Открытый код</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);margin-bottom:12px;line-height:1.55">Публикуешь код контракта с независимой проверкой — любой желающий убедится, что внутри нет скрытого «отключения продаж» или печатного станка для владельца. Не публикуешь — покупатель видит чёрный ящик.</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px">' +
+          artBtn('<b>🔓 Публиковать код с проверкой</b><br><span style="font-size:12px;color:var(--mut)">независимые глаза найдут ошибки раньше злоумышленников</span>', ' data-a="1"') +
+          artBtn('<b>🔒 Не публиковать</b><br><span style="font-size:12px;color:var(--mut)">«потом как-нибудь» — классическая фраза из разборов скамов</span>', ' data-a="0"') +
+        '</div>';
+      stage.querySelectorAll('[data-art-choice]').forEach(function(b){
+        b.onclick = function(){ st.audit = b.getAttribute('data-a') === '1'; st.step = 4; step(); };
+      });
+    } else if(st.step === 4){
+      const score = (st.audit ? 2 : -1) + (st.lockMonths >= 12 ? 2 : (st.lockMonths >= 6 ? 1 : -2)) + (st.teamPct <= 15 ? 1 : (st.teamPct > 30 ? -3 : (st.teamPct > 20 ? -1 : 0)));
+      const rug = st.teamPct > 30 && st.lockMonths === 0;
+      stage.innerHTML = artStepper(5, 4) +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Шаг 5 из 5. Сводка перед выпуском</div>' +
+        '<div style="background:#040714;border-radius:10px;padding:14px;font-size:13px;color:var(--txt);line-height:1.8;margin-bottom:12px">' +
+          '🪙 <b>' + artEsc(st.name) + ' (' + artEsc(st.symbol) + ')</b> · ' + st.standard.name.toLowerCase() + '<br>' +
+          '🌐 Сеть: ' + st.net.name + ' · эмиссия: ' + st.supply.toLocaleString('ru-RU') + '<br>' +
+          '👥 Доля команды: <b style="color:' + (st.teamPct > 30 ? 'var(--bad)' : (st.teamPct > 20 ? 'var(--warn)' : 'var(--ok)')) + '">' + st.teamPct + '%</b> · блокировка: <b style="color:' + (st.lockMonths === 0 ? 'var(--bad)' : 'var(--ok)') + '">' + (st.lockMonths === 0 ? 'нет' : st.lockMonths + ' мес') + '</b><br>' +
+          '🔍 Открытый код: <b style="color:' + (st.audit ? 'var(--ok)' : 'var(--bad)') + '">' + (st.audit ? 'да, с проверкой' : 'нет') + '</b>' +
+        '</div>' +
+        (rug ? '<div style="background:rgba(244,63,94,.1);border:1px solid var(--bad);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--txt);line-height:1.55;margin-bottom:12px">⚠️ <b>Проверяющий из урока 0.19 остановился бы на этом экране.</b> Доля команды больше 30% без единого дня блокировки — это классическая конфигурация «сброса»: создатель может обрушить цену в любой момент, и ничто ему не мешает.</div>' : '') +
+        '<button class="btn" id="art1_launch" style="width:100%">🚀 Выпустить токен</button>';
+      document.getElementById('art1_launch').onclick = function(){ fate(score, rug); };
+    }
+  }
+
+  function fate(score, rug){
+    const rng = mulberry32(artSeedFrom(st.name + st.symbol + st.supply));
+    const surviveP = rug ? 0.02 : Math.min(0.9, Math.max(0.05, 0.2 + score * 0.11));
+    const rugMonth = 2 + Math.floor(rng() * 4);
+    const survives = rng() < surviveP;
+    // 12 месяцев цены (от 1.00 условной)
+    const price = [1];
+    let log = [];
+    for(let m = 1; m <= 12; m++){
+      let p = price[m - 1];
+      if(rug && m === rugMonth){ p *= 0.03; log.push({ m: m, t: '💥 Команда выгрузила свою долю в рынок. Цена упала на 97% за час. Покупатели остались с неликвидом — ровно сценарий «сброса» из урока 0.17.' }); }
+      else if(rug && m > rugMonth){ p *= 0.6 + rng() * 0.2; }
+      else {
+        const drift = survives ? (0.92 + rng() * 0.35) : (0.55 + rng() * 0.5);
+        p *= drift;
+        if(m === 2) log.push({ m: m, t: '📣 Первое внимание: токен заметили, пришли первые покупатели.' });
+        if(m === 5 && !st.audit) log.push({ m: m, t: '🕵️ Код закрыт — проверяющие не могут подтвердить безопасность. Крупные покупатели проходят мимо.' });
+        if(m === 5 && st.audit) log.push({ m: m, t: '🔍 Проверка кода пройдена публично — это строка доверия в каждом обзоре.' });
+        if(m === st.lockMonths && st.lockMonths > 0) log.push({ m: m, t: '🔓 Закончилась блокировка доли команды. Рынок спокоен: за месяцы проект доказал, что команда работает, а не ждёт разблокировки.' });
+        if(m === 8 && !survives) log.push({ m: m, t: '📉 Интерес угасает: без доверия нет новых покупателей, а без покупателей — цены.' });
+        if(m === 9 && survives) log.push({ m: m, t: '🌱 Проект пережил первые кризисы доверия — дальше решает продукт, а не токеномика.' });
+      }
+      price.push(p);
+    }
+    const survived = !rug && survives && price[12] > 0.3;
+    const honest = st.audit && st.lockMonths >= 12 && st.teamPct <= 15;
+    const passed = honest && survived;
+    // график
+    stage.innerHTML =
+      '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Судьба токена: 12 месяцев</div>' +
+      artCanvas(wid, 200) +
+      '<div id="art1_log" style="margin-top:12px;display:flex;flex-direction:column;gap:8px"></div>';
+    const cv = document.getElementById(wid + '_cv');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, pad = 30;
+    artAxes(ctx, W, H, pad);
+    const maxP = Math.max(1.2, Math.max.apply(null, price));
+    const pts = price.map(function(p, i){
+      return [pad + (W - 2 * pad) * i / 12, H - pad - (H - 2 * pad) * Math.min(p, maxP) / maxP];
+    });
+    artLine(ctx, pts, survived ? '#22C55E' : '#F43F5E', 2.5);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('1.00', 4, H - pad + 4);
+    ctx.fillText('мес 12', W - pad - 30, H - 10);
+    const logBox = document.getElementById('art1_log');
+    logBox.innerHTML = log.map(function(e){
+      return '<div style="background:#040714;border-left:3px solid var(--acc2);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--txt);line-height:1.5"><b style="color:var(--mut)">Месяц ' + e.m + '.</b> ' + e.t + '</div>';
+    }).join('') +
+    artFinal(wid,
+      '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">' +
+        (rug ? '💀 Красный сценарий: сброс доли команды' : (survived ? '🌱 Токен выжил первый год' : '🍂 Токен угас')) + '</div>' +
+      '<div style="font-size:13px;color:var(--txt);line-height:1.7">' +
+        (rug ? 'Ты собрал конфигурацию скама — и симулятор честно показал, чем это кончается: обнулёнными покупателями. <b>Если ты можешь это сделать за пять шагов, это может сделать кто угодно. Именно поэтому чек-лист из урока 0.19 существует.</b>' :
+        (honest ? 'Честная токеномика сработала как надо: заблокированная доля, открытый код, скромный процент команды — это не «потерянная выгода», а цена доверия рынка.' :
+        'Шанс выжить был ' + Math.round(surviveP * 100) + '%. Параметры запуска — это не формальность, а публичный контракт с покупателями.')) +
+      '</div>' +
+      '<div style="margin-top:12px;font-size:13px;color:var(--mut);line-height:1.65;border-top:1px dashed var(--line);padding-top:10px">' +
+        '<b style="color:var(--txt)">Твои 5 шагов = чек-лист 0.19 глазами создателя:</b><br>' +
+        '1. Сеть видна в эксплорере → проверяющий смотрит её первой.<br>' +
+        '2. Стандарт определяет, что вообще можно проверить.<br>' +
+        '3. Доля команды и блокировка — главный красный флаг (или зелёный).<br>' +
+        '4. Открытый код — единственный способ доказать отсутствие ловушек.<br>' +
+        '5. «Выпустить» легко. Дальше начинается единственное сложное — заслужить, чтобы токен жил.' +
+      '</div>') + artAgain(wid);
+    artMark(wid, passed ? 3 : (honest ? 2 : 1), passed);
+    if(passed) artRefreshHeaderBadge(box, wid);
+  }
+  step();
+}
+
+
+/* ---------- ART-2. «Мемкоин в три клика» ----------
+   Три клика — и монета существует. Таймлайн 48 часов, развилка
+   «добавить / забрать ликвидность» с обоими исходами.
+   Связь с sim_meme через общий счётчик cn_meme_runs. */
+const ART2_COINS = [
+  { icon: '🐸', name: 'Жабкоин', symbol: 'ZHAB' },
+  { icon: '🚀', name: 'ЛунаПёс', symbol: 'LPES' },
+  { icon: '😼', name: 'КотикСвоп', symbol: 'KOTIK' }
+];
+function art2Runs(){
+  try{ return JSON.parse(localStorage.getItem('cn_meme_runs') || '{"sim":0,"art2":0}'); }catch(e){ return { sim: 0, art2: 0 }; }
+}
+function art2BumpRuns(){
+  const r = art2Runs(); r.art2 = (r.art2 || 0) + 1;
+  try{ localStorage.setItem('cn_meme_runs', JSON.stringify(r)); }catch(e){}
+}
+
+function ART_render_widget_art_memecoin_3click(box){
+  if(!box) return;
+  const wid = 'widget_art_memecoin_3click';
+  const stage = artShell(box, wid, '🐸', 'Мемкоин в три клика: что ты на самом деле запустил',
+    'Создай мемкоин через «агрегатор» — три клика, без кода. Потом посмотри первые 48 часов его жизни и реши судьбоносную развилку. Обе ветки покажем честно.');
+  const st = { click: 0, coin: null, branch: null, seen: { add: false, pull: false } };
+
+  function step(){
+    if(st.click === 0){
+      stage.innerHTML =
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Клик 1 из 3. Картинка и название</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);margin-bottom:12px">Агрегатор предлагает готовые «бренды». Выбирай — это вся работа по созданию актива.</div>' +
+        '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+        ART2_COINS.map(function(cn, i){
+          return '<button class="ans" data-art-choice="1" data-i="' + i + '" style="flex:1;min-width:100px;padding:16px 10px;text-align:center;border-radius:10px;border:1px solid var(--line);background:#040714;color:var(--txt);cursor:pointer;transition:all .2s"><div style="font-size:34px">' + cn.icon + '</div><b>' + cn.name + '</b><br><span style="font-size:11px;color:var(--mut)">' + cn.symbol + '</span></button>';
+        }).join('') + '</div>';
+      stage.querySelectorAll('[data-art-choice]').forEach(function(b){
+        b.onclick = function(){ st.coin = ART2_COINS[parseInt(b.getAttribute('data-i'))]; st.click = 1; step(); };
+      });
+    } else if(st.click === 1){
+      stage.innerHTML =
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Клик 2 из 3. Торговая пара</div>' +
+        '<div style="background:#040714;border-radius:10px;padding:14px;margin-bottom:12px;font-size:13px;color:var(--txt);line-height:1.6">' +
+          st.coin.icon + ' <b>' + st.coin.name + ' (' + st.coin.symbol + ')</b> ↔ учебный доллар 💵<br>' +
+          '<span style="font-size:12px;color:var(--mut)">Стартовая ликвидность: 100 000 ₽ (твои). Агрегатор сам разместил пару на «быстрой бирже».</span>' +
+        '</div>' +
+        '<button class="btn sm" id="art2_c2">Создать пару ➔</button>';
+      document.getElementById('art2_c2').onclick = function(){ st.click = 2; step(); };
+    } else if(st.click === 2){
+      stage.innerHTML =
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Клик 3 из 3. Запуск</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);margin-bottom:12px;line-height:1.55">Всё готово. Ты потратил на «создание актива» меньше времени, чем на заказ обеда. <b>Запомни это ощущение</b> — именно поэтому таких монет тысячи в день, и именно поэтому проверка красных флагов обязательна.</div>' +
+        '<button class="btn" id="art2_go" style="width:100%">🌍 В мир!</button>';
+      document.getElementById('art2_go').onclick = function(){ st.click = 3; timeline(0); };
+    }
+  }
+
+  const EVENTS = [
+    { h: 2,  t: 'Первые покупатели: любители новинок купили на 8 000 ₽. Цена +12%.', p: 1.12 },
+    { h: 6,  t: 'Чаты подхватили картинку. Приток любопытных, цена +40% от старта.', p: 1.4 },
+    { h: 12, t: 'Пик хайпа: монета в «топе новых» агрегатора. Цена ×2,3. Ты «в плюсе» на 130 000 ₽.', p: 2.3 },
+    { h: 18, t: 'Первый крупный продавец: ранняя покупка на 60 000 ₽ выходит. Цена −35% за десять минут.', p: 1.5 },
+    { h: 24, t: '⏰ РАЗВИЛКА. Ликвидность в паре просела, покупатели ждут. Твой ход.', p: 1.35, fork: true }
+  ];
+
+  function timeline(idx){
+    const e = EVENTS[idx];
+    const feed = EVENTS.slice(0, idx + 1).map(function(ev, i){
+      const isFork = ev.fork;
+      return '<div style="background:#040714;border-left:3px solid ' + (isFork ? 'var(--warn)' : 'var(--acc2)') + ';border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--txt);line-height:1.5"><b style="color:var(--mut)">Час ' + ev.h + '.</b> ' + ev.t + '</div>';
+    }).join('');
+    stage.innerHTML =
+      '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:10px"><span>' + st.coin.icon + ' ' + st.coin.symbol + '/💵</span><span>цена: <b style="color:var(--acc2);font-family:var(--mono)">' + e.p.toFixed(2) + '×</b> от старта</span></div>' +
+      feed + '<div id="art2_ctrl" style="margin-top:12px"></div>';
+    const ctrl = document.getElementById('art2_ctrl');
+    if(e.fork){
+      ctrl.innerHTML =
+        '<div style="display:flex;flex-direction:column;gap:8px">' +
+          artBtn('<b>💧 Добавить ликвидности</b> — вложить ещё 20 000 ₽ «чтобы не упал»', ' data-b="add"') +
+          artBtn('<b>🏃 Забрать ликвидность</b> — вывести свои деньги и закрыть лавочку', ' data-b="pull"') +
+        '</div>';
+      ctrl.querySelectorAll('[data-art-choice]').forEach(function(b){
+        b.onclick = function(){ outcome(b.getAttribute('data-b')); };
+      });
+    } else {
+      ctrl.innerHTML = '<button class="btn sm" id="art2_next">Дальше ➔</button>';
+      document.getElementById('art2_next').onclick = function(){ timeline(idx + 1); };
+    }
+  }
+
+  function outcome(branch){
+    st.branch = branch;
+    st.seen[branch] = true;
+    const rng = mulberry32(artSeedFrom(st.coin.symbol + branch));
+    let html;
+    if(branch === 'add'){
+      const bleed = 0.15 + rng() * 0.15;
+      html =
+        '<div style="background:#040714;border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--txt);line-height:1.6">' +
+          '<b>Часы 24–48.</b> Ты добавил 20 000 ₽. Цена выровнялась на пару часов… и продолжила медленное сползание: −' + Math.round(bleed * 100) + '% к утру второго дня. Покупателей больше нет — есть только ты и твои деньги в пустой паре.<br><br>' +
+          '💸 <b>Итог:</b> вложено 120 000 ₽, реально можно вывести около ' + Math.round((100 - bleed * 60)).toLocaleString('ru-RU') + ' 000 ₽. «Поддержал проект» — переводится как «докупил себе убыток».' +
+        '</div>';
+    } else {
+      html =
+        '<div style="background:rgba(244,63,94,.08);border-left:3px solid var(--bad);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--txt);line-height:1.6">' +
+          '<b>Час 24.</b> Ты вывел свои 100 000 ₽. Цена мгновенно ушла на <b>−99%</b>: продать больше не в чем — ликвидности нет. Те, кто купил на хайпе, остались с монетами, которые невозможно продать.<br><br>' +
+          '⚖️ <b>Это и есть «выход ликвидности»</b> — та самая схема из разбора пампа в этом уроке. Ты только что сделал её своими руками, за три клика. Для держателей ты теперь — «скамер».' +
+        '</div>';
+    }
+    stage.innerHTML = html + '<div id="art2_ctrl" style="margin-top:12px"></div>';
+    const ctrl = document.getElementById('art2_ctrl');
+    const other = branch === 'add' ? 'pull' : 'add';
+    if(!st.seen.add || !st.seen.pull){
+      ctrl.innerHTML = '<button class="btn sm ghost" id="art2_other">🔀 Посмотреть другой исход</button>';
+      document.getElementById('art2_other').onclick = function(){ outcome(other); };
+    } else {
+      final();
+    }
+  }
+
+  function final(){
+    art2BumpRuns();
+    const runs = art2Runs();
+    const passed = true; // обе ветки просмотрены
+    artMark(wid, 1, passed);
+    stage.innerHTML = artFinal(wid,
+      '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">🔍 Что ты на самом деле запустил</div>' +
+      '<div style="font-size:13px;color:var(--txt);line-height:1.7">' +
+        'За три клика — <b>полноценный торгуемый актив</b>, в который чужие люди вложили реальные деньги. Технически это ничего не стоит. Поэтому ежедневно появляются тысячи таких монет, и почти все умирают в первые дни.' +
+      '</div>' +
+      '<div style="margin-top:12px;font-size:13px;color:var(--mut);line-height:1.65;border-top:1px dashed var(--line);padding-top:10px">' +
+        'Выводы:<br>' +
+        '1. Лёгкость создания — не признак ценности, а источник бесконечного количества ловушек.<br>' +
+        '2. Развилка «добавить или забрать» у создателя возникает всегда. У покупателя — никогда: он просто живёт в чужом решении.<br>' +
+        '3. Проверка на красные флаги (урок 0.19) — единственная защита от чужих трёх кликов.' +
+      '</div>' +
+      '<div style="margin-top:10px;font-size:12px;color:var(--mut)">🐸 Прохождений мемкоин-тренажёров: генератор из урока 0.17 — <b>' + (runs.sim || 0) + '</b>, «три клика» — <b>' + (runs.art2 || 0) + '</b>.</div>') +
+      artAgain(wid);
+    artRefreshHeaderBadge(box, wid);
+  }
+  step();
+}
+
+
+/* ---------- ART-3. «Стейблкоин под набегом» ----------
+   Две модели: обеспеченная резервами и алгоритмическая.
+   Ползунок набега 0–80%, график отклонения от номинала за 30 дней. */
+function ART_render_widget_art_stable_lab(box){
+  if(!box) return;
+  const wid = 'widget_art_stable_lab';
+  const stage = artShell(box, wid, '⚖️', 'Стейблкоин под набегом',
+    'Ты — эмитент стейблкоина: обещаешь, что монета всегда стоит 1 доллар. Придумай модель, запусти набег владельцев — и смотри, держится ли номинал. Прогони обе модели, чтобы увидеть разницу.');
+
+  const st = { model: 'reserve', run: { reserve: false, algo: false }, answered: false };
+
+  function screen(){
+    stage.innerHTML =
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">' +
+        artChip('🏦 Обеспеченный резервами', st.model === 'reserve', ' data-m="reserve"') +
+        artChip('🧮 Алгоритмический', st.model === 'algo', ' data-m="algo"') +
+      '</div>' +
+      '<div style="background:#040714;border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--mut);line-height:1.55;margin-bottom:12px">' +
+        (st.model === 'reserve'
+          ? 'Резервы: <b style="color:var(--txt)">105%</b> от выпущенных монет, но <b style="color:var(--txt)">40% резерва — в ценных бумагах</b>, которые продаются 3 дня. Держится, пока набег не превышает мгновенно доступные ~65%.'
+          : 'Никаких резервов: связка двух монет — «стейбл» и «балансир». Пока верят в балансир, стейбл держит номинал. Когда веры нет — печатать балансир приходится всё быстрее.') +
+      '</div>' +
+      '<div style="font-size:12.5px;color:var(--mut);margin-bottom:4px">Набег владельцев (доля монет, предъявленных к обмену)' +
+        artSlider('art3_run', 0, 80, 30, 1, "function(v){return v+'%'}") +
+      '</div>' +
+      '<button class="btn sm" id="art3_go" style="margin-bottom:14px">▶️ Запустить набег</button>' +
+      '<div id="art3_out"></div>';
+
+    stage.querySelectorAll('[data-art-chip]').forEach(function(ch){
+      ch.onclick = function(){ st.model = ch.getAttribute('data-m'); screen(); };
+    });
+    document.getElementById('art3_go').onclick = function(){
+      run(st.model, parseInt(document.getElementById('art3_run').value));
+    };
+  }
+
+  function run(model, rush){
+    st.run[model] = true;
+    const rng = mulberry32(artSeedFrom(model + ':' + rush));
+    const days = [];
+    for(let d = 0; d < 30; d++){
+      let p = 1;
+      if(model === 'reserve'){
+        if(rush <= 60){
+          const dip = 1 - rush * 0.0012;
+          if(d >= 1 && d <= 4) p = 1 - (1 - dip) * Math.sin(Math.PI * (d - 0.5) / 4.5) * (0.9 + rng() * 0.2);
+          else if(d > 4 && d < 12) p = dip + (1 - dip) * (d - 4) / 8;
+          else p = 1;
+        } else {
+          if(d >= 1 && d <= 6) p = 1 - 0.12 * Math.sin(Math.PI * d / 7);
+          else if(d > 6) p = Math.min(0.99, 0.88 + (d - 6) * 0.008);
+        }
+      } else {
+        if(rush <= 20){
+          if(d >= 1 && d <= 3) p = 1 - 0.02 * Math.sin(Math.PI * d / 4);
+        } else if(rush <= 40){
+          if(d >= 1 && d <= 5) p = 1 - 0.15 * Math.sin(Math.PI * d / 6);
+          else if(d > 5) p = 0.85 + Math.min(0.1, (d - 5) * 0.006);
+        } else {
+          if(d < 2) p = 1;
+          else if(d < 8) p = Math.max(0.02, 1 - (d - 1) * 0.16 - rng() * 0.04);
+          else p = Math.max(0.02, 0.06 - d * 0.001);
+        }
+      }
+      days.push(Math.max(0.02, Math.min(1.05, p)));
+    }
+    const crashed = model === 'algo' && rush > 40;
+    const hurt = model === 'reserve' && rush > 60;
+
+    let verdict;
+    if(model === 'reserve' && !hurt){
+      verdict = '✅ Набег ' + rush + '% отбит: мгновенно ликвидной части резервов хватило. Номинал просел незначительно и вернулся к доллару. Запас прочности обеспеченной модели — около 60% оттока.';
+    } else if(model === 'reserve' && hurt){
+      verdict = '⚠️ Набег ' + rush + '% пробил мгновенную ликвидность: бумаги продавались 3 дня, номинал просел к 0.88 и восстанавливался неделю. Модель выжила, но с шрамом доверия: часть владельцев вышла в минус.';
+    } else if(model === 'algo' && rush <= 20){
+      verdict = '✅ Набег ' + rush + '% поглощён: балансир выкупил лишние монеты, номинал почти не дрогнул. Пока верят в балансир — конструкция работает.';
+    } else if(model === 'algo' && !crashed){
+      verdict = '⚠️ Набег ' + rush + '% расшатал связку: балансира напечатали столько, что он подешевел вдвое. Номинал просел к 0.85 и восстановился лишь частично. Запас веры — конечен.';
+    } else {
+      verdict = '💀 Набег ' + rush + '% запустил спираль: монеты сдают → балансир печатается → балансир дешевеет → стейбл дешевеет → сдают ещё быстрее. За неделю номинал обнулился. Знаменитый «обрыв в ноль» — не злой рок, а встроенное свойство конструкции.';
+    }
+
+    document.getElementById('art3_out').innerHTML =
+      artCanvas(wid, 220) +
+      '<div style="margin-top:10px;background:#040714;border-left:3px solid ' + (crashed ? 'var(--bad)' : (hurt ? 'var(--warn)' : 'var(--ok)')) + ';border-radius:8px;padding:12px 14px;font-size:13px;color:var(--txt);line-height:1.6">' + verdict + '</div>' +
+      '<div id="art3_q" style="margin-top:12px"></div>';
+
+    const cv = document.getElementById(wid + '_cv');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, pad = 34;
+    artAxes(ctx, W, H, pad);
+    // линия номинала
+    ctx.strokeStyle = 'rgba(255,255,255,.25)';
+    ctx.setLineDash([5, 5]);
+    const y1 = H - pad - (H - 2 * pad) * (1 - 0) / 1.05;
+    ctx.beginPath(); ctx.moveTo(pad, y1); ctx.lineTo(W - pad, y1); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('номинал $1.00', pad + 6, y1 - 6);
+    ctx.fillText('$0', 8, H - pad + 4);
+    ctx.fillText('день 30', W - pad - 40, H - 12);
+    const pts = days.map(function(p, d){
+      return [pad + (W - 2 * pad) * d / 29, H - pad - (H - 2 * pad) * p / 1.05];
+    });
+    artLine(ctx, pts, crashed ? '#F43F5E' : (hurt ? '#F59E0B' : '#22C55E'), 2.5);
+
+    if(!st.answered && (st.run.reserve || st.run.algo)){
+      const qBox = document.getElementById('art3_q');
+      qBox.innerHTML =
+        '<div style="background:#090d1f;border:1px solid var(--acc1);border-radius:10px;padding:14px">' +
+          '<div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:10px">❓ Мини-вопрос. Какой резерв выдержит набег в 60% без потери номинала?</div>' +
+          '<div style="display:flex;flex-direction:column;gap:8px">' +
+            artBtn('105% резерв, но 40% — в бумагах, которые продаются 3 дня', ' data-a="0"') +
+            artBtn('100% резерв в активах, которые продаются мгновенно', ' data-a="1"') +
+            artBtn('Любой — главное, чтобы отчёт аудитора выглядел убедительно', ' data-a="2"') +
+          '</div><div id="art3_qfb" style="margin-top:10px"></div>' +
+        '</div>';
+      qBox.querySelectorAll('[data-art-choice]').forEach(function(b){
+        b.onclick = function(){
+          const a = b.getAttribute('data-a');
+          qBox.querySelectorAll('[data-art-choice]').forEach(function(x){ x.disabled = true; x.style.opacity = .55; });
+          b.style.opacity = 1;
+          const fb = document.getElementById('art3_qfb');
+          if(a === '1'){
+            b.classList.add('ok');
+            st.answered = true;
+            fb.innerHTML = '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">✅ Верно. Набег идёт в реальном времени: платить нужно сейчас, а не через 3 дня. Резерв ценен не процентом в отчёте, а скоростью превращения в деньги.</div>';
+            maybeFinal();
+          } else {
+            b.classList.add('bad');
+            fb.innerHTML = '<div style="font-size:12.5px;color:var(--txt);line-height:1.55">❌ ' + (a === '0' ? 'Именно эта конструкция и просела в твоём прогоне: пока бумаги продавались, номинал падал. Ликвидность резерва важнее его размера.' : 'Отчёт — это слова о резерве. Набег проверяет сам резерв: можно ли его продать прямо сейчас.') + ' Попробуй другой вариант.</div>';
+            qBox.querySelectorAll('[data-art-choice]').forEach(function(x){ x.disabled = false; x.style.opacity = 1; });
+          }
+        };
+      });
+    } else {
+      maybeFinal();
+    }
+  }
+
+  function maybeFinal(){
+    if(st.run.reserve && st.run.algo && st.answered){
+      const passed = true;
+      artMark(wid, 2, passed);
+      const ctrl = document.createElement('div');
+      ctrl.innerHTML = artFinal(wid,
+        '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">⚖️ Разбор: две модели, две судьбы</div>' +
+        '<div style="font-size:13px;color:var(--txt);line-height:1.7">' +
+          '1. Обеспеченный стейблкоин держится на <b>ликвидности резерва</b>, а не на его размере: 105% в «медленных» бумагах хуже, чем 100% в мгновенных.<br>' +
+          '2. Алгоритмический держится на <b>вере в балансир</b>. Вера кончается быстрее, чем печатный станок успевает печатать — отсюда обрыв в ноль, а не «просадка».<br>' +
+          '3. Вопрос «потеряет ли стейблкоин доллар» — это вопрос не «если», а «при каком набеге». У каждой модели есть свой порог.' +
+        '</div>') + artAgain(wid);
+      stage.appendChild(ctrl);
+      artRefreshHeaderBadge(box, wid);
+    }
+  }
+  screen();
+}
+
+
+/* ---------- ART-4. «NFT: выпустил — теперь продай» ----------
+   Создай коллекцию, выставь цену против видимой лестницы заявок.
+   Итог: «оценка» против реально полученных денег и времени ожидания. */
+function ART_render_widget_art_nft_market(box){
+  if(!box) return;
+  const wid = 'widget_art_nft_market';
+  const stage = artShell(box, wid, '🖼️', 'NFT: выпустил — теперь продай',
+    'Выпусти коллекцию и попробуй продать один экземпляр. Перед тобой честная лестница заявок покупателей. Посмотрим, сколько из «оценки площадки» превратится в деньги.');
+
+  const st = { step: 0, copies: 100, rare: true, bestBid: 3, ladder: [] };
+
+  function step(){
+    if(st.step === 0){
+      stage.innerHTML =
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Этап 1. Конструктор коллекции</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);margin-bottom:6px">Число копий</div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px" id="art4_copies">' +
+          [10, 100, 1000].map(function(n){ return artChip(n + ' копий', n === 100, ' data-n="' + n + '"'); }).join('') +
+        '</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);margin-bottom:6px">Редкость</div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="art4_rare">' +
+          artChip('✨ 5% экземпляров редкие', true, ' data-r="1"') +
+          artChip('⬜ Все одинаковые', false, ' data-r="0"') +
+        '</div>' +
+        '<button class="btn sm" id="art4_mint">🪙 Выпустить коллекцию</button>';
+      stage.querySelectorAll('#art4_copies [data-art-chip]').forEach(function(ch){
+        ch.onclick = function(){
+          stage.querySelectorAll('#art4_copies [data-art-chip]').forEach(function(x){ x.classList.remove('active'); });
+          ch.classList.add('active'); st.copies = parseInt(ch.getAttribute('data-n'));
+        };
+      });
+      stage.querySelectorAll('#art4_rare [data-art-chip]').forEach(function(ch){
+        ch.onclick = function(){
+          stage.querySelectorAll('#art4_rare [data-art-chip]').forEach(function(x){ x.classList.remove('active'); });
+          ch.classList.add('active'); st.rare = ch.getAttribute('data-r') === '1';
+        };
+      });
+      document.getElementById('art4_mint').onclick = function(){ st.step = 1; step(); };
+    } else if(st.step === 1){
+      const rng = mulberry32(artSeedFrom('nft' + st.copies + st.rare));
+      st.bestBid = st.copies <= 10 ? 8 : (st.copies <= 100 ? 3 : 0.4);
+      st.ladder = [st.bestBid];
+      for(let i = 1; i < 5; i++) st.ladder.push(Math.max(0.1, st.ladder[i - 1] * (0.75 + rng() * 0.1)));
+      const est = Math.round(st.bestBid * (st.rare ? 14 : 10) + rng() * st.bestBid * 2);
+      stage.innerHTML =
+        '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Этап 2. Площадка открыта</div>' +
+        '<div style="background:#040714;border-radius:10px;padding:14px;margin-bottom:12px">' +
+          '<div style="font-size:13px;color:var(--txt);margin-bottom:8px">🖼️ Коллекция: <b>' + st.copies + ' копий</b>' + (st.rare ? ' · ✨ есть редкие' : ' · все одинаковые') + '</div>' +
+          '<div style="font-size:12.5px;color:var(--mut);margin-bottom:10px">Алгоритм площадки показывает «оценку»: <b style="color:var(--acc2);font-family:var(--mono);font-size:15px">' + est + '</b> усл. ед. за экземпляр. Внизу — все реальные заявки покупателей, которые существуют прямо сейчас:</div>' +
+          '<div style="display:flex;flex-direction:column;gap:6px">' +
+          st.ladder.map(function(b, i){
+            const w = 100 - i * 18;
+            return '<div style="display:flex;align-items:center;gap:10px"><div style="width:' + w + '%;height:22px;border-radius:6px;background:rgba(56,189,248,' + (0.35 - i * 0.06) + ');display:flex;align-items:center;padding:0 10px;font-family:var(--mono);font-size:12px;color:var(--txt);font-weight:800;transition:width .3s">' + b.toFixed(1) + '</div><span style="font-size:11px;color:var(--mut)">' + (i === 0 ? 'лучшая заявка' : 'заявка ' + (i + 1)) + '</span></div>';
+          }).join('') + '</div>' +
+        '</div>' +
+        '<div style="font-size:12.5px;color:var(--mut)">Твоя цена продажи (усл. ед.)' + artSlider('art4_price', 1, 50, 10, 0.5, "function(v){return (+v).toLocaleString('ru-RU')}") + '</div>' +
+        '<button class="btn sm" id="art4_sell">📤 Выставить на продажу</button>' +
+        '<div id="art4_out" style="margin-top:12px"></div>';
+      document.getElementById('art4_sell').onclick = function(){
+        sell(parseFloat(document.getElementById('art4_price').value), est);
+      };
+    }
+  }
+
+  function sell(price, est){
+    const rng = mulberry32(artSeedFrom('sale' + price + st.copies + st.rare));
+    const best = st.bestBid;
+    let outcome, got = 0, wait = 0, color = 'var(--ok)';
+    if(price <= best){
+      got = best; wait = 0;
+      outcome = '⚡ <b>Мгновенная продажа.</b> Заявка покупателя уже стояла в лестнице — сделка прошла по <b>его цене ' + best.toFixed(1) + '</b>, а не по твоей ' + price.toLocaleString('ru-RU') + '. Ты получил деньги сразу, но ровно столько, сколько рынок был готов отдать.';
+    } else if(st.rare && price <= best * 2.5){
+      wait = 3 + Math.floor(rng() * 6);
+      const premium = Math.min(price, best * (1.5 + rng() * 0.4));
+      got = premium;
+      outcome = '✨ <b>Продано через ' + wait + ' дн.</b> Появился коллекционер, которому нужен именно редкий экземпляр — он дал премию и купил за <b>' + premium.toFixed(1) + '</b>. Редкость работает, но покупателя пришлось ждать.';
+    } else if(price <= best * 1.4){
+      wait = 4 + Math.floor(rng() * 5);
+      const drop = 0.75 + rng() * 0.15;
+      got = best * drop;
+      outcome = '⏳ <b>' + wait + ' дней ожидания.</b> Пока твой лот висел, интерес к коллекции остыл: лучшая заявка опустилась с ' + best.toFixed(1) + ' до ' + got.toFixed(1) + '. Продал — но дешевле, чем мог в первый день. Цена ожидания оказалась отрицательной.';
+      color = 'var(--warn)';
+    } else {
+      wait = 14; got = 0;
+      outcome = '🕸️ <b>14 дней тишины.</b> Твоя цена висела над лестницей заявок, как воздушный шар над землёй. Покупателей нет: оценка площадки светится, но денег она не создаёт. Ты снял лот ни с чем.';
+      color = 'var(--bad)';
+    }
+    const passed = true;
+    artMark(wid, got > 0 ? 2 : 1, passed);
+    document.getElementById('art4_out').innerHTML =
+      '<div style="background:#040714;border-left:3px solid ' + color + ';border-radius:8px;padding:12px 14px;font-size:13px;color:var(--txt);line-height:1.65">' + outcome + '</div>' +
+      artFinal(wid,
+        '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">🧾 Счёт к продаже</div>' +
+        '<div style="font-size:13px;color:var(--txt);line-height:1.8">' +
+          '«Оценка» площадки: <b>' + est + '</b> усл. ед.<br>' +
+          'Реально получено: <b style="color:' + (got > 0 ? 'var(--ok)' : 'var(--bad)') + '">' + (got > 0 ? got.toFixed(1) : '0') + '</b> усл. ед.<br>' +
+          'Время ожидания: <b>' + (wait === 0 ? 'мгновенно' : wait + ' дн.') + '</b>' +
+        '</div>' +
+        '<div style="margin-top:12px;font-size:13px;color:var(--mut);line-height:1.65;border-top:1px dashed var(--line);padding-top:10px">' +
+          'Вывод: <b style="color:var(--txt)">владение ≠ ликвидность</b>. Цифра «оценки» — это желания продавцов; деньги — только лестница заявок. Помни пример из урока: «оценка 50 против лучшей заявки 3» — реальна только тройка. Редкость помогает, но и она ищет покупателя днями.' +
+        '</div>') +
+      artAgain(wid);
+    artRefreshHeaderBadge(box, wid);
+  }
+  step();
+}
+
+
+/* ---------- ART-5. «Одно предложение — три судьбы» ----------
+   Голосование держателей: 3 раунда, кворум, делегирование,
+   попытка купить голос перед вредоносным раундом. */
+const ART5_SHARES = { you: 4, whale: 30, team: 15, retail: 51 }; // % голосов
+
+function ART_render_widget_art_dao_vote(box){
+  if(!box) return;
+  const wid = 'widget_art_dao_vote';
+  const stage = artShell(box, wid, '🏛️', 'Одно предложение — три судьбы',
+    'Ты держишь 12 000 токенов проекта — это 4% голосов. Три раунда голосований: от безобидного до вредоносного. Решай сам: голосовать, делегировать или воздержаться — и смотри, чем кончается каждое решение.');
+
+  const st = { round: 0, delegated: false, refusedBribe: false, votedAgainstR3: false, log: [] };
+
+  const ROUNDS = [
+    {
+      title: 'Раунд 1. Повышение комиссии казны с 0,5% до 0,7%',
+      desc: 'Безобидное: деньги — на ремонт узлов и серверы. Киты «за», команда «за», розница равнодушна.',
+      kind: 'mild'
+    },
+    {
+      title: 'Раунд 2. Новые правила наград',
+      desc: 'Спорное: награды перераспределяются в пользу крупных держателей. Розница против — но апатична: на голосование приходит лишь 8% из её 51%.',
+      kind: 'tricky'
+    },
+    {
+      title: 'Раунд 3. Вывод 40% казны «на маркетинг»',
+      desc: 'Вредоносное: крупный держатель Г. предлагает перевести 40% казны в фирму, которую контролирует сам. Накануне тебе приходит личное сообщение: «продай свой голос за 0,5% токенов сверху».',
+      kind: 'evil'
+    }
+  ];
+
+  function shareBar(turnout){
+    const rows = [
+      { k: 'you', n: 'Ты', c: 'var(--acc2)' },
+      { k: 'whale', n: 'Кит Г.', c: 'var(--bad)' },
+      { k: 'team', n: 'Команда', c: 'var(--warn)' },
+      { k: 'retail', n: 'Розница', c: 'rgba(255,255,255,.4)' }
+    ];
+    return '<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">' +
+      rows.map(function(r){
+        const v = turnout[r.k];
+        return '<div style="display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--mut)"><span style="width:70px">' + r.n + '</span><div style="flex:1;height:14px;border-radius:5px;background:rgba(255,255,255,.05);overflow:hidden"><div style="width:' + v + '%;height:100%;background:' + r.c + ';transition:width .3s"></div></div><b style="font-family:var(--mono);width:52px;text-align:right;color:var(--txt)">' + v + '%</b></div>';
+      }).join('') +
+      '<div style="font-size:11px;color:var(--mut)">Кворум: 20% от всех голосов</div></div>';
+  }
+
+  function round(){
+    const R = ROUNDS[st.round];
+    const base = { you: 0, whale: 30, team: 15, retail: st.round === 0 ? 20 : (st.round === 1 ? 8 : 14) };
+    stage.innerHTML =
+      '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">' + R.title + '</div>' +
+      '<div style="font-size:12.5px;color:var(--mut);line-height:1.55;margin-bottom:12px">' + R.desc + '</div>' +
+      '<div style="font-size:11.5px;color:var(--mut);margin-bottom:4px">Участие групп без твоего решения:</div>' +
+      shareBar(base) +
+      '<div id="art5_bribe"></div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px" id="art5_opts">' +
+        artBtn('🗳️ Проголосовать <b>' + (R.kind === 'evil' ? 'против' : 'за') + '</b> (мои 4%)', ' data-a="vote"') +
+        (st.round === 0 ? artBtn('🤝 Делегировать голос команде — «они разбираются»', ' data-a="delegate"') : '') +
+        artBtn('🙈 Воздержаться — «мои 4% ничего не решают»', ' data-a="skip"') +
+      '</div><div id="art5_fb" style="margin-top:12px"></div>';
+
+    if(R.kind === 'evil' && !st.refusedBribe){
+      document.getElementById('art5_bribe').innerHTML =
+        '<div style="background:rgba(244,63,94,.08);border:1px solid var(--bad);border-radius:10px;padding:12px 14px;margin-bottom:12px">' +
+          '<div style="font-size:12.5px;color:var(--txt);line-height:1.55;margin-bottom:8px">📩 <b>Личное сообщение от кита Г.:</b> «Дружище, проголосуй как надо или просто не мешай — отблагодарю 0,5% токенов. Никто не узнает».</div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+            '<button class="btn sm ghost" id="art5_bribe_yes" style="border-color:var(--bad)">💰 Принять предложение</button>' +
+            '<button class="btn sm" id="art5_bribe_no">🚩 Отказаться — это покупка голосов</button>' +
+          '</div><div id="art5_bribe_fb" style="margin-top:8px"></div>' +
+        '</div>';
+      document.getElementById('art5_bribe_no').onclick = function(){
+        st.refusedBribe = true;
+        document.getElementById('art5_bribe_fb').innerHTML =
+          '<div style="font-size:12.5px;color:var(--ok);line-height:1.55">✅ Верно распознано: предложение «продай голос» — это покупка голосов, красный флаг уровня урока 0.19. Если голоса покупаются — управление проектом фикция, и твои токены стоят ровно столько, сколько продержится видимость.</div>';
+        document.getElementById('art5_bribe_yes').disabled = true;
+        document.getElementById('art5_bribe_no').disabled = true;
+        document.getElementById('art5_bribe_yes').style.opacity = .5;
+      };
+      document.getElementById('art5_bribe_yes').onclick = function(){
+        document.getElementById('art5_bribe_fb').innerHTML =
+          '<div style="font-size:12.5px;color:var(--bad);line-height:1.55">💸 Принято. +0,5% токенов… проекта, который через час потеряет 40% казны. Твоя «премия» обесценилась быстрее, чем ты её получил. Запомни вкус этой сделки — так продаются все управляемые проекты.</div>';
+        document.getElementById('art5_bribe_yes').disabled = true;
+        document.getElementById('art5_bribe_no').disabled = true;
+        document.getElementById('art5_bribe_no').style.opacity = .5;
+      };
+    }
+
+    stage.querySelectorAll('#art5_opts [data-art-choice]').forEach(function(b){
+      b.onclick = function(){
+        stage.querySelectorAll('#art5_opts [data-art-choice]').forEach(function(x){ x.disabled = true; x.style.opacity = .55; });
+        b.style.opacity = 1;
+        resolve(R, b.getAttribute('data-a'));
+      };
+    });
+  }
+
+  function resolve(R, act){
+    let turnout = { you: 0, whale: 30, team: 15, retail: 0 }, fb, color = 'var(--acc2)';
+    if(st.round === 0){
+      turnout.retail = 20;
+      if(act === 'vote'){ turnout.you = 4; fb = '✅ Прошло: 69% «за». Твой голос не был решающим — но участие в безобидных раундах держит тебя в курсе и даёт репутацию. Точно понял, что именно подписываешь.'; }
+      else if(act === 'delegate'){ st.delegated = true; fb = '🤝 Делегировано команде. Удобно… но запомни: <b>твои 4% теперь голосуют без тебя</b> — во всех следующих раундах, включая те, о которых ты не узнаешь.'; color = 'var(--warn)'; }
+      else { fb = '🙈 Воздержался. Прошло и без тебя: 65% «за». В безобидном раунде — допустимо. Но привычка «мой голос ничего не решает» — ровно то, на чём играют крупные держатели.'; color = 'var(--warn)'; }
+      st.log.push('Р1: комиссия 0,7% принята' + (st.delegated ? ', голос делегирован команде' : ''));
+    } else if(st.round === 1){
+      turnout.retail = 8;
+      if(st.delegated){
+        fb = '⚠️ Сюрприз: твои 4% уже у команды — а команда «за» вместе с китами. Решение, невыгодное рознице (то есть тебе), прошло <b>в том числе твоим голосом</b>. Делегирование — это не «доверие профессионалам», это подпись вслепую.';
+        color = 'var(--bad)';
+      } else if(act === 'vote'){ turnout.you = 4; turnout.retail = 12; fb = '🗳️ Ты против. Итог: 45% «за» киты+команда против 16% «против» — прошло, но розница увидела, что кто-то считает. Следующий раунд соберёт больше явки.'; }
+      else { fb = '🙈 Воздержался. Розница сонная (8% явки), киты с командой провели свои правила: 45% «за» при кворуме 53%. Проект стал чуть более «для своих».'; color = 'var(--warn)'; }
+      st.log.push('Р2: награды переписаны под крупных' + (st.delegated ? ' — твоим делегированным голосом' : ''));
+    } else {
+      turnout.retail = 14;
+      if(st.delegated){
+        fb = '💀 Твои 4% голосуют «за» вместе с командой — ведь делегат не спрашивает. Кит Г., команда и твой голос: 49% «за». Казна лишилась 40% «на маркетинг» фирме кита. Токен упал на 70% за ночь. Ты даже не нажимал кнопку.';
+        color = 'var(--bad)';
+      } else if(act === 'vote' && st.refusedBribe){
+        turnout.you = 4; turnout.retail = 18;
+        st.votedAgainstR3 = true;
+        fb = '🛡️ Ты против — и твой пример разбудил розницу (явка выросла с 8% до 18%). «За» только кит с частью команды: 38%. Не хватило ни перевеса, ни легитимности. Предложение отклонено, попытка покупки голосов — в публичном журнале. Казна цела.';
+        color = 'var(--ok)';
+      } else if(act === 'vote'){
+        turnout.you = 4; turnout.retail = 18;
+        fb = '🗳️ Ты против, розница подтянулась: «за» 38% против 22%. Отклонено. Но тишина насчёт «личного сообщения» осталась твоей маленькой этической занозой.';
+        color = 'var(--ok)';
+      } else {
+        fb = '💀 Воздержался. Кит + команда = 45% «за» при апатичной рознице — кворум собран, предложение прошло. 40% казны ушло «на маркетинг». Токен −70% за ночь. Твои 4%, которые «ничего не решали», как раз были недостающим весом.';
+        color = 'var(--bad)';
+      }
+      st.log.push('Р3: ' + (color === 'var(--ok)' ? 'вывод казны отклонён' : 'казна лишилась 40%, токен −70%'));
+    }
+    document.getElementById('art5_fb').innerHTML =
+      '<div style="font-size:11.5px;color:var(--mut);margin-bottom:6px">Участие с твоим решением:</div>' +
+      shareBar(turnout) +
+      '<div style="background:#040714;border-left:3px solid ' + color + ';border-radius:8px;padding:12px 14px;font-size:13px;color:var(--txt);line-height:1.65">' + fb + '</div>' +
+      '<button class="btn sm" style="margin-top:12px" id="art5_next">' + (st.round < 2 ? 'Следующий раунд ➔' : 'Итоги ➔') + '</button>';
+    document.getElementById('art5_next').onclick = function(){
+      st.round++;
+      if(st.round < 3) round(); else final();
+    };
+  }
+
+  function final(){
+    const passed = st.refusedBribe && st.votedAgainstR3;
+    artMark(wid, passed ? 3 : 1, passed);
+    stage.innerHTML = artFinal(wid,
+      '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">' + (passed ? '🏛️ Управление выстояло' : '🏛️ Разбор трёх судеб') + '</div>' +
+      '<div style="font-size:13px;color:var(--txt);line-height:1.7">' +
+        st.log.map(function(l){ return '• ' + l; }).join('<br>') +
+      '</div>' +
+      '<div style="margin-top:12px;font-size:13px;color:var(--mut);line-height:1.65;border-top:1px dashed var(--line);padding-top:10px">' +
+        '1. Правила записаны в коде, но <b style="color:var(--txt)">пишут их люди с интересами</b> — читай каждое предложение, как договор.<br>' +
+        '2. Делегирование — это подпись вслепую: удобно в тихие дни, смертельно в важные.<br>' +
+        '3. «Мои 4% ничего не решают» — миф, который оплачивают крупные держатели: именно сонная розница делает кворум для вредоносных раундов.<br>' +
+        '4. Предложение «продай голос» — не бонус, а диагноз: проект, где покупают голоса, уже продан.' +
+      '</div>') + artAgain(wid);
+    if(passed) artRefreshHeaderBadge(box, wid);
+  }
+  round();
+}
+
+
+/* ---------- ART-6. «Оракул врёт?» ----------
+   Поставщик цены для контракта залога. Три режима потока:
+   честная цена / задержка 60 сек / искажение свечой. */
+function ART_render_widget_art_oracle_feed(box){
+  if(!box) return;
+  const wid = 'widget_art_oracle_feed';
+  const stage = artShell(box, wid, '📡', 'Оракул врёт?',
+    'Ты — поставщик цены для контракта залога: по твоей цифре контракт решает, кого ликвидировать. Выбери режим потока, нажми «падение рынка» — и смотри, что видит контракт на самом деле. Прогони все три режима.');
+
+  const st = { mode: 'honest', tested: { honest: false, delay: false, wick: false } };
+  const MODES = [
+    { id: 'honest', name: '✅ Честная цена биржи', desc: 'контракт видит цену как есть' },
+    { id: 'delay', name: '🐢 Задержка 60 секунд', desc: 'контракт видит цену минутной давности' },
+    { id: 'wick', name: '🕯️ Искажение большой свечой', desc: 'один толстый приказ на тонком рынке на 2 секунды уносит цену на −25%' }
+  ];
+
+  function screen(){
+    stage.innerHTML =
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">' +
+        MODES.map(function(m){
+          const done = st.tested[m.id];
+          return artChip((done ? '✓ ' : '') + m.name, st.mode === m.id, ' data-m="' + m.id + '"');
+        }).join('') +
+      '</div>' +
+      '<div style="background:#040714;border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--mut);line-height:1.55;margin-bottom:12px">' +
+        MODES.find(function(m){ return m.id === st.mode; }).desc +
+      '</div>' +
+      '<button class="btn sm" id="art6_run">▶️ Запустить поток (30 секунд торгов)</button>' +
+      '<div id="art6_out" style="margin-top:12px"></div>';
+    stage.querySelectorAll('[data-art-chip]').forEach(function(ch){
+      ch.onclick = function(){ st.mode = ch.getAttribute('data-m'); screen(); };
+    });
+    document.getElementById('art6_run').onclick = function(){ run(st.mode); };
+  }
+
+  function run(mode){
+    const rng = mulberry32(artSeedFrom('oracle' + mode));
+    // реальная цена: 30 тиков, крах на тике 14 (−18% за 3 тика), восстановление к концу
+    const real = [];
+    let p = 100;
+    for(let t = 0; t < 30; t++){
+      p += (rng() - 0.5) * 0.8;
+      if(t >= 14 && t <= 16) p -= 6.2 + rng();
+      if(t >= 24) p += 1.2;
+      real.push(p);
+    }
+    // цена контракта по режиму
+    const seen = real.map(function(v, t){
+      if(mode === 'delay') return t >= 2 ? real[t - 2] : real[0];
+      if(mode === 'wick' && (t === 15)) return real[t] * 0.75;
+      if(mode === 'wick' && (t === 16)) return real[t] * 0.92;
+      return v;
+    });
+    st.tested[mode] = true;
+
+    let verdict, color;
+    if(mode === 'honest'){
+      verdict = '✅ Падение отработано штатно: контракт видел реальную цену, ликвидации прошли по настоящим уровням. Залоговый фонд в порядке, невинные не пострадали.';
+      color = 'var(--ok)';
+    } else if(mode === 'delay'){
+      const late = Math.abs(real[15] - seen[15]).toFixed(1);
+      verdict = '⚠️ В момент падения контракт видел цену минутной давности — выше реальной на ' + late + '. Ликвидации начались, когда реальная цена была уже глубоко ниже: залоговый фонд недосчитался, часть долгов повисла без покрытия. <b>Слишком поздно.</b>';
+      color = 'var(--warn)';
+    } else {
+      verdict = '💥 Одна большая свеча на тонком рынке уронила цену потока на −25% на две секунды. Контракт ликвидировал <b>здоровые позиции</b>, которые при честной цене были в полном порядке. Через минуту цена вернулась — а позиции уже не вернуть. <b>Слишком рано и по ложному сигналу.</b>';
+      color = 'var(--bad)';
+    }
+
+    document.getElementById('art6_out').innerHTML =
+      artCanvas(wid, 230) +
+      '<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--mut);margin-top:6px">' +
+        '<span>— <span style="color:#38BDF8">реальная цена</span></span>' +
+        '<span>— <span style="color:#F59E0B">цена, которую видит контракт</span></span>' +
+      '</div>' +
+      '<div style="margin-top:10px;background:#040714;border-left:3px solid ' + color + ';border-radius:8px;padding:12px 14px;font-size:13px;color:var(--txt);line-height:1.6">' + verdict + '</div>' +
+      '<div id="art6_more" style="margin-top:12px"></div>';
+
+    const cv = document.getElementById(wid + '_cv');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, pad = 34;
+    artAxes(ctx, W, H, pad);
+    const lo = Math.min(Math.min.apply(null, real), Math.min.apply(null, seen)) - 2;
+    const hi = Math.max(Math.max.apply(null, real), Math.max.apply(null, seen)) + 2;
+    function xy(arr){
+      return arr.map(function(v, t){
+        return [pad + (W - 2 * pad) * t / 29, H - pad - (H - 2 * pad) * (v - lo) / (hi - lo)];
+      });
+    }
+    artLine(ctx, xy(real), '#38BDF8', 2);
+    artLine(ctx, xy(seen), '#F59E0B', 2.5);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('сек 30', W - pad - 34, H - 12);
+
+    const more = document.getElementById('art6_more');
+    if(st.tested.honest && st.tested.delay && st.tested.wick){
+      const passed = true;
+      artMark(wid, 3, passed);
+      more.innerHTML = artFinal(wid,
+        '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">📡 Итог: почему проекты платят за несколько источников</div>' +
+        '<div style="font-size:13px;color:var(--txt);line-height:1.7">' +
+          '1. Один источник = одна точка отказа: запаздывание превращает ликвидации в опоздания, а манипуляция тонким рынком — в грабёж невинных.<br>' +
+          '2. Решение индустрии: <b>несколько независимых источников и среднее по ним</b> (обычно медиана). Одна врёт — остальные вытягивают.<br>' +
+          '3. Всякий раз, когда урок 4.9 говорит «расчёт по цене оракула», задавай вопрос: <b>чьи это глаза и как быстро они моргают?</b>' +
+        '</div>') + artAgain(wid);
+      artRefreshHeaderBadge(box, wid);
+    } else {
+      const left = MODES.filter(function(m){ return !st.tested[m.id]; }).map(function(m){ return m.name; }).join(' · ');
+      more.innerHTML = '<div style="font-size:12px;color:var(--mut)">Осталось прогнать: ' + left + '</div>' +
+        '<button class="btn sm ghost" style="margin-top:8px" id="art6_back">↩ К выбору режима</button>';
+      document.getElementById('art6_back').onclick = function(){ screen(); };
+    }
+  }
+  screen();
+}
+
+
+/* ---------- ART-7. «Собери торгового бота» ----------
+   Выпускной конструктор: 7 слотов конвейера × 3 варианта.
+   Симуляция года торговли с двумя кризисами. Экзамен курса. */
+const ART7_SLOTS = [
+  { name: 'Источник идеи', icon: '💡', lesson: 'урок 1.6', opts: [
+    { t: 'Своя гипотеза, проверенная на данных', q: 2 },
+    { t: '«Все так торгуют» — возьму популярное', q: 1 },
+    { t: 'Стратегия из телеграм-канала', q: 0 } ] },
+  { name: 'Данные', icon: '🗄️', lesson: 'уроки 1.7–1.8', opts: [
+    { t: 'Чистые, с проверкой на дыры и сдвиги', q: 2 },
+    { t: 'Сырые, как отдала биржа', q: 1 },
+    { t: 'Красивый скриншот из обзора', q: 0 } ] },
+  { name: 'Правило входа', icon: '🎯', lesson: 'уроки 1.9–1.10', opts: [
+    { t: 'Проверено на данных, которые стратегия не видела', q: 2 },
+    { t: 'Один честный бэктест без подгонки', q: 1 },
+    { t: 'Подогнано под историю до красивой кривой', q: 0 } ] },
+  { name: 'Размер позиции', icon: '⚖️', lesson: 'урок 3.3', opts: [
+    { t: 'По правилу риска: доля капитала по формуле', q: 2 },
+    { t: 'Фиксированная сумма «на глаз»', q: 1 },
+    { t: 'По ощущению уверенности в сделке', q: 0 } ] },
+  { name: 'Исполнение', icon: '🛡️', lesson: 'уроки 4.4–4.5', opts: [
+    { t: 'Защитные приказы стоят всегда', q: 2 },
+    { t: 'Защитные приказы — когда не забуду', q: 1 },
+    { t: 'Остановлю руками, если что', q: 0 } ] },
+  { name: 'Предохранители', icon: '🛑', lesson: 'уроки 4.2, 4.4', opts: [
+    { t: 'Аварийная кнопка + дневные лимиты потерь', q: 2 },
+    { t: 'Лимит потерь есть, кнопки нет', q: 1 },
+    { t: '«Присмотрю сам, я рядом»', q: 0 } ] },
+  { name: 'Оценка результата', icon: '📓', lesson: 'уроки 5.5, П8', opts: [
+    { t: 'Качество процесса по журналу', q: 2 },
+    { t: 'Прибыль + общее настроение', q: 1 },
+    { t: 'Только прибыль, остальное лирика', q: 0 } ] }
+];
+
+function ART_render_widget_art_bot_assembler(box){
+  if(!box) return;
+  const wid = 'widget_art_bot_assembler';
+  const stage = artShell(box, wid, '🤖', 'Собери торгового бота',
+    'Выпускной конструктор курса. Семь слотов конвейера — в каждый выбери вариант. Потом твоя сборка пройдёт год торговли с двумя кризисами. Проходной балл: все семь слотов без критических ошибок.');
+  const st = { step: 0, picks: new Array(7).fill(-1) };
+
+  function step(){
+    const S = ART7_SLOTS[st.step];
+    stage.innerHTML = artStepper(7, st.step) +
+      '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:2px">' + S.icon + ' Слот ' + (st.step + 1) + ' из 7: ' + S.name + '</div>' +
+      '<div style="font-size:11.5px;color:var(--mut);margin-bottom:12px">чему учит: ' + S.lesson + '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px">' +
+        S.opts.map(function(o, i){ return artBtn(o.t, ' data-i="' + i + '"'); }).join('') +
+      '</div>';
+    stage.querySelectorAll('[data-art-choice]').forEach(function(b){
+      b.onclick = function(){
+        st.picks[st.step] = parseInt(b.getAttribute('data-i'));
+        st.step++;
+        if(st.step < 7) step(); else simulate();
+      };
+    });
+  }
+
+  function simulate(){
+    const qs = st.picks.map(function(p, i){ return ART7_SLOTS[i].opts[p].q; });
+    const criticals = qs.map(function(q, i){ return q === 0 ? i : -1; }).filter(function(i){ return i >= 0; });
+    const rng = mulberry32(artSeedFrom('bot' + st.picks.join(',')));
+    // месячная доходность: среднее по слотам влияет на ожидание
+    const meanQ = qs.reduce(function(a, b){ return a + b; }, 0) / 14; // 0..1
+    const base = 0.015 * meanQ - 0.012 * (1 - meanQ); // ожидание в месяц
+    let eq = [100];
+    let maxDD = 0, peak = 100, interventions = 0;
+    const crises = [4, 9]; // месяцы кризисов
+    const log = [];
+    for(let m = 1; m <= 12; m++){
+      let r = base + (rng() - 0.5) * 0.08;
+      if(crises.indexOf(m) !== -1){
+        r = -0.12 - rng() * 0.06;
+        // кризис бьёт по слабым слотам
+        let mult = 1;
+        if(qs[3] === 0) mult += 0.6; // размер по ощущению
+        if(qs[4] === 0) mult += 0.8; // нет защитных приказов
+        if(qs[5] === 0) mult += 1.0; // нет предохранителей
+        if(qs[5] === 2) mult -= 0.45;
+        r *= Math.max(0.25, mult);
+        if(qs[5] === 0){ interventions += 1; log.push({ m: m, t: '🚨 Кризис ' + (m === 4 ? '№1' : '№2') + ': предохранителей нет — ты вмешался руками в панике, зафиксировав дно.' }); }
+        else if(qs[5] === 2){ log.push({ m: m, t: '🛑 Кризис ' + (m === 4 ? '№1' : '№2') + ': сработали лимиты и аварийная кнопка — потери в рамках плана.' }); }
+        else { log.push({ m: m, t: '⚠️ Кризис ' + (m === 4 ? '№1' : '№2') + ': частичные лимиты сдержали удар, но без кнопки было тревожно.' }); }
+        if(qs[4] === 0){ interventions += 1; }
+      }
+      eq.push(eq[m - 1] * (1 + r));
+      peak = Math.max(peak, eq[m]);
+      maxDD = Math.max(maxDD, (peak - eq[m]) / peak);
+    }
+    const died = eq[12] < 45 || (criticals.length > 0 && maxDD > 0.55);
+    const endEq = died ? Math.min(eq[12], 38 + rng() * 10) : eq[12];
+    if(died){ eq = eq.map(function(v, i){ return v * Math.pow(endEq / eq[12], i / 12); }); }
+    const score = qs.reduce(function(a, b){ return a + b; }, 0);
+    const passed = criticals.length === 0;
+
+    stage.innerHTML =
+      '<div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px">Год торговли твоей сборки</div>' +
+      artCanvas(wid, 220) +
+      '<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-top:8px">' +
+        '<span>📈 Капитал: <b style="color:' + (endEq >= 100 ? 'var(--ok)' : 'var(--bad)') + '">' + Math.round(endEq) + '%</b> от старта</span>' +
+        '<span>📉 Макс. просадка: <b>' + Math.round(maxDD * 100) + '%</b></span>' +
+        '<span>🖐️ Ручных вмешательств: <b>' + interventions + '</b></span>' +
+      '</div>' +
+      '<div id="art7_log" style="margin-top:10px;display:flex;flex-direction:column;gap:6px">' +
+        log.map(function(e){
+          return '<div style="background:#040714;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--txt);line-height:1.5"><b style="color:var(--mut)">Месяц ' + e.m + '.</b> ' + e.t + '</div>';
+        }).join('') +
+      '</div>' +
+      '<div id="art7_debrief" style="margin-top:12px"></div>';
+
+    const cv = document.getElementById(wid + '_cv');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, pad = 34;
+    artAxes(ctx, W, H, pad);
+    const lo = Math.min.apply(null, eq) * 0.95, hi = Math.max.apply(null, eq) * 1.03;
+    const pts = eq.map(function(v, i){
+      return [pad + (W - 2 * pad) * i / 12, H - pad - (H - 2 * pad) * (v - lo) / (hi - lo)];
+    });
+    ctx.strokeStyle = 'rgba(255,255,255,.2)';
+    ctx.setLineDash([5, 5]);
+    const y100 = H - pad - (H - 2 * pad) * (100 - lo) / (hi - lo);
+    ctx.beginPath(); ctx.moveTo(pad, y100); ctx.lineTo(W - pad, y100); ctx.stroke();
+    ctx.setLineDash([]);
+    artLine(ctx, pts, died ? '#F43F5E' : (endEq >= 100 ? '#22C55E' : '#F59E0B'), 2.5);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('100%', 6, y100 - 4);
+    ctx.fillText('мес 12', W - pad - 34, H - 12);
+
+    document.getElementById('art7_debrief').innerHTML = artFinal(wid,
+      '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">' +
+        (passed ? '🏆 Экзамен сдан: балл ' + score + '/14' : '💀 Экзамен не сдан: ' + criticals.length + ' крит. ошибки, балл ' + score + '/14') + '</div>' +
+      '<div style="font-size:13px;color:var(--txt);line-height:1.8">' +
+        ART7_SLOTS.map(function(S, i){
+          const q = qs[i];
+          const mark = q === 2 ? '✅' : (q === 1 ? '🔶' : '❌');
+          return mark + ' <b>' + S.name + ':</b> ' + S.opts[st.picks[i]].t +
+            (q < 2 ? ' <span style="color:var(--mut);font-size:12px">— пересдай: ' + S.lesson + '</span>' : '');
+        }).join('<br>') +
+      '</div>' +
+      '<div style="margin-top:12px;font-size:13px;color:var(--mut);line-height:1.65;border-top:1px dashed var(--line);padding-top:10px">' +
+        (passed
+          ? 'Семь слотов без критических ошибок — это и есть «система против рук» из всего курса. Бот выжил в обоих кризисах не потому, что угадал рынок, а потому что каждый слот был защищён заранее.'
+          : 'Кривая честно показала цену слабых слотов: ' + (died ? 'сборка не пережила год.' : 'год пройден, но с ранами.') + ' Каждый слот выше — с ссылкой на урок, который учит именно ему. Пересобери и возвращайся.') +
+      '</div>') + artAgain(wid);
+    artMark(wid, score, passed);
+    if(passed) artRefreshHeaderBadge(box, wid);
+  }
+  step();
+}
+
+
+/* ---------- ART-8. «Токенизированный фонд: деньги доверяют тебе» ----------
+   10 млн условных, до 40 вкладчиков, 12 месяцев.
+   Обещанная доходность против рыночной реальности. */
+function ART_render_widget_art_fund_manager(box){
+  if(!box) return;
+  const wid = 'widget_art_fund_manager';
+  const stage = artShell(box, wid, '🏦', 'Токенизированный фонд: деньги доверяют тебе',
+    'Ты управляешь учебным ончейн-фондом: 10 млн условных рублей и 40 вкладчиков. Настрой условия, проживи 12 месяцев — и узнай, сколько доверия и денег осталось к концу года.');
+
+  function screen(){
+    stage.innerHTML =
+      '<div style="font-size:12.5px;color:var(--mut)">Обещанная доходность вкладчикам (годовых)' +
+        artSlider('art8_prom', 5, 60, 20, 1, "function(v){return v+'%'}") + '</div>' +
+      '<div style="font-size:12.5px;color:var(--mut)">Максимальная просадка стратегии' +
+        artSlider('art8_dd', 5, 50, 20, 1, "function(v){return v+'%'}") + '</div>' +
+      '<div style="font-size:12.5px;color:var(--mut)">Комиссия управляющего' +
+        artSlider('art8_fee', 0, 5, 2, 0.5, "function(v){return (+v)+'%'}") + '</div>' +
+      '<div style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.35);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--txt);line-height:1.55;margin:10px 0">' +
+        '💡 Подсказка из урока 5.2: обещание становится обязательством. Рынок про твои обещания не знает — годовая реальность стратегии будет ~8% плюс шум, какую бы цифру ты ни пообещал.' +
+      '</div>' +
+      '<button class="btn" id="art8_go" style="width:100%">▶️ Запустить год работы фонда</button>' +
+      '<div id="art8_out" style="margin-top:12px"></div>';
+    document.getElementById('art8_go').onclick = function(){
+      run(
+        parseInt(document.getElementById('art8_prom').value),
+        parseInt(document.getElementById('art8_dd').value),
+        parseFloat(document.getElementById('art8_fee').value)
+      );
+    };
+  }
+
+  function run(promised, maxDDpct, fee){
+    const rng = mulberry32(artSeedFrom('fund' + promised + maxDDpct + fee));
+    let aum = 100, investors = 40, reputation = 60, silenced = 0;
+    const aumPath = [100], invPath = [40];
+    const log = [];
+    for(let m = 1; m <= 12; m++){
+      const r = 0.08 / 12 + (rng() - 0.5) * (maxDDpct / 100) * 0.28;
+      aum *= (1 + r);
+      const expectM = promised / 100 / 12;
+      const gap = expectM - r;
+      let outflow = 0;
+      if(gap > 0.005) outflow += Math.min(6, Math.round(gap * 220));
+      if(r < -maxDDpct / 100 * 0.5){
+        const panic = 4 + Math.round(rng() * 5);
+        outflow += silenced > 0 ? panic * 2 : panic;
+        // развилка коммуникации
+        if(m <= 10){
+          const honest = (m + Math.floor(rng() * 2)) % 2 === 0;
+          if(honest){
+            outflow = Math.max(0, Math.round(outflow * 0.65));
+            reputation += 6;
+            log.push({ m: m, t: '📉 Просадка ' + Math.round(r * 100) + '%. Ты отправил честное письмо вкладчикам: что случилось, что делаем, что в плане. Часть ушла всё равно — но меньше, и ушедшие сказали «вернёмся».' });
+          } else {
+            silenced++;
+            reputation -= 8;
+            log.push({ m: m, t: '📉 Просадка ' + Math.round(r * 100) + '%. Ты замолчал. Вкладчики заметили молчание раньше, чем цифру — и запомнили. При следующей просадке отток будет вдвое жёстче.' });
+          }
+        }
+      }
+      if(outflow > 0){
+        const gone = Math.min(investors, outflow);
+        investors -= gone;
+        aum *= 1 - (gone / 40) * 0.5;
+        log.push({ m: m, t: '🚪 Ушло вкладчиков: ' + gone + '. Ожидали ' + promised + '% годовых, а месяц дал ' + (r >= 0 ? '+' : '') + Math.round(r * 1000) / 10 + '%. Разрыв между обещанием и фактом — это и есть отток.' });
+      }
+      if(m === 6) log.push({ m: m, t: '📊 Полугодие: комиссия ' + fee + '% тихо работает на тебя, но репутация решает, будет ли кому её платить.' });
+      aumPath.push(aum); invPath.push(investors);
+    }
+    const finalAUM = Math.round(aum);
+    const passed = finalAUM >= 60 && reputation >= 50;
+
+    document.getElementById('art8_out').innerHTML =
+      artCanvas(wid, 220) +
+      '<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--mut);margin-top:6px">' +
+        '<span>— <span style="color:#38BDF8">капитал под управлением, %</span></span>' +
+        '<span>— <span style="color:#F59E0B">вкладчики, чел.</span></span>' +
+      '</div>' +
+      '<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">' +
+        log.map(function(e){
+          return '<div style="background:#040714;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--txt);line-height:1.5"><b style="color:var(--mut)">Месяц ' + e.m + '.</b> ' + e.t + '</div>';
+        }).join('') +
+      '</div>' +
+      '<div id="art8_fin" style="margin-top:12px"></div>';
+
+    const cv = document.getElementById(wid + '_cv');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, pad = 34;
+    artAxes(ctx, W, H, pad);
+    const lo = Math.min(Math.min.apply(null, aumPath), invPath[0] * 1.5) * 0.9;
+    const hi = Math.max.apply(null, aumPath) * 1.05;
+    function xy(arr, scale){
+      return arr.map(function(v, i){
+        return [pad + (W - 2 * pad) * i / 12, H - pad - (H - 2 * pad) * (v * (scale || 1) - lo) / (hi - lo)];
+      });
+    }
+    artLine(ctx, xy(aumPath), '#38BDF8', 2.5);
+    artLine(ctx, xy(invPath, 2.2), '#F59E0B', 2);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('мес 12', W - pad - 34, H - 12);
+
+    document.getElementById('art8_fin').innerHTML = artFinal(wid,
+      '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px">' + (passed ? '🏦 Год пройден достойно' : '🌫️ Трудный год управляющего') + '</div>' +
+      '<div style="font-size:13px;color:var(--txt);line-height:1.8">' +
+        '💰 Капитал под управлением: <b style="color:' + (finalAUM >= 60 ? 'var(--ok)' : 'var(--bad)') + '">' + finalAUM + '%</b> от старта (' + Math.round(10 * finalAUM / 100) + ' млн усл.)<br>' +
+        '👥 Вкладчики: <b>' + investors + '</b> из 40<br>' +
+        '⭐ Репутация: <b style="color:' + (reputation >= 50 ? 'var(--ok)' : 'var(--bad)') + '">' + reputation + '</b> / 100' +
+      '</div>' +
+      '<div style="margin-top:12px;font-size:13px;color:var(--mut);line-height:1.65;border-top:1px dashed var(--line);padding-top:10px">' +
+        '1. Обещанная доходность не меняет рынок — она меняет <b style="color:var(--txt)">ожидания</b>. Отток всегда равен разрыву «обещал − сделал».<br>' +
+        '2. Честная коммуникация в просадке стоит дороже молчания: молчание вкладчики читают как «стало ещё хуже».<br>' +
+        '3. Управлять чужим тяжелее, чем своим: свои 50% просадки ты переживёшь философски, а чужие — нет. Обещания становятся обязательствами.' +
+      '</div>') + artAgain(wid);
+    artMark(wid, Math.round(finalAUM / 40), passed);
+    if(passed) artRefreshHeaderBadge(box, wid);
+  }
+  screen();
+}
+
+
+/* ---------- Регистрация виджетов, бейджи, связка с sim_meme ---------- */
+window.ART_render_widget_art_token_factory = ART_render_widget_art_token_factory;
+window.ART_render_widget_art_memecoin_3click = ART_render_widget_art_memecoin_3click;
+window.ART_render_widget_art_stable_lab = ART_render_widget_art_stable_lab;
+window.ART_render_widget_art_nft_market = ART_render_widget_art_nft_market;
+window.ART_render_widget_art_dao_vote = ART_render_widget_art_dao_vote;
+window.ART_render_widget_art_oracle_feed = ART_render_widget_art_oracle_feed;
+window.ART_render_widget_art_bot_assembler = ART_render_widget_art_bot_assembler;
+window.ART_render_widget_art_fund_manager = ART_render_widget_art_fund_manager;
+
+const ART_WIDGET_IDS = [
+  'widget_art_token_factory','widget_art_memecoin_3click','widget_art_stable_lab','widget_art_nft_market',
+  'widget_art_dao_vote','widget_art_oracle_feed','widget_art_bot_assembler','widget_art_fund_manager'
+];
+
+/* Бейджи: дополняем сетку достижений тремя бейджами конструктора,
+   не трогая существующий код — оборачиваем renderBadgesGrid. */
+const ART_BADGES = [
+  { id: 'art_creator', icon: '🏭', name: 'Создатель с ответственностью', desc: 'ART-1: честный запуск токена (доля команды ≤15%, блокировка ≥12 мес, открытый код) — и токен пережил год', wid: 'widget_art_token_factory' },
+  { id: 'art_keeper', icon: '⚖️', name: 'Хранитель номинала', desc: 'ART-3: прогнал набег на обеих моделях стейблкоина и ответил на вопрос о ликвидности резерва', wid: 'widget_art_stable_lab' },
+  { id: 'art_assembler', icon: '🤖', name: 'Сборщик', desc: 'ART-7: собрал торгового бота без единой критической ошибки в семи слотах', wid: 'widget_art_bot_assembler' }
+];
+
+function ART_checkBadges(){
+  const st = artLoad();
+  ART_BADGES.forEach(function(b){
+    if(st[b.wid] && st[b.wid].passed && typeof simMastery !== 'undefined' && !simMastery[b.id]){
+      simMastery[b.id] = true;
+      if(typeof save === 'function') save();
+      if(typeof renderBadgesGrid === 'function') renderBadgesGrid();
+      if(typeof renderProgressStats === 'function') renderProgressStats();
+    }
+  });
+}
+window.ART_checkBadges = ART_checkBadges;
+
+(function patchArtBadgesGrid(){
+  const prev = window.renderBadgesGrid;
+  if(typeof prev !== 'function') return;
+  window.renderBadgesGrid = function(){
+    prev();
+    const box = document.getElementById('badges_grid') || document.getElementById('badgesGrid');
+    if(!box || box.querySelector('[data-art-badge]')) return;
+    ART_BADGES.forEach(function(b){
+      const isUnlocked = (typeof simMastery !== 'undefined' && simMastery[b.id] === true);
+      const prog = artGet(b.wid);
+      const card = document.createElement('div');
+      card.setAttribute('data-art-badge', b.id);
+      card.style.cssText = 'background:' + (isUnlocked ? 'rgba(6,182,212,.08)' : 'rgba(255,255,255,.02)') + ';border:1px solid ' + (isUnlocked ? 'var(--acc2)' : 'var(--line)') + ';border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;opacity:' + (isUnlocked ? '1' : '0.6');
+      card.innerHTML =
+        '<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:8px">' +
+          '<div style="font-size:30px;line-height:1">' + b.icon + '</div>' +
+          '<div>' +
+            '<div style="font-weight:800;font-size:13.5px;color:' + (isUnlocked ? 'var(--acc2)' : 'var(--txt)') + '">' + b.name + '</div>' +
+            '<div style="font-size:11.5px;color:var(--mut);line-height:1.4;margin-top:2px">' + b.desc + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.05);padding-top:8px;margin-top:6px">' +
+          '<span style="font-size:11px;color:var(--mut)">' + (isUnlocked ? '✓ пройдено' : (prog && prog.best ? '◐ попыток: есть, критерии не все' : '○ тренажёр серии «Артефакты»')) + '</span>' +
+          '<span style="font-size:10.5px;font-weight:800;color:' + (isUnlocked ? 'var(--ok)' : 'var(--warn)') + '">' + (isUnlocked ? '✓ Открыт' : '○ В процессе') + '</span>' +
+        '</div>';
+      box.appendChild(card);
+    });
+  };
+})();
+
+/* Общая статистика прохождений с sim_meme: считаем запуски генератора
+   мемкоинов в тот же счётчик cn_meme_runs, что показывает ART-2. */
+(function patchMemeCounter(){
+  if(!window.P1_Meme || typeof window.P1_Meme.start !== 'function') return;
+  const prevStart = window.P1_Meme.start;
+  window.P1_Meme.start = function(){
+    try{
+      const r = JSON.parse(localStorage.getItem('cn_meme_runs') || '{"sim":0,"art2":0}');
+      r.sim = (r.sim || 0) + 1;
+      localStorage.setItem('cn_meme_runs', JSON.stringify(r));
+    }catch(e){}
+    return prevStart.apply(this, arguments);
+  };
+})();
+
+/* Диспетчер интерактивов: регистрируем ART-виджеты поверх существующей цепочки */
+(function patchArtWidgets(){
+  const prev = window.renderPhase0Widget;
+  window.renderPhase0Widget = function(widgetId){
+    if(ART_WIDGET_IDS.indexOf(widgetId) !== -1){
+      const box = document.getElementById(widgetId);
+      if(box && !box.dataset.rendered){
+        box.dataset.rendered = '1';
+        window['ART_render_' + widgetId](box);
+      }
+      return;
+    }
+    return prev(widgetId);
+  };
+})();
+})();
+
+</script>
 </body>
 </html>
-
