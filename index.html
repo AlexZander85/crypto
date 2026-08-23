@@ -2083,6 +2083,13 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 
   <div class="panel" id="stats" style="margin-bottom:24px"></div>
 
+  <!-- V3-A2: Журнал когнитивных ошибок -->
+  <div class="panel" style="margin-bottom:24px">
+    <h3 style="color:var(--txt); margin-bottom:6px">📓 Журнал когнитивных ошибок</h3>
+    <p style="color:var(--mut); font-size:13px; margin-bottom:12px">Каждая ошибка классифицируется: концептуальная / расчётная / look-ahead / импульс. Доминирующий тип влияет на подбор адаптивной тренировки.</p>
+    <div id="mistake_journal"></div>
+  </div>
+
   <!-- E5: Карьерная лестница фонда -->
   <div style="background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:24px">
     <h3 style="color:var(--txt); margin-bottom:6px">🏛️ Найм в фонд: карьерная лестница</h3>
@@ -30423,6 +30430,201 @@ function shuffledOptions(q, salt){
   };
 }
 
+</script>
+<script>
+/* =========================================================================
+   V3-A2: ЖУРНАЛ КОГНИТИВНЫХ ОШИБОК (Mistake Tracker)
+   Классификация причины каждой ошибки → профиль в Прогрессе → влияние
+   на адаптивный банк (доминирующий тип меняет подбор вопросов).
+   ========================================================================= */
+const MISTAKE_TYPES = [
+  { id:'concept',  label:'🧩 Концептуальная', desc:'не понял саму идею' },
+  { id:'calc',     label:'🧮 Расчётная', desc:'идея понятна, обсчитался' },
+  { id:'lookahead',label:'🕳 Look-ahead/выжившего', desc:'подглядел будущее или красивую выборку' },
+  { id:'impulse',  label:'🎢 Импульс', desc:'паника, FOMO, «выбрал наугад»' }
+];
+window._mistakeSeq = 0;
+window.offerMistakeClassification = function(contextKey){
+  const uid = 'mcl_' + (++window._mistakeSeq) + '_' + Math.random().toString(36).slice(2,7);
+  (window._mistakeCtx = window._mistakeCtx || {})[uid] = contextKey;
+  return `<div id="${uid}" style="margin-top:10px; padding:10px 12px; border:1px dashed var(--warn); border-radius:8px">
+    <div style="font-size:11.5px; color:var(--warn); font-weight:700; margin-bottom:6px">📓 Журнал ошибок: в чём была причина? (делает тренировку умнее)</div>
+    <div style="display:flex; flex-wrap:wrap; gap:6px">` +
+    MISTAKE_TYPES.map(t => `<button class="btn sm ghost" style="font-size:11.5px" onclick="window.recordMistake('${uid}','${t.id}')" title="${t.desc}">${t.label}</button>`).join('') +
+    `</div></div>`;
+};
+window.recordMistake = function(uid, typeId){
+  const box = document.getElementById(uid);
+  const ctx = (window._mistakeCtx || {})[uid] || 'unknown';
+  let log = [];
+  try{ log = JSON.parse(localStorage.getItem('cn_mistakes') || '[]'); }catch(e){}
+  log.push({ t: typeId, ts: Date.now(), ctx });
+  try{ localStorage.setItem('cn_mistakes', JSON.stringify(log.slice(-500))); }catch(e){}
+  if(box) box.innerHTML = `<span style="font-size:12px; color:var(--ok)">✓ записано: ${MISTAKE_TYPES.find(t=>t.id===typeId).label}</span>`;
+  if(document.getElementById('progress') && document.getElementById('progress').classList.contains('active-view')) renderMistakeJournal();
+  showToast('📓 Тип ошибки записан — журнал обновлен', '📓');
+};
+window.getMistakeProfile = function(){
+  let log = [];
+  try{ log = JSON.parse(localStorage.getItem('cn_mistakes') || '[]'); }catch(e){}
+  const counts = {}; MISTAKE_TYPES.forEach(t => counts[t.id] = 0);
+  log.forEach(m => { if(counts[m.t] !== undefined) counts[m.t]++; });
+  let dominant = null, max = 0;
+  MISTAKE_TYPES.forEach(t => { if(counts[t.id] > max){ max = counts[t.id]; dominant = t.id; } });
+  return { counts, dominant, total: log.length };
+};
+window.renderMistakeJournal = function(){
+  const box = document.getElementById('mistake_journal');
+  if(!box) return;
+  const prof = getMistakeProfile();
+  if(prof.total === 0){
+    box.innerHTML = '<div style="color:var(--mut); font-size:13px">Пока пусто: при неверном ответе приложение предложит классифицировать причину. Это deliberately-честная практика: ошибки → данные → персональная тренировка.</div>';
+    return;
+  }
+  const maxC = Math.max(...Object.values(prof.counts));
+  const domT = prof.dominant ? MISTAKE_TYPES.find(t=>t.id===prof.dominant) : null;
+  box.innerHTML = MISTAKE_TYPES.map(t => {
+    const c = prof.counts[t.id];
+    const pct = maxC ? Math.round(c / maxC * 100) : 0;
+    return `<div style="display:flex; align-items:center; gap:10px; margin-bottom:6px">
+      <span style="min-width:190px; font-size:12.5px; color:var(--txt)">${t.label}</span>
+      <div style="flex:1; background:#040714; border-radius:6px; height:14px; overflow:hidden">
+        <div style="width:${pct}%; height:100%; background:${t.id===prof.dominant?'var(--warn)':'var(--acc1)'}"></div>
+      </div>
+      <span style="min-width:30px; text-align:right; font-size:12.5px; color:var(--acc2); font-weight:700">${c}</span>
+    </div>`;
+  }).join('') +
+  `<div style="font-size:12.5px; color:var(--mut); margin-top:8px">Всего классифицировано: ${prof.total}. ${domT ? 'Доминирует тип <b style="color:var(--warn)">' + domT.label + '</b> — адаптивная тренировка подстроена под него.' : ''}</div>`;
+};
+
+/* хук на рендер прогреса */
+const _origRenderProgressStats = renderProgressStats;
+renderProgressStats = function(){ _origRenderProgressStats.apply(this, arguments); renderMistakeJournal(); };
+
+/* ---------- хуки неверных ответов (урок / тренажёр / аттестация) ---------- */
+const _origLessonQuiz = handleLessonQuizAnswer;
+handleLessonQuizAnswer = function(lessonId, selectedIdx, correctIdx){
+  _origLessonQuiz.apply(this, arguments);
+  if(selectedIdx !== correctIdx){
+    const fb = document.getElementById('lquiz_fb_' + lessonId);
+    if(fb) fb.innerHTML += window.offerMistakeClassification('lesson:' + lessonId);
+  }
+};
+const _origCheckQuiz = checkQuizAnswer;
+checkQuizAnswer = function(optIdx){
+  const q = quiz.qs[quiz.cur];
+  const qa = (q && q._sv && q._svCur === quiz.cur + '_' + quiz._shuffleSalt) ? q._sv.a : (q ? q.a : 0);
+  _origCheckQuiz.apply(this, arguments);
+  if(optIdx !== qa){
+    const fb = document.getElementById('quiz_feedback');
+    if(fb) fb.innerHTML += window.offerMistakeClassification('trainer:' + (q && q.topic ? q.topic : 'mixed'));
+  }
+};
+const _origPhaseAnswer = checkPhaseTestAnswer;
+checkPhaseTestAnswer = function(phaseNum, qIdx, optIdx){
+  const test = phaseNum === 6 ? CAPSTONE_EXAM : (typeof PHASE_TESTS !== 'undefined' ? PHASE_TESTS.find(t=>t.phase===phaseNum) : null);
+  const q = (window._ptView && window._ptView[phaseNum]) ? window._ptView[phaseNum][qIdx] : (test ? test.questions[qIdx] : null);
+  _origPhaseAnswer.apply(this, arguments);
+  if(q && q.a !== undefined && optIdx !== q.a){
+    const expBox = document.getElementById('ptest_exp_' + phaseNum + '_' + qIdx);
+    if(expBox) expBox.innerHTML += window.offerMistakeClassification('ptest:' + phaseNum + ':' + qIdx);
+  }
+};
+
+/* ---------- влияние доминирующего типа на адаптивный банк ---------- */
+/* numeric-вопросы доступны в банке адаптивной тренировки */
+const ADAPTIVE_NUMERIC = [
+  { topic:'risk_management', type:'numeric', q:'Полный Келли f* = 20%. Quarter Kelly — доля капитала (в %)?', answer:5, absTol:0.25, unit:'%', explain:'Quarter Kelly = f*/4 = 5%.' },
+  { topic:'statistics', type:'numeric', q:'Стратегия: win rate 55%, профит +3%, убыток −3%. Ожидание на сделку (в %)?', answer:0.3, absTol:0.1, unit:'%', explain:'E = 0.55×3 − 0.45×3 = 0.3% — тонкое, но положительное.' },
+  { topic:'statistics', type:'numeric', q:'Sharpe: доходность 24%, волатильность 16%, Rf 4%.', answer:1.25, absTol:0.06, unit:'', explain:'(24 − 4) / 16 = 1.25.' },
+  { topic:'market_microstructure', type:'numeric', q:'Лучший бид 500, исполнение продажи 499.5. Slippage (bps)?', answer:1, absTol:0.2, unit:'bps', explain:'0.5/500 = 1 bps.' },
+  { topic:'math_skew', type:'numeric', q:'Последовательность +20%, −20%. Итог (в %)?', answer:-4, absTol:0.3, unit:'%', explain:'1.2×0.8 = 0.96 → −4%: драг волатильности.' },
+  { topic:'accounting', type:'numeric', q:'Куплено 1 лот за 200 000 ₽, продан за 250 000 ₽. НДФЛ 13% (в ₽)?', answer:6500, tolPct:2, unit:'₽', explain:'50 000 × 0.13 = 6 500 ₽.' }
+];
+if(typeof ADAPTIVE_QUESTION_BANK !== 'undefined') ADAPTIVE_QUESTION_BANK.push(...ADAPTIVE_NUMERIC);
+
+const MISTAKE_STRATEGY = {
+  concept:  'Профиль: концептуальные ошибки → вернись к уровню «Объясни просто» и Фейнману.',
+  calc:     'Профиль: расчётные ошибки → в сессию добавлены числовые задачи с открытым вводом.',
+  lookahead:'Профиль: look-ahead/выжившего → проверяй TRAIN/OOS/HOLDOUT на каждом графике.',
+  impulse:  'Профиль: импульсивные ответы → перед кликом проговори причину вслух.'
+};
+window.applyMistakeBias = function(){
+  const prof = getMistakeProfile();
+  if(prof.dominant && prof.counts[prof.dominant] >= 3){
+    if(prof.dominant === 'calc' && window.quiz && quiz.qs){
+      const numPool = ADAPTIVE_NUMERIC.filter(q => q.type === 'numeric');
+      if(numPool.length && !quiz.qs.some(q => q.type === 'numeric')){
+        quiz.qs[quiz.qs.length - 1] = numPool[Math.floor(Math.random() * numPool.length)];
+      }
+    }
+    setTimeout(() => showToast('📓 ' + MISTAKE_STRATEGY[prof.dominant], '📓'), 700);
+  }
+};
+/* оборачиваем строителей адаптивной/смешанной сессии */
+if(typeof startAdaptiveWorkout === 'function'){
+  const _origAW = startAdaptiveWorkout;
+  startAdaptiveWorkout = function(){ _origAW.apply(this, arguments); applyMistakeBias(); };
+}
+if(typeof startInterleavingSession === 'function'){
+  const _origIL = startInterleavingSession;
+  startInterleavingSession = function(){ _origIL.apply(this, arguments); applyMistakeBias(); };
+}
+
+/* ---------- numeric-поддержка в тренажёре (renderQuizQuestion) ---------- */
+const _origRenderQuizQ = renderQuizQuestion;
+renderQuizQuestion = function(){
+  const q = (window.quiz && quiz.qs) ? quiz.qs[quiz.cur] : null;
+  if(q && q.type === 'numeric'){
+    const box = document.getElementById('quizBox');
+    if(box){
+      box.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px">
+        <span style="font-size:12px; font-weight:700; color:var(--mut)">Вопрос ${quiz.cur + 1} из ${quiz.total}</span>
+        <span style="color:var(--warn); font-weight:700; font-size:12px">🔥 Серия: ${quizStreak}</span>
+      </div>
+      <div style="font-size:15px; font-weight:700; color:var(--txt); margin-bottom:8px; line-height:1.5">${q.q}</div>
+      <div style="font-size:11.5px; color:var(--acc2); margin-bottom:12px">🧮 Открытый ввод (допуск ${q.absTol !== undefined ? '±' + q.absTol + ' ' + (q.unit || '') : '±' + (q.tolPct || 2) + '%'})</div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <input id="quiz_num_in" type="text" inputmode="decimal" placeholder="число" style="width:150px; background:#040714; border:1px solid var(--acc2); border-radius:8px; padding:9px 12px; color:var(--txt); font-size:14.5px; font-weight:700">
+        <span style="color:var(--mut); font-size:13.5px">${q.unit || ''}</span>
+        <button class="btn sm" onclick="checkQuizNumeric()">Проверить</button>
+      </div>
+      <div id="quiz_feedback" style="display:none; margin-top:14px; padding:12px; border-radius:10px; font-size:13px"></div>
+      <div style="margin-top:16px; text-align:right">
+        <button class="btn sm ghost" id="quiz_next_btn" style="display:none" onclick="nextQuizQuestion()">Следующий вопрос →</button>
+      </div>`;
+    }
+    return;
+  }
+  _origRenderQuizQ.apply(this, arguments);
+};
+window.checkQuizNumeric = function(){
+  const q = quiz.qs[quiz.cur];
+  if(!q || q.type !== 'numeric') return;
+  const inp = document.getElementById('quiz_num_in');
+  const fb = document.getElementById('quiz_feedback');
+  if(!inp || !fb) return;
+  const val = parseFloat(String(inp.value).replace(/\\s/g, '').replace(',', '.'));
+  if(isNaN(val)){ showToast('Введи число.', '🧮'); return; }
+  const tol = q.absTol !== undefined ? q.absTol : Math.abs(q.answer) * (q.tolPct || 2) / 100;
+  const ok = Math.abs(val - q.answer) <= tol;
+  inp.disabled = true;
+  (quiz.results = quiz.results || []).push({ cat: q._cat || null, src: q._src || null, ok });
+  if(ok){ quiz.score++; quizStreak++; } else { quizStreak = 0; }
+  fb.style.display = 'block';
+  fb.style.background = ok ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.15)';
+  fb.style.border = '1px solid ' + (ok ? 'var(--ok)' : 'var(--bad)');
+  fb.innerHTML = (ok ? '<b>Верно! 🎯</b> ' : '<b>Ошибка! ❌</b> ') + (q.explain || q.solution || '');
+  if(!ok) fb.innerHTML += window.offerMistakeClassification('trainer-num:' + (q.topic || 'numeric'));
+  if(q.topic) recordTopicResult(q.topic, ok);
+  else if(quiz.isAdaptive && quiz.targetTopic) recordTopicResult(quiz.targetTopic, ok);
+  save();
+  updateHeader();
+  renderProgressStats();
+  const nextBtn = document.getElementById('quiz_next_btn');
+  if(nextBtn) nextBtn.style.display = 'inline-block';
+};
 </script>
 </body>
 </html>
