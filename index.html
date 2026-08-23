@@ -10664,6 +10664,13 @@ const LESSONS = [
           { "ru": "Сложность сети", "en": "Difficulty" }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g17_asic",
+        "title": "🎮 ASIC под напряжением",
+        "desc": "Хешрейт, тариф, курс, сложность, халвинг-слайдер: посчитай срок окупаемости и найди зону «майнинг = благотворительность энергокомпании»."
+      }
     ],
     "quiz": {
       "q": "Какой расход майнера является главным ПЕРЕМЕННЫМ расходом, который решает судьбу маржи?",
@@ -10717,6 +10724,13 @@ const LESSONS = [
           { "ru": "Ликвидный стейкинг", "en": "Liquid staking" }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g18_staking",
+        "title": "🎮 Стейкинг: ставка против курса",
+        "desc": "Два ползунка — APY и изменение цены токена. Пресеты «ETH 3%», «малая сеть 12%», «LST в депеге»."
+      }
     ],
     "quiz": {
       "q": "Почему стейкинг под 8% годовых может принести МИНУС в итоге?",
@@ -10769,6 +10783,13 @@ const LESSONS = [
           { "ru": "Фарминт доходности", "en": "Yield farming" },
           { "ru": "Заблокированная стоимость", "en": "TVL" }
         ]
+      }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g19_il",
+        "title": "🎮 IL-исследователь",
+        "desc": "Кривая непостоянных потерь: ползунок отношения цен, маркеры ×2→−5.7% и ×4→−20%, линия комиссий пула для честного сравнения."
       }
     ],
     "quiz": {
@@ -10875,6 +10896,13 @@ const LESSONS = [
           { "ru": "Истечение срока", "en": "Expiration" },
           { "ru": "Распад по времени", "en": "Theta decay" }
         ]
+      }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g20_payoff",
+        "title": "🎮 Payoff-конструктор опционов",
+        "desc": "Страйк и премия ползунками, Long/Short × Call/Put — PnL-«бабочка» строится вживую, риск short-позиций подписан честно."
       }
     ],
     "quiz": {
@@ -11084,6 +11112,13 @@ const LESSONS = [
           { "ru": "Пул запуска", "en": "Launchpool" }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g22_airdrop",
+        "title": "🎮 Дроп или ловушка?",
+        "desc": "Карточки сайтов-эйрдропов: легитимный запрос против «подпиши approve», «введи seed», фейк-домена. Мгновенный вердикт."
+      }
     ],
     "quiz": {
       "q": "Тебе в личку написали: «Забери airdrop, подключи кошелёк и введи seed-фразу для верификации». Что это?",
@@ -11241,6 +11276,13 @@ const LESSONS = [
           { "ru": "Время до резолюции", "en": "Time to resolution" }
         ]
       }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g21_polyarb",
+        "title": "🎮 Полимаркет-сканер арбитража",
+        "desc": "Лента рынков YES+NO с комиссиями по категориям (Crypto 0.07 / Sports 0.05 / Politics 0.04 / Geopolitics 0). Найди, где арбитраж жив ПОСЛЕ издержек."
+      }
     ],
     "quiz": {
       "q": "YES=$0.55 и NO=$0.40 на одной площадке. Действие?",
@@ -11291,6 +11333,13 @@ const LESSONS = [
           { "ru": "Токенизация", "en": "Tokenization" },
           { "ru": "Выкуп", "en": "Redemption" }
         ]
+      }
+    ,
+      {
+        "type": "interactive_inline",
+        "id": "widget_g23_rwa",
+        "title": "🎮 RWA-цепочка доверия",
+        "desc": "Схема SPV→кастодиан→оракул NAV→токен. Кликни звено — сломай его и посмотри, что происходит с держателем токена."
       }
     ],
     "quiz": {
@@ -27407,6 +27456,381 @@ function g13Play(){
     <div style="background:#040714; border-left:3px solid var(--warn); border-radius:6px; padding:10px">
       <b>Узел «${g13Sel.node}» × поломка «${g13Sel.fail}»:</b><br>${txt}
       <div style="margin-top:6px; color:var(--mut); font-size:12px">Отказоустойчивость — это цепочка: ломается одно звено, а умирает вся система, если нет наблюдаемости и аварийных триггеров на каждом уровне.</div>
+    </div>`;
+}
+
+/* =========================================================================
+   D3.3 ВОЛНА 3 ИГР (G-17…G-23, бонус-фаза Ф6)
+   ========================================================================= */
+(function(){
+  const W3_IDS = ['widget_g17_asic','widget_g18_staking','widget_g19_il','widget_g20_payoff','widget_g21_polyarb','widget_g22_airdrop','widget_g23_rwa'];
+  const prev = window.renderPhase0Widget;
+  window.renderPhase0Widget = function(widgetId){
+    if(W3_IDS.indexOf(widgetId) !== -1){
+      const box = document.getElementById(widgetId);
+      if(box && !box.dataset.rendered){
+        box.dataset.rendered = '1';
+        if(widgetId === 'widget_g17_asic') renderG17(box);
+        if(widgetId === 'widget_g18_staking') renderG18(box);
+        if(widgetId === 'widget_g19_il') renderG19(box);
+        if(widgetId === 'widget_g20_payoff') renderG20(box);
+        if(widgetId === 'widget_g21_polyarb') renderG21(box);
+        if(widgetId === 'widget_g22_airdrop') renderG22(box);
+        if(widgetId === 'widget_g23_rwa') renderG23(box);
+      }
+      return;
+    }
+    return prev(widgetId);
+  };
+})();
+
+/* ---------- G-17 «ASIC под напряжением» ---------- */
+function renderG17(box){
+  box.innerHTML = `
+    <div style="background:rgba(245,158,11,.05); border:1.5px solid var(--warn); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--warn); margin-bottom:6px">🎮 ASIC под напряжением</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Упрощённый учебный калькулятор майнинга. Реальная экономика зависит от пула, курса и сложности сети.</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; font-size:12.5px">
+        <label>Цена ASIC, ₽<br><input type="number" id="g17_cost" value="350000" step="10000" style="width:110px"></label>
+        <label>Хешрейт, TH/s<br><input type="number" id="g17_th" value="200" step="10" style="width:80px"></label>
+        <label>Тариф, ₽/кВт·ч<br><input type="number" id="g17_tariff" value="4.5" step="0.5" style="width:70px"></label>
+        <label>Мощность, кВт<br><input type="number" id="g17_kw" value="3.5" step="0.1" style="width:70px"></label>
+        <label>Курс BTC, $<br><input type="number" id="g17_btc" value="110000" step="5000" style="width:90px"></label>
+        <label>Халвинг: награда, BTC/блок<br><input type="range" id="g17_halving" min="0" max="2" step="1" value="0" style="width:100px"> <b id="g17_h_lbl">3.125</b></label>
+      </div>
+      <button class="btn sm" style="margin-top:8px" onclick="g17Calc()">⚡ Рассчитать</button>
+      <div id="g17_out" style="margin-top:10px; font-size:12.5px"></div>
+    </div>`;
+}
+function g17Calc(){
+  const cost = +document.getElementById('g17_cost').value;
+  const th = +document.getElementById('g17_th').value;
+  const tariff = +document.getElementById('g17_tariff').value;
+  const kw = +document.getElementById('g17_kw').value;
+  const btc = +document.getElementById('g17_btc').value;
+  const hlv = +document.getElementById('g17_halving').value;
+  const reward = [3.125, 1.5625, 0.78125][hlv];
+  document.getElementById('g17_h_lbl').textContent = reward;
+  // упрощённо: доля сети ~ TH/s против ~700 EH/s; доход в день
+  const networkTH = 700e6;
+  const btcPerDay = reward * 144 * (th / networkTH);
+  const usdRub = 90;
+  const income = btcPerDay * btc * usdRub;
+  const expense = kw * 24 * tariff;
+  const net = income - expense;
+  const payback = net > 0 ? Math.round(cost / net) : Infinity;
+  const out = document.getElementById('g17_out');
+  out.innerHTML = `
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px">
+      <div style="background:#040714; border-radius:8px; padding:8px 10px">Доход/день: <b>${income.toFixed(0)} ₽</b></div>
+      <div style="background:#040714; border-radius:8px; padding:8px 10px">Розетка/день: <b style="color:var(--bad)">${expense.toFixed(0)} ₽</b></div>
+      <div style="background:#040714; border-radius:8px; padding:8px 10px">Нетто/день: <b style="color:${net > 0 ? 'var(--ok)' : 'var(--bad)'}">${net.toFixed(0)} ₽</b></div>
+      <div style="background:#040714; border-radius:8px; padding:8px 10px">Окупаемость: <b>${payback === Infinity ? 'никогда' : payback + ' дней'}</b></div>
+    </div>
+    <div style="margin-top:8px; padding:10px; background:#040714; border-left:3px solid var(--acc2); border-radius:6px; font-size:12px; color:var(--mut)">
+      ${net <= 0 ? '<b style="color:var(--bad)">Зона «благотворительности энергокомпании»:</b> ты платишь за электричество больше, чем добываешь. ASIC работает в минус каждый день.' : payback > 730 ? 'Окупаемость дольше 2 лет — а за это время будет халвинг и рост сложности: реальный срок длиннее расчётного.' : 'Проект выглядит живым, НО: сложность сети растёт, халвинг режет награду вдвое, а курс волатилен. Закладывай стресс −30% к доходу.'}
+    </div>`;
+}
+
+/* ---------- G-18 «Стейкинг: ставка против курса» ---------- */
+function renderG18(box){
+  box.innerHTML = `
+    <div style="background:rgba(34,197,94,.05); border:1.5px solid var(--ok); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--ok); margin-bottom:6px">🎮 Стейкинг: ставка против курса</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">APY платится в токене, а живёшь ты в рублях. Двигай ползунки и смотри итог в деньгах за год.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px">
+        <button class="btn sm ghost" onclick="g18Preset(3, -5)">ETH 3%, курс −5%</button>
+        <button class="btn sm ghost" onclick="g18Preset(12, -45)">Малая сеть 12%, курс −45%</button>
+        <button class="btn sm ghost" onclick="g18Preset(4, -70)">LST в депеге 4%, курс −70%</button>
+      </div>
+      <div style="font-size:13px">
+        APY: <b id="g18_apy_lbl" style="color:var(--ok)">3%</b>
+        <input type="range" id="g18_apy" min="0" max="25" step="0.5" value="3" style="width:45%" oninput="g18Calc()"><br>
+        Изменение цены токена за год: <b id="g18_px_lbl" style="color:var(--bad)">−5%</b>
+        <input type="range" id="g18_px" min="-90" max="100" step="5" value="-5" style="width:45%" oninput="g18Calc()">
+      </div>
+      <div id="g18_out" style="margin-top:10px; font-size:13px"></div>
+    </div>`;
+  g18Calc();
+}
+function g18Preset(apy, px){
+  document.getElementById('g18_apy').value = apy;
+  document.getElementById('g18_px').value = px;
+  g18Calc();
+}
+function g18Calc(){
+  const apy = +document.getElementById('g18_apy').value;
+  const px = +document.getElementById('g18_px').value;
+  document.getElementById('g18_apy_lbl').textContent = apy + '%';
+  document.getElementById('g18_px_lbl').textContent = (px > 0 ? '+' : '') + px + '%';
+  const start = 100000;
+  const coins = 1 * (1 + apy / 100);
+  const end = start * coins * (1 + px / 100);
+  const pnl = end - start;
+  document.getElementById('g18_out').innerHTML = `
+    <div style="background:#040714; border-radius:8px; padding:10px; border-left:3px solid ${pnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">
+      100,000 ₽ в стейкинге на год: монет стало <b>${coins.toFixed(3)}×</b>, но в рублях это
+      <b style="color:${pnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">${end.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ₽</b>
+      (итог: <b style="color:${pnl >= 0 ? 'var(--ok)' : 'var(--bad)'}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ₽</b>).
+      <div style="margin-top:6px; color:var(--mut); font-size:12px">${pnl < 0 ? 'Ставка не компенсировала падение курса. Реальная доходность стейкинга = APY + изменение цены − риск slashing/депега.' : 'Повезло с курсом — но помни: APY не страхует от падения цены токена.'}</div>
+    </div>`;
+}
+
+/* ---------- G-19 «IL-исследователь» ---------- */
+function renderG19(box){
+  box.innerHTML = `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--acc2); margin-bottom:6px">🎮 IL-исследователь</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Непостоянные потери пула 50/50 от отношения цен x. Формула: IL = 2√x/(1+x) − 1. Маркеры: ×2 → −5.7%, ×4 → −20%.</div>
+      <div style="font-size:13px; margin-bottom:6px">Отношение цен x: <b id="g19_x_lbl" style="color:var(--acc2)">×2.0</b>
+        <input type="range" id="g19_x" min="1" max="5" step="0.1" value="2" style="width:50%" oninput="g19Draw()">
+        · Комиссии пула за период: <b id="g19_f_lbl" style="color:var(--ok)">+4%</b>
+        <input type="range" id="g19_f" min="0" max="20" step="1" value="4" style="width:30%" oninput="g19Draw()"></div>
+      <canvas id="g19_cv" width="560" height="240" style="width:100%; background:#040714; border-radius:10px"></canvas>
+      <div id="g19_stat" style="margin-top:8px; font-size:12.5px"></div>
+    </div>`;
+  setTimeout(g19Draw, 50);
+}
+function g19Draw(){
+  const x = +document.getElementById('g19_x').value;
+  const fees = +document.getElementById('g19_f').value;
+  document.getElementById('g19_x_lbl').textContent = '×' + x.toFixed(1);
+  document.getElementById('g19_f_lbl').textContent = '+' + fees + '%';
+  const cv = document.getElementById('g19_cv');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const ilOf = k => 2 * Math.sqrt(k) / (1 + k) - 1;
+  const xOf = k => 40 + (k - 1) / 4 * (cv.width - 60);
+  const yOf = v => cv.height - 30 - (v + 0.25) / 0.45 * (cv.height - 60);
+  // ось нуля
+  ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(0, yOf(0)); ctx.lineTo(cv.width, yOf(0)); ctx.stroke(); ctx.setLineDash([]);
+  // кривая IL
+  ctx.strokeStyle = 'var(--warn)'; ctx.lineWidth = 2.5; ctx.beginPath();
+  for(let k = 1; k <= 5; k += 0.05){
+    const px = xOf(k), py = yOf(ilOf(k));
+    k === 1 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  // линия комиссий
+  ctx.strokeStyle = 'var(--ok)'; ctx.lineWidth = 2; ctx.setLineDash([6,4]); ctx.beginPath();
+  ctx.moveTo(xOf(1), yOf(fees / 100)); ctx.lineTo(xOf(5), yOf(fees / 100)); ctx.stroke(); ctx.setLineDash([]);
+  // маркеры
+  [[2, '−5.7%'], [4, '−20%']].forEach(([k, lbl]) => {
+    ctx.fillStyle = 'var(--bad)';
+    ctx.beginPath(); ctx.arc(xOf(k), yOf(ilOf(k)), 5, 0, 7); ctx.fill();
+    ctx.fillText(`×${k}: ${lbl}`, xOf(k) + 8, yOf(ilOf(k)));
+  });
+  // текущая точка
+  const il = ilOf(x);
+  ctx.fillStyle = 'var(--acc2)';
+  ctx.beginPath(); ctx.arc(xOf(x), yOf(il), 6, 0, 7); ctx.fill();
+  const net = fees / 100 + il;
+  document.getElementById('g19_stat').innerHTML =
+    `При ×${x.toFixed(1)}: IL = <b style="color:var(--bad)">${(il * 100).toFixed(1)}%</b>, комиссии <b style="color:var(--ok)">+${fees}%</b> → итог LP против простого холда:
+     <b style="color:${net >= 0 ? 'var(--ok)' : 'var(--bad)'}">${(net * 100).toFixed(1)}%</b>. ` +
+    (net < 0 ? '<span style="color:var(--bad)">Комиссии НЕ перекрыли непостоянные потери — холд был выгоднее.</span>' : 'Комиссии перекрыли IL — но это не гарантия на будущем отрезке.');
+}
+
+/* ---------- G-20 «Payoff-конструктор опционов» ---------- */
+var g20 = { side: 'long', type: 'call' };
+function renderG20(box){
+  box.innerHTML = `
+    <div style="background:rgba(124,58,237,.05); border:1.5px solid var(--acc1); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--acc1); margin-bottom:6px">🎮 Payoff-конструктор опционов</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">Спотовая цена $100. Двигай страйк и премию, переключай Long/Short и Call/Put — PnL-«бабочка» строится вживую.</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px">
+        <button class="btn sm" id="g20_long" onclick="g20.side='long'; g20Draw()">Long</button>
+        <button class="btn sm ghost" id="g20_short" onclick="g20.side='short'; g20Draw()">Short</button>
+        <button class="btn sm" id="g20_call" style="background:var(--acc2)" onclick="g20.type='call'; g20Draw()">Call</button>
+        <button class="btn sm ghost" id="g20_put" onclick="g20.type='put'; g20Draw()">Put</button>
+      </div>
+      <div style="font-size:13px">Страйк: <b id="g20_k_lbl">$100</b> <input type="range" id="g20_k" min="60" max="140" step="5" value="100" style="width:35%" oninput="g20Draw()">
+        Премия: <b id="g20_p_lbl">$8</b> <input type="range" id="g20_p" min="1" max="25" step="1" value="8" style="width:35%" oninput="g20Draw()"></div>
+      <canvas id="g20_cv" width="560" height="220" style="width:100%; background:#040714; border-radius:10px; margin-top:8px"></canvas>
+      <div id="g20_stat" style="margin-top:8px; font-size:12.5px"></div>
+    </div>`;
+  g20Draw();
+}
+function g20Draw(){
+  ['long','short','call','put'].forEach(k => {
+    const b = document.getElementById('g20_' + k);
+    b.className = 'btn sm ' + ((g20.side === k || g20.type === k) ? '' : 'ghost');
+  });
+  const K = +document.getElementById('g20_k').value;
+  const prem = +document.getElementById('g20_p').value;
+  document.getElementById('g20_k_lbl').textContent = '$' + K;
+  document.getElementById('g20_p_lbl').textContent = '$' + prem;
+  const sign = g20.side === 'long' ? 1 : -1;
+  const intrinsic = (S) => g20.type === 'call' ? Math.max(S - K, 0) : Math.max(K - S, 0);
+  const pnl = S => sign * (intrinsic(S) - prem);
+  const cv = document.getElementById('g20_cv');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  let mn = Infinity, mx = -Infinity;
+  for(let S = 40; S <= 160; S++){ const v = pnl(S); if(v < mn) mn = v; if(v > mx) mx = v; }
+  mn = Math.min(mn, -30); mx = Math.max(mx, 30);
+  const yOf = v => cv.height - 15 - (v - mn) / (mx - mn) * (cv.height - 30);
+  const xOf = S => (S - 40) / 120 * cv.width;
+  ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(0, yOf(0)); ctx.lineTo(cv.width, yOf(0)); ctx.stroke(); ctx.setLineDash([]);
+  ctx.strokeStyle = sign > 0 ? 'var(--ok)' : 'var(--bad)'; ctx.lineWidth = 2.5; ctx.beginPath();
+  for(let S = 40; S <= 160; S++){ S === 40 ? ctx.moveTo(xOf(S), yOf(pnl(S))) : ctx.lineTo(xOf(S), yOf(pnl(S))); }
+  ctx.stroke();
+  ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif';
+  ctx.fillText('спот при экспирации $40', 4, cv.height - 3);
+  ctx.fillText('$160', cv.width - 34, cv.height - 3);
+  const risk = g20.side === 'short' && g20.type === 'call'
+    ? '<b style="color:var(--bad)">Short Call: потенциальный убыток НЕОГРАНИЧЕН</b> — цена может уйти в бесконечность, а ты обязан поставить.'
+    : g20.side === 'short'
+    ? '<b style="color:var(--warn)">Short Put: убыток ограничен, но огромен</b> — до страйка минус премия при падении актива к нулю.'
+    : '<b style="color:var(--ok)">Long: максимальный убыток = уплаченная премия.</b> Всё, что выше безубытка — прибыль.';
+  const be = g20.type === 'call' ? K + prem : K - prem;
+  document.getElementById('g20_stat').innerHTML = `Безубыток: <b>$${be}</b> · ${risk}`;
+}
+
+/* ---------- G-21 «Полимаркет-сканер арбитража» ---------- */
+var G21_MARKETS = [
+  { name: 'BTC > $150k к 01.01.2027?', cat: 'Crypto', feeRate: 0.07, yes: 0.48, no: 0.50 },
+  { name: 'ETH ETF приток > $1B за квартал?', cat: 'Crypto', feeRate: 0.07, yes: 0.44, no: 0.54 },
+  { name: 'Финал ЛЧ: победа «Реала»?', cat: 'Sports', feeRate: 0.05, yes: 0.30, no: 0.66 },
+  { name: 'Выборы: победа кандидата X?', cat: 'Politics', feeRate: 0.04, yes: 0.51, no: 0.47 },
+  { name: 'Перемирие в регионе Y до лета?', cat: 'Geopolitics', feeRate: 0.0, yes: 0.35, no: 0.63 }
+];
+function renderG21(box){
+  box.innerHTML = `
+    <div style="background:rgba(6,182,212,.05); border:1.5px solid var(--acc2); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--acc2); margin-bottom:6px">🎮 Полимаркет-сканер арбитража</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">YES + NO &lt; $1 выглядит как гарантированная прибыль — но комиссия тейкера fee ≈ C × feeRate × p × (1−p) максимальна у p≈50%. Отметь рынки, где арбитраж жив ПОСЛЕ комиссий, и сдай.</div>
+      <div id="g21_list"></div>
+      <button class="btn sm" style="margin-top:8px" onclick="g21Grade()">📤 Проверить ответы</button>
+      <div id="g21_out" style="margin-top:10px; font-size:12.5px"></div>
+    </div>`;
+  g21DrawList(false);
+}
+function g21Fee(cat, feeRate, p){
+  const C = 1;
+  const f = C * feeRate * p * (1 - p) * 2; // обе стороны
+  return f;
+}
+function g21DrawList(reveal){
+  const list = document.getElementById('g21_list');
+  window._g21marks = window._g21marks || {};
+  list.innerHTML = G21_MARKETS.map((m, i) => {
+    const sum = m.yes + m.no;
+    const fee = g21Fee(m.cat, m.feeRate, (m.yes + m.no) / 2);
+    const profit = 1 - sum - fee;
+    const real = profit > 0.002;
+    const marked = window._g21marks[i];
+    let border = marked ? 'var(--acc1)' : 'var(--line)';
+    let note = '';
+    if(reveal){
+      border = real ? 'var(--ok)' : 'var(--bad)';
+      note = `<div style="font-size:11.5px; color:${real ? 'var(--ok)' : 'var(--bad)'}; margin-top:4px">
+        Сумма $${sum.toFixed(2)} · комиссия ≈ $${fee.toFixed(3)} → нетто ${profit >= 0 ? '+' : ''}$${profit.toFixed(3)}: ${real ? '✅ арбитраж ЖИВ после издержек' : '❌ комиссия съела маржу'}</div>`;
+    }
+    return `<div onclick="${reveal ? '' : `g21Toggle(${i})`}" style="cursor:${reveal ? 'default' : 'pointer'}; background:#040714; border:1.5px solid ${border}; border-radius:8px; padding:8px 12px; margin-bottom:6px; font-size:12.5px">
+      <b>${m.name}</b> <span style="color:var(--mut); font-size:11px">[${m.cat}, feeRate ${m.feeRate}]</span><br>
+      YES $${m.yes.toFixed(2)} + NO $${m.no.toFixed(2)} = <b style="color:${sum < 1 ? 'var(--ok)' : 'var(--bad)'}">$${sum.toFixed(2)}</b>${note}
+    </div>`;
+  }).join('');
+}
+function g21Toggle(i){ window._g21marks[i] = !window._g21marks[i]; g21DrawList(false); }
+function g21Grade(){
+  let tp = 0, fp = 0, fn = 0;
+  G21_MARKETS.forEach((m, i) => {
+    const fee = g21Fee(m.cat, m.feeRate, (m.yes + m.no) / 2);
+    const real = 1 - m.yes - m.no - fee > 0.002;
+    if(real && window._g21marks[i]) tp++;
+    else if(!real && window._g21marks[i]) fp++;
+    else if(real && !window._g21marks[i]) fn++;
+  });
+  g21DrawList(true);
+  document.getElementById('g21_out').innerHTML =
+    `Верно отмечено: <b style="color:var(--ok)">${tp}</b>, ложных: <b style="color:var(--bad)">${fp}</b>, пропущено: <b style="color:var(--warn)">${fn}</b>.
+     <div style="margin-top:6px; color:var(--mut); font-size:12px">Правило: «YES+NO &lt; $1» — только начало расчёта. Комиссия по кривой p×(1−p) и проскальзывание решают, есть ли арбитраж на самом деле. У категории Geopolitics feeRate=0 — там маржа выживает чаще.</div>`;
+}
+
+/* ---------- G-22 «Дроп или ловушка?» ---------- */
+var G22_CARDS = [
+  { t: 'app.uniswap.org предлагает проверить кошелёк на ретродроп: «Connect wallet»', good: true, why: 'Подключение кошелька к известному домену — норма. Проверяй домен побуквенно.' },
+  { t: 'uniswάp-airdrop.io: «Подпиши сообщение approve для получения UNI»', good: false, why: 'Поддельная буква ά в домене + запрос подписи approve = классический drainer. Approve отдаёт право вывода твоих токенов.' },
+  { t: 'Telegram-бот «Arbitrum Foundation»: «Введи seed-фразу для верификации дропа»', good: false, why: 'Seed-фразу не просит НИКТО и НИКОГДА. Любой, кто просит — вор. Без исключений.' },
+  { t: 'Официальный блог проекта объявил снапшот: «Зайди на сайт из официального X-аккаунта»', good: true, why: 'Переход по ссылке из верифицированного официального канала — приемлемый путь. Домен всё равно сверяй.' },
+  { t: 'layer-zero.claims: «Срочно! Осталось 2 часа. Подключи кошелёк и подпиши setApprovalForAll»', good: false, why: 'Искусственная срочность + setApprovalForAll = передача ВСЕХ NFT/токенов коллекции. Признак скама в 100% случаев для «дропа».' },
+  { t: 'Сайт просит только прочитать баланс (eth_call) без подписей', good: true, why: 'Чтение баланса не двигает деньги. Опасность начинается с подписей и транзакций.' }
+];
+var g22Idx = 0, g22Score = 0;
+function renderG22(box){
+  g22Idx = 0; g22Score = 0;
+  box.innerHTML = `
+    <div style="background:rgba(239,68,68,.05); border:1.5px solid var(--bad); border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:var(--bad); margin-bottom:6px">🎮 Дроп или ловушка?</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">6 карточек. Вердикт: безопасно или скам. Ошибка здесь стоит кошелёк.</div>
+      <div id="g22_card"></div>
+      <div id="g22_out" style="margin-top:8px; font-size:12.5px"></div>
+    </div>`;
+  g22ShowCard();
+}
+function g22ShowCard(){
+  const c = G22_CARDS[g22Idx];
+  document.getElementById('g22_card').innerHTML = `
+    <div style="background:#040714; border-radius:10px; padding:14px; font-size:13.5px; min-height:60px">
+      <span style="color:var(--mut); font-size:11px">Карточка ${g22Idx + 1}/6 · счёт ${g22Score}</span><br>${c.t}
+    </div>
+    <div style="display:flex; gap:8px; margin-top:8px">
+      <button class="btn sm" style="background:var(--ok)" onclick="g22Answer(true)">✅ Похоже на правду</button>
+      <button class="btn sm" style="background:var(--bad)" onclick="g22Answer(false)">🚨 Ловушка</button>
+    </div>`;
+}
+function g22Answer(saidGood){
+  const c = G22_CARDS[g22Idx];
+  const correct = saidGood === c.good;
+  if(correct) g22Score++;
+  document.getElementById('g22_out').innerHTML = `
+    <div style="padding:10px; background:#040714; border-left:3px solid ${correct ? 'var(--ok)' : 'var(--bad)'}; border-radius:6px">
+      <b style="color:${correct ? 'var(--ok)' : 'var(--bad)'}">${correct ? '✅ Верно!' : '❌ Мимо — в жизни это стоило бы денег.'}</b><br>
+      <span style="color:var(--mut); font-size:12.5px">${c.why}</span>
+    </div>`;
+  g22Idx++;
+  if(g22Idx < G22_CARDS.length) setTimeout(g22ShowCard, 50);
+  else document.getElementById('g22_card').innerHTML = `
+    <div style="background:#040714; border-radius:10px; padding:14px; font-size:13.5px">
+      Итог: <b style="color:${g22Score >= 5 ? 'var(--ok)' : 'var(--bad)'}">${g22Score}/6</b>.
+      ${g22Score === 6 ? 'Идеально: глаз наметан.' : 'Перечитай урок про фишинг: seed — никому, approve — только осознанно, домен — побуквенно.'}
+      <div style="margin-top:8px"><button class="btn sm ghost" onclick="renderG22(document.getElementById('widget_g22_airdrop'))">🔄 Ещё раз</button></div>
+    </div>`;
+}
+
+/* ---------- G-23 «RWA-цепочка доверия» ---------- */
+var G23_LINKS = [
+  { id: 'spv', name: '🏛️ SPV (юрлицо)', fail: 'SPV банкротится или оказывается прокладкой: активы под залогом кредиторов, держатели токенов — последние в очереди. Токен теряет обеспечение юридически.' },
+  { id: 'cust', name: '🔐 Кастодиан', fail: 'Кастодиан замораживает счета по санкциям или взломан: актив есть, но «доказать» его движение для токена невозможно — NAV останавливается, вторичный рынок девальвирует токен.' },
+  { id: 'oracle', name: '📡 Оракул NAV', fail: 'Оракул публикует устаревшую/ложную оценку: токен торгуется по фантомной цене. Арбитражёры разбирают пул, пока NAV не честный.' },
+  { id: 'token', name: '🪙 Токен', fail: 'Смарт-контракт токена уязвим (минт без лимита / пауза у одного ключа): эмитент может размыть или заморозить твои токены одной транзакцией.' }
+];
+function renderG23(box){
+  box.innerHTML = `
+    <div style="background:rgba(148,163,184,.08); border:1.5px solid #94a3b8; border-radius:12px; padding:16px; margin-top:12px">
+      <div style="font-weight:800; color:#94a3b8; margin-bottom:6px">🎮 RWA-цепочка доверия</div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:8px">«Токенизированная недвижимость/облигации» = цепочка посредников. Кликни звено, чтобы сломать его и увидеть последствия для держателя токена.</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center">
+        ${G23_LINKS.map((l, i) => `<button class="btn sm ghost" id="g23_${l.id}" onclick="g23Break('${l.id}')">${l.name}</button>${i < 3 ? '<span style="color:var(--mut)">→</span>' : ''}`).join('')}
+      </div>
+      <div id="g23_out" style="margin-top:10px; font-size:12.5px"></div>
+    </div>`;
+}
+function g23Break(id){
+  G23_LINKS.forEach(l => {
+    const b = document.getElementById('g23_' + l.id);
+    b.className = 'btn sm ' + (l.id === id ? '' : 'ghost');
+    if(l.id === id) b.style.background = 'var(--bad)';
+  });
+  const l = G23_LINKS.find(x => x.id === id);
+  document.getElementById('g23_out').innerHTML = `
+    <div style="background:#040714; border-left:3px solid var(--bad); border-radius:6px; padding:10px">
+      <b>💥 Звено «${l.name}» сломано:</b><br>${l.fail}
+      <div style="margin-top:6px; color:var(--mut); font-size:12px">Вывод: RWA-токен — это не «актив в блокчейне», а обещание цепочки посредников. Оценивай самое слабое звено, а не самое красивое.</div>
     </div>`;
 }
 
