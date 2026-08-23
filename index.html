@@ -1246,7 +1246,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
           <option value="1">x1 (Без плеча)</option>
           <option value="2">x2</option>
           <option value="3">x3</option>
-          <option value="5">x5</option>
+          <option value="3">x5</option>
           <option value="10" selected>x10</option>
           <option value="20">x20</option>
           <option value="50">x50 (Опасно!)</option>
@@ -1440,7 +1440,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <div class="sim-controls">
       <div class="sim-input-group">
         <label>Win Rate (% прибыльных сделок):</label>
-        <input type="number" id="k_win" value="55" min="30" max="80" step="1" oninput="calcKellySim()">
+        <input type="number" id="k_win" value="52" min="30" max="80" step="1" oninput="calcKellySim()">
       </div>
       <div class="sim-input-group">
         <label>Risk / Reward (Отношение Win/Loss):</label>
@@ -1520,7 +1520,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <div class="sim-controls">
       <div class="sim-input-group">
         <label>Размер торгового капитала ($):</label>
-        <input type="number" id="ks_deposit" value="50000" step="5000">
+        <input type="number" id="ks_deposit" value="150000" step="5000">
       </div>
       <div class="sim-input-group">
         <label>Заданный порог Kill-Switch (% просадки):</label>
@@ -1574,7 +1574,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
         <label>Размер торгового капитала (₽):</label>
         <select id="sc_cap" onchange="calcScalingSim()">
           <option value="150000">150,000 ₽ (Микро-лайв)</option>
-          <option value="1000000">1,000,000 ₽</option>
+          <option value="3000000">1,000,000 ₽</option>
           <option value="3000000">3,000,000 ₽</option>
           <option value="6000000" selected>6,000,000 ₽ (Целевой капитал)</option>
         </select>
@@ -1679,7 +1679,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       <div class="sim-input-group">
         <label>Средняя задержка сети до CEX (Latency ms):</label>
         <select id="ed_latency" onchange="calcExecDevSim()">
-          <option value="5">VPS Франкфурт (5 мс — идеал)</option>
+          <option value="3.5">VPS Франкфурт (5 мс — идеал)</option>
           <option value="45" selected>VPS Общий дата-центр (45 мс)</option>
           <option value="180">Домашний интернет РФ (180 мс — высокий риск)</option>
         </select>
@@ -1764,7 +1764,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       </div>
       <div class="sim-input-group">
         <label style="font-size:12px; color:var(--mut); font-weight:700">Исходный спред (bps):</label>
-        <input type="number" id="arb_spread" value="50" step="5" oninput="calcArbitrageSim()" style="width:100%; padding:8px 12px; border-radius:8px; background:var(--card); border:1px solid var(--line); color:var(--txt)">
+        <input type="number" id="arb_spread" value="150" step="5" oninput="calcArbitrageSim()" style="width:100%; padding:8px 12px; border-radius:8px; background:var(--card); border:1px solid var(--line); color:var(--txt)">
       </div>
     </div>
 
@@ -1885,7 +1885,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">На перпетуале фандинг платится каждые 8 часов. Даже крошечная ставка превращается в заметную годовую «аренду позиции». Посчитай драг и подумай, какое ожидание на сделку нужно, чтобы его окупить.</p>
     <div class="sim-controls">
       <div class="sim-input-group"><label>Размер позиции (₽):</label><input type="number" id="fd_notional" value="100000" min="1000" step="1000"></div>
-      <div class="sim-input-group"><label>Фандинг за 8 ч (bps):</label><input type="number" id="fd_rate" value="1" step="0.5"></div>
+      <div class="sim-input-group"><label>Фандинг за 8 ч (bps):</label><input type="number" id="fd_rate" value="2.5" step="0.5"></div>
       <div class="sim-input-group"><label>Дней удержания:</label><input type="number" id="fd_days" value="30" min="1" step="1"></div>
       <div class="sim-input-group"><label>Направление:</label>
         <select id="fd_side"><option value="long">Лонг (платишь при положительном фандинге)</option><option value="short">Шорт</option></select>
@@ -1903,7 +1903,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
       <div class="sim-input-group"><label>Сделка (₽):</label><input type="number" id="tc_notional" value="50000" min="1000" step="1000"></div>
       <div class="sim-input-group"><label>Комиссия тейкера (%):</label><input type="number" id="tc_fee" value="0.055" step="0.005"></div>
       <div class="sim-input-group"><label>Спред (bps):</label><input type="number" id="tc_spread" value="2" step="0.5"></div>
-      <div class="sim-input-group"><label>Слиппедж (bps):</label><input type="number" id="tc_slip" value="3" step="0.5"></div>
+      <div class="sim-input-group"><label>Слиппедж (bps):</label><input type="number" id="tc_slip" value="5" step="0.5"></div>
       <div class="sim-input-group"><label>Сделок (round-trips):</label><input type="number" id="tc_rt" value="20" min="1" step="1"></div>
     </div>
     <button class="btn" onclick="window.runTCostSim()">🧾 Посчитать издержки</button>
