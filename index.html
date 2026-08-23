@@ -36543,7 +36543,18 @@ const NEWS_ANTIFUD = [
 window.NEWS_ANTIFUD = NEWS_ANTIFUD;
 
 let newsAntifudCurrent = null;
+function newsAntifudLockedHTML(){
+  return '<div style="background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:16px;text-align:center">' +
+    '<div style="font-size:24px;margin-bottom:6px">🔒</div>' +
+    '<div style="font-weight:700;font-size:13px;color:var(--txt);margin-bottom:4px">Анти-FUD откроется после урока 0.18</div>' +
+    '<div style="font-size:11.5px;color:var(--mut)">Там разобрана анатомия манипулятивных заголовков.</div>' +
+  '</div>';
+}
+window.newsAntifudLockedHTML = newsAntifudLockedHTML;
+
 function newsAntifudHTML(){
+  const g = newsGateCheck();
+  if(!g.antiOpen) return newsAntifudLockedHTML();
   const idx = Math.floor(Date.now() / 864e5) % NEWS_ANTIFUD.length;
   newsAntifudCurrent = NEWS_ANTIFUD[idx];
   const st = newsStatsLoad();
@@ -36593,6 +36604,126 @@ window.newsExercisesHTML = newsExercisesHTML;
   const prev = window.renderNewsView;
   window.renderNewsView = function(){
     return prev() + newsExercisesHTML();
+  };
+})();
+
+/* =========================================================================
+   N4 · Гейтинг и таймер внимания: лента открывается после уроков 2.1–2.2,
+   анти-FUD после 0.18; таймер чтения 10 мин → карточка П6 «тяга к движению»
+   ========================================================================= */
+
+/* ---------- гейтинг ---------- */
+function newsGateCheck(){
+  // если LESSONS не содержит id — гейт снимается (безопасный fallback)
+  const need = ['p2_l1', 'p2_l2'];
+  const missing = need.filter(id => !(typeof lessonsDone === 'object' && lessonsDone[id] === 1));
+  const antiNeed = ['p0_l18'];
+  const antiMissing = antiNeed.filter(id => !(typeof lessonsDone === 'object' && lessonsDone[id] === 1));
+  return {
+    open: missing.length === 0,
+    missing: missing,
+    antiOpen: antiMissing.length === 0,
+    antiMissing: antiMissing
+  };
+}
+window.newsGateCheck = newsGateCheck;
+
+/* ---------- таймер внимания ---------- */
+const NEWS_TIMER_KEY = 'cn_news_timer';
+function newsTimerGet(){
+  try{ return JSON.parse(localStorage.getItem(NEWS_TIMER_KEY) || '{"elapsed":0,"started":null}'); }catch(e){ return { elapsed: 0, started: null }; }
+}
+function newsTimerSave(st){
+  try{ localStorage.setItem(NEWS_TIMER_KEY, JSON.stringify(st)); }catch(e){}
+}
+let newsTimerId = null;
+function newsTimerStart(){
+  if(newsTimerId) return;
+  newsTimerId = setInterval(function(){
+    const st = newsTimerGet();
+    if(!st.started) st.started = Date.now();
+    st.elapsed += 30;
+    newsTimerSave(st);
+    const el = document.getElementById('news_attention_banner');
+    if(st.elapsed >= 600 && !el){ // 10 минут = 600 сек
+      const view = document.getElementById('live');
+      if(view && view.classList.contains('active') && sessionStorage.getItem('cn_live_sub') === 'news'){
+        const coachCol = document.getElementById('live_coach_col');
+        if(coachCol){
+          coachCol.insertAdjacentHTML('afterbegin',
+            '<div id="news_attention_banner" style="background:rgba(245,158,11,.1);border:1px solid var(--warn);border-radius:12px;padding:12px 16px;margin-bottom:12px">' +
+              '<div style="font-weight:800;font-size:12.5px;color:var(--warn);margin-bottom:4px">🧘 Тяга к движению растёт — 10 минут ленты</div>' +
+              '<div style="font-size:12px;color:var(--txt);line-height:1.55;margin-bottom:8px">Длинная лента кормит тягу к движению: информационный поток кажется обязательным, а 90% заголовков — шум. Остаточная привычка: фиксируй понятные и закрывай.</div>' +
+              '<div style="display:flex;gap:8px">' +
+                '<button class="btn sm ghost" onclick="newsTimerDismiss()">Закрыть ленту</button>' +
+                '<button class="btn sm ghost" onclick="newsTimerDismiss(this)">Записать в журнал</button>' +
+              '</div>' +
+            '</div>');
+        }
+      }
+    }
+    const lbl = document.getElementById('news_timer_lbl');
+    if(lbl){
+      const m = Math.floor(st.elapsed / 60);
+      lbl.textContent = '⏱ лента: ' + m + ' мин';
+      if(m >= 10) lbl.style.color = 'var(--warn)';
+    }
+  }, 30000);
+}
+window.newsTimerStart = newsTimerStart;
+
+function newsTimerDismiss(btn){
+  const el = document.getElementById('news_attention_banner');
+  if(el) el.remove();
+  const st = newsTimerGet();
+  st.elapsed = 0; st.started = Date.now();
+  newsTimerSave(st);
+  if(btn && btn.textContent.includes('журнал')){
+    if(typeof showToast === 'function') showToast('📝 Отмечено: тяга к движению зафиксирована до следующего раза', '🧘');
+    else alert('Записано в журнальные заметки');
+  }
+  const lbl = document.getElementById('news_timer_lbl');
+  if(lbl){ lbl.textContent = '⏱ лента: 0 мин'; lbl.style.color = ''; }
+}
+window.newsTimerDismiss = newsTimerDismiss;
+
+/* старт/стоп таймера при переходе на субвкладку «Новости» */
+(function patchNewsSwitchForTimer(){
+  const prev = window.newsSwitchSub;
+  window.newsSwitchSub = function(id){
+    prev(id);
+    if(id === 'news'){
+      const st = newsTimerGet();
+      if(!st.started){ st.started = Date.now(); newsTimerSave(st); }
+      newsTimerStart();
+    } else if(newsTimerId){
+      clearInterval(newsTimerId);
+      newsTimerId = null;
+    }
+  };
+})();
+
+/* ---------- патч renderNewsView: гейтинг + таймер-лейбл + скрытие анти-FUD ---------- */
+(function patchNewsViewForGate(){
+  const prev = window.renderNewsView;
+  window.renderNewsView = function(){
+    const g = newsGateCheck();
+    if(!g.open){
+      return '<div style="background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:20px;text-align:center">' +
+        '<div style="font-size:32px;margin-bottom:8px">🔒</div>' +
+        '<div style="font-weight:800;font-size:14px;color:var(--txt);margin-bottom:6px">Лента новостей откроется после уроков</div>' +
+        '<div style="font-size:12.5px;color:var(--mut);line-height:1.6;margin-bottom:10px">Сначала пройди: ' + g.missing.map(id => '«' + id.replace('p', '').replace('_l', '.') + '»').join(' и ') + ' — там объясняется, как читать информационный поток без ущерба.</div>' +
+        '<button class="btn sm" onclick="go(\'lessons\')">🎓 К урокам</button>' +
+      '</div>';
+    }
+    let html = prev();
+    // лейбл таймера в заголовок
+    html = html.replace('📰 Лента новостей</div>', '📰 Лента новостей</div><div id="news_timer_lbl" style="font-size:11px;color:var(--mut)"></div>');
+    // если antiFud не открыт — показываем замок вместо упражнения
+    if(!g.antiOpen){
+      html = html.replace('🛡️ Анти-FUD / анти-хайп', '🔒 Анти-FUD');
+    }
+    return html;
   };
 })();
 /*__LIVE_APPEND__*/
