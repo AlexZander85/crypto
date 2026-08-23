@@ -13663,6 +13663,20 @@ function filterSimulators(phase, btn){
 }
 
 function initSims(){
+  // D3.6: единый бейдж учебной модели на всех симуляторах
+  if(!window._simBadgesDone){
+    window._simBadgesDone = true;
+    document.querySelectorAll('.sim-box h3').forEach(h => {
+      if(h.querySelector('.sim-edu-badge')) return;
+      const b = document.createElement('span');
+      b.className = 'sim-edu-badge';
+      b.textContent = '🧪 Учебная модель';
+      b.title = 'Симулятор использует упрощённую модель: реальные комиссии, стакан и правила биржи отличаются. См. описание ограничений в тексте симулятора.';
+      b.style.cssText = 'margin-left:8px; font-size:10px; font-weight:800; color:var(--warn); background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.4); border-radius:6px; padding:2px 7px; vertical-align:middle; cursor:help';
+      h.appendChild(b);
+    });
+  }
+
   if(!simInitialized){
     renderObTable();
     calcLiquidation();
@@ -20483,6 +20497,7 @@ function renderCandleConstructor2(containerId = 'widget_p0_l6'){
       patternName = '🚀 Марубозу (Marubozu) — сильное однонаправленное движение бара';
       patternClass = isBull ? 'var(--ok)' : 'var(--bad)';
     }
+    patternName += ' · ⚠️ паттерн не гарантирует направление: это описание формы бара, а не прогноз';
   }
 
   box.innerHTML = `
@@ -22823,6 +22838,9 @@ function r2bRender(){
           <li>Комиссии: биржа $${r2b.feeUsd.toFixed(2)} + сеть ${R2B_NET_FEE} BTC</li>
           <li>На кошелёк пришло: <b>${r2b.btc.toFixed(8)} BTC</b></li>
           <li>Эффективный курс покупки: <b>${Math.round(effRate).toLocaleString()} ₽ за 1 BTC</b> (чуть хуже рыночного — это цена входа)</li>
+          <li><b>🧮 Во что обошёлся круг:</b> рыночный курс ${(R2B_USDT_RUB*R2B_BTC_USDT).toLocaleString()} ₽/BTC → ты заплатил ${Math.round(effRate).toLocaleString()} ₽/BTC.
+            Трение пути: <b style="color:var(--bad)">${Math.round(effRate - R2B_USDT_RUB*R2B_BTC_USDT).toLocaleString()} ₽ на BTC</b> ≈
+            <b style="color:var(--bad)">${((effRate/(R2B_USDT_RUB*R2B_BTC_USDT)-1)*10000).toFixed(0)} bps</b> (спред + комиссия биржи + комиссия сети).</li>
         </ul>
         <p style="font-size:12px;color:var(--mut);margin-top:6px">Урок пути: каждый шаг — пополнение, спред, тип заявки, комиссии биржи и сети — стоит денег. Понимание механики экономит проценты капитала ещё до первой стратегии.</p>
       </div>
