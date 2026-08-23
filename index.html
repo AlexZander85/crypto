@@ -36756,6 +36756,7 @@ function mentorLimitReached(){
   return mentorUsageToday().n >= MENTOR_LIMIT;
 }
 window.mentorLimitReached = mentorLimitReached;
+window.MENTOR_LIMIT = MENTOR_LIMIT;
 
 /* ---------- клиент ---------- */
 const MENTOR = {
@@ -36974,7 +36975,8 @@ window.renderMentorActions = function(){
 };
 
 function mentorRun(action){
-  const lessonId = window._mentorLessonId || (window.openFullscreenLesson && window.lessonsDone ? Object.keys(lessonsDone).slice(-1)[0] : '');
+  const lessonId = window._mentorLessonId;
+  if(!lessonId) return;
   // если панель не открыта — открываем
   if(!document.getElementById('mentor_panel')) mentorOpenPanel(lessonId);
   const out = document.getElementById('mentor_result');
