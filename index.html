@@ -821,6 +821,13 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   <button class="tab" data-tab="glossary">📖 Глоссарий</button>
   <button class="tab" data-tab="quiz">🎮 Викторина</button>
   <button class="tab" data-tab="progress">📊 Прогресс</button>
+  <span class="badge" style="background:rgba(6,182,212,.08); color:var(--mut); border:1px solid var(--line); display:inline-flex; align-items:center; gap:4px; padding:2px 8px; font-size:11.5px">💼
+    <select id="account_size_sel" onchange="window.setAccountSize(this.value)" style="background:transparent; border:none; color:var(--txt); font-size:11.5px; font-family:var(--font); cursor:pointer">
+      <option value="small">≤ 50К ₽</option>
+      <option value="mid">50К–500К ₽</option>
+      <option value="large">500К+ ₽</option>
+    </select>
+  </span>
 </nav>
 
 <main>
@@ -2197,6 +2204,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <p style="margin:8px 0; color:var(--txt)"><b style="color:var(--acc1)">Определение:</b> <span id="mDef"></span></p>
     <p style="margin:8px 0; color:var(--mut)"><b>Аналогия:</b> <span id="mAna"></span></p>
     <p style="margin:8px 0; color:var(--mut)"><b>Зачем алготрейдеру:</b> <span id="mWhy"></span></p>
+    <p style="margin:8px 0; font-size:12px; color:var(--acc2); border-top:1px dashed var(--line); padding-top:8px"><b>💼 Под твой капитал:</b> <span id="mCapNote"></span></p>
   </div>
 </div>
 
@@ -13800,6 +13808,14 @@ function openTermModal(idx){
   $('#mDef').textContent = t.d;
   $('#mAna').textContent = t.a;
   $('#mWhy').textContent = t.w;
+  const size = localStorage.getItem('cn_account_size') || 'small';
+  const capNote = {
+    small: '≤ 50К ₽: комиссии и спред съедают большую долю — частые сделки вреднее, предпочтительны лимитные ордера и более редкие ребалансировки.',
+    mid: '50К–500К ₽: комиссии терпимы, но контролируй проскальзывание на неликвидных парах и объём не больше 2–5% объёма стакана.',
+    large: '500К+ ₽: исполнение и проскальзывание — ключевой риск: дроби ордера (TWAP/VWAP), считай рыночный импакт и следи за глубиной стакана.'
+  }[size];
+  const capEl = document.getElementById('mCapNote');
+  if(capEl) capEl.textContent = capNote;
   $('#termModal').classList.add('open');
 }
 
@@ -13889,6 +13905,18 @@ window.runTCostSim = function(){
     </table>
     <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Правило безубытка: ожидание на сделку ≥ <b style="color:var(--warn)">${breakevenBps} bps</b>. Maker-ордера срезают комиссию, но добавляют риск неисполнения — обсуждается в уроке про стакан.</div>`;
 };
+
+// V3-B3: контур капитала — выбор размера счёта влияет на тултипы и рекомендации
+window.setAccountSize = function(v){
+  localStorage.setItem('cn_account_size', v);
+  const sel = document.getElementById('account_size_sel');
+  if(sel) sel.value = v;
+  if(typeof showToast === 'function') showToast('💼 Капитал: ' + (v === 'small' ? '≤ 50К ₽' : v === 'mid' ? '50К–500К ₽' : '500К+ ₽') + ' — рекомендации в тултипах обновлены', '💼');
+};
+window.addEventListener('DOMContentLoaded', () => {
+  const sel = document.getElementById('account_size_sel');
+  if(sel) sel.value = localStorage.getItem('cn_account_size') || 'small';
+});
 
 function filterSimulators(phase, btn){
   if(btn){
