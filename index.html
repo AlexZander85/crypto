@@ -34,6 +34,9 @@ nav{display:flex; justify-content:center; align-items:center; gap:10px; padding:
 .tab{border:1px solid var(--line); background:var(--card); color:var(--txt); padding:8px 16px; border-radius:99px; cursor:pointer; font-size:13.5px; transition:.2s; display:inline-flex; align-items:center; gap:6px}
 .tab:hover{border-color:var(--acc2); background:rgba(255,255,255,.08)}
 .tab.active{background:var(--grad); border-color:transparent; font-weight:700; color:#fff; box-shadow:0 0 16px rgba(124,58,237,.35)}
+.nav-group{display:inline-flex; align-items:center; gap:6px; padding:4px 8px 4px 10px; border:1px dashed var(--line); border-radius:99px; background:rgba(255,255,255,.015)}
+.nav-group-label{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); padding-right:2px; user-select:none}
+.nav-group .tab{padding:6px 12px; font-size:12.5px}
 main{max-width:1560px; width:95%; margin:0 auto; padding:20px 24px 100px}
 .view{display:none; animation:fade .3s ease-out}
 .view.active{display:block}
@@ -823,14 +826,23 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </header>
 <nav>
   <button class="tab active" data-tab="home">🚀 Старт</button>
-  <button class="tab" data-tab="lessons">🎓 Уроки</button>
-  <button class="tab" data-tab="sims">🕹️ Симуляторы</button>
-  <button class="tab" data-tab="roadmap">🗺️ Дорожная карта</button>
-  <button class="tab" data-tab="tests">📝 Тесты фаз</button>
-  <button class="tab" data-tab="earnings" style="background:rgba(234,179,8,.15); color:var(--warn); border:1px solid rgba(234,179,8,.4)">💰 Способы заработка</button>
-  <button class="tab" data-tab="glossary">📖 Глоссарий</button>
-  <button class="tab" data-tab="quiz">🎮 Викторина</button>
-  <button class="tab" data-tab="progress">📊 Прогресс</button>
+  <div class="nav-group">
+    <span class="nav-group-label">🎓 Учёба</span>
+    <button class="tab" data-tab="lessons">Уроки</button>
+    <button class="tab" data-tab="tests">Тесты фаз</button>
+    <button class="tab" data-tab="progress">Прогресс</button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-label">🕹️ Практика</span>
+    <button class="tab" data-tab="sims">Симуляторы</button>
+    <button class="tab" data-tab="quiz">Викторина</button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-label">📖 Справка</span>
+    <button class="tab" data-tab="glossary">Глоссарий</button>
+    <button class="tab" data-tab="roadmap">Дорожная карта</button>
+    <button class="tab" data-tab="earnings" style="background:rgba(234,179,8,.15); color:var(--warn); border:1px solid rgba(234,179,8,.4)">💰 Заработок</button>
+  </div>
   <span class="badge" style="background:rgba(6,182,212,.08); color:var(--mut); border:1px solid var(--line); display:inline-flex; align-items:center; gap:4px; padding:2px 8px; font-size:11.5px">💼
     <select id="account_size_sel" onchange="window.setAccountSize(this.value)" style="background:transparent; border:none; color:var(--txt); font-size:11.5px; font-family:var(--font); cursor:pointer">
       <option value="small">≤ 50К ₽</option>
