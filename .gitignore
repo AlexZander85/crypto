@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Session/tool state
+.ag/
+.playwright-mcp/
+
+# Backup and intermediate HTML versions
+index.backup*.html
+index.DESTROYED-by-agent.html
+index.verified-100-master.html
+index(3).html
+
+# Debug / verification scripts and temp artifacts
+*.mjs
+verify_*.js
+check_*.js
+debug_out.txt
+dbg_tmp.txt
+scratch_boundary.txt
+err_only.mjs
+
+# Build artifacts
+extracted_app.js
+p1_pack.js
+
+# OS junk
+Thumbs.db
+.DS_Store
