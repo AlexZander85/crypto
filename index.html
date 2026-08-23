@@ -27681,6 +27681,72 @@ completeLessonWithMastery = function(id){
 
 
 
+/* ---------- V4-E2: строгий режим Фазы 0 (toggle, default OFF) ---------- */
+function isStrictPhase0(){
+  try{ return localStorage.getItem('cn_strict_phase0') === '1'; }catch(e){ return false; }
+}
+window.toggleStrictPhase0 = function(){
+  const on = !isStrictPhase0();
+  try{ localStorage.setItem('cn_strict_phase0', on ? '1' : '0'); }catch(e){}
+  showToast(on ? 'Строгий режим Фазы 0 ВКЛ: урок N+1 откроется после завершения урока N.' : 'Строгий режим Фазы 0 ВЫКЛ: свободная навигация по урокам.', on ? '🔒' : '🔓', 3500);
+  if(typeof renderPhaseLessonsView === 'function' && currentViewingPhase === 0) renderPhaseLessonsView(0);
+};
+const _origOpenFullscreenV4 = openFullscreenLesson;
+openFullscreenLesson = function(lessonId){
+  if(isStrictPhase0()){
+    const l = LESSONS.find(x => x.id === lessonId);
+    if(l && l.phase === 0){
+      const seq = LESSONS.filter(x => x.phase === 0);
+      const idx = seq.findIndex(x => x.id === lessonId);
+      if(idx > 0 && lessonsDone[seq[idx - 1].id] !== 1){
+        showToast('🔒 Строгий режим: сначала заверши урок «' + seq[idx - 1].title.slice(0, 48) + '…»', '🔒', 4000);
+        window.scrollToLessonCard && window.scrollToLessonCard(seq[idx - 1].id);
+        return;
+      }
+    }
+  }
+  return _origOpenFullscreenV4.apply(this, arguments);
+};
+// Визуальный замок на карточках Фазы 0 при включённом строгом режиме
+const _origRenderPhaseLessonsV4 = renderPhaseLessonsView;
+renderPhaseLessonsView = function(phaseNum){
+  _origRenderPhaseLessonsV4.apply(this, arguments);
+  try{
+    if(phaseNum === 0){
+      const jumpBar = document.getElementById('phase_jump_bar');
+      if(jumpBar && !document.getElementById('strict_phase0_toggle')){
+        jumpBar.insertAdjacentHTML('beforeend',
+          '<button id="strict_phase0_toggle" class="btn sm ghost" style="margin-left:auto; font-size:11.5px" onclick="toggleStrictPhase0()"></button>');
+      }
+      const tgl = document.getElementById('strict_phase0_toggle');
+      if(tgl){
+        const on = isStrictPhase0();
+        tgl.innerHTML = (on ? '🔒 Строгий режим: ВКЛ' : '🔓 Строгий режим: ВЫКЛ');
+        tgl.style.borderColor = on ? 'var(--warn)' : 'var(--line)';
+        tgl.style.color = on ? 'var(--warn)' : 'var(--mut)';
+      }
+      if(isStrictPhase0()){
+        const seq = LESSONS.filter(x => x.phase === 0);
+        let firstOpen = true;
+        seq.forEach(l => {
+          const card = document.getElementById('lesson_card_' + l.id);
+          if(!card) return;
+          const locked = lessonsDone[l.id] !== 1 && !firstOpen;
+          if(lessonsDone[l.id] !== 1 && firstOpen) firstOpen = false;
+          if(locked){
+            card.style.opacity = '.55';
+            card.style.position = 'relative';
+            if(!card.querySelector('.v4-lock-badge')){
+              card.insertAdjacentHTML('beforeend',
+                '<span class="v4-lock-badge" style="position:absolute; top:8px; right:8px; font-size:15px" title="Откроется после предыдущего урока">🔒</span>');
+            }
+          }
+        });
+      }
+    }
+  }catch(e){}
+};
+
 /* ---------- V4-D3: «Сборочный пункт» после каждых 5 завершённых уроков ---------- */
 const _origShowConsolV4 = showConsolidationScreen;
 showConsolidationScreen = function(lessonId, customTitle){
