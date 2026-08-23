@@ -2047,6 +2047,12 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
+  <div class="controls" style="margin-bottom:6px" id="quiz_level_row">
+    <span style="font-size:11.5px; color:var(--mut); font-weight:700; margin-right:2px">🎚 Уровень мастерства:</span>
+    <button class="chip active" id="quiz_lvl_1" onclick="setQuizLevel(1, this)">🌱 Базовый</button>
+    <button class="chip" id="quiz_lvl_2" onclick="setQuizLevel(2, this)">🚀 Практик</button>
+    <button class="chip" id="quiz_lvl_3" onclick="setQuizLevel(3, this)">🏛 Архитектор</button>
+  </div>
   <div class="controls" style="margin-bottom:10px">
     <button class="chip active" id="quiz_mode_terms" onclick="setQuizMode('terms', this)">⚡ Блиц по терминам</button>
     <button class="chip" id="quiz_mode_cases" onclick="setQuizMode('cases', this)">🧠 Практические квант-кейсы</button>
@@ -30767,6 +30773,171 @@ window.checkQuizNumeric = function(){
   renderProgressStats();
   const nextBtn = document.getElementById('quiz_next_btn');
   if(nextBtn) nextBtn.style.display = 'inline-block';
+};
+</script>
+<script>
+/* =========================================================================
+   V3-A6: ТРЕНАЖЁР — 3 УРОВНЯ МАСТЕРСТВА + ДО/ПОСЛЕ ПРЕ-КВИЗ (learning gain)
+   ========================================================================= */
+window.quizLevel = 1;
+window.setQuizLevel = function(lvl, btn){
+  window.quizLevel = lvl;
+  document.querySelectorAll('#quiz_level_row .chip').forEach(c => c.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  startQuiz();
+};
+/* уровни влияют на генерацию блица по терминам */
+const _origStartQuizA6 = startQuiz;
+startQuiz = function(){
+  if(quiz.preserveQs){ _origStartQuizA6.apply(this, arguments); return; }
+  const lvl = window.quizLevel || 1;
+  if(quizMode !== 'terms' && lvl !== 1){
+    quiz.score = 0; quiz.cur = 0; quiz.qs = []; quiz._shuffleSalt = nextShuffleSalt();
+    quiz.mode = 'standard'; quiz.isAdaptive = false; quiz.targetTopic = null;
+    const sb = document.getElementById('quiz_session_banner'); if(sb) sb.innerHTML = '';
+    let pool = quizMode === 'cases' ? [...QUIZ_CASES] : quizMode === 'legal' ? [...QUIZ_LEGAL] : [...QUIZ_CALC];
+    const len = lvl === 2 ? Math.min(10, pool.length) : Math.min(15, pool.length);
+    quiz.qs = pool.sort(() => 0.5 - Math.random()).slice(0, len);
+    quiz.total = quiz.qs.length;
+    renderQuizQuestion();
+    return;
+  }
+  if(quizMode !== 'terms'){ _origStartQuizA6.apply(this, arguments); return; }
+  quiz.mode = 'standard'; quiz.isAdaptive = false; quiz.targetTopic = null;
+  const sb = document.getElementById('quiz_session_banner'); if(sb) sb.innerHTML = '';
+  quiz.score = 0; quiz.cur = 0; quiz.total = 10; quiz.qs = [];
+  quiz._shuffleSalt = nextShuffleSalt();
+  const shuffled = [...TERMS].sort(() => 0.5 - Math.random()).slice(0, 10);
+  quiz.qs = shuffled.map(t => {
+    const others = TERMS.filter(x => x.t !== t.t).sort(() => 0.5 - Math.random()).slice(0, 3);
+    if(lvl === 1){
+      const allOpts = [t.t, ...others.map(o => o.t)].sort(() => 0.5 - Math.random());
+      return { q: `💡 Определение: «${t.d}». О каком понятии речь?`, opts: allOpts, a: allOpts.indexOf(t.t), explain: `Верный ответ: <b>${t.t}</b> (${CATS[t.c][0]}). ${t.d}` };
+    }
+    if(lvl === 2){
+      const allOpts = [t.t, ...others.map(o => o.t)].sort(() => 0.5 - Math.random());
+      return { q: `🎭 Бытовая аналогия: «${t.a}». Какой это термин?`, opts: allOpts, a: allOpts.indexOf(t.t), explain: `Верный ответ: <b>${t.t}</b> (${CATS[t.c][0]}). ${t.d}` };
+    }
+    const defOpts = [t.d, ...others.map(o => o.d)].sort(() => 0.5 - Math.random());
+    return { q: `🏛 Термин: «${t.t}». Выбери верное определение.`, opts: defOpts, a: defOpts.indexOf(t.d), explain: `Эталон: ${t.d}` };
+  });
+  quiz.total = quiz.qs.length;
+  renderQuizQuestion();
+};
+
+/* ---------- до/после пре-квиз (3 вопроса) ---------- */
+window._prepost = null;
+window.startSessionWithPrecheck = function(launchFn, pool){
+  const qs = [...pool].sort(() => 0.5 - Math.random()).slice(0, 3).filter(q => q.opts && q.opts.length);
+  if(qs.length < 3){ launchFn(); return; }
+  window._prepost = { qs, pre: 0, answered: 0, launchFn };
+  showPrePostModal('pre');
+};
+window.showPrePostModal = function(stage){
+  const st = window._prepost;
+  const old = document.getElementById('prepost_modal');
+  if(old) old.remove();
+  const modal = document.createElement('div');
+  modal.id = 'prepost_modal';
+  modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:120000; display:flex; justify-content:center; align-items:center; padding:14px; backdrop-filter:blur(6px)';
+  const isPre = stage === 'pre';
+  modal.innerHTML = `
+    <div style="background:#090d1f; border:2px solid var(--acc2); border-radius:16px; max-width:560px; width:100%; padding:22px; max-height:90vh; overflow-y:auto">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+        <h3 style="margin:0; font-size:17px; color:var(--txt)">${isPre ? '📋 Входной опрос (3 вопроса)' : '📋 Контрольный опрос (те же 3 вопроса)'}</h3>
+        ${isPre ? '<button class="btn sm ghost" onclick="window.finishPrePost(true)">Пропустить</button>' : ''}
+      </div>
+      <div style="font-size:12.5px; color:var(--mut); margin-bottom:14px; line-height:1.5">${isPre ? 'Ответь честно «как есть» — это не экзамен. После сессии сравним Δ до/после, чтобы увидеть прирост.' : 'Финал: те же вопросы — покажем честный прирост Δ.'}</div>
+      <div id="prepost_body"></div>
+      <div id="prepost_delta" style="display:none; margin-top:12px"></div>
+      <div style="text-align:right; margin-top:14px"><button class="btn sm" id="prepost_next" style="display:none" onclick="window.finishPrePost()">${isPre ? 'Начать сессию →' : 'Готово'}</button></div>
+    </div>`;
+  document.body.appendChild(modal);
+  st.answered = 0;
+  const body = modal.querySelector('#prepost_body');
+  body.innerHTML = st.qs.map((q, qi) => {
+    const sv = (typeof shuffledOptions === 'function') ? shuffledOptions(q, qi * 17 + 3) : q;
+    return `<div style="margin-bottom:14px">
+      <div style="font-size:13.5px; font-weight:700; color:var(--txt); margin-bottom:6px">${qi + 1}. ${q.q}</div>
+      <div id="prepost_opts_${qi}" style="display:flex; flex-direction:column; gap:5px">
+        ${sv.opts.map((o, oi) => `<button class="ans sm" style="text-align:left; font-size:12.5px; padding:7px 10px" onclick="window.answerPrePost(${qi}, ${oi}, ${sv.a})">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  if(!isPre){
+    const delta = modal.querySelector('#prepost_delta');
+    delta.style.display = 'block';
+    delta.innerHTML = `<div style="font-size:13px; color:var(--txt)">До: ${st.pre}/3 · после: <b id="prepost_post_cnt">0</b>/3</div>`;
+  }
+};
+window.answerPrePost = function(qi, oi, correct){
+  const st = window._prepost;
+  const box = document.getElementById('prepost_opts_' + qi);
+  if(!box || st._answered && st._answered[qi]) return;
+  st._answered = st._answered || {};
+  st._answered[qi] = true;
+  st.answered++;
+  box.querySelectorAll('button').forEach((b, bi) => {
+    b.disabled = true;
+    if(bi === correct) b.classList.add('ok'); else if(bi === oi) b.classList.add('bad');
+  });
+  const stage = document.querySelector('#prepost_modal h3').textContent.includes('Входной') ? 'pre' : 'post';
+  if(oi === correct){ if(stage === 'pre') st.pre++; else st.post = (st.post || 0) + 1; }
+  const pc = document.getElementById('prepost_post_cnt');
+  if(pc) pc.textContent = st.post || 0;
+  if(st.answered >= st.qs.length){
+    const nxt = document.getElementById('prepost_next');
+    if(nxt) nxt.style.display = 'inline-block';
+    if(stage === 'post'){
+      const delta = (st.post || 0) - st.pre;
+      const dl = document.getElementById('prepost_delta');
+      dl.innerHTML = `<div style="font-size:14px; color:var(--txt); font-weight:700">Δ до/после: <span style="color:${delta >= 0 ? 'var(--ok)' : 'var(--bad)'}">${delta >= 0 ? '+' : ''}${delta}</span> — ${delta > 0 ? 'прирост зафиксирован, сессия сработала.' : delta === 0 ? 'база устойчива; точки роста — в журнале ошибок.' : 'похоже на усталость — перерыв или повторное извлечение.'}</div>`;
+      if(delta > 0) showToast('📈 Δ до/после: +' + delta + ' — прирост зафиксирован!', '📈');
+    }
+  }
+};
+window.finishPrePost = function(skip){
+  const st = window._prepost;
+  const modal = document.getElementById('prepost_modal');
+  if(modal) modal.remove();
+  if(skip){ window._prepost = null; return; }
+  const stageWasPre = !st.postCalled;
+  st.postCalled = true;
+  if(stageWasPre && st.launchFn){
+    const qs = st.qs;
+    const fn = st.launchFn;
+    fn();
+    quiz._prepost = qs;
+    quiz._prepostPre = st.pre;
+  }
+};
+/* оборачиваем запуск смешанной и адаптивной сессий */
+if(typeof startInterleavingSession === 'function'){
+  const _il = startInterleavingSession;
+  startInterleavingSession = function(){
+    window.startSessionWithPrecheck(() => _il(), typeof ADAPTIVE_QUESTION_BANK !== 'undefined' ? ADAPTIVE_QUESTION_BANK.filter(q => q.opts) : []);
+  };
+}
+if(typeof startAdaptiveWorkout === 'function'){
+  const _aw = startAdaptiveWorkout;
+  startAdaptiveWorkout = function(){
+    window.startSessionWithPrecheck(() => _aw(), typeof ADAPTIVE_QUESTION_BANK !== 'undefined' ? ADAPTIVE_QUESTION_BANK.filter(q => q.opts) : []);
+  };
+}
+/* пост-опрос в конце сессии */
+const _origRQA6 = renderQuizQuestion;
+renderQuizQuestion = function(){
+  if(quiz && quiz.qs && quiz.cur >= quiz.total && quiz._prepost && quiz._prepost.length){
+    const qs = quiz._prepost; const pre = quiz._prepostPre;
+    quiz._prepost = null;
+    _origRQA6.apply(this, arguments);
+    setTimeout(() => {
+      window._prepost = { qs, pre, answered: 0, postCalled: true, launchFn: null };
+      showPrePostModal('post');
+    }, 400);
+    return;
+  }
+  _origRQA6.apply(this, arguments);
 };
 </script>
 </body>
