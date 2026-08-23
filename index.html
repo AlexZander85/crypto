@@ -810,6 +810,9 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     </div>
   </div>
 
+  <!-- V4-D2: помодоро-таймер 25 мин -->
+  <button id="pomodoro_btn" class="btn sm ghost" style="padding:5px 10px; font-size:12px; margin-left:8px" onclick="window.togglePomodoro()" title="Помодоро: 25 минут фокуса, затем напоминание о перерыве и консолидации">🍅 25:00</button>
+
   <!-- 💾 Save Progress Button -->
   <button id="headerSaveBtn" class="btn sm" style="padding:5px 10px; font-size:12px; background:rgba(34,197,94,.15); color:var(--ok); border:1px solid var(--ok); margin-left:8px; display:flex; align-items:center; gap:4px" onclick="manualSaveProgress()" title="Сохранить весь прогресс обучения в памяти браузера">
     <span style="font-size:13px">💾</span> Сохранить
@@ -13960,6 +13963,43 @@ window.runTCostSim = function(){
     </table>
     <div style="font-size:12.5px; color:var(--mut); margin-top:10px">Правило безубытка: ожидание на сделку ≥ <b style="color:var(--warn)">${breakevenBps} bps</b>. Maker-ордера срезают комиссию, но добавляют риск неисполнения — обсуждается в уроке про стакан.</div>`;
 };
+
+// V4-D4: автосохранение прогресса каждые 30 секунд
+setInterval(() => {
+  try{ if(typeof save === 'function') save(); }catch(e){}
+}, 30000);
+
+// V4-D2: помодоро-таймер 25 минут (opt-in)
+window._pomodoro = { left: 1500, running: false, id: null };
+window.togglePomodoro = function(){
+  const p = window._pomodoro;
+  const btn = document.getElementById('pomodoro_btn');
+  if(p.running){
+    p.running = false;
+    if(p.id) clearInterval(p.id);
+    if(btn){ btn.classList.remove('active'); btn.textContent = '🍅 ' + window._fmtPomo(p.left); }
+    return;
+  }
+  if(p.left <= 0) p.left = 1500;
+  p.running = true;
+  if(btn) btn.classList.add('active');
+  p.id = setInterval(() => {
+    p.left--;
+    const b = document.getElementById('pomodoro_btn');
+    if(b) b.textContent = '🍅 ' + window._fmtPomo(p.left);
+    if(p.left <= 0){
+      clearInterval(p.id);
+      p.running = false;
+      p.left = 1500;
+      if(b){ b.classList.remove('active'); b.textContent = '🍅 25:00'; }
+      showToast('🍅 25 минут фокуса! Сделай 5–10 мин перерыва БЕЗ телефона — консолидация усилится (~30%).', '🍅', 9000);
+      if(typeof showConsolidationScreen === 'function'){
+        setTimeout(() => { try{ showConsolidationScreen(null, 'Помодоро завершён — время закрепить'); }catch(e){} }, 600);
+      }
+    }
+  }, 1000);
+};
+window._fmtPomo = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
 
 // V3-B3: контур капитала — выбор размера счёта влияет на тултипы и рекомендации
 window.setAccountSize = function(v){
