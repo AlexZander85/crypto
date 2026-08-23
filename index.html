@@ -35603,6 +35603,284 @@ window.renderLiveCoachCol = function(){
       : '<div style="background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:18px;font-size:13px;color:var(--mut);line-height:1.6">Наставник ждёт данные. Подключи живой рынок или учебный режим — и здесь появятся карточки: куда смотреть, что число значит и чего оно не значит.</div>');
 };
 
+
+/* =========================================================================
+   W3 · Живой стакан и свечи: детекторы 1–6, 9–10 + задание с вводом ответа
+   ========================================================================= */
+
+/* ---------- рендер стакана ---------- */
+function liveFmtP(p){
+  return p >= 1000 ? Math.round(p).toLocaleString('ru-RU') : (+p).toFixed(2);
+}
+function renderLiveOrderbook(ob){
+  const bids = ob.bids.slice(0, 10), asks = ob.asks.slice(0, 10);
+  const maxV = Math.max.apply(null, bids.concat(asks).map(x => x[1]));
+  const bestBid = ob.bids[0][0], bestAsk = ob.asks[0][0];
+  const spreadBps = (bestAsk - bestBid) / ((bestAsk + bestBid) / 2) * 10000;
+  function row(x, side){
+    const w = Math.round(x[1] / maxV * 100);
+    return '<div style="display:flex;justify-content:space-between;align-items:center;position:relative;padding:2px 8px;font-size:11.5px;font-family:var(--mono)">' +
+      '<div style="position:absolute;' + (side === 'ask' ? 'right' : 'left') + ':0;top:0;bottom:0;width:' + w + '%;background:' + (side === 'ask' ? 'rgba(244,63,94,.12)' : 'rgba(34,197,94,.12)') + '"></div>' +
+      '<span style="position:relative;color:' + (side === 'ask' ? 'var(--bad)' : 'var(--ok)') + '">' + liveFmtP(x[0]) + '</span>' +
+      '<span style="position:relative;color:var(--mut)">' + (+x[1]).toFixed(3) + '</span></div>';
+  }
+  return livePanel('📖 Стакан BTC/USDT (топ-10 уровней)', 'live_ob_value',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">' +
+      '<div><div style="font-size:10px;color:var(--ok);font-weight:800;text-align:center;margin-bottom:4px">ПОКУПКИ (bid)</div>' + bids.map(x => row(x, 'bid')).join('') + '</div>' +
+      '<div><div style="font-size:10px;color:var(--bad);font-weight:800;text-align:center;margin-bottom:4px">ПРОДАЖИ (ask)</div>' + asks.map(x => row(x, 'ask')).join('') + '</div>' +
+    '</div>' +
+    '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:12px;color:var(--txt);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">' +
+      '<span>Лучший bid <b style="font-family:var(--mono);color:var(--ok)" id="live_ob_bid">' + liveFmtP(bestBid) + '</b></span>' +
+      '<span>Лучший ask <b style="font-family:var(--mono);color:var(--bad)" id="live_ob_ask">' + liveFmtP(bestAsk) + '</b></span>' +
+      '<span>Спред <b style="font-family:var(--mono);color:var(--acc2)" id="live_ob_spread">' + spreadBps.toFixed(1) + ' б.п.</b></span>' +
+    '</div>');
+}
+
+/* ---------- рендер свечей ---------- */
+function renderLiveCandles(kl){
+  const cs = kl.candles.slice(-24);
+  if(!cs.length) return '';
+  const W = 640, H = 180, pad = 6;
+  const lo = Math.min.apply(null, cs.map(c => c.l)), hi = Math.max.apply(null, cs.map(c => c.h));
+  const cw = (W - 2 * pad) / cs.length;
+  const y = v => H - pad - (H - 2 * pad) * (v - lo) / (hi - lo || 1);
+  let s = '';
+  cs.forEach((c, i) => {
+    const x = pad + i * cw + cw / 2;
+    const up = c.c >= c.o;
+    const col = up ? '#22C55E' : '#F43F5E';
+    s += '<line x1="' + x + '" y1="' + y(c.h) + '" x2="' + x + '" y2="' + y(c.l) + '" stroke="' + col + '" stroke-width="1"/>' +
+         '<rect x="' + (x - cw * 0.32) + '" y="' + y(Math.max(c.o, c.c)) + '" width="' + cw * 0.64 + '" height="' + Math.max(1.5, Math.abs(y(c.o) - y(c.c))) + '" fill="' + col + '"/>';
+  });
+  return livePanel('🕯️ Свечи BTC/USDT · 1ч (последние сутки)', 'live_candles_value',
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;display:block;background:#040714;border-radius:8px">' + s + '</svg>' +
+    '<div style="font-size:10.5px;color:var(--mut);margin-top:4px">Последняя свеча справа — текущий час, ещё не закрыт.</div>');
+}
+
+/* ---------- панель фандинга ---------- */
+function renderLiveFunding(f){
+  const pct = (f.rate * 100).toFixed(4);
+  const annual = (f.rate * 3 * 365 * 100).toFixed(1);
+  const who = f.rate > 0 ? 'длинные позиции платят коротким' : f.rate < 0 ? 'короткие платят длинным' : 'платежей почти нет';
+  return livePanel('💸 Ставка фандинга BTC (перп)', 'live_funding_value',
+    '<div style="font-size:13px;color:var(--txt);line-height:1.7">' +
+      'Сейчас: <b style="font-family:var(--mono);color:' + (f.rate >= 0 ? 'var(--warn)' : 'var(--acc2)') + '">' + (f.rate >= 0 ? '+' : '') + pct + '%</b> за 8 часов<br>' +
+      '<span style="font-size:12px;color:var(--mut)">' + who + ' · в пересчёте на год ~' + annual + '%</span>' +
+    '</div>');
+}
+
+/* Обновляем левую колонку: добавляем стакан/свечи/фандинг поверх W2-панелей */
+(function patchMarketCol(){
+  const prev = window.renderLiveMarketCol;
+  window.renderLiveMarketCol = function(){
+    const col = document.getElementById('live_market_col');
+    if(!col) return;
+    prev(); // W2-панели (индекс, комиссии, рынок)
+    let html = '';
+    const ob = LIVE.data.orderbook;
+    html += ob ? renderLiveOrderbook(ob) : livePanel('📖 Стакан BTC/USDT', 'live_ob_value', liveNoData('orderbook'));
+    const kl = LIVE.data.klines;
+    html += (kl && kl.candles && kl.candles.length) ? renderLiveCandles(kl) : livePanel('🕯️ Свечи BTC/USDT · 1ч', 'live_candles_value', liveNoData('klines'));
+    const f = LIVE.data.funding;
+    html += f ? renderLiveFunding(f) : livePanel('💸 Ставка фандинга BTC', 'live_funding_value', liveNoData('funding'));
+    col.innerHTML = html + col.innerHTML;
+  };
+})();
+
+/* ---------- Детекторы W3: стакан 1–4, свечи 5–6, фандинг 9–10 ---------- */
+function obStats(ob){
+  const bestBid = ob.bids[0][0], bestAsk = ob.asks[0][0];
+  const mid = (bestBid + bestAsk) / 2;
+  const spreadBps = (bestAsk - bestBid) / mid * 10000;
+  let bidVol = 0, askVol = 0;
+  ob.bids.forEach(x => { if(x[0] >= mid * 0.995) bidVol += x[1]; });
+  ob.asks.forEach(x => { if(x[0] <= mid * 1.005) askVol += x[1]; });
+  // толстая стена: объём уровня в 4+ раза больше медианы соседей
+  const all = ob.bids.slice(0, 20).map(x => ['bid', x[0], x[1]]).concat(ob.asks.slice(0, 20).map(x => ['ask', x[0], x[1]]));
+  const vols = all.map(x => x[2]).slice().sort((a, b) => a - b);
+  const med = vols[Math.floor(vols.length / 2)] || 0;
+  let wall = null;
+  all.forEach(x => { if(med > 0 && x[2] >= med * 4 && (!wall || x[2] > wall[2])) wall = x; });
+  return { mid: mid, spreadBps: spreadBps, bidVol: bidVol, askVol: askVol, wall: wall, med: med };
+}
+
+COACH_DETECTORS.push(
+  { id: 'ob_spread', num: 1, src: 'orderbook', lessons: ['p0_l4', 'p0_l9', 'p0_l10'], run: function(ob){
+    const st = obStats(ob);
+    const calm = st.spreadBps <= 5;
+    return {
+      icon: '📏', title: 'Спред ' + st.spreadBps.toFixed(1) + ' базисных пункта',
+      highlight: '#live_ob_spread',
+      look: 'Строка «Спред» под стаканом слева — разница между лучшей ценой продажи и покупки в базисных пунктах (1 б.п. = 0,01%).',
+      meaning: 'Купить и тут же продать сейчас стоит ~' + (st.spreadBps / 100).toFixed(3) + '% от цены. Для крупной пары это ' + (calm ? 'узкий спред: рынок ликвидный и спокойный' : 'заметный спред: ликвидности меньше обычного, цена входа-выхода выше') + '.',
+      caveat: 'Узкий спред НЕ признак роста — он говорит о ликвидности, а не о направлении. И рыночный ордер всегда платит спред, даже когда «цена стоит».'
+    };
+  }},
+  { id: 'ob_imbalance', num: 2, src: 'orderbook', lessons: ['p0_l4', 'p0_l9'], run: function(ob){
+    const st = obStats(ob);
+    const tot = st.bidVol + st.askVol;
+    if(!tot) return null;
+    const share = Math.round(st.bidVol / tot * 100);
+    const side = share >= 55 ? 'покупок' : share <= 45 ? 'продаж' : 'примерный паритет';
+    return {
+      icon: '⚖️', title: 'Дисбаланс стакана: ' + share + '% / ' + (100 - share) + '%',
+      highlight: '#live_ob_value',
+      look: 'Сравни высоту цветных полос слева (покупки) и справа (продажи) в пределах ±0,5% от цены.',
+      meaning: 'В ближних ±0,5% от цены стоит ~' + st.bidVol.toFixed(1) + ' BTC на покупку против ~' + st.askVol.toFixed(1) + ' BTC на продажу — перевес ' + side + '.',
+      caveat: 'Дисбаланс НЕ гарантия движения: заявки отменяются в один клик, а «стены» часто ставят, чтобы создать картинку. Это моментный снимок намерений, не обещание.'
+    };
+  }},
+  { id: 'ob_wall', num: 3, src: 'orderbook', lessons: ['p0_l9'], run: function(ob){
+    const st = obStats(ob);
+    if(!st.wall) return null;
+    const side = st.wall[0] === 'bid' ? 'покупку' : 'продажу';
+    return {
+      icon: '🧱', title: 'Толстая стена: ' + st.wall[2].toFixed(1) + ' BTC на ' + side,
+      highlight: '#live_ob_value',
+      look: 'Самая длинная цветная полоса в стакане — уровень ' + liveFmtP(st.wall[1]) + ', в разы толще соседних.',
+      meaning: 'На цене ' + liveFmtP(st.wall[1]) + ' стоит заявка ~' + st.wall[2].toFixed(1) + ' BTC — в ' + Math.round(st.wall[2] / st.med) + ' раз больше медианного уровня. Пока она стоит, цене нужно «проглотить» этот объём, чтобы пройти дальше.',
+      caveat: 'Стена НЕ бетонная: её могут снять за секунду до касания (это называется спуфинг). Опора/потолок из стакана существует, только пока заявку не отменили.'
+    };
+  }},
+  { id: 'ob_fresh', num: 4, src: 'orderbook', lessons: ['p0_l9'], run: function(ob){
+    const ageSec = Math.max(0, Math.round((Date.now() - ob.ts) / 1000));
+    const fresh = ageSec < 60;
+    return {
+      icon: '💓', title: fresh ? 'Стакан живой: снимок ' + ageSec + ' сек назад' : 'Снимку ' + Math.round(ageSec / 60) + ' мин',
+      highlight: '#live_ob_value',
+      look: 'Как часто обновляется картинка: живой стакан перерисовывается десятки раз в секунду на бирже, мы берём снимок раз в 45 секунд.',
+      meaning: fresh ? 'Данные свежие — рынок активен, котировки меняются.' : 'Снимок не свежий — рынок мог уже уйти. Для обучения это нормально: структура стакана меняется медленнее цены.',
+      caveat: 'Даже свежий снимок НЕ «текущая цена навсегда»: через секунду стакан другой. Решения по стакану принимают на паттернах, а не на одном кадре.'
+    };
+  }},
+  { id: 'candle_body', num: 5, src: 'klines', lessons: ['p0_l7', 'p0_l8'], run: function(kl){
+    const c = kl.candles[kl.candles.length - 1];
+    if(!c) return null;
+    const body = Math.abs(c.c - c.o), range = c.h - c.l;
+    if(!range) return null;
+    const share = body / range;
+    const up = c.c >= c.o;
+    const dom = share > 0.7 ? (up ? 'покупатели уверенно доминируют' : 'продавцы уверенно доминируют') :
+                share > 0.35 ? (up ? 'небольшой перевес покупателей' : 'небольшой перевес продавцов') :
+                'борьба: тени длиннее тела';
+    return {
+      icon: '🕯️', title: 'Текущая свеча: ' + (share * 100).toFixed(0) + '% диапазона — тело',
+      highlight: '#live_candles_value',
+      look: 'Последняя свеча справа: прямоугольник — тело (открытие→закрытие), линии — тени (крайние точки часа).',
+      meaning: 'За этот час цена прошла от ' + liveFmtP(c.l) + ' до ' + liveFmtP(c.h) + ', а закрывается пока у ' + liveFmtP(c.c) + '. Тело ' + (share * 100).toFixed(0) + '% диапазона: ' + dom + '.',
+      caveat: 'Одна свеча НЕ история: текущая ещё не закрыта и перерисуется. «Сильная свеча» в пустом часе может быть просто тонкой ликвидностью.'
+    };
+  }},
+  { id: 'candle_volume', num: 6, src: 'klines', lessons: ['p0_l7', 'p0_l8'], run: function(kl){
+    const cs = kl.candles;
+    if(cs.length < 10) return null;
+    const cur = cs[cs.length - 1];
+    const avg = cs.slice(-21, -1).reduce((s, x) => s + x.v, 0) / 20;
+    if(!avg) return null;
+    const ratio = cur.v / avg;
+    const t = ratio > 2 ? 'всплеск интереса: объём в ' + ratio.toFixed(1) + ' раза выше среднего' :
+              ratio > 1.2 ? 'объём выше обычного (' + ratio.toFixed(1) + '×)' :
+              ratio < 0.6 ? 'тихий час: объём заметно ниже среднего' : 'обычный час по объёму';
+    return {
+      icon: '📊', title: 'Объём часа: ' + ratio.toFixed(1) + '× от среднего',
+      highlight: '#live_candles_value',
+      look: 'Та же панель свечей: объём — сколько монет реально сменило руки за час (здесь: ' + cur.v.toFixed(1) + ' против ~' + avg.toFixed(1) + ' в среднем).',
+      meaning: t.charAt(0).toUpperCase() + t.slice(1) + '. Движение цены на большом объёме совершается «всем миром», на маленьком — немногими участниками.',
+      caveat: 'Большой объём НЕ подтверждает направление «наверняка»: кульминация объёма часто бывает и на разворотах. Объём говорит об участии, не о будущем.'
+    };
+  }},
+  { id: 'funding_rate', num: 9, src: 'funding', lessons: ['p3_l5'], run: function(f){
+    const pct = (f.rate * 100).toFixed(4);
+    const annual = (f.rate * 3 * 365 * 100).toFixed(1);
+    const who = f.rate > 0 ? 'длинные платят коротким' : f.rate < 0 ? 'короткие платят длинным' : 'платежей почти нет';
+    return {
+      icon: '💸', title: 'Фандинг: ' + (f.rate >= 0 ? '+' : '') + pct + '% за 8 часов',
+      highlight: '#live_funding_value',
+      look: 'Панель «Ставка фандинга» слева: кто кому платит за то, что цена перпетуала держится у цены спота.',
+      meaning: 'Сейчас ' + who + '. Ставка ' + pct + '% каждые 8 часов — в пересчёте на год ~' + annual + '%: за долгое удержание позиции фандинг становится заметным «налогом на сторону».',
+      caveat: 'Положительный фандинг НЕ значит «цена вырастет» — он значит, что желающих держать длинную позицию больше и они доплачивают за это. Переполненная лодка может качнуться в любую сторону.'
+    };
+  }},
+  { id: 'funding_extreme', num: 10, src: 'funding', lessons: ['p3_l5'], run: function(f){
+    if(Math.abs(f.rate) < 0.0005) return null;
+    const side = f.rate > 0 ? 'длинной' : 'короткой';
+    return {
+      icon: '🔥', title: 'Фандинг перегрет: ' + (f.rate * 100).toFixed(3) + '%',
+      highlight: '#live_funding_value',
+      look: 'Та же ставка фандинга — но её модуль в разы выше обычных ±0,01%.',
+      meaning: 'Ставка ' + (f.rate * 100).toFixed(3) + '% за 8 часов — толпа толпится в ' + side + ' стороне и платит заметную ренту за место в ней. Такие периоды исторически хрупки: маленький толчок выбивает цепочку перегруженных позиций.',
+      caveat: 'Перегрев НЕ таймер разворота: ставка может оставаться экстремальной долго. Это индикатор хрупкости конструкции, а не кнопка «входить против толпы».'
+    };
+  }}
+);
+
+/* ---------- Задание с проверкой по живым данным (±20%) ---------- */
+const LIVE_TASKS = [
+  { id: 'spread_bps', src: 'orderbook', title: 'Чему равен спред в базисных пунктах?',
+    hint: 'Спред = (лучший ask − лучший bid) / средняя цена × 10 000. Посмотри под стаканом или посчитай сам.',
+    answer: () => { const st = obStats(LIVE.data.orderbook); return st.spreadBps; },
+    unit: 'б.п.' },
+  { id: 'fng_value', src: 'fng', title: 'Какое сейчас значение индекса страха и жадности?',
+    hint: 'Большое число на панели «Страх и жадность».', answer: () => LIVE.data.fng.current.value, unit: '' },
+  { id: 'fee_fast', src: 'fees', title: 'Сколько сат/vB стоит подтверждение в ближайшем блоке?',
+    hint: 'Панель «Комиссии сети BTC», левое число (~10 мин).', answer: () => LIVE.data.fees.fastest, unit: 'сат/vB' },
+  { id: 'funding_pct', src: 'funding', title: 'Какая ставка фандинга сейчас (в % за 8 часов)?',
+    hint: 'Панель «Ставка фандинга BTC».', answer: () => LIVE.data.funding.rate * 100, unit: '%' }
+];
+
+function liveTaskHTML(t){
+  const ready = !!LIVE.data[t.src];
+  return '<div style="background:var(--card);border:1px solid var(--acc2);border-radius:12px;padding:14px 16px;margin-bottom:10px">' +
+    '<div style="font-weight:800;font-size:13px;color:var(--txt);margin-bottom:6px">✍️ Задание: ' + t.title + '</div>' +
+    '<div style="font-size:11.5px;color:var(--mut);margin-bottom:8px">' + t.hint + '</div>' +
+    (ready
+      ? '<div style="display:flex;gap:8px;align-items:center">' +
+          '<input id="live_task_in_' + t.id + '" type="number" step="any" placeholder="ответ' + (t.unit ? ', ' + t.unit : '') + '" style="flex:1;max-width:180px;background:#040714;border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--txt);font-family:var(--mono)">' +
+          '<button class="btn sm" onclick="liveTaskCheck(\'' + t.id + '\')">Проверить</button>' +
+        '</div><div id="live_task_fb_' + t.id + '" style="margin-top:8px"></div>'
+      : '<div style="font-size:12px;color:var(--mut)">Нужны данные: подключи источник «' + LIVE_SOURCES[t.src].name + '».</div>') +
+  '</div>';
+}
+
+window.LIVE_TASKS = LIVE_TASKS;
+function liveTaskCheck(id){
+  const t = LIVE_TASKS.find(x => x.id === id);
+  const inp = document.getElementById('live_task_in_' + id);
+  const fb = document.getElementById('live_task_fb_' + id);
+  if(!t || !inp || !fb) return;
+  const val = parseFloat(String(inp.value).replace(',', '.'));
+  if(!isFinite(val)){
+    fb.innerHTML = '<div style="font-size:12px;color:var(--warn)">Введи число.</div>';
+    return;
+  }
+  const truth = t.answer();
+  const tol = Math.abs(truth) * 0.2;
+  const ok = Math.abs(val - truth) <= Math.max(tol, Math.abs(truth) * 0.001 + 1e-9);
+  const obs = COACH.collect().filter(o => o.src === t.src)[0];
+  fb.innerHTML = ok
+    ? '<div style="font-size:12.5px;color:var(--ok);line-height:1.55">✅ Верно: ' + (Math.round(truth * 1000) / 1000) + ' ' + t.unit + '. Считаешь живой рынок как аппарат — допуск ±20%.</div>' +
+      (obs ? '<div style="margin-top:8px">' + coachCardHTML(obs) + '</div>' : '')
+    : '<div style="font-size:12.5px;color:var(--bad);line-height:1.55">❌ Не сходится. Эталон сейчас: ' + (Math.round(truth * 1000) / 1000) + ' ' + t.unit + ' (допуск ±20%). Пересчитай или сверься с панелью — и попробуй ещё раз.</div>';
+  if(ok && typeof COACH !== 'undefined'){
+    COACH.markSeen('task_' + id);
+  }
+}
+window.liveTaskCheck = liveTaskCheck;
+
+/* Поток наставника: карточки + блок заданий */
+(function patchCoachCol(){
+  const prev = window.renderLiveCoachCol;
+  window.renderLiveCoachCol = function(){
+    prev();
+    const col = document.getElementById('live_coach_col');
+    if(!col) return;
+    const anyReady = LIVE_TASKS.some(t => LIVE.data[t.src]);
+    if(!anyReady) return;
+    col.innerHTML += '<div style="font-weight:800;font-size:14px;color:var(--txt);margin:14px 0 10px">✍️ Задания по живым данным</div>' +
+      LIVE_TASKS.map(liveTaskHTML).join('');
+  };
+})();
+
 /*__LIVE_APPEND__*/
 })();
 
