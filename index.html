@@ -37433,6 +37433,253 @@ function mentorSparStep(){
   });
 }
 window.mentorSparStep = mentorSparStep;
+
+/* =========================================================================
+   IMP-UX · Улучшения P0: тон ошибок, демо-режим с баннером, кнопка «Ещё раз»
+   ========================================================================= */
+
+/* ---------- тон ошибок: offline / limit / error ---------- */
+function mentorErrHTML(e, action, lessonId){
+  const msg = e && e.message;
+  if(msg === 'offline') return '<div style="font-size:12px;color:var(--mut);padding:8px 12px;background:#040714;border-radius:8px">📡 Нужна сеть для наставника. Урок работает как раньше.</div>';
+  if(msg === 'limit') return '<div style="font-size:12px;color:var(--warn);padding:8px 12px;background:#040714;border-radius:8px">🕐 Дневной лимит наставника исчерпан (' + MENTOR_LIMIT + ' действий). Завтра продолжим.</div>';
+  return '<div style="font-size:12.5px;color:var(--warn);padding:8px 12px;background:#040714;border-radius:8px">🤖 Не удалось получить ответ.</div>' +
+    '<button class="btn sm ghost" style="margin-top:6px;font-size:11px" onclick="window.mentorRetryGlobal(\'' + action + '\',\'' + lessonId + '\')">🔄 Ещё раз</button>';
+}
+window.mentorErrHTML = mentorErrHTML;
+
+/* кнопка «Ещё раз» */
+window.mentorRetryGlobal = function(action, lessonId){
+  window._mentorRetryAction = { action, lessonId };
+  if(document.getElementById('mentor_result')){
+    mentorRun(action);
+  }
+};
+
+/* ---------- демо-режим: предупреждение если воркер не настроен ---------- */
+function mentorDemoBanner(){
+  if(MENTOR.base()) return '';
+  return '<div id="mentor_demo_banner" style="font-size:10px;color:var(--warn);background:rgba(245,158,11,.12);border:1px dashed var(--warn);border-radius:8px;padding:6px 10px;margin:8px 0">🎭 Демо-режим: ответы примитивные без настройки воркера Cloudflare. Подключи для полноценного ИИ.</div>';
+}
+window.mentorDemoBanner = mentorDemoBanner;
+
+/* встраиваем в панель */
+(function patchPanelDemo(){
+  const prev = window.mentorPanelHTML;
+  window.mentorPanelHTML = function(){
+    return prev() + mentorDemoBanner();
+  };
+})();
+
+/* =========================================================================
+   IMP-CLAS · P1: классификатор с отрицанием + тренд скользящее среднее
+   + адаптивный порог свежести
+   ========================================================================= */
+
+/* ---------- классификатор: уменьшить вес рядом с «не/без/нет/not/no» ---------- */
+function classifyNewsTypeP1(text, categories){
+  const t = ((text || '') + ' ' + (categories || []).join(' ')).toLowerCase().replace(/ё/g, 'е');
+  const negations = ['не ', 'без ', 'нет ', 'not ', 'no '];
+  let best = null, bestScore = 0;
+  const scores = {};
+  Object.keys(NEWS_TYPES).forEach(k => {
+    let s = (categories || []).reduce((sum, c) => sum + (c.toLowerCase().includes(k) ? 2 : 0), 0);
+    NEWS_TYPES[k].w.forEach(w => {
+      const idx = t.indexOf(w);
+      if(idx > 0 && negations.some(n => t.slice(Math.max(0, idx - 8), idx).includes(n))) return; // пропускаем — отрицание
+      if(t.includes(w)) s += 1;
+    });
+    const wc = newsWordCounts();
+    Object.keys(wc).forEach(word => { if(t.includes(word) && wc[word][k]) s += wc[word][k].n * 0.4; });
+    scores[k] = s;
+    if(s > bestScore){ best = k; bestScore = s; }
+  });
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+  return { type: best, score: bestScore, confident: bestScore >= 2, confidence: total ? Math.round(bestScore / total * 100) : 0, scores: scores };
+}
+window.classifyNewsTypeP1 = classifyNewsTypeP1;
+
+/* перехват classifyNewsType на улучшенную версию */
+(function patchClassifier(){
+  window.classifyNewsType = function(text, categories){
+    return classifyNewsTypeP1(text, categories);
+  };
+})();
+
+/* тестовую accuracy P1: должно быть >94% (отрицания 'не' уменьшают вес) */
+(function runAccuracyP1(){
+  try{
+    const corpus = {
+      regulatory: ['SEC подала иск против биржи', 'Суд запретил работу без лицензии'],
+      security: ['Взлом моста: украдено $5 млн', 'Фишинговая атака на кошельки'],
+      macro: ['ФРС сохранила ставку', 'Инфляция замедлилась'],
+      tech: ['Хардфорк активирован', 'Тестнет запущен'],
+      market: ['Приток в ETF достиг $1 млрд', 'Листинг нового токена'],
+      hype: ['Партнёрство с платёжной сетью', 'Интеграция привлечёт миллионы'],
+      scam: ['Гарантированный доход 300%', 'Фиксированный процент без риска']
+    };
+    // + негативные примеры: 'SEC не подала иск' → меньше веса regulatory
+    let ok = 0, n = 0;
+    Object.keys(corpus).forEach(t => corpus[t].forEach(s => { n++; if(classifyNewsTypeP1(s, []).type === t) ok++; }));
+    // negation test
+    const neg = ['SEC не подала иск', 'Без доказательств', 'Нет связи'];
+    let negOk = 0;
+    neg.forEach(s => { const r = classifyNewsTypeP1(s, []); if(r.type !== 'regulatory') negOk++; });
+    window._classifyAccuracy = { acc: ok / n, negAcc: negOk / neg.length };
+  }catch(e){}
+})();
+
+/* ---------- тренд: скользящее среднее 3 дня vs 3 дня до этого ---------- */
+function fngTrendP1(fng){
+  if(!fng.history || fng.history.length < 6) return { trend: 0, msg: 'нет данных' };
+  const recent3 = fng.history.slice(0, 3).map(h => h.value);
+  const prev3 = fng.history.slice(3, 6).map(h => h.value);
+  const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
+  const trend = Math.round(avg(recent3) - avg(prev3));
+  const msg = Math.abs(trend) > 10 ? (trend > 0 ? 'тренд вверх' : 'тренд вниз') : 'без чёткого тренда';
+  return { trend: trend, msg: msg, recentAvg: Math.round(avg(recent3)), prevAvg: Math.round(avg(prev3)) };
+}
+window.fngTrendP1 = fngTrendP1;
+
+/* ---------- адаптивный порог свежести ---------- */
+function obFreshP1(ob, typicalIntervalSec){
+  // typicalIntervalSec: по дефолту 45 (наш refresh)
+  typicalIntervalSec = typicalIntervalSec || 45;
+  const ageSec = Math.max(0, Math.round((Date.now() - ob.ts) / 1000));
+  const ratio = ageSec / typicalIntervalSec;
+  const fresh = ratio < 1.5;
+  return { ageSec: ageSec, ratio: ratio, fresh: fresh, freshLine: fresh ? 'свежий' : (ratio < 2 ? 'норм' : 'старый') };
+}
+window.obFreshP1 = obFreshP1;
+
+/* =========================================================================
+   IMP-MENTOR · P2: история диалога в сессии + адаптивный лимит + кэш ответов
+   ========================================================================= */
+
+/* ---------- история диалога в сессии: window._mentorSession ---------- */
+(function patchMentorSession(){
+  if(typeof window._mentorSession !== 'object'){
+    window._mentorSession = { lessonId: null, history: [] };
+  }
+  const orig = window.mentorOpenPanel;
+  window.mentorOpenPanel = function(lessonId){
+    // сбрасываем если урок сменился
+    if(window._mentorSession.lessonId !== lessonId){
+      window._mentorSession = { lessonId: lessonId, history: [] };
+    }
+    orig(lessonId);
+  };
+  const origRun = window.mentorRun;
+  window.mentorRun = function(action){
+    const rec = { action: action, ts: Date.now() };
+    window._mentorSession.history.push(rec);
+    origRun(action);
+  };
+})();
+
+/* Socratic: передаем историю в payload */
+(function patchSocraticHistory(){
+  const orig = window.mentorF3step;
+  window.mentorF3step = function(lessonId){
+    const inEl = document.getElementById('mentor_soc_in');
+    const outEl = document.getElementById('mentor_soc_out');
+    if(!inEl || !outEl) return;
+    const val = (inEl.value || '').trim();
+    const step = ++window._mentorSocStep;
+    const isDone = /не знаю/i.test(val) && step >= 3;
+    // передаем историю
+    const hist = window._mentorSession.history.slice(-3).map(h => h.action);
+    MENTOR.ask('socratic', lessonId, { question: val, step: step, history: hist }).then(r => {
+      const color = isDone ? 'var(--ok)' : 'var(--acc2)';
+      outEl.innerHTML += '<div style="padding:10px 12px;background:#040714;border-left:3px solid ' + color + ';border-radius:6px;font-size:12.5px;color:var(--txt);margin-top:8px">' + r.text + '</div>';
+      if(inEl) inEl.value = '';
+      if(isDone) window._mentorSession.history = [];
+    }).catch(e => {
+      outEl.innerHTML += window.mentorErrHTML(e, 'socratic', lessonId);
+    });
+  };
+})();
+
+/* ---------- адаптивный лимит: 20 базовый + 10 за пройду за урок + 5 за активность без hint ---------- */
+function mentorAdaptiveLimit(lessonId){
+  const base = 20;
+  const lessonDone = typeof lessonsDone === 'object' && lessonsDone[lessonId] === 1 ? 10 : 0;
+  const activeBonus = (typeof hintGetCount === 'function' ? hintGetCount(lessonId) : 0) <= 2 ? 5 : 0;
+  return base + lessonDone + activeBonus;
+}
+window.mentorAdaptiveLimit = mentorAdaptiveLimit;
+
+(function patchLimit(){
+  window.MENTOR_LIMIT = 20; // базовый
+  window.mentorLimitReached = function(lessonId){
+    const max = mentorAdaptiveLimit(lessonId);
+    return mentorUsageToday().n >= max;
+  };
+  // в panel: показываем текущий лимит
+  const prev = window.mentorPanelHTML;
+  window.mentorPanelHTML = function(){
+    const lessonId = window._mentorLessonId || 'generic';
+    return prev() + '<div style="font-size:9px;color:var(--mut);padding:6px 18px;border-bottom:1px solid var(--line)">Лимит: ' + mentorAdaptiveLimit(lessonId) + ' действий/день (адаптивный)</div>';
+  };
+})();
+
+/* ---------- кэш ответов по (lessonId+action+payload) TTL 1 час ---------- */
+function mentorCacheKey(action, lessonId, payload){
+  const hash = JSON.stringify(payload || {}).slice(0, 80).replace(/\s/g, '');
+  return 'mentor_cache_' + lessonId + '_' + action + '_' + hash;
+}
+function mentorCacheGet(action, lessonId, payload){
+  try{
+    const raw = localStorage.getItem(mentorCacheKey(action, lessonId, payload));
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(Date.now() - obj.ts > 3600000) return null;
+    return obj.data;
+  }catch(e){ return null; }
+}
+function mentorCacheSet(action, lessonId, payload, data){
+  try{
+    localStorage.setItem(mentorCacheKey(action, lessonId, payload), JSON.stringify({ ts: Date.now(), data: data }));
+  }catch(e){}
+}
+window.mentorCacheGet = mentorCacheGet;
+window.mentorCacheSet = mentorCacheSet;
+
+(function patchAskCache(){
+  const orig = MENTOR.ask;
+  MENTOR.ask = async function(action, lessonId, payload){
+    const cached = mentorCacheGet(action, lessonId, payload);
+    if(cached) return cached;
+    const resp = await orig.call(this, action, lessonId, payload);
+    mentorCacheSet(action, lessonId, payload, resp);
+    return resp;
+  };
+})();
+
+/* ---------- P3: персонализация детекторов по уровню (минимальный уровень lessonsDone) ---------- */
+(function patchCoachPersonalized(){
+  const orig = window.COACH.collect;
+  window.COACH.collect = function(){
+    const userLevel = Object.keys(lessonsDone).filter(k => lessonsDone[k] === 1).length;
+    const obs = [];
+    COACH_DETECTORS.forEach(d => {
+      if(d.minLevel && userLevel < d.minLevel) return; // пропускаем сложный для новичка
+      const snap = LIVE.data[d.src];
+      if(!snap) return;
+      try{
+        const o = d.run(snap);
+        if(o) obs.push(Object.assign({ id: d.id, src: d.src }, o));
+      }catch(e){}
+    });
+    return obs;
+  };
+  // присваиваем minLevel к сложным детекторам (обтекания)
+  COACH_DETECTORS.forEach(d => {
+    if(d.id === 'bot_assembler' || d.id === 'fund_manager') d.minLevel = 5;
+    else if(d.id === 'oracle_feed' || d.id === 'stable_lab') d.minLevel = 3;
+    else d.minLevel = 0;
+  });
+})();
 /*__LIVE_APPEND__*/
 })();
 
