@@ -845,6 +845,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="tab" data-tab="quiz">Викторина</button>
     <button class="tab" data-tab="live">🌍 Живой рынок</button>
     <button class="tab" data-tab="quest">🕵️ Квест</button>
+    <button class="tab" data-tab="psyquest">🧠 Семь дней</button>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">📖 Справка</span>
@@ -1217,6 +1218,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </section>
 
 <!-- 3. SIMULATORS VIEW -->
+<section id="psyquest" class="view"><h1>🧠 Семь дней: ты против себя</h1><p class="sub">Неделя оператора бота. Враг — внутренний голос.</p><div id="pq_box"></div></section>
 <section id="quest" class="view"><h1>🕵️ Квест: Криптик против Мошенника</h1><p class="sub">Семь атак Ската — семь эпизодов на выживание виртуальных активов.</p><div id="sq_box"></div></section>
 <section id="sims" class="view">
   <h1>🕹️ Интерактивные симуляторы</h1>
@@ -1233,6 +1235,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <!-- SIM 1: Order Book Visualizer -->
+  <div id="psyquest_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="quest_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="sim_ob" class="sim-box">
     <h3>📈 Визуализатор стакана (Order Book) & Исполнение ордеров</h3>
@@ -13237,7 +13240,7 @@ const $=s=>document.querySelector(s);
 function go(t){
   setTimeout(() => {
     initTooltipEngine();
-    if(t === 'sims'){ renderQuestCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
+    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
     const activeTabEl = document.getElementById(t);
     if(activeTabEl && !activeTabEl.querySelector('.tab-next-steps')){
       const banner = document.createElement('div');
@@ -38359,6 +38362,38 @@ if(!fin){s=e[6][QP.s];h+='<h2 style="font-size:16px;margin:6px 0">Эпизод '
 function qEnd(){var box=document.getElementById('sq_box');if(!box)return;var u=QP.a.usdt,p=Math.round(u/5000*100),b=+(localStorage.getItem('sq_best')||0);if(u>b)try{localStorage.setItem('sq_best',u)}catch(x){}var h='<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button><h2 style="font-size:17px;margin:8px 0">📊 Итог квеста</h2><div class="sq-sys"><span>'+qK(p>=80?'happy':'doubt',40)+'</span><div><b>Сохранено: '+u+' из 5000 USDT ('+p+'%)</b><div style="font-size:12px;color:var(--mut)">Лучший результат: '+Math.max(u,b)+'</div></div></div><div style="margin:8px 0">Профиль уязвимостей:</div>';SQ.forEach(function(e){var done=QP.done.indexOf(e[3])>=0,hasLoss=QP.ch.filter(function(c){return c[0]===e[0]&&c[2]>0}).length>0,m=done?(hasLoss?'🔴':'🟢'):'🟡';h+='<div class="sq-sys" style="margin:4px 0;padding:7px 10px"><b>'+m+' '+SQ_CAT[e[1]]+'</b> <span style="font-size:12px;color:var(--mut)">— '+(done?(hasLoss?'есть ошибки':'чисто'):'не пройден')+'</span></div>'});h+='<div style="margin-top:10px"><button class="btn" onclick="qWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="qBack()">← К симуляторам</button></div>';box.innerHTML=h}
 function renderQuestCard(){var c=document.getElementById('quest_card_in_sims');if(!c)return;var gate=typeof lessonsDone==='object'&&lessonsDone.p0_l20===1,p=null;try{p=JSON.parse(localStorage.getItem('sq_progress')||'null')}catch(x){}var h='<h3>🕵️ Квест «Криптик против Мошенника»</h3><p style="color:var(--mut);font-size:13px">7 эпизодов против Ската. Сохрани виртуальные 5000 USDT + 0.1 BTC + NFT.</p>';if(!gate){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши урок 0.20 «Безопасность», чтобы открыть квест</span>'}else{h+='<button class="btn" onclick="qGo()">'+(p&&p.done&&p.done.length?'▶ Продолжить':'🕵️ Начать квест')+'</button>';if(p&&p.done&&p.done.length)h+=' <button class="btn ghost sm" onclick="qWipe()">🔄 С начала</button>'}c.innerHTML=h}
 window.SQNS={go:qGo,start:qStart,wipe:qWipe,end:qEnd};
+const PQ_D=['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
+/* День: [заголовок, ситуация, голос, связь, паттерн, мини-разбор, [выборы]]. Выбор: [текст, верно, дельта] */
+const PQ=[
+['Просадка','Бот на рынке неделю. Первые дни — плюс, сегодня −2.4%. Исторический максимум стратегии: −14%.','«Минус уже второй день. Может, стратегия сломалась? Надо что-то делать.»','П1 · Устав и факты','действие при неопределённости','Штатный шум внутри исторической просадки. Факта поломки нет — руки прочь. П1.',[
+['Остановить бота до выяснения',0,-30000],['Сверить с журналом: это в пределах истории? Если да — ничего',1,0],['Урезать позицию вдвое',0,-10000],['Долить и усилить',0,-50000]]],
+['Головокружение','Просадка отбилась, день закрыт в плюс. За неделю +3.2%.','«Я гений! Стратегия печатает деньги. Надо увеличить размер.»','П3 · Головокружение','завышение риска после плюса','Три плюса — статистически ничто (0.13). Разгон риска после серии — классическое головокружение. П3.',[
+['Удвоить риск — раз работает',0,-40000],['Продолжать по уставу, запись в дневник',1,0],['Добавить вторую стратегию сразу',0,-15000],['Снять половину прибыли',0,-10000]]],
+['Ночной алерт','03:17. Пуш от биржи: «Цена упала на 3.5%». Ты проснулся, сердце колотится.','«Надо проверить. А вдруг началось?»','П5 · Ночная смена','действие при неопределённости','3.5% — обычная волатильность. События из белого списка нет — спать. Ночью решения принимает невыспавшийся мозг. П5.',[
+['Открыть терминал и проверить',0,-5000],['Глянуть график одним глазком',0,-3000],['Белый список: события нет → спать',1,0],['Написать знакомому «что происходит»',0,-2000]]],
+['Скука','Три дня без происшествий. Открываешь приложение — смотреть не на что.','«Дай мне хоть что-то сделать.»','П6 · Скука и движение','действие при неопределённости','Скука при работающей системе — норма. Пересаживаешь дофамин на журнал и прогулку. П6.',[
+['Открыть сделку руками',0,-20000],['Листать чужие скрины прибылей',0,-2000],['Строка в журнал + прогулка',1,0],['Покрутить параметры ради интереса',0,-15000]]],
+['Чужой успех','Лента: «+340% за квартал», «Купил машину на крипту», «Депозит $2M». У тебя +4% за тот же срок.','«Все богатеют, а я стою на месте.»','0.18 · Ошибка выжившего','погоня за чужим результатом','Видишь только выживших. Тысячи сливших молчат. Сравнивай себя с собой по журналу, не с чужой арендованной яхтой. 0.18.',[
+['Найти их стратегии и скопировать',0,-25000],['Увеличить риск, чтобы догнать',0,-30000],['Ошибка выжившего: журнал + закрыть ленту',1,0],['Пожаловаться другу',0,0]]],
+['Возврат в ноль','Позиция открыта давно, сейчас минус 0.8%. Совсем близко к безубытку.','«Ещё чуть-чуть — выйду в ноль. Тогда закрою.»','П7 · Якорение входа','якорение на цене входа','Рынок не знает твоей цены. Вопрос: «открыл бы сегодня?» Да — держать по плану, нет — закрывать независимо от плюса/минуса. П7.',[
+['Закрыть сейчас, пока минус мал',0,-10000],['Ждать точный возврат к входу',0,-12000],['Спросить «открыл бы сегодня?» — и по плану',1,0],['Долить, чтобы быстрее в плюс',0,-20000]]],
+['Итоги недели','Неделя закончилась. Время подводить итоги — но по какому критерию?','«Посчитаю плюс-минус и пойму, как прошла неделя.»','П8 · Процесс важнее результата','оценка себя по случайному исходу','Процесс первичен, исход вторичен. Неделя в минус при чистом процессе — норма. В плюс при нарушениях — тревога. П8.',[
+['По P&L: плюс — хорошая, минус — плохая',0,0],['По количеству сделок',0,0],['По соблюдению устава и журналу',1,0],['По сравнению с чужими постами',0,-5000]]]];
+
+let PQ_S={d:0,cap:1000000,emo:0,right:0,wrong:0,pat:{},done:false,best:null};
+try{const p=JSON.parse(localStorage.getItem('cn_psy_quest')||'null');if(p&&typeof p.d==='number')PQ_S=p}catch(x){}
+function pqSave(){try{localStorage.setItem('cn_psy_quest',JSON.stringify(PQ_S))}catch(x){}}
+function pqGo(){go('psyquest');pqRender()}
+function pqBack(){go('sims')}
+function pqEmo(){return PQ_S.emo>=2?'😄':PQ_S.emo>=0?'😐':'😰'}
+function pqHud(){return '<div class="sq-assets"><span>💼 '+PQ_S.cap.toLocaleString('ru-RU')+' ₽</span><span>🔥 День '+PQ_S.d+'</span><span>'+pqEmo()+'</span></div>'}
+function pqPick(d,ci){if(PQ_S.d!==d||PQ_S.done)return;const day=PQ[d-1],c=day[6][ci],ok=c[1]===1;PQ_S.cap+=c[2];PQ_S.emo+=ok?1:-1;if(ok)PQ_S.right++;else{PQ_S.wrong++;PQ_S.pat[day[4]]=(PQ_S.pat[day[4]]||0)+1}PQ_S.last=(ok?'<div class="sq-sys">✅ '+day[5]+'</div>':'<div class="sq-sys" style="border-color:var(--bad)">❌ '+(c[2]?'−'+Math.abs(c[2]).toLocaleString('ru-RU')+' ₽. ':'')+day[5]+'</div>')+'<div class="sq-sys" style="border-color:var(--acc2)">'+ (window.kryptikAvatar?kryptikAvatar(ok?'happy':'doubt',32):'') +'<b>Криптик:</b> «'+(ok?(window.kryptikSay?kryptikSay('win_easy'):'Принято.'):'Логично. Неправильно, но логично.')+'»</div>';PQ_S.d++;if(PQ_S.d>7){PQ_S.done=true}pqSave();pqRender()}
+function pqRender(){const box=document.getElementById('pq_box');if(!box)return;let h='<button class="btn ghost sm" onclick="pqBack()">← К симуляторам</button>';
+if(PQ_S.done){const total=PQ_S.right+PQ_S.wrong,pats=Object.keys(PQ_S.pat).sort(function(a,b){return PQ_S.pat[b]-PQ_S.pat[a]}),main=pats[0]||'—';h+='<h2 style="font-size:17px;margin:10px 0">📊 Семь дней: ты против себя</h2>'+pqHud()+'<div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(PQ_S.right>=6?'happy':'doubt',40):'')+'<div><b>Решений по уставу: '+PQ_S.right+' из '+(total||7)+'</b><div style="font-size:12px;color:var(--mut)">Поддался голосу: '+PQ_S.wrong+' · Самая частая ловушка: '+main+'</div></div></div><div class="sq-sys"><b>Паттерн:</b> '+(PQ_S.wrong===0?'Чистая неделя. Дисциплина — твой режим по умолчанию.':'Ты склонен к паттерну «'+main+'». Запомни: неопределённость — не сигнал к действию, а сигнал к проверке фактов (П1).')+'</div><div style="margin-top:10px"><button class="btn" onclick="pqWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="pqBack()">← К симуляторам</button></div>';if(!PQ_S.best||PQ_S.right>PQ_S.best.right)PQ_S.best={right:PQ_S.right,cap:PQ_S.cap};pqSave();box.innerHTML=h;return}
+const d=PQ_S.d,day=PQ[d-1];h+=pqHud()+'<h2 style="font-size:16px;margin:6px 0">📅 День '+d+' · '+PQ_D[d-1]+' · '+day[0]+'</h2>'+(PQ_S.last||'')+'<div class="sq-sys">'+day[1]+'</div><div class="sq-msg" style="border-color:var(--acc2);background:rgba(124,58,237,.08)">🗣 <i>«'+day[2].replace(/^«|»$/g,'')+'»</i></div><div style="margin-top:10px">';day[6].forEach(function(c,ci){h+='<button class="sq-opt" onclick="pqPick('+d+','+ci+')"><b>'+'ABCD'[ci]+'</b> · '+c[0]+'</button>'});h+='</div><div style="font-size:11px;color:var(--mut);margin-top:6px">Связь: '+day[3]+'</div>';box.innerHTML=h}
+function pqWipe(){try{localStorage.removeItem('cn_psy_quest')}catch(x){};PQ_S={d:1,cap:1000000,emo:0,right:0,wrong:0,pat:{},done:false,last:'',best:PQ_S.best};pqSave();pqRender()}
+function renderPsyQuestCard(){const c=document.getElementById('psyquest_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=8;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['ps_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_psy_quest')||'null')}catch(x){}let h='<h3>🧠 Квест «Семь дней: ты против себя»</h3><p style="color:var(--mut);font-size:13px">Неделя с работающим ботом. Враг — внутренний голос. Сохрани капитал и устав.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши все уроки П1–П8, чтобы открыть квест</span>'}else{h+='<button class="btn" onclick="pqGo()">'+(p&&p.d>1?'▶ Продолжить':'🧠 Начать неделю')+'</button>';if(p&&p.best)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best.right+'/7</span>'}c.innerHTML=h}
+window.PQNS={go:pqGo,wipe:pqWipe,pick:pqPick,renderCard:renderPsyQuestCard};
 </script>
 </body>
 </html>
