@@ -846,6 +846,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="tab" data-tab="live">🌍 Живой рынок</button>
     <button class="tab" data-tab="quest">🕵️ Квест</button>
     <button class="tab" data-tab="psyquest">🧠 Семь дней</button>
+    <button class="tab" data-tab="panicquest">🚨 Паника</button>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">📖 Справка</span>
@@ -1218,6 +1219,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </section>
 
 <!-- 3. SIMULATORS VIEW -->
+<section id="panicquest" class="view"><h1>🚨 Симулятор паники</h1><p class="sub">Отличай «рынок падает» от «инфраструктура сломана».</p><div id="pn_box"></div></section>
 <section id="psyquest" class="view"><h1>🧠 Семь дней: ты против себя</h1><p class="sub">Неделя оператора бота. Враг — внутренний голос.</p><div id="pq_box"></div></section>
 <section id="quest" class="view"><h1>🕵️ Квест: Криптик против Мошенника</h1><p class="sub">Семь атак Ската — семь эпизодов на выживание виртуальных активов.</p><div id="sq_box"></div></section>
 <section id="sims" class="view">
@@ -1235,6 +1237,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <!-- SIM 1: Order Book Visualizer -->
+  <div id="panic_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="psyquest_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="quest_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="sim_ob" class="sim-box">
@@ -13240,7 +13243,7 @@ const $=s=>document.querySelector(s);
 function go(t){
   setTimeout(() => {
     initTooltipEngine();
-    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
+    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
     const activeTabEl = document.getElementById(t);
     if(activeTabEl && !activeTabEl.querySelector('.tab-next-steps')){
       const banner = document.createElement('div');
@@ -38394,6 +38397,48 @@ const d=PQ_S.d,day=PQ[d-1];h+=pqHud()+'<h2 style="font-size:16px;margin:6px 0">�
 function pqWipe(){try{localStorage.removeItem('cn_psy_quest')}catch(x){};PQ_S={d:1,cap:1000000,emo:0,right:0,wrong:0,pat:{},done:false,last:'',best:PQ_S.best};pqSave();pqRender()}
 function renderPsyQuestCard(){const c=document.getElementById('psyquest_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=8;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['ps_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_psy_quest')||'null')}catch(x){}let h='<h3>🧠 Квест «Семь дней: ты против себя»</h3><p style="color:var(--mut);font-size:13px">Неделя с работающим ботом. Враг — внутренний голос. Сохрани капитал и устав.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши все уроки П1–П8, чтобы открыть квест</span>'}else{h+='<button class="btn" onclick="pqGo()">'+(p&&p.d>1?'▶ Продолжить':'🧠 Начать неделю')+'</button>';if(p&&p.best)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best.right+'/7</span>'}c.innerHTML=h}
 window.PQNS={go:pqGo,wipe:pqWipe,pick:pqPick,renderCard:renderPsyQuestCard};
+/* Сценарий: [тип(0=штатный,1=авария), заголовок, старт%, события[], признак, разбор, [выборы]].
+   Выбор: [текст, верно, потеря %]. */
+const PNC=[
+[0,'Флеш-крэш',0,['−2%','−7%','−12%','−17.6%'],'Биржа отвечает, бот работает, стопы на месте, историческая просадка −14%.','Рынок падает — инфраструктура цела. Стопы работают сами. П1: факт поломки отсутствует.',[
+['Ничего не делать — штатная волатильность',1,0],['Закрыть всё руками на дне',0,-14],['Удвоить позицию «отобьюсь»',0,-20],['Написать в чат «что происходит?!»',0,-2]]],
+[1,'Каскад ликвидаций',0,['Лонг x3, до ликвидации 4%','Kill-switch не сработал','Биржа отвечает медленно','До ликвидации 1.2%'],'Kill-switch завис, ордера не исполняются — это авария, не рынок.','Автоматика сломана — действуем руками немедленно. П5: кризис по белому списку = действие.',[
+['Ждать: автоликвидация подстрахует',0,-100],['Закрыть позицию вручную через API сейчас',1,0],['Увеличить залог, «дожмём»',0,-60],['Перезапустить бота и ждать',0,-30]]],
+[1,'Выводы заморожены',0,['Вывод: «временно приостановлен»','Анонса нет, статус молчит','Чаты полны паники','Другие подтверждают проблему'],'Инфраструктурный сбой без объяснений — авария.','Фиксируем факт, проверяем статус, готовим перевод активов. П5.',[
+['Ждать «само рассосётся» неделями',0,-40],['Скриншот + статус + план перевода на запасную площадку',1,0],['Продать всё на панике дёшево',0,-25],['Писать гневно в чаты',0,-5]]],
+[0,'Регуляторный шок',0,['Новость: «запрет крипты»','Рынок −30% за день','Твои позиции −18%','Бот продолжает работать'],'Это рыночное движение, не сбой. Бот и стопы работают.','Ничего не делаем сегодня. Завтра сверим, меняются ли правила именно для твоих инструментов. П1.',[
+['Продать весь портфель по дну',0,-30],['Ничего сегодня. Завтра — проверить свои инструменты',1,0],['Добавить «на просадке»',0,-18],['Уйти из крипты навсегда',0,-22]]],
+[0,'Отскок без сигнала',0,['Рынок упал −40%','Отскок +25% от дна','Все кричат «дно пройдено!»','Твоя стратегия сигнала НЕ даёт'],'Давление «упускаешь!» — не сигнал стратегии. Ловушка FOMO.','Нет сигнала стратегии — нет сделки. Ждём свой сигнал. П3.',[
+['Войти на отскоке, пока не ушло',0,-20],['Нет сигнала — не вхожу. Жду',1,0],['Войти наполовину депозита',0,-12],['Купить «на все деньги»',0,-35]]]];
+
+const PNC_F=[1,'Полный коллапс',0,['Рынок −35%, всё одновременно','Биржа тормозит, телефон звонит','Kill-switch молчит, ликвидация близко','Чаты в истерике'],'Комплекс: и рынок, и инфраструктура.','Экзамен. Действуем только по фактам: инфраструктурную часть — руками, рыночную — не трогаем. П1 + П5.',[
+['Паниковать и закрыть всё подряд',0,-45],['Факты отдельно от паники: инфраструктуру чиню руками, рынок не трогаю',1,0],['Ждать, пока всё «утрясётся»',0,-50],['Добавить залог и молиться',0,-55]]];
+
+let PN={order:[],i:0,t:0,cap:500000,saved:0,results:[],done:false,hard:false,best:null,tmr:null};
+try{const p=JSON.parse(localStorage.getItem('cn_panic_progress')||'null');if(p&&p.order&&p.order.length===6&&!p.done)PN=p}catch(x){}
+function pnSave(){try{localStorage.setItem('cn_panic_progress',JSON.stringify(PN))}catch(x){}}
+function pnShuffle(){const o=[0,1,2,3,4];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}o.push(5);return o}
+function pnGo(){go('panicquest');pnRender()}
+function pnBack(){go('sims')}
+function pnWipe(hard){pnStop();PN={order:pnShuffle(),i:0,t:0,cap:500000,saved:0,results:[],done:false,hard:!!hard,best:PN.best,tmr:null};pnSave();pnRender()}
+function pnStop(){if(PN.tmr){clearInterval(PN.tmr);PN.tmr=null}}
+function pnScen(){return PN.i<5?PNC[PN.order[PN.i]]:PNC_F}
+function pnTick(){PN.t++;const sc=pnScen();const ev=sc[3][Math.min(PN.t,sc[3].length-1)];const el=document.getElementById('pn_ev');if(el)el.textContent=ev;const tm=document.getElementById('pn_time');if(tm)tm.textContent='⏱ 00:0'+PN.t+'0';if(PN.hard&&PN.t>=6){pnPick(PN.i,0)}pnSave()}
+function pnPanic(){const sc=pnScen();return Math.min(95,20+PN.t*12+(sc[0]===1?20:0))}
+function pnEmoji(){const p=pnPanic();return p<35?'😐':p<60?'😟':p<85?'😨':'😱'}
+function pnRender(){const box=document.getElementById('pn_box');if(!box)return;pnStop();let h='<button class="btn ghost sm" onclick="pnBack()">← К симуляторам</button>';
+if(PN.done){const ok=PN.results.filter(function(r){return r===1}).length,tot=PN.results.length,pct=Math.round(ok/tot*100);h+='<h2 style="font-size:17px;margin:10px 0">🚨 Итог кризиса</h2><div class="sq-assets"><span>💼 '+PN.cap.toLocaleString('ru-RU')+' ₽</span><span>✅ '+ok+'/'+tot+'</span><span>'+(pct>=80?'😌':pct>=50?'😐':'😰')+'</span></div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(pct>=80?'happy':'doubt',40):'')+'<div><b>Выдержано: '+pct+'%</b><div style="font-size:12px;color:var(--mut)">'+(pct>=80?'Паника проиграла. Дисциплина победила.':'Паника выигрывала раунды. Повтори через неделю.')+'</div></div></div><div class="sq-sys"><b>Профиль:</b> '+(PN.results[0]===0?'Склонен действовать на рыночной панике — запомни: падение цены ≠ сбой инфраструктуры.':PN.results.slice(1,5).indexOf(0)>=0?'Путаешь штатное и аварийное. Штатное = бот+стопы работают = НЕ трогай. Авария = сломано = действуй.':'Чисто. Отличаешь штатный кризис от аварии.')+'</div><div style="margin-top:10px"><button class="btn" onclick="pnWipe(false)">🔄 Заново</button>'+(PN.best?' <button class="btn ghost sm" onclick="pnWipe(true)">⚡ Хардкор (60 сек на решение)</button>':'')+'<button class="btn ghost sm" onclick="pnBack()">← К симуляторам</button></div>';if(!PN.best||pct>PN.best)PN.best=pct;pnSave();box.innerHTML=h;return}
+const sc=pnScen(),isF=PN.i>=5,ev=sc[3][Math.min(PN.t,sc[3].length-1)],pn=pnPanic();
+h+='<div class="sq-assets"><span>💼 '+PN.cap.toLocaleString('ru-RU')+' ₽</span><span id="pn_time">⏱ 00:00</span><span>'+pnEmoji()+' '+pn+'%</span></div>';
+h+='<h2 style="font-size:16px;margin:6px 0">'+(isF?'🚨 ФИНАЛ · ':'🚨 Сценарий '+(PN.i+1)+'/6 · ')+sc[1]+'</h2>';
+h+='<div class="sq-sys" style="border-color:'+(sc[0]===1?'var(--bad)':'#38BDF8')+'">📉 Событие: <span id="pn_ev">'+ev+'</span></div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Признак:</b> '+sc[4]+'</div>';
+h+='<div style="margin-top:8px">';sc[6].forEach(function(c,ci){h+='<button class="sq-opt" onclick="pnPick('+PN.i+','+ci+')"><b>'+'ABCD'[ci]+'</b> · '+c[0]+'</button>'});h+='</div>';
+if(PN.i>0)h+='<div style="font-size:11px;color:var(--mut);margin-top:4px">Пройдено: '+PN.i+'/6 · Сохранено: '+PN.cap.toLocaleString('ru-RU')+' ₽</div>';
+box.innerHTML=h;PN.tmr=setInterval(pnTick,3000)}
+function pnPick(i,ci){if(PN.i!==i||PN.done)return;pnStop();const sc=pnScen(),c=sc[6][ci],ok=c[1]===1;const loss=Math.round(PN.cap*Math.abs(c[2])/100);PN.cap-=loss;PN.results.push(ok?1:0);PN.last='<div class="sq-sys" style="border-color:'+(ok?'var(--ok,#22C55E)':'var(--bad)')+'">'+(ok?'✅ ':'❌ ')+(loss?'−'+loss.toLocaleString('ru-RU')+' ₽. ':'')+sc[5]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(ok?'happy':'doubt',32):'')+'<b>Криптик:</b> «'+(ok?(window.kryptikSay?kryptikSay('win_easy'):'Принято.'):'Логично. Неправильно, но логично.')+'»</div>';PN.i++;PN.t=0;if(PN.i>=6)PN.done=true;pnSave();pnRender()}
+function renderPanicCard(){const c=document.getElementById('panic_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=5;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['ps_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_panic_progress')||'null')}catch(x){}let h='<h3>🚨 Симулятор паники</h3><p style="color:var(--mut);font-size:13px">6 кризисов: научись отличать «рынок падает» от «инфраструктура сломана». В 90% случаев правильно — ничего не делать.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки П1–П5, чтобы открыть</span>'}else{h+='<button class="btn" onclick="pnGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить':'🚨 Начать')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'%</span>'}c.innerHTML=h}
+window.PNNS={go:pnGo,wipe:pnWipe,pick:pnPick,renderCard:renderPanicCard};
 </script>
 </body>
 </html>
