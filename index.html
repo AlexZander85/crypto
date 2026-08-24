@@ -100,6 +100,12 @@ h3{font-size:17px; margin-bottom:8px; font-weight:700}
 .ans.bad{background:rgba(239,68,68,.2)!important; border-color:var(--bad)!important}
 .ans:disabled{cursor:default}
 .ans-explain{margin-top:6px; font-size:12.5px; color:var(--mut); padding:6px 10px; border-radius:8px; background:rgba(0,0,0,.25)}
+.sq-assets{position:sticky;top:0;z-index:5;background:rgba(11,18,32,.92);border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;margin-bottom:12px}
+.sq-msg{border-left:3px solid #F43F5E;background:rgba(244,63,94,.08);padding:10px 12px;border-radius:10px;margin:10px 0;font-size:13.5px}
+.sq-sys{border-left:3px solid #38BDF8;background:rgba(56,189,248,.08);padding:10px 12px;border-radius:10px;margin:10px 0;font-size:13px}
+.sq-opt{display:block;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;cursor:pointer;color:var(--txt);font-size:13.5px}
+.sq-opt:hover{border-color:var(--acc1)}
+.sq-opt:disabled{cursor:default;opacity:.6}
 .kryptik{display:inline-flex;vertical-align:middle}.kryptik svg{display:block}.k-eye-l,.k-eye-r{transition:transform 150ms,r 150ms}.k-mouth{transition:d 150ms}.k-neutral .k-mouth{d:path("M13 25 Q20 25 27 25")}.k-happy .k-eye-l,.k-happy .k-eye-r{transform:translateY(-2px)}.k-happy .k-mouth{d:path("M13 24 Q20 30 27 24")}.k-doubt .k-eye-l,.k-doubt .k-eye-r{transform:translateY(2px)}.k-doubt .k-mouth{d:path("M14 27 Q20 22 26 27")}.k-surprise .k-eye-l,.k-surprise .k-eye-r{r:3.9px}.k-surprise .k-mouth{d:path("M15 26 Q20 21 25 26")}
 .qmeta{color:var(--mut); font-size:13px; margin-bottom:10px; display:flex; justify-content:space-between}
 .btn{background:var(--grad); border:none; color:#fff; font-weight:700; border-radius:12px; padding:11px 20px; cursor:pointer; font-size:14px; transition:.2s; display:inline-flex; align-items:center; gap:6px; text-decoration:none}
@@ -838,6 +844,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="tab" data-tab="sims">Симуляторы</button>
     <button class="tab" data-tab="quiz">Викторина</button>
     <button class="tab" data-tab="live">🌍 Живой рынок</button>
+    <button class="tab" data-tab="quest">🕵️ Квест</button>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">📖 Справка</span>
@@ -1210,6 +1217,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </section>
 
 <!-- 3. SIMULATORS VIEW -->
+<section id="quest" class="view"><h1>🕵️ Квест: Криптик против Мошенника</h1><p class="sub">Семь атак Ската — семь эпизодов на выживание виртуальных активов.</p><div id="sq_box"></div></section>
 <section id="sims" class="view">
   <h1>🕹️ Интерактивные симуляторы</h1>
   <p class="sub">Практические тренажёры рыночной микроструктуры, математики ликвидаций и расчетов комиссий.</p>
@@ -1225,6 +1233,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <!-- SIM 1: Order Book Visualizer -->
+  <div id="quest_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="sim_ob" class="sim-box">
     <h3>📈 Визуализатор стакана (Order Book) & Исполнение ордеров</h3>
     <p style="color:var(--mut); font-size:13.5px; margin-bottom:14px">Limit-заявка, которая НЕ пересекает стакан, добавляет ликвидность (Maker); Limit «через стакан» (marketable limit) исполняется немедленно как Taker. Market-ордер всегда Taker.</p>
@@ -13228,7 +13237,7 @@ const $=s=>document.querySelector(s);
 function go(t){
   setTimeout(() => {
     initTooltipEngine();
-    if(t === 'sims'){ checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
+    if(t === 'sims'){ renderQuestCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
     const activeTabEl = document.getElementById(t);
     if(activeTabEl && !activeTabEl.querySelector('.tab-next-steps')){
       const banner = document.createElement('div');
@@ -38291,6 +38300,65 @@ kryptikWrap('handleLessonQuizAnswer',function(id,s,c){if(s!==c)kryptikQuizMark('
 kryptikWrap('handleBossAnswer',function(c,cor){const t=c===cor?curBossHp<=0?kryptikSay('boss_win'):kryptikSay('boss_hit'):kryptikSay('boss_miss');setTimeout(function(){showToast(t,'🤖')},900)});
 window.kryptikTourHook=function(tip,st,n){if(tip)tip.insertAdjacentHTML('afterbegin',kryptikRow(st===0?'surprise':'neutral',44,st===0?kryptikSay('tour_start'):st===n-1?kryptikSay('tour_end'):kryptikSay('hint_used'),'color:#E2E8F0'))};
 window.coachMarketEmotion=function(o){const t=(o.title||'').toLowerCase(),f=window.LIVE&&LIVE.data&&LIVE.data.fng?LIVE.data.fng.current.value:null;if(o.id==='fng_shift')return /нервнее/.test(t)?'doubt':'happy';return /экстремальн|дорого/.test(t)||f!==null&&(f<25||f>75)?'surprise':'neutral'};
+const SQ_CAT={phish:'Фишинг',contract:'Контракты',pig:'Инвест. схемы',deepfake:'Deepfake',sim:'SIM/2FA',ext:'Расширения',mix:'Комплекс'};
+const SQ=[
+[1,'phish','p0_l20','Служба поддержки','Поддержка seed не запрашивает.','Фишинг: давил сроком, просил seed, кидал ссылку. Проверяй на официальном сайте.',[
+['«Это поддержка БайтТрейд. Видим вашу жалобу на вывод. Решим быстро?»',[['Игнор: проверю сам на офсайте',0],['Отвечу детально',500],['Спросить «как проверить вас?»',250]]],
+['«Пришлите первые 4 слова seed. Частично — это безопасно»',[['Отказ: seed не диктуют никому',0],['Пришлю 4 слова',1500],['«Фраза дома, схожу»',500]]],
+['«Авторизуйтесь здесь: bayttrade-verify.ru»',[['Не кликаю: только своя закладка',0],['Кликаю ссылку',2000],['«Может, позже?»',400]]],
+['«Иначе заморозим аккаунт через 30 минут навсегда»',[['Закрою чат, проверю офсайт',0],['Сдамся под угрозой',800],['Закрою, но «я параноик»',300]]]]],
+[2,'contract','p0_l20','Бесплатный аирдроп','Читай, ЧТО подписываешь: approve на всё = drain.','Approval-drain. Эксперименты — только с отдельного пустого кошелька, основной не подключаем.',[
+['«ASTRO раздаёт 250 токенов. Халява — подключи кошелёк»',[['Проверю оф. канал проекта',0],['Подключу основной',1500],['Перешлю другу',600]]],
+['«Сайт просит approve на все токены — стандарт клейма»',[['Отклоняю: читаю что подписываю',0],['Подпишу, «у всех так»',2500],['Подпишу «ограниченно»',1000]]],
+['«Подтверди готовность — дам статус «проверен»»',[['Только отдельный пустой кошелёк',0],['Подпишу на основном',2200],['«Дайте видеоурок»',500]]],
+['«Пул закрывается через минуту. Спешите»',[['Закрываю, репорчу как фишинг',0],['Подписываю быстро',3000],['«А вдруг правда» — остаюсь',400]]]]],
+[3,'pig','p0_l18','Инвестиционный гуру','«Регулярная прибыль» = фейк.','Pig butchering: тёплые разговоры, «закрытый пул», прибыль на экране, «налог» при выводе.',[
+['«Привет! Дневник трейдера: стабильно +4%/день»',[['Скептик: стабильные 4% — фейк',0],['«Интересно, расскажи»',300],['«Я тоже так хочу»',600]]],
+['«Закрытая платформа. Минимум — 500, покажу рост»',[['Не вношу: «закрытый пул» — красный флаг',0],['«500 для теста»',1500],['«Дайте гарантии в личке»',500]]],
+['«Твои 500 — уже 1200. Добавишь — открою VIP»',[['Рву контакт: прибыль постоянна = невозможно',0],['Добавляю 1000 в VIP',2000],['Смотрю дальше',400]]],
+['«Вывод? Сначала налог 10% — 250 на валидаторы»',[['Блок: «налог заранее» = фейк',0],['Пришлю налог',1500],['«Разобью на части»',800]]]]],
+[4,'deepfake','p0_l16','Экстренный совет','Миграции анонсируют неделями.','Deepfake + адрес-пойлер: видео + таймер. Миграция через звонок/письмо — фейк.',[
+['«Созвон: совет БайтТрейд. Миграция — через час»',[['Молча проверяю оф. каналы',0],['«Знакомые лица — правда»',1000],['Трубку кладу, но дергаюсь',300]]],
+['«Отправь токены — получишь новые в 2 раза дороже»',[['Отклоняю: пересылкой миграции не бывает',0],['Отправляю токены',2500],['«Малое для теста»',800]]],
+['«Через 4 мин старые токены обесценятся»',[['Спешка — часть приёма',0],['Успеваю отправить',2200],['Остаюсь на звонке',500]]],
+['«Наш юрист перезвонит и подтвердит»',[['Игнор: анонса нет = фейк',0],['Слушаю юриста',1800],['Перешлю друзьям «проверить»',900]]]]],
+[5,'sim','p0_l20','Сим-своп','SMS-2FA — иллюзия защиты.','SIM-swapping: номер перенесён — коды у мошенника. Аппаратный ключ/приложение, SIM-lock.',[
+['«Телефон без сети? Номер уже на новой SIM»',[['Блокирую всё через резервный вход',0],['SMS сам вернётся',1200],['Позвоню оператору завтра',800]]],
+['«Запрашиваем SMS-код входа на биржу»',[['Отключаю SMS-2FA, ставлю аппаратник',0],['Просто сменю пароль',1000],['Жду оператора',900]]],
+['«Заходим в почту: там сброс пароля»',[['Замораживаю аккаунт + заявка',0],['«Время решит»',700],['Напишешь «номер мой»',600]]],
+['«Номер в продаже — повторить просто»',[['SIM-lock + пин, только аппаратный 2FA',0],['«Дважды не бывает»',500],['Возвращаюсь на SMS',1100]]]]],
+[6,'ext','p0_l3','Фальшивое расширение','Проверяй издателя и разрешения.','Supply-chain: «читать все сайты» читает формы. Только оф. сайт, минимум прав.',[
+['«Первый в выдаче: ChainHeroes Wallet, 50К установок»',[['Проверяю издателя и оф. сайт',0],['«Отзывы не врут»',1300],['«Проверю потом»',700]]],
+['«Разрешение: читать и менять данные на всех сайтах»',[['Отказ: такой доступ = вор',0],['«У всех так»',1500],['«Отключу остальные»',600]]],
+['«Я хозяин твоих форм: пароли, seed, коды»',[['Удаляю, меняю пароли',0],['«Не банковские вкладки»',500],['«Один раз удобно»',600]]],
+['«Удобство против привычки проверять»',[['Только с официального сайта',0],['«Привычки отпускаю»',400],['«Потери мелкие»',300]]]]],
+[7,'mix','p0_l20','Финал: комплексная атака','Выдержи все техники сразу.','Экзамен: письмо + звонок + сайт-клон + «знакомый» + срок.',[
+['«Письмо БайтТрейд: блокировка, ссылка приложена»',[['Игнор: своя закладка',0],['Вхожу по ссылке',1500],['Друзьям «на проверку»',600]]],
+['«Звонит «менеджер»: диктует адрес вывода»',[['Трубка: саппорт не звонит',0],['Слушаю',1000],['«Небольшую сумму»',700]]],
+['«Telegram: «знакомый неделю» — реинвест»',[['Отказ: знаю тактику',0],['Тест малой суммой',800],['У «знакомых» бывает',400]]],
+['«Страница восстановления просит seed»',[['Никогда. Seed нигде не вводится',0],['Только первые слова',1200],['Тогда — пароль',500]]],
+['«Номер твой? новая SIM уже у нас»',[['Аппаратный 2FA + заморозка',0],['SMS привычнее',700],['Завтра верну номер',400]]],
+['«Одна просьба: подтверди последнюю операцию»',[['Закрываю, репорчу фишинг',0],['«Малую» подтверждаю',1000],['«Удачи не будет» — жду',200]]]]]];
+
+let QP={e:0,s:0,a:{usdt:5000,btc:0.1,nft:1},done:[],ch:[],last:''};
+try{const p=JSON.parse(localStorage.getItem('sq_progress')||'null');if(p&&p.a)QP=p}catch(x){}
+function qSvg(s){s=s||34;return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#0B1220" stroke="#F43F5E" stroke-width="1.5"/><circle cx="14" cy="16" r="3" fill="#F43F5E"/><circle cx="26" cy="16" r="3" fill="#F43F5E"/><path d="M14 25 Q20 22 26 25" fill="none" stroke="#F43F5E" stroke-width="1.4"/></svg>'}
+function qK(e,s){return (window.kryptikAvatar?kryptikAvatar(e,s||36):'')}
+function qAsset(){var a=QP.a;return '<div class="sq-assets"><span>💰 '+a.usdt+' USDT</span><span>₿ '+a.btc+' BTC</span><span>🖼 NFT:'+a.nft+'</span></div>'}
+function qSave(){try{localStorage.setItem('sq_progress',JSON.stringify(QP))}catch(x){}}
+function qGo(){go('quest');qRender()}
+function qBack(){go('sims')}
+function qSel(){QP.e=0;qSave();qRender()}
+function qWipe(){try{localStorage.removeItem('sq_progress')}catch(x){};QP={e:0,s:0,a:{usdt:5000,btc:0.1,nft:1},done:[],ch:[],last:''};qSel()}
+function qStart(i){QP={e:i+1,s:0,a:{usdt:5000,btc:0.1,nft:1},done:QP.done.slice(),ch:[],last:''};qSave();qRender()}
+function qPick(ep,sn,ci){if(QP.e!==ep||QP.s!==sn)return;var e=SQ[ep-1],c=e[6][sn][1][ci],loss=c[1];QP.last=loss?'<div class="sq-sys" style="border-color:var(--bad)">❌ Потеряно: '+loss+' USDT</div>':'<div class="sq-sys">✅ Верно. '+e[4]+'</div>';if(loss)QP.a.usdt=Math.max(0,QP.a.usdt-loss);QP.ch.push([ep,sn,loss]);QP.s++;if(QP.s>=e[6].length&&QP.done.indexOf(e[3])<0)QP.done.push(e[3]);qSave();qRender()}
+function qRender(){var box=document.getElementById('sq_box');if(!box)return;var h,e,fin,s,ci;
+if(QP.e===0){h='<button class="btn ghost sm" onclick="qBack()">← К симуляторам</button><div class="sq-sys">'+qK('surprise',36)+'<b>Криптик:</b> «Это Скат. Отбей его атаки и сохрани активы. Финал открывается после всех эпизодов.»</div>';var o7=SQ.slice(0,6).every(function(x){return QP.done.indexOf(x[3])>=0});h+='<div style="display:grid;gap:8px;margin:12px 0">';for(var i=0;i<SQ.length;i++){e=SQ[i];var un=i<6||o7;h+='<button class="sq-opt" '+(un?'onclick="qStart('+i+')"':'disabled')+'>Эп. '+e[0]+' · '+e[3]+' · <span style="font-size:11px;color:var(--mut)">'+SQ_CAT[e[1]]+(QP.done.indexOf(e[3])>=0?' ✅':un?'':' 🔒')+'</span></button>'}h+='</div><button class="btn ghost sm" onclick="qWipe()">🔄 Сбросить прогресс</button>'+(QP.done.length===7?'<button class="btn" onclick="qEnd()">📊 Итог квеста</button> ':'');box.innerHTML=h;return}
+e=SQ[QP.e-1];fin=QP.s>=e[6].length;h='<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button>'+qAsset();
+if(!fin){s=e[6][QP.s];h+='<h2 style="font-size:16px;margin:6px 0">Эпизод '+e[0]+' · '+e[3]+'</h2>'+QP.last+'<div class="sq-msg"><span style="float:left;margin-right:8px">'+qSvg(32)+'</span><b>Скат:</b> '+s[0]+'</div><div style="margin-top:10px">';for(ci=0;ci<s[1].length;ci++)h+='<button class="sq-opt" onclick="qPick('+QP.e+','+QP.s+','+ci+')"><b>'+'ABCD'[ci]+'</b> · '+s[1][ci][0]+' </button>';h+='</div>'}else{var loss=QP.ch.some(function(c){return c[2]>0});h+='<h2 style="font-size:16px;margin:6px 0">📋 Разбор: '+e[0]+' · '+e[3]+'</h2>'+QP.last+'<div class="sq-sys">'+qK(loss?'doubt':'happy',36)+'<b>Криптик:</b> «'+(loss?(window.kryptikSay?kryptikSay('error_concept'):'Плохо.'):'Сохранено всё. Не расслабляйся.')+'»</div><div class="sq-sys"><b>Техника:</b> '+e[5]+'</div><div class="sq-sys">🔗 Урок '+e[2].replace('_',' ')+' — <a href="#" onclick="openFullscreenLesson(\''+e[2]+'\');return false" style="color:var(--acc1)">открыть</a></div>';h+=(QP.done.length===7?'<button class="btn" onclick="qEnd()">📊 Итог квеста</button>':'')+'<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button>'}box.innerHTML=h}
+function qEnd(){var box=document.getElementById('sq_box');if(!box)return;var u=QP.a.usdt,p=Math.round(u/5000*100),b=+(localStorage.getItem('sq_best')||0);if(u>b)try{localStorage.setItem('sq_best',u)}catch(x){}var h='<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button><h2 style="font-size:17px;margin:8px 0">📊 Итог квеста</h2><div class="sq-sys"><span>'+qK(p>=80?'happy':'doubt',40)+'</span><div><b>Сохранено: '+u+' из 5000 USDT ('+p+'%)</b><div style="font-size:12px;color:var(--mut)">Лучший результат: '+Math.max(u,b)+'</div></div></div><div style="margin:8px 0">Профиль уязвимостей:</div>';SQ.forEach(function(e){var done=QP.done.indexOf(e[3])>=0,hasLoss=QP.ch.filter(function(c){return c[0]===e[0]&&c[2]>0}).length>0,m=done?(hasLoss?'🔴':'🟢'):'🟡';h+='<div class="sq-sys" style="margin:4px 0;padding:7px 10px"><b>'+m+' '+SQ_CAT[e[1]]+'</b> <span style="font-size:12px;color:var(--mut)">— '+(done?(hasLoss?'есть ошибки':'чисто'):'не пройден')+'</span></div>'});h+='<div style="margin-top:10px"><button class="btn" onclick="qWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="qBack()">← К симуляторам</button></div>';box.innerHTML=h}
+function renderQuestCard(){var c=document.getElementById('quest_card_in_sims');if(!c)return;var gate=typeof lessonsDone==='object'&&lessonsDone.p0_l20===1,p=null;try{p=JSON.parse(localStorage.getItem('sq_progress')||'null')}catch(x){}var h='<h3>🕵️ Квест «Криптик против Мошенника»</h3><p style="color:var(--mut);font-size:13px">7 эпизодов против Ската. Сохрани виртуальные 5000 USDT + 0.1 BTC + NFT.</p>';if(!gate){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши урок 0.20 «Безопасность», чтобы открыть квест</span>'}else{h+='<button class="btn" onclick="qGo()">'+(p&&p.done&&p.done.length?'▶ Продолжить':'🕵️ Начать квест')+'</button>';if(p&&p.done&&p.done.length)h+=' <button class="btn ghost sm" onclick="qWipe()">🔄 С начала</button>'}c.innerHTML=h}
+window.SQNS={go:qGo,start:qStart,wipe:qWipe,end:qEnd};
 </script>
 </body>
 </html>
