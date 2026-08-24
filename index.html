@@ -31500,13 +31500,25 @@ function renderCompetencyRadar(){
 
 // Привязка инфографики к урокам: файл появится в assets/ — картинка подхватится сама
 (function attachInfographics(){
-  const IMGS = [
-    ['p0_l1',  'assets/crypto_ecosystem_map.png', 'Карта крипто-экосистемы', 'Инфографика: пять зон экосистемы вокруг блокчейна — CEX, DEX/DeFi, кошельки, стейблкоины, NFT/мемкоины.'],
-    ['p0_l7',  'assets/candle_anatomy.png',       'Анатомия японской свечи', 'Инфографика: open/close/high/low, тело и фитили; как 5 тиков собираются в одну свечу.'],
-    ['p0_l16', 'assets/leverage_ladder.png',       'Лестница ликвидации плечей', 'Инфографика: x1…x25 — чем выше плечо, тем уже платформа над пропастью.'],
-    ['p1_l1',  'assets/bot_lifecycle.png',         'Жизненный цикл торгового бота', 'Инфографика: гипотеза → данные → бэктест → walk-forward → paper → микро-лайв, и где умирают стратегии.'],
-    ['p4_l3',  'assets/security_pyramid.png',      'Пирамида безопасности хранения капитала', 'Инфографика: холодный кошелёк в основании, «никогда» — на вершине.'],
-    ['p2_l1',  'assets/market_regimes.png',        'Режимы рынка и стратегии', 'Инфографика: тренд / боковик / чёрный лебедь — и какие стратегии живут в каждом режиме.']
+  const IMG_DIR='assets/infographics/';
+  const IMGS=[
+    ['p0_l1','assets/infographics/img-01.jpg','Блокчейн — общая тетрадь','Инфографика: блокчейн как общая тетрадь без начальника — каждый пишет, никто не стирает.'],
+    ['p0_l2','assets/infographics/img-02.jpg','Адрес и приватный ключ','Инфографика: публичный адрес — почтовый ящик, приватный ключ — ключ от замка. Показывать можно только ящик.'],
+    ['p0_l4','assets/infographics/img-03.jpg','Спред Bid/Ask','Инфографика: стакан с Bid снизу, Ask сверху и зазором между ними — это спред, цена входа в рынок.'],
+    ['p0_l5','assets/infographics/img-04.jpg','Анатомия свечи OHLC','Инфографика: Open, High, Low, Close — тело и фитили японской свечи на примере пяти сделок.'],
+    ['p0_l9','assets/infographics/img-05.jpg','Плечо x10: ликвидация при −10%','Инфографика: чем выше плечо, тем ближе черта ликвидации; при x10 достаточно −10% для полной потери залога.'],
+    ['p1_l1','assets/infographics/img-06.jpg','Простая vs логарифмическая доходность','Инфографика: почему −50% требует +100% для восстановления — асимметрия процентных изменений.'],
+    ['p1_l2','assets/infographics/img-07.jpg','Толстые хвосты распределения','Инфографика: нормальное распределение против реального крипторынка — крайние события случаются чаще.'],
+    ['p1_l6','assets/infographics/img-08.jpg','Стационарность: ADF и KPSS','Инфографика: два статистических теста подтверждают стационарность ряда перед моделированием.'],
+    ['p1_l10','assets/infographics/img-09.jpg','Режимы рынка','Инфографика: тренд, боковик, паника — какие стратегии живут в каждом режиме и умирают вне его.'],
+    ['p2_l10','assets/infographics/img-10.jpg','Критерий Келли','Инфографика: рост капитала против доли ставки — полный Келли против Quarter Kelly по кривой log-growth.'],
+    ['p3_l4','assets/infographics/img-11.jpg','Асимметрия просадки','Инфографика: −50% требует +100% для восстановления — лестница потерь от −10% до −90%.'],
+    ['p3_l6','assets/infographics/img-12.jpg','Walk-forward анализ','Инфографика: скользящие окна train/test — проверка стратегии на данных, которых она никогда не видела.'],
+    ['p4_l6','assets/infographics/img-13.jpg','Налоговый учёт FIFO','Инфографика: купил по 300к, купил по 400к, продал по 500к — какая прибыль облагается налогом по методу FIFO.'],
+    ['p4_l4','assets/infographics/img-14.jpg','Kill-switch бота','Инфографика: аварийная кнопка закрытия всех позиций — когда нажимать и что происходит после.'],
+    ['p3_l5','assets/infographics/img-15.jpg','Фандинг-арбитраж','Инфографика: дельта-нейтральная конструкция — лонг спот + шорт фьючерс = заработок на ставке фандинга без направления.'],
+    ['p6_l2','assets/infographics/img-16.jpg','Стейкинг: APY vs реальная доходность','Инфографика: номинальные 8% годовых превращаются в минус при падении цены токена на 50%.'],
+    ['p6_l11','assets/infographics/img-17.jpg','Полимаркет: комиссия fee ∝ p×(1−p)','Инфографика: кривая комиссии Polymarket — максимум при вероятности 50%, ноль у краёв.']
   ];
   IMGS.forEach(function(a){
     const l = LESSONS.find(x => x.id === a[0]);
@@ -31520,11 +31532,38 @@ function renderCompetencyRadar(){
   });
 })();
 
+/* ---------- Тур онбординга для новых пользователей ---------- */
+(function onboardingTour(){
+  if(localStorage.getItem('cn_tour_done')) return;
+  const STEPS=[
+    {sel:'header', txt:'🧭 КриптоНавигатор — твой тренажёр. Прогресс и ранг видны в шапке.'},
+    {sel:'nav', txt:'Навигация: Уроки → Тесты → Симуляторы → Живой рынок → Глоссарий. Начни с Уроков.'},
+    {sel:'#lessonContentBox, #home_content, .view.active', txt:'Это главный экран. Нажми «Уроки» и открой первый урок Фазы 0.'},
+    {sel:'[data-tab="tests"], [data-tab="progress"]', txt:'После каждой фазы — аттестация с порогом 80%. Без неё дальше нельзя.'}
+  ];
+  let step=0;
+  function show(){
+    const old=document.getElementById('tour_overlay'); if(old)old.remove();
+    if(step>=STEPS.length){finish();return;}
+    const s=STEPS[step];
+    const el=document.querySelector(s.sel);
+    const ov=document.createElement('div');
+    ov.id='tour_overlay';
+    ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.6)';
+    const tip=document.createElement('div');
+    tip.style.cssText='position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#0F172A;border:2px solid #7C3AED;border-radius:16px;padding:28px 32px;max-width:420px;text-align:center;color:#E2E8F0;font-size:15px;line-height:1.55';
+    tip.innerHTML='<div style="font-size:12px;color:#A78BFA;text-transform:uppercase;font-weight:700;margin-bottom:10px">Шаг '+(step+1)+' из '+STEPS.length+'</div>'+
+      '<div style="margin-bottom:20px">'+s.txt+'</div>'+
+      '<div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-p sm" id="tour_next" style="padding:8px 22px">'+(step===STEPS.length-1?'🚀 Начать!':'Далее →')+'</button><button class="btn btn-g sm" id="tour_skip" style="padding:8px 14px">Пропустить тур</button></div>';
+    ov.appendChild(tip);document.body.appendChild(ov);
+    document.getElementById('tour_next').onclick=function(){step++;show();};
+    document.getElementById('tour_skip').onclick=finish;
+  }
+  function finish(){localStorage.setItem('cn_tour_done','1');const o=document.getElementById('tour_overlay');if(o)o.remove();}
+  setTimeout(show,800);
+})();
 
-/* =========================================================================
-   D0.1. ПЕРЕМЕШИВАНИЕ ВАРИАНТОВ ОТВЕТОВ (детерминированный сид от текста
-   вопроса + счётчик попыток → повторные прохождения дают другой порядок)
-   ========================================================================= */
+
 function fnv1a(str){
   let h = 0x811c9dc5;
   for(let i = 0; i < str.length; i++){
@@ -36894,6 +36933,7 @@ function mentorPanelHTML(){
   return '<div id="mentor_panel" style="position:fixed;top:0;right:0;width:380px;max-width:96vw;height:100vh;background:var(--bg);border-left:1px solid var(--line);z-index:99998;box-shadow:-10px 0 40px rgba(0,0,0,.5);display:flex;flex-direction:column">' +
     '<div style="padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">' +
       '<div style="font-weight:800;font-size:15px;color:var(--txt)">🤖 Наставник М.</div>' +
+      '<button class="btn sm ghost" id="mentor_settings_btn" title="Настройки наставника" onclick="mentorSettingsRender()" style="margin-right:8px">⚙️</button>' +
       '<button class="btn sm ghost" onclick="mentorClosePanel()">✕</button>' +
     '</div>' +
     '<div style="padding:14px 18px;overflow-y:auto;flex:1" id="mentor_panel_body"></div>' +
@@ -37229,6 +37269,17 @@ window.mentorHint = mentorHint;
         });
       }catch(e){}
     }, 150);
+    // второй проход: подсказки в виджетах после полной отрисовки урока
+    setTimeout(() => {
+      try{
+        const modal = document.getElementById('lessonFullscreenReaderModal');
+        if(!modal) return;
+        modal.querySelectorAll('[id^="widget_"]').forEach(w => {
+          if(w.querySelector('.mentor-hint-btn')) return;
+          w.insertAdjacentHTML('beforeend', mentOrHintBtnHTML(id, w));
+        });
+      }catch(e){}
+    }, 800);
     return r;
   };
 })();
