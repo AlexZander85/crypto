@@ -849,6 +849,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="tab" data-tab="panicquest">🚨 Паника</button>
     <button class="tab" data-tab="marginquest">💥 Маржин</button>
     <button class="tab" data-tab="curvequest">📉 Кривые</button>
+    <button class="tab" data-tab="launchquest">🚀 Запуск</button>
     <button class="tab" data-tab="prodquest">🌙 Прод</button>
   </div>
   <div class="nav-group">
@@ -1222,6 +1223,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </section>
 
 <!-- 3. SIMULATORS VIEW -->
+<section id="launchquest" class="view"><h1>🚀 Первый запуск</h1><p class="sub">Чек-лист боевого бота: 8 категорий до включения.</p><div id="ln_box"></div></section>
 <section id="prodquest" class="view"><h1>🌙 Ночь в проде</h1><p class="sub">Дежурство по ранбуку: 6 инцидентов до утра.</p><div id="pr_box"></div></section>
 <section id="curvequest" class="view"><h1>📉 Кривая-обманщица</h1><p class="sub">Инвесткомитет по бэктестам: что пойдёт в прод, что — в мусорку.</p><div id="cv_box"></div></section>
 <section id="marginquest" class="view"><h1>💥 Маржин-колл</h1><p class="sub">10 сделок. Стратегия рабочая. Вопрос — сколько ставишь.</p><div id="mc_box"></div></section>
@@ -1243,6 +1245,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <!-- SIM 1: Order Book Visualizer -->
+  <div id="launch_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="prod_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="curve_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="margin_card_in_sims" class="sim-box" style="max-width:720px"></div>
@@ -13252,7 +13255,7 @@ const $=s=>document.querySelector(s);
 function go(t){
   setTimeout(() => {
     initTooltipEngine();
-    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); renderMarginCard(); renderCurveCard(); renderProdCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
+    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); renderMarginCard(); renderCurveCard(); renderProdCard(); renderLaunchCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
     const activeTabEl = document.getElementById(t);
     if(activeTabEl && !activeTabEl.querySelector('.tab-next-steps')){
       const banner = document.createElement('div');
@@ -38620,6 +38623,49 @@ box.innerHTML=h;
 PR.t=20;PR.tmr=setInterval(prTick,1000)}
 function renderProdCard(){const c=document.getElementById('prod_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=7;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['p5_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_prod_progress')||'null')}catch(x){}let h='<h3>🌙 Квест «Ночь в проде»</h3><p style="color:var(--mut);font-size:13px">02:41. Бот торгует на реальном счёте, ты — дежурный. 6 инцидентов, таймер, ранбук. Доживи до утра без лишних потерь.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки 5.1–5.7, чтобы открыть</span>'}else{h+='<button class="btn" onclick="prGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить смену':'🌙 Заступить на смену')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'/100</span>'}c.innerHTML=h}
 window.PRNS={go:prGo,wipe:prWipe,pick:prPick,stop:prStop,renderCard:renderProdCard};
+/* Квест «Первый запуск» — чек-лист боевого бота (Фаза 4).
+   Категория: [название, урок, [[текст,балл,комментарий]x3], сценарий провала].
+   Балл: 2=идеально, 1=допустимо, 0=провал. */
+const LN_C=[
+['Хостинг','4.1',[['VPS в зоне биржи, Docker, аптайм-алерты в Telegram',2,'Дёшево, скучно, надёжно. Именно так и выглядит прод.'],['VPS, но без мониторинга: «я и так в чате»',1,'Без алертов ты узнаешь о падении из отчёта. В час ночи — из убытка.'],['Домашний ПК под столом',0,'Свет моргнул, провайдер чихнул, кот прошёл по клавиатуре. Позиция осталась без надзора.']],'Ночью отключили свет. Бот молчал 6 часов с открытой позицией — рынок за это время сходил в обе стороны.'],
+['API-ключи','4.2',[['Только Trade, IP-whitelist, ключи зашифрованы',2,'Вывод невозможен даже при угоне ключа. Максимум потерь — плохие сделки.'],['Trade + без whitelist, «у меня 2FA на аккаунте»',1,'2FA защищает логин, не ключ. Ключ без whitelist работает с любого IP мира.'],['Full access, whitelist не настраивал',0,'Ключ с правом вывода — это карта с ПИН-кодом на скриншоте.']],'Ключ утёк из логов. Дренер вывел всё за 4 минуты — whitelist бы остановил, но его не было.'],
+['Kill-switch','4.3',[['Автономный: heartbeat, авто-закрытие при аномалии',2,'Страховка, которая работает, когда ты спишь. Именно тогда она и нужна.'],['Полуавтомат: алерт мне, я решаю',1,'Ночной алерт + сон = решение через 5 часов. Половина защиты.'],['«Успею руками, я за компом»',0,'Руки — самый медленный kill-switch в индустрии.']],'Бот зациклился на ошибке и долбил ордера в закрытый стакан 40 минут. Руки были в метро.'],
+['Paper-период','4.4',[['30+ дней live-paper, контроль execution deviation',2,'Бэктест — прошлое, paper — настоящее. Отклонение исполнения видно только вживую.'],['Неделя paper, «и так понятно»',1,'Неделя не покрывает ни новости, ни выходные, ни тонкий стакан.'],['Сразу в бой: бэктест зелёный',0,'Бэктест не знает про очередь ордеров, проскальзывание и комиссии. Узнаешь на своих деньгах.']],'Первая же неделя: слиппедж съел весь эдж. Бэктест об этом не знал, paper — знал бы.'],
+['P2P и комплаенс','4.5',[['Отдельная карта, чеки на каждую сделку, FIFO-журнал',2,'Банк видит понятную историю, налоговая — аккуратный расчёт. Все спят спокойно.'],['Чеки есть, но одна карта на всё',1,'Смешение потоков — любимый повод для 115-ФЗ блокировки.'],['Одна карта «на всё», чеки не храню',0,'Заблокированная карта с зарплатой — классика жанра.']],'Банк заблокировал карту по 115-ФЗ. На ней была зарплата. Разблокировка — месяц и поход с объяснениями.'],
+['Автономность агента','4.6',[['LLM предлагает, движок исполняет, риск-модуль — вето',2,'Галлюцинация модели упирается в детерминированный риск-модуль. Правильная граница.'],['LLM советует, но ордера шлёт сама, с лимитом',1,'Лимит сужает ущерб, но галлюцинация с лимитом — всё ещё галлюцинация с деньгами.'],['LLM сама шлёт ордера, «она умная»',0,'«Умная» модель однажды уверенно купит несуществующий паттерн на весь депозит.']],'Модель увидела «бычий флаг» в шуме и открыла пять позиций подряд. Вето не было — доверие было.'],
+['Кодовая база','4.8',[['Фреймворк (Freqtrade/Hummingbot) + своя стратегия',2,'Движок отлажен сообществом годами. Твоя ценность — стратегия, а не велосипед.'],['Фреймворк, но переписал половину ядра',1,'Половина чужих гарантий потеряна, свои баги приобретены.'],['Пишу свой движок с нуля',0,'Первый год ты пишешь не стратегию, а баги, которые фреймворки пофиксили в 2019-м.']],'Три месяца ушли на свой движок. Он упал на реконнекте. Freqtrade пережил бы это молча.'],
+['Площадка','4.9',[['CEX для старта, perp-DEX — после стабильных месяцев',2,'Привычная инфраструктура сначала, оракулы и газ — когда есть что защищать.'],['CEX, но сразу с плечом x5',1,'Плечо на непроверенной вживую стратегии — ускоритель сюрпризов.'],['Сразу perp-DEX с плечом',0,'Оракул-лаг + плечо + новый бот = три источника сюрпризов одновременно.']],'Оракул отстал на 12 секунд. Ликвидация пришла раньше, чем бот понял, что происходит.']];
+let LN={order:[],i:0,picks:[],score:0,done:false,last:'',best:null};
+try{const p=JSON.parse(localStorage.getItem('cn_launch_progress')||'null');if(p&&p.order&&p.order.length===8&&!p.done){LN=Object.assign(LN,p)}}catch(x){}
+function lnSave(){try{localStorage.setItem('cn_launch_progress',JSON.stringify(LN))}catch(x){}}
+function lnShuffle(){const o=[0,1,2,3,4,5,6,7];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}return o}
+function lnGo(){go('launchquest');lnRender()}
+function lnBack(){go('sims')}
+function lnWipe(){LN={order:lnShuffle(),i:0,picks:[],score:0,done:false,last:'',best:LN.best};lnSave();lnRender()}
+function lnCat(){return LN_C[LN.order[LN.i]]}
+function lnPick(idx){if(LN.done)return;const c=lnCat(),o=c[2][idx],sc=o[1];
+LN.picks.push({cat:LN.order[LN.i],opt:idx,sc:sc});LN.score+=sc;
+LN.last='<div class="sq-sys" style="border-color:'+(sc===2?'var(--ok,#22C55E)':sc===1?'#EAB308':'var(--bad)')+'">'+(sc===2?'✅ ':sc===1?'🟡 ':'❌ ')+o[2]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(sc===2?'happy':sc===1?'neutral':'doubt',32):'')+'<b>Криптик:</b> «'+(sc===2?'По уставу. Так запускают.':sc===1?'Допустимо. Но запиши в техдолг.':'В проде это выстрелит. Вопрос — когда.')+'»</div>';
+LN.i++;if(LN.i>=8)LN.done=true;lnSave();lnRender()}
+function lnRender(){const box=document.getElementById('ln_box');if(!box)return;
+let h='<button class="btn ghost sm" onclick="lnBack()">← К симуляторам</button>';
+if(LN.done){const sc=LN.score,grade=sc>=14?['🟢 К запуску готов','Чек-лист закрыт. Такой прод переживёт и твою ночь, и свою первую неделю.']:sc>=10?['🟡 Запускаемся с ограничениями','Ядро собрано, но техдолг есть. Закрой его до масштабирования.']:sc>=5?['🟠 Первая неделя будет дорогой','Несколько категорий — провал. Запускай, но готовь деньги на уроки.']:['🔴 Это не запуск, это пожар','Чек-носов не закрыт почти ничего. Возвращайся к урокам 4.1–4.9.'];
+h+='<h2 style="font-size:17px;margin:10px 0">🚀 Вердикт комитета</h2><div class="sq-assets"><span>Готовность: '+sc+'/16</span><span>✅ идеально: '+LN.picks.filter(p=>p.sc===2).length+'</span><span>🟡 допустимо: '+LN.picks.filter(p=>p.sc===1).length+'</span><span>❌ провал: '+LN.picks.filter(p=>p.sc===0).length+'</span></div>';
+h+='<div class="sq-sys" style="border-color:'+(sc>=10?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(sc>=10?'happy':'doubt',40):'')+'<div><b>'+grade[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+grade[1]+'</div></div></div>';
+const fails=LN.picks.filter(p=>p.sc===0);
+if(fails.length){h+='<div class="sq-sys" style="font-size:12.5px"><b>Сценарий первой недели:</b><ul style="margin:6px 0 0 16px;padding:0">'+fails.map(p=>'<li style="margin:4px 0"><b>'+LN_C[p.cat][0]+':</b> '+LN_C[p.cat][3]+'</li>').join('')+'</ul></div>'}
+else h+='<div class="sq-sys" style="font-size:12.5px"><b>Сценарий первой недели:</b> скучная неделя. Бот торгует, алерты молчат, журнал растёт. Скука — лучший признак живого прода.</div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило запуска:</b> чек-лист заполняется до включения, а не после первого инцидента. Уроки 4.1–4.9.</div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="lnWipe()">🔄 Собрать заново</button><button class="btn ghost sm" onclick="lnBack()">← К симуляторам</button></div>';
+if(!LN.best||sc>LN.best)LN.best=sc;lnSave();box.innerHTML=h;return}
+const c=lnCat();
+h+='<div class="sq-assets"><span>Категория '+(LN.i+1)+'/8</span><span>Урок '+c[1]+'</span><span>Готовность: '+LN.score+'</span></div>';
+if(LN.last)h+=LN.last;
+h+='<h2 style="font-size:16px;margin:8px 0">'+c[0]+'</h2>';
+c[2].forEach(function(o,idx){h+='<button class="btn ghost" style="display:block;width:100%;text-align:left;margin:6px 0;font-size:13px" onclick="lnPick('+idx+')">'+o[0]+'</button>'});
+box.innerHTML=h}
+function renderLaunchCard(){const c=document.getElementById('launch_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=9;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['p4_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_launch_progress')||'null')}catch(x){}let h='<h3>🚀 Квест «Первый запуск»</h3><p style="color:var(--mut);font-size:13px">Стратегия прошла «Кривые». Осталось собрать прод: 8 категорий чек-листа, от хостинга до площадки. Собери бота, который переживёт первую неделю.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки 4.1–4.9, чтобы открыть</span>'}else{h+='<button class="btn" onclick="lnGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить сборку':'🚀 Собрать бота')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'/16</span>'}c.innerHTML=h}
+window.LNNS={go:lnGo,wipe:lnWipe,pick:lnPick,renderCard:renderLaunchCard};
 </script>
 </body>
 </html>
