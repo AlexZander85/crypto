@@ -849,6 +849,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="tab" data-tab="panicquest">🚨 Паника</button>
     <button class="tab" data-tab="marginquest">💥 Маржин</button>
     <button class="tab" data-tab="curvequest">📉 Кривые</button>
+    <button class="tab" data-tab="firstquest">🌱 Старт</button>
     <button class="tab" data-tab="launchquest">🚀 Запуск</button>
     <button class="tab" data-tab="prodquest">🌙 Прод</button>
   </div>
@@ -1223,6 +1224,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </section>
 
 <!-- 3. SIMULATORS VIEW -->
+<section id="firstquest" class="view"><h1>🌱 Первые деньги</h1><p class="sub">Путь новичка: 8 решений первого месяца.</p><div id="fm_box"></div></section>
 <section id="launchquest" class="view"><h1>🚀 Первый запуск</h1><p class="sub">Чек-лист боевого бота: 8 категорий до включения.</p><div id="ln_box"></div></section>
 <section id="prodquest" class="view"><h1>🌙 Ночь в проде</h1><p class="sub">Дежурство по ранбуку: 6 инцидентов до утра.</p><div id="pr_box"></div></section>
 <section id="curvequest" class="view"><h1>📉 Кривая-обманщица</h1><p class="sub">Инвесткомитет по бэктестам: что пойдёт в прод, что — в мусорку.</p><div id="cv_box"></div></section>
@@ -1245,6 +1247,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <!-- SIM 1: Order Book Visualizer -->
+  <div id="first_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="launch_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="prod_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="curve_card_in_sims" class="sim-box" style="max-width:720px"></div>
@@ -13255,7 +13258,7 @@ const $=s=>document.querySelector(s);
 function go(t){
   setTimeout(() => {
     initTooltipEngine();
-    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); renderMarginCard(); renderCurveCard(); renderProdCard(); renderLaunchCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
+    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); renderMarginCard(); renderCurveCard(); renderProdCard(); renderLaunchCard(); renderFirstCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
     const activeTabEl = document.getElementById(t);
     if(activeTabEl && !activeTabEl.querySelector('.tab-next-steps')){
       const banner = document.createElement('div');
@@ -38666,6 +38669,73 @@ c[2].forEach(function(o,idx){h+='<button class="btn ghost" style="display:block;
 box.innerHTML=h}
 function renderLaunchCard(){const c=document.getElementById('launch_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=9;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['p4_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_launch_progress')||'null')}catch(x){}let h='<h3>🚀 Квест «Первый запуск»</h3><p style="color:var(--mut);font-size:13px">Стратегия прошла «Кривые». Осталось собрать прод: 8 категорий чек-листа, от хостинга до площадки. Собери бота, который переживёт первую неделю.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки 4.1–4.9, чтобы открыть</span>'}else{h+='<button class="btn" onclick="lnGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить сборку':'🚀 Собрать бота')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'/16</span>'}c.innerHTML=h}
 window.LNNS={go:lnGo,wipe:lnWipe,pick:lnPick,renderCard:renderLaunchCard};
+/* Квест «Первые деньги» — путь новичка (Фаза 0).
+   Решение: [название, ситуация, [[текст,уровень,потеря,разбор]x3]].
+   Уровень: 0=верно, 1=допустимо, 2=провал. Потеря в ₽ (0 при верном). */
+const FM_D=[
+['Первый депозит','100 000 ₽ на карте. Пора заводить на биржу. В чате пишут: «выгодный обменник, курс лучше на 3%, без комиссии».',
+[['Завести на крупную биржу напрямую, начать с малой суммы',0,0,'Крупная биржа + малый старт = дёшево и безопасно. «Выгодный обменник» без репутации — классическая точка потери.'],
+['Завести половину на биржу, половину — через обменник',1,8000,'Половина дошла. Вторая «зависла на проверке» и растворилась. −8 000 ₽ за урок про репутацию.'],
+['Всё через обменник: 3% — это 3 000 ₽ экономии',2,45000,'Обменник принял перевод и перестал отвечать. Вернули 55 000 через неделю нервов. «Экономия» обошлась в 45 000.']]],
+['Первая покупка','Монета выросла на 40% за день. Везде заголовки. Страшно упустить.',
+[['Подождать отката, разбить вход на 3 части',0,0,'FOMO — не стратегия. Разбивка сглаживает вход, ожидание отката снижает цену. Урок 0.4: цена покупки ≠ цена заголовка.'],
+['Войти третью депозита «на пробу»',1,5000,'Вошёл на локальном пике. Откат съел 5 000 ₽, но треть депозита — переживаемо.'],
+['Войти всем: «пока не поздно»',2,22000,'Купил на хаях. Откат −22% за два дня. Паника добавила ещё −5% на выходе.']]],
+['Зелёная свеча','Свеча +20%, зелёная, длинная. Кажется, что «рынок зовёт».',
+[['Это просто OHLC: 4 числа, не сигнал. Смотрю контекст',0,0,'Свеча — запись движения, а не приглашение. Урок 0.8: график не может сказать «купи».'],
+['Куплю немного: «тренд — друг»',1,4000,'Тренд развернулся на следующей свече. −4 000 ₽ за путаницу «зелёное = расти дальше».'],
+['Войти по-максимуму: «ракета»',2,18000,'Купил на закрытии +20%. Следующая свеча — красная, −15%. «Ракета» оказалась фейерверком.']]],
+['Тип заявки','Нужно купить. Стакан тонкий: между лучшим бидом и аском — пропасть.',
+[['Лимитная заявка: плачу свою цену, жду исполнения',0,0,'В тонком стакане рыночная заявка съедает спред и проскальзывание. Лимитная — терпение в обмен на цену.'],
+['Рыночная, но малой суммой',1,3000,'Малая сумма — малый слиппедж. −3 000 ₽ за нетерпение, но урок засчитан.'],
+['Рыночная на всё: «быстрее»',2,12000,'Рыночная прошла по всему стакану. Средняя цена на 12% хуже лучшего аска. «Быстрее» = «дороже».']]],
+['Просадка','Портфель −15% за день. Красные цифры, руки чешутся.',
+[['Это drawdown. Закон асимметрии: −15% нужно +17.6% к возврату. Не паникую',0,0,'Просадка — часть пути. Паник-продажа на дне фиксирует убыток и пропускает возврат.'],
+['Продал половину «на всякий случай»',1,6000,'Половина продана на дне. Возврат поймал только вторая половина. −6 000 ₽ упущенного.'],
+['Продал всё: «сохраню остатки»',2,15000,'Продал на дне. Через неделю портфель вернулся к исходному — без тебя. −15 000 ₽ за панику.']]],
+['Гарантированный сигнал','В личке: «инсайд, 100% рост, вход 5 000 ₽ за сигнал». Скриншоты «профитов» прилагаются.',
+[['Считаю EV: 100% гарантий не бывает. Это скам',0,0,'Матожидание «гарантированного» сигнала всегда отрицательное — иначе продавец торговал бы сам. Урок 0.14.'],
+['Не купил сигнал, но вошёл в монету «по наводке»',1,7000,'«Наводка» была пампом. Вошёл на пике, вышел на −7 000 ₽. Сигнал не купил — купил сам памп.'],
+['Купил сигнал и вошёл',2,13000,'−5 000 ₽ за «сигнал», −8 000 ₽ на самом пампе. Двойная плата за одну ошибку.']]],
+['Зов мемкоина','Друг: «залетай, 100x к листингу, все в теме». График — вертикальная палка.',
+[['Это памп-дамп. Чек-лист 0.19: кто за проектом, что продаёт, где ликвидность',0,0,'Вертикальная палка — это не рост, это разводка ликвидности. Пампу нужны покупатели наверху.'],
+['Зашёл на 5% депозита «по-быстрому»',1,4500,'Успел к пиковому окну. Выскочил с −4 500 ₽. Дешёвый билет на шоу.'],
+['Залетел всем свободным: «100x»',2,25000,'Купил у тех, кто продавал. Дамп −80% за час. «100x» был для организаторов.']]],
+['Плечо x20','На споте «скучно». На фьючерсах предлагают плечо x20: «ускорь прибыль».',
+[['Плечо ускоряет и ликвидацию. На старте — только спот',0,0,'Плечо x20 означает ликвидацию при движении −5%. Урок 0.16: деривативы — инструмент, не ускоритель.'],
+['Попробовал с плечом x2 на малую сумму',1,5000,'Даже x2 поймал волатильность. −5 000 ₽, но сумма была малой — урок усвоен.'],
+['x20 на полдепозита: «ускоряюсь»',2,50000,'Движение −4% против позиции. Ликвидация. Половина депозита испарилась за 20 минут.']]]];
+let FM={order:[],i:0,picks:[],loss:0,right:0,done:false,last:'',best:null};
+try{const p=JSON.parse(localStorage.getItem('cn_first_progress')||'null');if(p&&p.order&&p.order.length===8&&!p.done){FM=Object.assign(FM,p)}}catch(x){}
+function fmSave(){try{localStorage.setItem('cn_first_progress',JSON.stringify(FM))}catch(x){}}
+function fmShuffle(){const o=[0,1,2,3,4,5,6,7];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}return o}
+function fmGo(){go('firstquest');fmRender()}
+function fmBack(){go('sims')}
+function fmWipe(){FM={order:fmShuffle(),i:0,picks:[],loss:0,right:0,done:false,last:'',best:FM.best};fmSave();fmRender()}
+function fmStep(){return FM_D[FM.order[FM.i]]}
+function fmPick(idx){if(FM.done)return;const c=fmStep(),o=c[2][idx],lvl=o[1],loss=o[2];
+FM.picks.push({step:FM.order[FM.i],opt:idx,lvl:lvl});FM.loss+=loss;if(lvl===0)FM.right++;
+FM.last='<div class="sq-sys" style="border-color:'+(lvl===0?'var(--ok,#22C55E)':lvl===1?'#EAB308':'var(--bad)')+'">'+(lvl===0?'✅ ':lvl===1?'🟡 −'+loss.toLocaleString('ru-RU')+' ₽. ':'❌ −'+loss.toLocaleString('ru-RU')+' ₽. ')+o[3]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(lvl===0?'happy':lvl===1?'neutral':'doubt',32):'')+'<b>Криптик:</b> «'+(lvl===0?'База работает. Так держать.':lvl===1?'Могло быть хуже. Но могло быть и лучше.':'Классика новичка. Запомни цену этого урока.')+'»</div>';
+FM.i++;if(FM.i>=8)FM.done=true;fmSave();fmRender()}
+function fmRender(){const box=document.getElementById('fm_box');if(!box)return;
+let h='<button class="btn ghost sm" onclick="fmBack()">← К симуляторам</button>';
+if(FM.done){const left=100000-FM.loss,grade=FM.loss<=10000?['🌱 Первый месяц без потерь','База усвоена: ты не сделал ни одной классической ошибки новичка. Так держать.']:FM.loss<=30000?['📚 Дорогой, но полезный месяц','Несколько уроков оплачены. Главное — они усвоены, а не повторены.']:FM.loss<=60000?['💸 Заплатил за обучение','Рынок взял плату. Вопрос — усвоил ли ты урок, или заплатишь ещё раз.']:['🔥 Классический новичок','Все ловушки собраны. Перечитай уроки 0.1–0.20 — они дешевле, чем рынок.'];
+h+='<h2 style="font-size:17px;margin:10px 0">🌱 Итог первого месяца</h2><div class="sq-assets"><span>Осталось: '+left.toLocaleString('ru-RU')+' ₽</span><span>📉 потери: '+FM.loss.toLocaleString('ru-RU')+' ₽</span><span>✅ верных: '+FM.right+'/8</span></div>';
+h+='<div class="sq-sys" style="border-color:'+(FM.loss<=30000?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(FM.loss<=30000?'happy':'doubt',40):'')+'<div><b>'+grade[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+grade[1]+'</div></div></div>';
+const fails=FM.picks.filter(p=>p.lvl===2);
+if(fails.length){h+='<div class="sq-sys" style="font-size:12.5px"><b>Где ты заплатил:</b><ul style="margin:6px 0 0 16px;padding:0">'+fails.map(p=>'<li style="margin:4px 0"><b>'+FM_D[p.step][0]+':</b> '+FM_D[p.step][2][p.opt][3]+'</li>').join('')+'</ul></div>'}
+else h+='<div class="sq-sys" style="font-size:12.5px"><b>Где ты заплатил:</b> нигде. Ноль классических ошибок — редкость для первого месяца.</div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило первого месяца:</b> рынок не прощает базовых ошибок, но щедро платит за базовую дисциплину. Уроки 0.1–0.20.</div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="fmWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="fmBack()">← К симуляторам</button></div>';
+const score=Math.max(0,100-Math.round(FM.loss/1000));if(!FM.best||score>FM.best)FM.best=score;fmSave();box.innerHTML=h;return}
+const c=fmStep();
+h+='<div class="sq-assets"><span>Шаг '+(FM.i+1)+'/8</span><span>💼 '+(100000-FM.loss).toLocaleString('ru-RU')+' ₽</span><span>✅ '+FM.right+'</span></div>';
+if(FM.last)h+=FM.last;
+h+='<h2 style="font-size:16px;margin:8px 0">'+c[0]+'</h2><div class="sq-sys">'+c[1]+'</div>';
+c[2].forEach(function(o,idx){h+='<button class="btn ghost" style="display:block;width:100%;text-align:left;margin:6px 0;font-size:13px" onclick="fmPick('+idx+')">'+o[0]+'</button>'});
+box.innerHTML=h}
+function renderFirstCard(){const c=document.getElementById('first_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=20;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['p0_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_first_progress')||'null')}catch(x){}let h='<h3>🌱 Квест «Первые деньги»</h3><p style="color:var(--mut);font-size:13px">100 000 ₽ и ноль опыта. 8 решений первого месяца: от первого депозита до плеча x20. Пройди месяц без классических ошибок новичка.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки 0.1–0.20, чтобы открыть</span>'}else{h+='<button class="btn" onclick="fmGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить месяц':'🌱 Начать месяц')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'/100</span>'}c.innerHTML=h}
+window.FMNS={go:fmGo,wipe:fmWipe,pick:fmPick,renderCard:renderFirstCard};
 </script>
 </body>
 </html>
