@@ -847,6 +847,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="tab" data-tab="quest">🕵️ Квест</button>
     <button class="tab" data-tab="psyquest">🧠 Семь дней</button>
     <button class="tab" data-tab="panicquest">🚨 Паника</button>
+    <button class="tab" data-tab="marginquest">💥 Маржин</button>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">📖 Справка</span>
@@ -1219,6 +1220,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </section>
 
 <!-- 3. SIMULATORS VIEW -->
+<section id="marginquest" class="view"><h1>💥 Маржин-колл</h1><p class="sub">10 сделок. Стратегия рабочая. Вопрос — сколько ставишь.</p><div id="mc_box"></div></section>
 <section id="panicquest" class="view"><h1>🚨 Симулятор паники</h1><p class="sub">Отличай «рынок падает» от «инфраструктура сломана».</p><div id="pn_box"></div></section>
 <section id="psyquest" class="view"><h1>🧠 Семь дней: ты против себя</h1><p class="sub">Неделя оператора бота. Враг — внутренний голос.</p><div id="pq_box"></div></section>
 <section id="quest" class="view"><h1>🕵️ Квест: Криптик против Мошенника</h1><p class="sub">Семь атак Ската — семь эпизодов на выживание виртуальных активов.</p><div id="sq_box"></div></section>
@@ -1237,6 +1239,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <!-- SIM 1: Order Book Visualizer -->
+  <div id="margin_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="panic_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="psyquest_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="quest_card_in_sims" class="sim-box" style="max-width:720px"></div>
@@ -13243,7 +13246,7 @@ const $=s=>document.querySelector(s);
 function go(t){
   setTimeout(() => {
     initTooltipEngine();
-    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
+    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); renderMarginCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
     const activeTabEl = document.getElementById(t);
     if(activeTabEl && !activeTabEl.querySelector('.tab-next-steps')){
       const banner = document.createElement('div');
@@ -38439,6 +38442,64 @@ box.innerHTML=h;PN.tmr=setInterval(pnTick,3000)}
 function pnPick(i,ci){if(PN.i!==i||PN.done)return;pnStop();const sc=pnScen(),c=sc[6][ci],ok=c[1]===1;const loss=Math.round(PN.cap*Math.abs(c[2])/100);PN.cap-=loss;PN.results.push(ok?1:0);PN.last='<div class="sq-sys" style="border-color:'+(ok?'var(--ok,#22C55E)':'var(--bad)')+'">'+(ok?'✅ ':'❌ ')+(loss?'−'+loss.toLocaleString('ru-RU')+' ₽. ':'')+sc[5]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(ok?'happy':'doubt',32):'')+'<b>Криптик:</b> «'+(ok?(window.kryptikSay?kryptikSay('win_easy'):'Принято.'):'Логично. Неправильно, но логично.')+'»</div>';PN.i++;PN.t=0;if(PN.i>=6)PN.done=true;pnSave();pnRender()}
 function renderPanicCard(){const c=document.getElementById('panic_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=5;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['ps_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_panic_progress')||'null')}catch(x){}let h='<h3>🚨 Симулятор паники</h3><p style="color:var(--mut);font-size:13px">6 кризисов: научись отличать «рынок падает» от «инфраструктура сломана». В 90% случаев правильно — ничего не делать.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки П1–П5, чтобы открыть</span>'}else{h+='<button class="btn" onclick="pnGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить':'🚨 Начать')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'%</span>'}c.innerHTML=h}
 window.PNNS={go:pnGo,wipe:pnWipe,pick:pnPick,renderCard:renderPanicCard};
+/* Квест «Маржин-колл» — экзамен по сайзингу (Фаза 3).
+   Раунд: [название, ситуация, move%, wick%, гэп(0/1)]. */
+const MC_R=[
+['Зелёный понедельник','Стратегия дала сигнал в лонг. Рынок спокоен, волатильность низкая.',4,1,0],
+['Тренд продолжается','Второй сигнал подряд. В чатах уже скриншоты прибылей.',6,2,0],
+['Эйфория','Третья зелёная неделя чувств. Все вокруг «гуру». Ты тоже так думаешь?',3,3,0],
+['Первая красная','Без новостей. Просто резкая красная свеча посреди дня.',-8,10,0],
+['Пила','Рынок ходит туда-сюда. Сигнал был, но цена пилит.',-2,6,0],
+['Отскок','Продавцы выдохлись. Цена возвращается.',5,4,0],
+['Новостной шок','Крупный заголовок. Свеча пролетает стопы за секунды. Гэп.',-12,15,1],
+['Тишина после бури','Рынок зализывает раны. Слабый плюс.',2,1,0],
+['Ночной фитиль','Ночью цена ныряет и возвращается. Свеча закроется в плюс. Вопрос — доживёшь ли ты до закрытия.',1,22,0],
+['Нормализация','Последняя сделка серии. Рынок снова обычный.',4,2,0]];
+const MC_LEV=[1,2,3,5,10],MC_STK=[10,25,50,100];
+let MC={r:0,cap:100000,peak:100000,dd:0,liq:0,hist:[],done:false,best:null,lev:2,stk:25,stop:1};
+try{const p=JSON.parse(localStorage.getItem('cn_margin_progress')||'null');if(p&&typeof p.r==='number'&&!p.done)MC=Object.assign(MC,p)}catch(x){}
+function mcSave(){try{localStorage.setItem('cn_margin_progress',JSON.stringify(MC))}catch(x){}}
+function mcGo(){go('marginquest');mcRender()}
+function mcBack(){go('sims')}
+function mcWipe(){MC={r:0,cap:100000,peak:100000,dd:0,liq:0,hist:[],done:false,best:MC.best,lev:2,stk:25,stop:1};mcSave();mcRender()}
+function mcSet(k,v){MC[k]=v;mcRender()}
+function mcRound(){return MC_R[MC.r]}
+function mcTrade(){if(MC.done||MC.r>=10)return;const rd=mcRound(),move=rd[2],wick=rd[3],gap=rd[4]===1;
+const stake=Math.round(MC.cap*MC.stk/100),lev=MC.lev;
+let pnl,liqd=false,note='';
+if(lev*wick>=100&&(!MC.stop||gap)){liqd=true;pnl=-stake;note=gap?'Стоп не успел — гэп. Ликвидация.':'Фитиль достал до ликвидации раньше стопа.';}
+else if(move<0){const lossPct=MC.stop?Math.min(Math.abs(move),3)*lev:Math.abs(move)*lev;pnl=-Math.round(stake*lossPct/100);if(lossPct>=100){liqd=true;pnl=-stake}note=MC.stop&&!gap?'Стоп сработал: −3% × плечо вместо полного хода.':''}
+else{pnl=Math.round(stake*lev*move/100);if(lev*wick>=100&&MC.stop){pnl=-Math.round(stake*3*lev/100);note='Фитиль выбил стоп по пути вверх.'}}
+MC.cap+=pnl;if(liqd)MC.liq++;if(MC.cap<0)MC.cap=0;
+if(MC.cap>MC.peak)MC.peak=MC.cap;const dd=Math.round((1-MC.cap/MC.peak)*100);if(dd>MC.dd)MC.dd=dd;
+MC.hist.push({pnl:pnl,liqd:liqd});MC.r++;if(MC.r>=10||MC.cap<=0)MC.done=true;
+MC.last={pnl:pnl,liqd:liqd,note:note,rd:rd};mcSave();mcRender()}
+function mcGrade(){if(MC.cap<=0)return['💀 Маржин-колл','Ты не дошёл до конца серии. Стратегия была рабочая — размер позиции её убил.'];
+if(MC.dd>50)return['😰 Дорогое обучение','Выжил, но просадка съела половину счёта. Отыгрывать −50% нужно +100%.'];
+if(MC.cap>=105000&&MC.dd<=30)return['🏆 Профи','Плюс при контролируемой просадке. Келли бы одобрил.'];
+if(MC.cap>=100000&&MC.dd<=30)return['✅ Дисциплина окупается','Скучный результат — это и есть результат.'];
+return['😐 Прошёл, но нервно','Финиш около нуля с лишними переживаниями. Урежь размер — получишь сон.']}
+function mcRender(){const box=document.getElementById('mc_box');if(!box)return;let h='<button class="btn ghost sm" onclick="mcBack()">← К симуляторам</button>';
+if(MC.done){const g=mcGrade();const ok=MC.cap>0;
+h+='<h2 style="font-size:17px;margin:10px 0">💥 Итог серии</h2><div class="sq-assets"><span>💼 '+MC.cap.toLocaleString('ru-RU')+' ₽</span><span>📉 max DD −'+MC.dd+'%</span><span>💥 ликвидаций: '+MC.liq+'</span></div>';
+h+='<div class="sq-sys" style="border-color:'+(ok?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(ok?'happy':'doubt',40):'')+'<div><b>'+g[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+g[1]+'</div></div></div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Эталон (x2 · 20% · стоп):</b> те же 10 сделок → ~106 900 ₽, просадка −2%. Скучно? Именно. Размер позиции решает больше, чем сигнал. Урок 3.2.</div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="mcWipe()">🔄 Новая серия</button><button class="btn ghost sm" onclick="mcBack()">← К симуляторам</button></div>';
+const score=MC.cap;if(!MC.best||score>MC.best)MC.best=score;mcSave();box.innerHTML=h;return}
+const rd=mcRound(),ddPct=Math.round((1-MC.cap/MC.peak)*100);
+const emo=MC.cap<=0?'💀':ddPct<15?'😐':ddPct<35?'😟':ddPct<60?'😨':'😱';
+h+='<div class="sq-assets"><span>💼 '+MC.cap.toLocaleString('ru-RU')+' ₽</span><span>Сделка '+(MC.r+1)+'/10</span><span>📉 −'+ddPct+'%</span><span>'+emo+'</span></div>';
+if(MC.last){const L=MC.last;h+='<div class="sq-sys" style="border-color:'+(L.pnl>=0?'var(--ok,#22C55E)':'var(--bad)')+'">'+(L.liqd?'💥 ЛИКВИДАЦИЯ: −':(L.pnl>=0?'✅ +':'❌ −'))+Math.abs(L.pnl).toLocaleString('ru-RU')+' ₽'+(L.note?' · '+L.note:'')+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(L.pnl>=0?'happy':'doubt',32):'')+'<b>Криптик:</b> «'+(L.liqd?'Позиция была правильная. Размер — нет.':L.pnl>=0?(window.kryptikSay?kryptikSay('win_easy'):'Принято.'):'Рынок не должен решать за тебя, сколько ты потеряешь.')+'»</div>'}
+h+='<h2 style="font-size:16px;margin:8px 0">Сделка '+(MC.r+1)+' · '+rd[0]+(rd[4]?' ⚡':'')+'</h2><div class="sq-sys">'+rd[1]+'</div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Плечо:</b> '+MC_LEV.map(function(l){return '<button class="btn ghost sm" style="'+(MC.lev===l?'border-color:var(--acc,#38BDF8);color:#fff':'')+'" onclick="mcSet(\'lev\','+l+')">x'+l+'</button>'}).join(' ')+'</div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Доля капитала:</b> '+MC_STK.map(function(v){return '<button class="btn ghost sm" style="'+(MC.stk===v?'border-color:var(--acc,#38BDF8);color:#fff':'')+'" onclick="mcSet(\'stk\','+v+')">'+v+'%</button>'}).join(' ')+'</div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Стоп −3%:</b> <button class="btn ghost sm" style="'+(MC.stop?'border-color:var(--acc,#38BDF8);color:#fff':'')+'" onclick="mcSet(\'stop\',1)">вкл</button> <button class="btn ghost sm" style="'+(!MC.stop?'border-color:var(--acc,#38BDF8);color:#fff':'')+'" onclick="mcSet(\'stop\',0)">выкл</button></div>';
+const stake=Math.round(MC.cap*MC.stk/100);
+h+='<div style="font-size:12px;color:var(--mut);margin:6px 0">Ставка: '+stake.toLocaleString('ru-RU')+' ₽ с плечом x'+MC.lev+' → ход 1% цены = '+(MC.lev)+'% ставки. Ликвидация при ходе против: '+Math.ceil(100/MC.lev)+'%.</div>';
+h+='<button class="btn" onclick="mcTrade()">📈 Открыть сделку</button>';
+box.innerHTML=h}
+function renderMarginCard(){const c=document.getElementById('margin_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=6;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['p3_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_margin_progress')||'null')}catch(x){}let h='<h3>💥 Квест «Маржин-колл»</h3><p style="color:var(--mut);font-size:13px">10 сделок. Рабочая стратегия. Единственный вопрос — сколько ставишь. Плечо, доля капитала, стоп: настрой сам и доживи до конца серии.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки 3.1–3.6, чтобы открыть</span>'}else{h+='<button class="btn" onclick="mcGo()">'+(p&&p.r>0&&!p.done?'▶ Продолжить':'💥 Начать серию')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best.toLocaleString('ru-RU')+' ₽</span>'}c.innerHTML=h}
+window.MCNS={go:mcGo,wipe:mcWipe,trade:mcTrade,set:mcSet,renderCard:renderMarginCard};
 </script>
 </body>
 </html>
