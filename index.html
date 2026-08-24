@@ -100,6 +100,7 @@ h3{font-size:17px; margin-bottom:8px; font-weight:700}
 .ans.bad{background:rgba(239,68,68,.2)!important; border-color:var(--bad)!important}
 .ans:disabled{cursor:default}
 .ans-explain{margin-top:6px; font-size:12.5px; color:var(--mut); padding:6px 10px; border-radius:8px; background:rgba(0,0,0,.25)}
+.kryptik{display:inline-flex;vertical-align:middle}.kryptik svg{display:block}.k-eye-l,.k-eye-r{transition:transform 150ms,r 150ms}.k-mouth{transition:d 150ms}.k-neutral .k-mouth{d:path("M13 25 Q20 25 27 25")}.k-happy .k-eye-l,.k-happy .k-eye-r{transform:translateY(-2px)}.k-happy .k-mouth{d:path("M13 24 Q20 30 27 24")}.k-doubt .k-eye-l,.k-doubt .k-eye-r{transform:translateY(2px)}.k-doubt .k-mouth{d:path("M14 27 Q20 22 26 27")}.k-surprise .k-eye-l,.k-surprise .k-eye-r{r:3.9px}.k-surprise .k-mouth{d:path("M15 26 Q20 21 25 26")}
 .qmeta{color:var(--mut); font-size:13px; margin-bottom:10px; display:flex; justify-content:space-between}
 .btn{background:var(--grad); border:none; color:#fff; font-weight:700; border-radius:12px; padding:11px 20px; cursor:pointer; font-size:14px; transition:.2s; display:inline-flex; align-items:center; gap:6px; text-decoration:none}
 .btn:hover{opacity:.92; transform:translateY(-1px); box-shadow:0 0 14px rgba(6,182,212,.3)}
@@ -31555,6 +31556,7 @@ function renderCompetencyRadar(){
     tip.innerHTML='<div style="font-size:12px;color:#A78BFA;text-transform:uppercase;font-weight:700;margin-bottom:10px">Шаг '+(step+1)+' из '+STEPS.length+'</div>'+
       '<div style="margin-bottom:20px">'+s.txt+'</div>'+
       '<div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-p sm" id="tour_next" style="padding:8px 22px">'+(step===STEPS.length-1?'🚀 Начать!':'Далее →')+'</button><button class="btn btn-g sm" id="tour_skip" style="padding:8px 14px">Пропустить тур</button></div>';
+    if(window.kryptikTourHook)kryptikTourHook(tip,step,STEPS.length);
     ov.appendChild(tip);document.body.appendChild(ov);
     document.getElementById('tour_next').onclick=function(){step++;show();};
     document.getElementById('tour_skip').onclick=finish;
@@ -35427,7 +35429,7 @@ function coachCardHTML(obs){
   const seen = COACH.seen[obs.id];
   return '<div class="coach-card" id="coach_card_' + obs.id + '" style="background:var(--card);border:1px solid ' + (seen ? 'var(--line)' : 'var(--acc2)') + ';border-radius:12px;padding:14px 16px;margin-bottom:10px;transition:border-color .3s">' +
     '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">' +
-      '<div style="font-weight:800;font-size:13.5px;color:var(--txt)">' + obs.icon + ' ' + obs.title + '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px">'+(window.coachMarketEmotion?kryptikAvatar(coachMarketEmotion(obs),28):'')+'<div style="font-weight:800;font-size:13.5px;color:var(--txt)">'+obs.icon+' '+obs.title+'</div></div>' +
       (seen ? '' : '<span style="font-size:10px;font-weight:800;color:var(--acc2);border:1px solid var(--acc2);border-radius:8px;padding:1px 7px;white-space:nowrap">НОВОЕ</span>') +
     '</div>' +
     '<div id="coach_lv_' + obs.id + '_a" style="margin-top:10px">' +
@@ -36930,9 +36932,9 @@ window.mentorUpsellModal = mentorUpsellModal;
 
 /* ---------- панель ---------- */
 function mentorPanelHTML(){
-  return '<div id="mentor_panel" style="position:fixed;top:0;right:0;width:380px;max-width:96vw;height:100vh;background:var(--bg);border-left:1px solid var(--line);z-index:99998;box-shadow:-10px 0 40px rgba(0,0,0,.5);display:flex;flex-direction:column">' +
+  return '<div id="mentor_panel" style="position:fixed;top:0;right:0;width:380px;max-width:96vw;height:100vh;background:var(--bg);border-left:1px solid var(--line);z-index:1000002;box-shadow:-10px 0 40px rgba(0,0,0,.5);display:flex;flex-direction:column">' +
     '<div style="padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">' +
-      '<div style="font-weight:800;font-size:15px;color:var(--txt)">🤖 Наставник М.</div>' +
+      '<div style="display:flex;align-items:center;gap:10px">'+kryptikAvatar('neutral',48)+'<div><div style="font-weight:800;font-size:15px;color:var(--txt)">Криптик</div><div id="kryptik_panel_status" style="font-size:11.5px;color:var(--mut);font-style:italic">'+kryptikSay('hint_used')+'</div></div></div>' +
       '<button class="btn sm ghost" id="mentor_settings_btn" title="Настройки наставника" onclick="mentorSettingsRender()" style="margin-right:8px">⚙️</button>' +
       '<button class="btn sm ghost" onclick="mentorClosePanel()">✕</button>' +
     '</div>' +
@@ -38272,6 +38274,23 @@ window.explainToPanel = explainToPanel;
 })();
 })();
 
+
+
+/* Криптик */
+const KRYPTIK_LINES={error_generic:['Логично. Неправильно, но логично.','Ну-ну. Все через это проходили.','Дальше будет проще. Или нет.'],error_concept:['Идея не дошла. Перечитай уровень 1.','База хромает. Вернись к определению.'],error_arithmetic:['Калькулятор изобрели для таких случаев.','Посчитай ещё раз. Медленно.'],win_easy:['Приемлемо.','Так и держи.','Не расслабляйся.'],win_hard:['Вот это уже интересно.','Заслуженно.'],hint_used:['Подсказал. Дальше сам.','Смотри сюда. Дальше сам.'],limit_reached:['На сегодня всё. Завтра продолжим.','Мозгу нужен отдых. Это тоже урок.'],tour_start:['Я Криптик. Покажу где что лежит. 30 секунд — и ты в деле.'],tour_end:['Разобрался? Хорошо. Дальше сам.'],streak_3:['Три дня подряд. Уже неплохо.'],streak_7:['Неделя. Не сорвись.'],boss_win:['Босс повержен. Следующий сложнее.'],boss_lose:['Проигрыш — это данные. Попробуй иначе.'],boss_hit:['Попал. Ещё разок так же.','Хороший ход. Видел и лучше. Но хороший.','Кризис пошатнулся. Дави.','Так держать. Босс не бессмертный.','Годно. Продолжай.'],boss_miss:['Мимо. Соберись.','Ой. То есть нет.','Неверно. Босс рад — не радуй его.','Не этот вариант. Думай.','Страйк. Следующий ход — точнее.']};
+function kryptikSay(c){const p=KRYPTIK_LINES[c];return p?p[Math.floor(Math.random()*p.length)]:''}
+window.kryptikSay=kryptikSay;
+function kryptikCls(e){return 'k-'+(/^(neutral|happy|doubt|surprise)$/.test(e)?e:'neutral')}
+function kryptikAvatar(e,s){s=s||40;return '<span class="kryptik '+kryptikCls(e)+'" role="img" aria-label="Криптик — наставник"><svg width="'+s+'" height="'+s+'" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="#1A2332" stroke="#38BDF8" stroke-width="1.5"/><circle class="k-eye-l" cx="14" cy="16" r="3" fill="#38BDF8"/><circle class="k-eye-r" cx="26" cy="16" r="3" fill="#38BDF8"/><path class="k-mouth" d="M13 25 Q20 25 27 25" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="3" x2="20" y2="8" stroke="#7C3AED" stroke-width="1.5"/><circle cx="20" cy="3" r="2" fill="#7C3AED"/></svg></span>'}
+(function(){const say=function(e,l){const p=document.getElementById('mentor_panel');if(!p)return;const a=p.querySelector('.kryptik');if(a)a.className='kryptik '+kryptikCls(e);const st=document.getElementById('kryptik_panel_status');if(st)st.textContent=l};const orig=MENTOR.ask.bind(MENTOR);MENTOR.ask=function(a,l,p){say('surprise','Смотрю…');return orig(a,l,p).then(function(r){let e='neutral',t='Готово.';if(a==='feynman'){let v=null;try{v=r.json||JSON.parse(r.text)}catch(x){}if(v&&v.verdict==='understood'){e='happy';t=kryptikSay('win_easy')}else if(v){e='doubt';t=kryptikSay('error_generic')}}else if(a==='hint')t=kryptikSay('hint_used');say(e,t);return r},function(err){say('doubt',err&&err.message==='limit'?kryptikSay('limit_reached'):'Связь шумит. Повтори.');throw err})}})();
+function kryptikRow(e,sz,line,cls){return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'+kryptikAvatar(e,sz)+'<div style="font-size:12.5px;font-style:italic;'+cls+'">'+line+'</div></div>'}
+function kryptikQuizMark(id){const fb=document.getElementById(id);if(fb)fb.innerHTML=kryptikRow('doubt',32,kryptikSay('error_generic'),'color:var(--txt)')+fb.innerHTML}
+function kryptikWrap(n,f){const o=window[n];if(typeof o==='function')window[n]=function(){o.apply(this,arguments);f.apply(null,arguments)}}
+kryptikWrap('checkQuizAnswer',function(i){const q=window.quiz&&quiz.qs?quiz.qs[quiz.cur]:null;const a=q?(q._sv&&q._svCur===quiz.cur+'_'+quiz._shuffleSalt?q._sv.a:q.a):-1;if(q&&i!==a)kryptikQuizMark('quiz_feedback')});
+kryptikWrap('handleLessonQuizAnswer',function(id,s,c){if(s!==c)kryptikQuizMark('lquiz_fb_'+id)});
+kryptikWrap('handleBossAnswer',function(c,cor){const t=c===cor?curBossHp<=0?kryptikSay('boss_win'):kryptikSay('boss_hit'):kryptikSay('boss_miss');setTimeout(function(){showToast(t,'🤖')},900)});
+window.kryptikTourHook=function(tip,st,n){if(tip)tip.insertAdjacentHTML('afterbegin',kryptikRow(st===0?'surprise':'neutral',44,st===0?kryptikSay('tour_start'):st===n-1?kryptikSay('tour_end'):kryptikSay('hint_used'),'color:#E2E8F0'))};
+window.coachMarketEmotion=function(o){const t=(o.title||'').toLowerCase(),f=window.LIVE&&LIVE.data&&LIVE.data.fng?LIVE.data.fng.current.value:null;if(o.id==='fng_shift')return /нервнее/.test(t)?'doubt':'happy';return /экстремальн|дорого/.test(t)||f!==null&&(f<25||f>75)?'surprise':'neutral'};
 </script>
 </body>
 </html>

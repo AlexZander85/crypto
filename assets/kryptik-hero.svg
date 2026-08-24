@@ -1,0 +1,26 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Криптик — наставник курса КриптоНавигатор">
+  <title>Криптик — наставник курса</title>
+  <defs>
+    <radialGradient id="kbg" cx="0.5" cy="0.4" r="0.8">
+      <stop offset="0" stop-color="#121B2E"/>
+      <stop offset="1" stop-color="#090D1F"/>
+    </radialGradient>
+    <linearGradient id="kring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="24" fill="url(#kbg)"/>
+  <circle cx="100" cy="105" r="78" fill="none" stroke="url(#kring)" stroke-width="2" opacity=".35" stroke-dasharray="6 8"/>
+  <line x1="100" y1="12" x2="100" y2="34" stroke="#7C3AED" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="100" cy="12" r="8" fill="#7C3AED"/>
+  <circle cx="100" cy="12" r="3.5" fill="#C4B5FD"/>
+  <circle cx="100" cy="105" r="72" fill="#1A2332" stroke="#38BDF8" stroke-width="5"/>
+  <circle cx="72" cy="88" r="13" fill="#38BDF8"/>
+  <circle cx="128" cy="88" r="13" fill="#38BDF8"/>
+  <circle cx="76" cy="84" r="4" fill="#E0F2FE" opacity=".85"/>
+  <circle cx="132" cy="84" r="4" fill="#E0F2FE" opacity=".85"/>
+  <path d="M68 132 Q100 148 132 128" fill="none" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="34" cy="105" r="5" fill="#38BDF8" opacity=".6"/>
+  <circle cx="166" cy="105" r="5" fill="#38BDF8" opacity=".6"/>
+</svg>
