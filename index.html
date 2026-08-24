@@ -36726,6 +36726,713 @@ window.newsTimerDismiss = newsTimerDismiss;
     return html;
   };
 })();
+
+/* =========================================================================
+   M1 · AI-НАСТАВНИК «М.» — клиент, гейт тарифа «Макс», панель в уроке
+   ========================================================================= */
+
+/* ---------- тариф ---------- */
+function mentorTier(){
+  try{ return localStorage.getItem('cn_tier_override') || window.__TIER__ || 'demo'; }catch(e){ return 'demo'; }
+}
+function mentorIsMax(){
+  return mentorTier() === 'max';
+}
+window.mentorTier = mentorTier;
+window.mentorIsMax = mentorIsMax;
+
+/* ---------- лимит 30 действий/день ---------- */
+const MENTOR_LIMIT = 30;
+function mentorUsageToday(){
+  const key = 'cn_mentor_usage';
+  const today = new Date().toISOString().slice(0, 10);
+  try{
+    const st = JSON.parse(localStorage.getItem(key) || '{}');
+    if(st.day !== today) return { day: today, n: 0 };
+    return st;
+  }catch(e){ return { day: today, n: 0 }; }
+}
+function mentorLimitReached(){
+  return mentorUsageToday().n >= MENTOR_LIMIT;
+}
+window.mentorLimitReached = mentorLimitReached;
+window.MENTOR_LIMIT = MENTOR_LIMIT;
+
+/* ---------- клиент ---------- */
+const MENTOR = {
+  deviceId: (function(){
+    let id = null;
+    try{ id = localStorage.getItem('cn_mentor_device'); }catch(e){}
+    if(!id){
+      id = 'dev-' + Math.random().toString(36).slice(2, 10);
+      try{ localStorage.setItem('cn_mentor_device', id); }catch(e){}
+    }
+    return id;
+  })(),
+  mock: (function(){
+    return new URLSearchParams(location.search).get('mockai') === '1';
+  })(),
+  countUsed(){
+    const today = new Date().toISOString().slice(0, 10);
+    const st = mentorUsageToday();
+    if(st.day === today) st.n++;
+    else { st.day = today; st.n = 1; }
+    try{ localStorage.setItem('cn_mentor_usage', JSON.stringify(st)); }catch(e){}
+  },
+  buildLessonText(lessonId, maxChars){
+    maxChars = maxChars || 6000;
+    try{
+      const l = LESSONS.find(x => x.id === lessonId);
+      if(!l) return '';
+      const parts = [];
+      (l.blocks || []).forEach(b => {
+        if(b.type === 'concept'){
+          ['level1','level2','level3','level4','analogy'].forEach(k => { if(b[k]) parts.push(b[k]); });
+        } else if(b.type === 'recap' && b.points){
+          parts.push(b.points.join('\n'));
+        }
+      });
+      let text = 'Урок «' + (l.title || '') + '» (id ' + l.id + '):\n' + parts.join('\n\n');
+      if(text.length > maxChars) text = text.slice(0, maxChars) + '\n…';
+      return text;
+    }catch(e){ return ''; }
+  },
+  filter(text){
+    const banned = ['покупай', 'продавай', 'цена вырастет', 'будет рост', 'рекомендую открыть позицию', 'сигнал к покупке', 'сигнал к продаже'];
+    const clean = String(text || '');
+    for(const b of banned){
+      if(clean.toLowerCase().includes(b.toLowerCase())){
+        return 'Здесь я останусь при материале урока: давай разберём то, что в нём есть.';
+      }
+    }
+    return clean;
+  },
+  base(){
+    try{ return localStorage.getItem('cn_mentor_api_base') || ''; }catch(e){ return ''; }
+  },
+  async ask(action, lessonId, payload){
+    if(mentorLimitReached()) throw new Error('limit');
+    if(!navigator.onLine) throw new Error('offline');
+    const text = this.buildLessonText(lessonId);
+    if(this.mock){
+      this.countUsed();
+      return Promise.resolve(this.mockAnswer(action, lessonId, payload));
+    }
+    const r = await fetch(this.base() + '/api/mentor/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: action, lessonId: lessonId, lessonText: text, deviceId: this.deviceId, payload: payload })
+    });
+    if(r.status === 429) throw new Error('limit');
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    this.countUsed();
+    return { text: this.filter(d.text), json: d.json };
+  },
+  mockAnswer(action, lessonId, payload){
+    const mk = (text, json) => ({ text: text, json: json });
+    if(action === 'feynman'){
+      const v = (payload && payload.explanation || '').trim();
+      const verdict = !v ? 'missed' : v.length > 40 ? 'understood' : 'partial';
+      return mk('', { verdict: verdict, gaps: verdict === 'understood' ? [] : ['добавь конкретный пример из урока'], advice: 'Переформулируй через «как будто» из раздела аналогий.' });
+    }
+    if(action === 'rephrase'){
+      const kind = (payload && payload.kind) || 'simpler';
+      return mk('Перефраз («' + kind + '»): суть — раздираем сложное на плоские слова без потери смысла.', null);
+    }
+    if(action === 'socratic'){
+      return mk('Хорошо. Тогда такой вопрос: ' + ((payload && payload.step || 1) < 3 ? 'какое условие делает это правилом, а не исключением?' : 'Итог из материала: правило срабатывает, когда выполнено условие.'), null);
+    }
+    if(action === 'tasker'){
+      return mk('', { story: 'Новая задача: маржа $2 000, плечо ×5. При каком движении против позиции ликвидация?', params: { leverage: 5 } });
+    }
+    if(action === 'hint'){
+      return mk('Ступень ' + (payload && payload.step || 1) + ': смотри на величины, которые сравниваются, а не на итоговое число.', null);
+    }
+    if(action === 'critique'){
+      return mk('', { falsifiable: { verdict: 'warn', note: 'нет формального критерия' }, data_needed: { verdict: 'ok', note: 'дневные свечи достаточно' }, edge_source: { verdict: 'warn', note: 'не показано, почему преимущество не удача' }, capacity: { verdict: 'ok', note: 'лимита объёма хватит' }, regime_risk: { verdict: 'fail', note: 'режим тренда сломает' }, summary: 'есть проверяемость, но преимущество не проработано' });
+    }
+    if(action === 'revise'){
+      return mk('', { loopholes: [{ quote: payload && payload.quote || 'по возможности', why_vague: 'нет числа рядом', fix_suggestion: 'укажи конкретный порог: «не более 2% на сделку»' }], solid: ['есть kill_criteria с порогом'] });
+    }
+    if(action === 'diagnose'){
+      return mk('', { trap_type: 'concept', personal_note: 'Эта ошибка повторяется у тебя в смежных понятиях.', review_pointer: 'Определение bid/ask в уроке 0.4' });
+    }
+    if(action === 'spar'){
+      const st = (payload && payload.stage) || 1;
+      return mk(st === 1 ? 'Сильная сторона: ликвидность BTC реально выше остальных.' : (st === 2 ? 'Контраргумент: низкая просадка ≠ низкий риск хвостов.' : 'Класс: проверяемое. Но концентрация мнения — опасность спарринга.'), null);
+    }
+    return mk('М. не придумал ответа.', null);
+  }
+};
+window.MENTOR = MENTOR;
+
+/* ---------- апселл ---------- */
+function mentorUpsellModal(){
+  if(sessionStorage.getItem('mentor_upsell_closed')) return;
+  const modal = document.createElement('div');
+  modal.id = 'mentor_upsell_modal';
+  modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.85);z-index:100000;display:flex;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(6px)';
+  modal.innerHTML = '<div style="background:#090d1f;border:2px solid var(--acc2);border-radius:16px;max-width:420px;padding:24px">' +
+    '<h3 style="margin:0 0 8px;font-size:17px;color:var(--txt)">🤖 Наставник М.</h3>' +
+    '<div style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:18px">AI-разбор уроков доступен на тарифе «Макс». Отвечает только по материалу открытого урока — без прогнозов и рекомендаций.</div>' +
+    '<div style="display:flex;gap:10px;justify-content:flex-end">' +
+      '<button class="btn sm ghost" onclick="sessionStorage.setItem(\'mentor_upsell_closed\',\'1\');document.getElementById(\'mentor_upsell_modal\').remove()">Позже</button>' +
+      '<button class="btn sm" onclick="sessionStorage.setItem(\'mentor_upsell_closed\',\'1\');document.getElementById(\'mentor_upsell_modal\').remove()">Перейти на Макс</button>' +
+    '</div></div>';
+  document.body.appendChild(modal);
+}
+window.mentorUpsellModal = mentorUpsellModal;
+
+/* ---------- панель ---------- */
+function mentorPanelHTML(){
+  return '<div id="mentor_panel" style="position:fixed;top:0;right:0;width:380px;max-width:96vw;height:100vh;background:var(--bg);border-left:1px solid var(--line);z-index:99998;box-shadow:-10px 0 40px rgba(0,0,0,.5);display:flex;flex-direction:column">' +
+    '<div style="padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">' +
+      '<div style="font-weight:800;font-size:15px;color:var(--txt)">🤖 Наставник М.</div>' +
+      '<button class="btn sm ghost" onclick="mentorClosePanel()">✕</button>' +
+    '</div>' +
+    '<div style="padding:14px 18px;overflow-y:auto;flex:1" id="mentor_panel_body"></div>' +
+    '<div style="padding:10px 18px;border-top:1px solid var(--line);font-size:10px;color:var(--mut);line-height:1.4">Вопросы обрабатываются ИИ Cloudflare без привязки к личности. Лимит: ' + MENTOR_LIMIT + ' действий/день.</div>' +
+  '</div>';
+}
+window.mentorPanelHTML = mentorPanelHTML;
+
+function mentorOpenPanel(lessonId){
+  if(!mentorIsMax()){
+    mentorUpsellModal();
+    return;
+  }
+  let panel = document.getElementById('mentor_panel');
+  if(!panel){
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = mentorPanelHTML();
+    panel = wrapper.firstElementChild;
+    document.body.appendChild(panel);
+    const st = document.createElement('style');
+    st.id = 'mentor_style';
+    st.textContent = '@media (max-width:480px){ #mentor_panel{ width:100vw !important; right:0 !important; left:0 !important; top:auto !important; bottom:0 !important; height:75vh !important; border-left:none !important; border-top:1px solid var(--line) !important } }';
+    document.head.appendChild(st);
+  }
+  const body = document.getElementById('mentor_panel_body');
+  if(body){
+    body.innerHTML = '<div style="font-size:12px;color:var(--mut);margin-bottom:10px">Урок: ' + (lessonId || 'общий') + '</div><div id="mentor_actions" style="display:flex;flex-direction:column;gap:7px"></div><div id="mentor_result" style="margin-top:12px"></div>';
+  }
+  window._mentorLessonId = lessonId;
+  if(typeof window.renderMentorActions === 'function') window.renderMentorActions();
+}
+window.mentorOpenPanel = mentorOpenPanel;
+
+function mentorClosePanel(){
+  const p = document.getElementById('mentor_panel');
+  if(p) p.remove();
+}
+window.mentorClosePanel = mentorClosePanel;
+
+/* ---------- кнопка 🤖 М. в уроке ---------- */
+(function hookMentorInLesson(){
+  const orig = window.openFullscreenLesson;
+  if(typeof orig !== 'function') return;
+  window.openFullscreenLesson = function(id){
+    const r = orig.apply(this, arguments);
+    setTimeout(() => {
+      try{
+        if(document.getElementById('mentor_entry_btn')) return;
+        const modal = document.getElementById('lessonFullscreenReaderModal');
+        if(!modal) return;
+        const btn = document.createElement('button');
+        btn.id = 'mentor_entry_btn';
+        btn.className = 'btn sm ghost';
+        btn.style.cssText = 'font-size:11.5px;padding:4px 10px;white-space:nowrap';
+        btn.innerHTML = '🤖 М.';
+        btn.onclick = () => mentorOpenPanel(id);
+        const first = modal.querySelector('div, h1, h2');
+        if(first && first.parentNode) first.parentNode.insertBefore(btn, first.nextSibling);
+        else modal.insertBefore(btn, modal.firstChild);
+      }catch(e){}
+    }, 120);
+    return r;
+  };
+})();
+
+/* =========================================================================
+   M2 · F1 Проверка Фейнмана (JSON-вердикт) + F2 «Объясни иначе»
+   ========================================================================= */
+
+/* ---------- рендер списка действий в панели ---------- */
+window.renderMentorActions = function(){
+  const lessonId = window._mentorLessonId;
+  const idWrapEl = document.getElementById('mentor_actions');
+  if(!idWrapEl) return;
+  const list = [
+    { id: 'feynman', label: '🧑‍🏫 Проверка Фейнмана', need: 'feynman_input_' + lessonId },
+    { id: 'rephrase', label: '🔄 Объясни иначе' },
+    { id: 'socratic', label: '🤔 Сократов режим' },
+    { id: 'tasker', label: '✍️ Генератор задач' }
+  ];
+  idWrapEl.innerHTML = list.map(a =>
+    '<button class="btn sm" style="text-align:left;justify-content:flex-start;font-size:12.5px" onclick="mentorRun(\'' + a.id + '\')">' + a.label + '</button>'
+  ).join('');
+};
+
+function mentorRun(action){
+  const lessonId = window._mentorLessonId;
+  if(!lessonId) return;
+  // если панель не открыта — открываем
+  if(!document.getElementById('mentor_panel')) mentorOpenPanel(lessonId);
+  const out = document.getElementById('mentor_result');
+  if(!out) return;
+  if(action === 'feynman') mentorF1(lessonId, out);
+  else if(action === 'rephrase') mentorF2(lessonId, out);
+  else if(action === 'socratic') mentorF3(lessonId, out);
+  else if(action === 'tasker') mentorF4(lessonId, out);
+}
+window.mentorRun = mentorRun;
+
+/* ---------- F1: проверка Фейнмана ---------- */
+window.mentorF1 = function(lessonId, out){
+  const ta = document.getElementById('feynman_input_' + lessonId);
+  const explanation = ta ? ta.value : '';
+  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">🤖 Разбираю объяснение…</div>';
+  MENTOR.ask('feynman', lessonId, { explanation: explanation }).then(r => {
+    let verdict = null;
+    try{ verdict = r.json || JSON.parse(r.text); }catch(e){
+      out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">Наставник задумался, попробуй ещё раз.</div>';
+      return;
+    }
+    const color = verdict.verdict === 'understood' ? 'var(--ok)' : verdict.verdict === 'partial' ? 'var(--warn)' : 'var(--bad)';
+    const label = verdict.verdict === 'understood' ? 'понял' : verdict.verdict === 'partial' ? 'частично' : 'пропущено';
+    out.innerHTML = '<div style="border-left:4px solid ' + color + ';padding:8px 12px;margin-bottom:10px;background:#040714;border-radius:6px">' +
+      '<div style="font-weight:800;color:' + color + ';margin-bottom:6px">' + label.toUpperCase() + '</div>' +
+      '<div style="font-size:11px;color:var(--mut);margin-bottom:6px">' + (verdict.advice || '') + '</div>' +
+      (verdict.gaps && verdict.gaps.length ? '<div style="font-size:12px;color:var(--txt)">Пробелы: ' + verdict.gaps.join(' · ') + '</div>' : '') +
+    '</div>';
+    // сохраняем в cn_feynman_ai
+    try{
+      const st = JSON.parse(localStorage.getItem('cn_feynman_ai') || '{}');
+      st[lessonId] = { verdict: verdict.verdict, gaps: verdict.gaps || [], ts: Date.now() };
+      localStorage.setItem('cn_feynman_ai', JSON.stringify(st));
+    }catch(e){}
+  }).catch(e => {
+    out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Дневной лимит исчерпан.' : 'Наставник не отвечает — повтори позже.') + '</div>';
+  });
+};
+
+/* ---------- F2: три переупаковки ---------- */
+window.mentorF2 = function(lessonId, out){
+  const kinds = [ { id: 'simpler', label: 'Проще' }, { id: 'example', label: 'Пример из жизни' }, { id: 'shorter', label: 'Короче' } ];
+  out.innerHTML = '<div style="display:flex;flex-direction:column;gap:6px">' + kinds.map(k =>
+    '<button class="btn sm ghost" style="font-size:12px;text-align:left" data-kind="' + k.id + '">' + k.label + '</button>'
+  ).join('') + '</div><div id="mentor_f2_out" style="margin-top:8px"></div>';
+};
+window.mentorF2do = function(lessonId, kind){
+  const out = document.getElementById('mentor_f2_out');
+  if(!out) return;
+  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">🤖 Переупаковываю…</div>';
+  MENTOR.ask('rephrase', lessonId, { kind: kind }).then(r => {
+    out.innerHTML = '<div style="padding:10px 12px;background:#040714;border-left:3px solid var(--acc2);border-radius:6px;font-size:12.5px;color:var(--txt);line-height:1.55">' +
+      '<div style="font-size:10px;color:var(--acc2);text-transform:uppercase;font-weight:800;margin-bottom:4px">перефраз от наставника</div>' + r.text + '</div>';
+  }).catch(e => {
+    out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит исчерпан.' : 'Наставник не отвечает.') + '</div>';
+  });
+};
+
+
+
+/* =========================================================================
+   M3 · F3 Сократов режим (3 ступени) + F4 Генератор задач (правду считает КОД)
+   ========================================================================= */
+
+/* ---------- F3: Сократов ---------- */
+window.mentorF3 = function(lessonId, out){
+  window._mentorSocStep = 0;
+  window._mentorSocHistory = [];
+  if(!document.getElementById('mentor_soc_in')){
+    out.innerHTML = '<input type="text" id="mentor_soc_in" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" placeholder="Твой вопрос/понимание...">' +
+      '<button class="btn sm" data-soc="1">Ответить</button><div id="mentor_soc_out" style="margin-top:10px"></div>';
+    const btn = out.querySelector('button[data-soc]');
+    if(btn) btn.onclick = () => window.mentorF3step(lessonId);
+  }
+};
+window.mentorF3step = function(lessonId){
+  const inEl = document.getElementById('mentor_soc_in');
+  const outEl = document.getElementById('mentor_soc_out');
+  if(!inEl || !outEl) return;
+  const val = (inEl.value || '').trim();
+  const step = ++window._mentorSocStep;
+  const isDone = /не знаю/i.test(val) && step >= 3;
+  MENTOR.ask('socratic', lessonId, { question: val, step: step, giveUp: isDone }).then(r => {
+    const color = isDone ? 'var(--ok)' : 'var(--acc2)';
+    outEl.innerHTML += '<div style="padding:10px 12px;background:#040714;border-left:3px solid ' + color + ';border-radius:6px;font-size:12.5px;color:var(--txt);margin-top:8px">' + r.text + '</div>';
+    if(inEl) inEl.value = '';
+    if(isDone) window._mentorSocHistory = [];
+  }).catch(e => {
+    outEl.innerHTML += '<div style="font-size:12.5px;color:var(--warn);margin-top:8px">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Не отвечает.') + '</div>';
+  });
+};
+
+/* ---------- F4: генератор задач — правду считает КОД ---------- */
+window.mentorF4 = function(lessonId, out){
+  const lesson = LESSONS.find(x => x.id === lessonId);
+  const nq = lesson && lesson.numericQuiz;
+  if(!nq){
+    out.innerHTML = '<div style="font-size:12px;color:var(--mut)">✍️ В этом уроке нет параметризуемой числовой задачи — генератор скрыт.</div>';
+    return;
+  }
+  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">✍️ Модель пишет новую формулировку, код считает эталон…</div>';
+  MENTOR.ask('tasker', lessonId, { example: { q: nq.q, answer: nq.answer } }).then(r => {
+    let gen = null;
+    try{ gen = r.json || JSON.parse(r.text); }catch(e){ gen = null; }
+    if(!gen || !gen.story || !gen.params){
+      out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">Генератор не собрал задачу — попробуй ещё раз.</div>';
+      return;
+    }
+    const truth = mentorCompute(nq, gen.params);
+    if(truth == null || !isFinite(truth)){
+      out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">Эта формула не параметризуется в коде — генератор для урока скрыт.</div>';
+      return;
+    }
+    window._mentorTaskTruth = truth;
+    window._mentorTaskTol = nq.absTol != null ? nq.absTol : (nq.tolPct != null ? nq.tolPct : 0.5);
+    out.innerHTML = '<div style="font-size:12.5px;color:var(--txt);padding:10px 12px;background:#040714;border-radius:6px;margin-bottom:8px;line-height:1.55">' + gen.story + '</div>' +
+      '<input type="number" id="mentor_task_in" step="any" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" placeholder="Твой ответ"> ' +
+      '<button class="btn sm" data-task="1">Проверить</button>' +
+      '<div id="mentor_task_fb" style="margin-top:8px"></div>';
+    const btn = out.querySelector('button[data-task]');
+    if(btn) btn.onclick = () => mentorTaskCheck();
+  }).catch(e => {
+    out.innerHTML = '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Генератор не отвечает.') + '</div>';
+  });
+};
+
+window.mentorCompute = function(nq, params){
+  if(params.leverage != null) return 100 / params.leverage;
+  if(params.p != null && params.b != null) return (params.p - (1 - params.p) / params.b) * 100;
+  return null;
+};
+
+function mentorTaskCheck(){
+  const inp = document.getElementById('mentor_task_in');
+  const fb = document.getElementById('mentor_task_fb');
+  if(!inp || !fb || window._mentorTaskTruth == null) return;
+  const val = parseFloat(inp.value);
+  const tol = window._mentorTaskTol || 0.5;
+  const ok = Math.abs(val - window._mentorTaskTruth) <= tol;
+  fb.innerHTML = ok
+    ? '<div style="font-size:12.5px;color:var(--ok)">✅ Верно: ' + (Math.round(window._mentorTaskTruth * 1000) / 1000) + '. Эталон считал код — модель только оформила условие.</div>'
+    : '<div style="font-size:12.5px;color:var(--bad)">❌ Эталон: ' + (Math.round(window._mentorTaskTruth * 1000) / 1000) + ' (допуск ' + tol + '). Пересчитай.</div>';
+}
+window.mentorTaskCheck = mentorTaskCheck;
+
+/* =========================================================================
+   M4 · H1 Универсальная подсказка «🤖 Подскажи» в каждом тренажёре (3 ступени)
+   + счётчик cn_hints (название ответа НИКОГДА не попадает в подсказку)
+   ========================================================================= */
+
+function hintGetCount(lessonId){
+  try{ return JSON.parse(localStorage.getItem('cn_hints') || '{}')[lessonId] || 0; }catch(e){ return 0; }
+}
+function hintAddCount(lessonId){
+  try{
+    const wc = JSON.parse(localStorage.getItem('cn_hints') || '{}');
+    wc[lessonId] = (wc[lessonId] || 0) + 1;
+    localStorage.setItem('cn_hints', JSON.stringify(wc));
+  }catch(e){}
+}
+window.hintGetCount = hintGetCount;
+
+function mentorHintStepRender(lessonId, step, out){
+  const lesson = LESSONS.find(x => x.id === lessonId);
+  const nq = lesson && lesson.numericQuiz;
+  // даю модели контекст без эталонного ответа (не включаем answer!)
+  const example = nq ? { q: nq.q, unit: nq.unit } : null;
+  return MENTOR.ask('hint', lessonId, { step: step, title: lesson ? lesson.title : '', example: example }).then(r => {
+    // дополн. фильтр: удаляем условные числа, совпадающие с эталонным ответом (H1 момент)
+    let txt = r.text;
+    if(nq && nq.answer != null){
+      const ansStr = String(Math.round(nq.answer * 1000) / 1000);
+      if(txt.includes(ansStr)){
+        txt = txt.replace(new RegExp(ansStr.replace(/[.]/g, '[.]'), 'g'), '[скрыто]').replace('[скрыто]', '[скрыто по экономике подсказок]');
+      }
+    }
+    hintAddCount(lessonId);
+    const titles = { 1: 'на что смотреть', 2: 'какая идея работает', 3: 'разбор соседнего примера' };
+    return '<div style="padding:10px 12px;background:#040714;border-left:3px solid var(--warn);border-radius:6px;font-size:12.5px;color:var(--txt);margin-top:8px"><div style="font-size:10px;color:var(--warn);text-transform:uppercase;font-weight:800;margin-bottom:4px">подсказка ' + step + '/' + ' 3: ' + (titles[step] || '') + '</div>' + txt + '</div>';
+  }).catch(e => {
+    return '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Подсказок нет — панель откроется.') + '</div>';
+  });
+}
+
+/* в каждом тренажёре-виджете: хелпер вставляет кнопку «🤖 Подскажи» */
+function mentOrHintBtnHTML(lessonId, widgetEl){
+  // одна точка правки: все widgets в catalog mount
+  return '<button class="btn sm ghost mentor-hint-btn" style="font-size:11px;padding:4px 10px;margin-top:8px" onclick="mentorHint(\'' + lessonId + '\')">🤖 Подскажи</button>';
+}
+window.mentorHintBtnHTML = mentOrHintBtnHTML;
+
+function mentorHint(lessonId){
+  if(!mentorIsMax()){
+    mentorUpsellModal();
+    return;
+  }
+  window._mentorHintSteps = (window._mentorHintSteps || {});
+  const step = window._mentorHintSteps[lessonId] || 1;
+  let panel = document.getElementById('mentor_panel');
+  if(!panel){
+    mentorOpenPanel(lessonId);
+    panel = document.getElementById('mentor_panel');
+  }
+  if(!panel) return;
+  const widgetBtns = document.querySelectorAll('.mentor-hint-btn');
+  if(widgetBtns.length) widgetBtns[0].remove();
+  const out = document.getElementById('mentor_result');
+  if(!out) return;
+  out.innerHTML = '<div style="font-size:12px;color:var(--mut)">🤖 Подскажу…</div>';
+  mentorHintStepRender(lessonId, step, out).then(html => {
+    out.innerHTML = html + '<div id="mentor_widget_hint" style="margin-top:10px"></div>';
+    window._mentorHintSteps[lessonId] = Math.min(3, step + 1);
+    const total = hintGetCount(lessonId);
+    const hintTotal = document.getElementById('mentor_widget_hint');
+    if(hintTotal){
+      hintTotal.innerHTML = '<div style="font-size:11.5px;color:var(--mut)">Подсказок использовано по уроку: <b>' + total + '</b>' +
+        (total > 2 ? ' — бейдж мастерства не будет выдан' : ' (для бейджа мастерства: ≤2)') + '</div>';
+    }
+  });
+}
+window.mentorHint = mentorHint;
+
+/* вставляем кнопку в каждом виджете при открытии урока */
+(function patchLessonWidgetHints(){
+  const orig = window.openFullscreenLesson;
+  if(typeof orig !== 'function') return;
+  window.openFullscreenLesson = function(id){
+    const r = orig.apply(this, arguments);
+    setTimeout(() => {
+      try{
+        if(!MISTAKE_TYPES) return; // no-op fallback
+        const modal = document.getElementById('lessonFullscreenReaderModal');
+        if(!modal) return;
+        // в каждый виджет (interactive) в хэлпере — добавляем кнопку hint
+        const widgets = modal.querySelectorAll('.lblock.widget-block, .lblock.interactive, [id^="widget"]');
+        widgets.forEach(w => {
+          if(w.querySelector('.mentor-hint-btn')) return;
+          const btn = document.createElement('button');
+          btn.className = 'btn sm ghost mentor-hint-btn';
+          btn.style.cssText = 'font-size:11px;padding:4px 10px;margin:8px auto;display:block';
+          btn.innerHTML = '🤖 Подскажи';
+          btn.onclick = () => mentorHint(id);
+          w.appendChild(btn);
+        });
+      }catch(e){}
+    }, 150);
+    return r;
+  };
+})();
+
+/* =========================================================================
+   M5 · H2 Критик гипотез (5 измерений JSON) + H3 Ревизор устава (словарный скан)
+   ========================================================================= */
+
+/* ---------- H2: критик гипотез ---------- */
+function mentorCritique(lessonId, hypothesisText){
+  if(!mentorIsMax()){ mentorUpsellModal(); return Promise.resolve('<div>Гейт</div>'); }
+  return MENTOR.ask('critique', lessonId, { hypothesis: hypothesisText }).then(r => {
+    let data = null;
+    try{ data = r.json || JSON.parse(r.text); }catch(e){ data = null; }
+    if(!data){ return '<div style="font-size:12.5px;color:var(--warn)">Критик задумался — повтори позже.</div>'; }
+    const dims = [
+      ['falsifiable', 'Проверяемость'],
+      ['data_needed', 'Данные'],
+      ['edge_source', 'Преимущество'],
+      ['capacity', 'Ёмкость'],
+      ['regime_risk', 'Режимный риск']
+    ];
+    const icon = v => v === 'ok' ? '✅' : v === 'warn' ? '⚠️' : '❌';
+    let html = '<div style="margin-top:8px">' + dims.map(([k, title]) => {
+      const row = data[k];
+      if(!row) return '';
+      return '<div style="border-left:2px solid ' + (row.verdict === 'ok' ? 'var(--ok)' : row.verdict === 'warn' ? 'var(--warn)' : 'var(--bad)') + ';padding-left:8px;margin-bottom:6px;font-size:11.5px">' +
+        '<b>' + icon(row.verdict) + ' ' + title + '</b> — ' + (row.note || '') + '</div>';
+    }).join('') + '<div style="font-size:11px;color:var(--mut);margin-top:6px">' + (data.summary || '') + '</div></div>';
+    return html;
+  }).catch(e => '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Не отвечает.') + '</div>');
+}
+window.mentorCritique = mentorCritique;
+
+/* ---------- H3: ревизор устава — словарный скан КОДОМ, модель только по потемам ---------- */
+function mentorRevise(lessonId, charterText){
+  if(!mentorIsMax()){ mentorUpsellModal(); return Promise.resolve('<div>Гейт</div>'); }
+  // 1) словарный скан — код, не модель
+  const vagueMarkers = ['обычно', 'крупн', 'значительн', 'по возможности', 'примерно', 'иногда', 'около', 'в основном', 'достаточно'];
+  const lines = charterText.split('\n');
+  const flagged = [];
+  lines.forEach((ln, i) => {
+    const lower = ln.toLowerCase();
+    const hit = vagueMarkers.find(m => lower.includes(m)) || (ln.replace(/[\d%\.\s:$]/g, '').length > 10 && !/\d/.test(ln));
+    if(hit) flagged.push({ line: i + 1, text: ln });
+  });
+  // 2) модель получает только flagged + всё же весь текст (как в ТЗ)
+  return MENTOR.ask('revise', lessonId, { flagged: flagged, full: charterText }).then(r => {
+    let data = null;
+    try{ data = r.json || JSON.parse(r.text); }catch(e){ data = null; }
+    if(!data){ return '<div style="font-size:12.5px;color:var(--warn)">Ревизор задумался — повтори позже.</div>'; }
+    let html = '<div style="margin-top:8px">' +
+      (data.loopholes && data.loopholes.length ? data.loopholes.map(l =>
+        '<div style="border-left:2px solid var(--warn);padding-left:8px;margin-bottom:8px;font-size:11.5px">' +
+          '<b>«' + (l.quote || '') + '»</b> — ' + (l.why_vague || '') + '<br>➜ ' + (l.fix_suggestion || '') +
+        '</div>').join('') : '<div style="font-size:11.5px;color:var(--ok)">расплывчатых маркеров не найдено</div>') +
+      (data.solid && data.solid.length ? '<div style="font-size:11px;color:var(--ok);margin-top:6px">✅ ' + data.solid.join(' · ') + '</div>' : '') +
+    '</div>';
+    return html;
+  }).catch(e => '<div style="font-size:12.5px;color:var(--warn)">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Ревизор не отвечает.') + '</div>');
+}
+window.mentorRevise = mentorRevise;
+
+/* встраиваем кнопки H2/H3 в панель действие: расширяем список */
+(function patchMentorActionsExt(){
+  if(typeof window.renderMentorActions !== 'function') return;
+  const prev = window.renderMentorActions;
+  window.renderMentorActions = function(){
+    prev();
+    const wrap = document.getElementById('mentor_actions');
+    if(!wrap) return;
+    // добавляем H2/H3/H4/H5 поскольку есть
+    const extra = [
+      { id: 'critique', label: '🔍 Критик гипотезы', title: 'H2' },
+      { id: 'revise', label: '📜 Ревизор устава', title: 'H3' },
+      { id: 'diagnose', label: '📓 Диагноз ошибки', title: 'H4' },
+      { id: 'spar', label: '⚔️ Спарринг убеждений', title: 'H5' }
+    ];
+    extra.forEach(x => {
+      if(wrap.querySelector('[data-action="' + x.id + '"]')) return;
+      const btn = document.createElement('button');
+      btn.className = 'btn sm';
+      btn.setAttribute('data-action', x.id);
+      btn.style.cssText = 'text-align:left;justify-content:flex-start;font-size:12.5px';
+      btn.innerHTML = x.label;
+      btn.onclick = () => mentorRunExt(x.id);
+      wrap.appendChild(btn);
+    });
+  };
+})();
+
+function mentorRunExt(action){
+  const lessonId = window._mentorLessonId || 'generic';
+  const out = document.getElementById('mentor_result');
+  if(action === 'critique'){
+    // поле ввода гипотезы
+    out.innerHTML = '<textarea id="mentor_hypo_in" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" rows="4" placeholder="Твоя гипотеза..."></textarea>' +
+      '<button class="btn sm" onclick="mentorCritique(\'' + lessonId + '\', document.getElementById(\'mentor_hypo_in\').value).then(html => { document.getElementById(\'mentor_result\').innerHTML = html; })">Критика</button>' +
+      '<div id="mentor_crit_out" style="margin-top:8px"></div>';
+  } else if(action === 'revise'){
+    // берёт устав из интерактивного charter виджет-элемента, если открыт
+    const charterEl = document.getElementById('widget_art_charter') || document.querySelector('[id*="charter"]') || document.getElementById('mentor_result');
+    const text = (charterEl && charterEl.textContent) || 'charter: задай текст';
+    out.innerHTML = '<div style="font-size:11.5px;color:var(--mut);margin-bottom:6px">Сканирую текст устава из открытого виджета…</div>' +
+      '<button class="btn sm" onclick="mentorRevise(\'' + lessonId + '\', this.parentElement.previousElementSibling.textContent).then(html => { document.getElementById(\'mentor_result\').innerHTML = html; })">Ревизор</button>';
+  } else if(action === 'diagnose'){
+    // перехват window.offerMistakeClassification — одна точка
+    out.innerHTML = '<div style="font-size:11.5px;color:var(--mut);margin-bottom:6px">Диагноз ошибки доступен при неверном ответе квиза — работает в интеграции.</div>';
+  } else if(action === 'spar'){
+    mentorSparInit(out);
+  }
+}
+window.mentorRunExt = mentorRunExt;
+
+/* =========================================================================
+   M6 · H4 Диагноз ошибки (trap_type предвыбор) + H5 Стальман-спарринг (3 стадии)
+   ========================================================================= */
+
+/* ---------- H4: диагноз ошибки — предвыбор в offerMistakeClassification ---------- */
+(function patchMistakeForMentor(){
+  const orig = window.offerMistakeClassification;
+  if(typeof orig !== 'function') return;
+  window.offerMistakeClassification = function(contextKey, q, chosen, correct){
+    let mentorHtml = '';
+    if(mentorIsMax()){
+      // если есть max-тариф и уже было — сначала спросим модель классификацию
+      const lessonId = typeof contextKey === 'string' && contextKey.startsWith('numeric:') ? contextKey.slice(8) : null;
+      const examples = [];
+      if(lessonId){
+        try{
+          const st = JSON.parse(localStorage.getItem('cn_feynman_ai') || '{}');
+          examples.push(st[lessonId]);
+        }catch(e){}
+      }
+      MENTOR.ask('diagnose', lessonId || contextKey, { question: q || 'ошибка', chosen: chosen, correct: correct, examples: examples }).then(r => {
+        let data = null;
+        try{ data = r.json || JSON.parse(r.text); }catch(e){ data = null; }
+        if(!data){ return; }
+        const trap = data.trap_type || 'concept';
+        // предвыдум VS вручную — выбираем кнопку под указанным id по trap_type
+        setTimeout(() => {
+          const box = document.querySelector('[data-mentor-trap]');
+          if(!box) return;
+          const btn = box.querySelector('[data-trap="' + trap + '"]');
+          if(btn) btn.click();
+        }, 50);
+      }).catch(() => {});
+    }
+    return orig(contextKey);
+  };
+  // прикрепляем marker для предвыбранного: trap_type → кнопка с id data-trap
+  setTimeout(() => {
+    const boxes = document.querySelectorAll('[id^="mcl_"], [id^="mistake_"]');
+    boxes.forEach(box => {
+      if(box.querySelector('[data-trap]')) return;
+      // тег processor: MENTOR.ask переписывает без этого хелпера — здесь только заносим marker
+      box.setAttribute('data-mentor-trap', '1');
+    });
+  }, 300);
+})();
+
+/* ---------- H5: спарринг убеждений — 3 стадии по очереди ---------- */
+function mentorSparInit(outEl){
+  if(!mentorIsMax()){ mentorUpsellModal(); return; }
+  window._mentorSparStage = 1;
+  window._mentorSparBelief = '';
+  outEl.innerHTML = '<div style="font-size:12px;color:var(--mut);margin-bottom:6px">⚔️ <b>Стадия 1/3 · STEELMAN</b>: сформулируй своё убеждение одной фразой — модель усилит её лучшими аргументами.</div>' +
+    '<input type="text" id="mentor_spare_in" style="background:#040714;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--txt);width:100%;font-size:12.5px;margin-bottom:8px" placeholder="Убеждение, например: «ETH оказалась сильнее BTC за счёт L2»">' +
+    '<button class="btn sm" onclick="mentorSparStep()">Дальше</button>' +
+    '<div id="mentor_spare_out" style="margin-top:10px"></div>';
+  if(document.getElementById('mentor_spare_in')) document.getElementById('mentor_spare_in').onclick = () => {};
+}
+window.mentorSparInit = mentorSparInit;
+
+function mentorSparStep(){
+  const lessonId = window._mentorLessonId || 'sparring';
+  const stage = window._mentorSparStage || 1;
+  const inEl = document.getElementById('mentor_spare_in');
+  const outEl = document.getElementById('mentor_spare_out');
+  const belief = inEl ? (inEl.value || '').trim() : '';
+  if(belief && !window._mentorSparBelief) window._mentorSparBelief = belief;
+  const prompt = window._mentorSparBelief;
+  MENTOR.ask('spar', lessonId, { stage: stage, belief: prompt }).then(r => {
+    const colors = ['var(--ok)', 'var(--warn)', 'var(--acc2)'];
+    const titles = ['сильная сторона (Steelman)', 'контраргументы (Attack)', 'класс убеждения (Check)'];
+    if(outEl){
+      outEl.innerHTML += '<div style="padding:10px 12px;background:#040714;border-left:3px solid ' + colors[stage - 1] + ';border-radius:6px;font-size:12.5px;color:var(--txt);margin-top:8px">' +
+        '<div style="font-size:10px;color:' + colors[stage - 1] + ';text-transform:uppercase;font-weight:800;margin-bottom:4px">стадия ' + stage + '/3: ' + titles[stage - 1] + '</div>' + r.text + '</div>';
+    }
+    if(stage < 3){
+      window._mentorSparStage = stage + 1;
+      const nextBtn = document.querySelector('#mentor_result button[onclick^=mentorSparStep]');
+      if(nextBtn) nextBtn.textContent = 'Дальше: стадия ' + (stage + 1) + '/3';
+      //
+    } else {
+      // финал: сохраняем только факт прохождения
+      try{ localStorage.setItem('cn_sparring_done', JSON.stringify({ t: Date.now(), belief: window._mentorSparBelief.slice(0, 80) })); }catch(e){}
+      const done = document.createElement('div');
+      done.id = 'mentor_spar_done';
+      done.style.cssText = 'font-size:11px;color:var(--ok);margin-top:8px';
+      done.textContent = 'Сегодняшним финал нейтрален — класс убеждения записан (не стежётся)';
+      document.getElementById('mentor_spare_out').appendChild(done);
+    }
+    if(inEl) inEl.value = '';
+  }).catch(e => {
+    if(outEl) outEl.innerHTML += '<div style="font-size:12.5px;color:var(--warn);margin-top:8px">' + (e.message === 'limit' ? '🕐 Лимит.' : 'Спарринг не отвечает.') + '</div>';
+  });
+}
+window.mentorSparStep = mentorSparStep;
 /*__LIVE_APPEND__*/
 })();
 
