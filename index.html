@@ -849,6 +849,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
     <button class="tab" data-tab="panicquest">🚨 Паника</button>
     <button class="tab" data-tab="marginquest">💥 Маржин</button>
     <button class="tab" data-tab="curvequest">📉 Кривые</button>
+    <button class="tab" data-tab="prodquest">🌙 Прод</button>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">📖 Справка</span>
@@ -1221,6 +1222,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 </section>
 
 <!-- 3. SIMULATORS VIEW -->
+<section id="prodquest" class="view"><h1>🌙 Ночь в проде</h1><p class="sub">Дежурство по ранбуку: 6 инцидентов до утра.</p><div id="pr_box"></div></section>
 <section id="curvequest" class="view"><h1>📉 Кривая-обманщица</h1><p class="sub">Инвесткомитет по бэктестам: что пойдёт в прод, что — в мусорку.</p><div id="cv_box"></div></section>
 <section id="marginquest" class="view"><h1>💥 Маржин-колл</h1><p class="sub">10 сделок. Стратегия рабочая. Вопрос — сколько ставишь.</p><div id="mc_box"></div></section>
 <section id="panicquest" class="view"><h1>🚨 Симулятор паники</h1><p class="sub">Отличай «рынок падает» от «инфраструктура сломана».</p><div id="pn_box"></div></section>
@@ -1241,6 +1243,7 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   </div>
 
   <!-- SIM 1: Order Book Visualizer -->
+  <div id="prod_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="curve_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="margin_card_in_sims" class="sim-box" style="max-width:720px"></div>
   <div id="panic_card_in_sims" class="sim-box" style="max-width:720px"></div>
@@ -13249,7 +13252,7 @@ const $=s=>document.querySelector(s);
 function go(t){
   setTimeout(() => {
     initTooltipEngine();
-    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); renderMarginCard(); renderCurveCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
+    if(t === 'sims'){ renderQuestCard(); renderPsyQuestCard(); renderPanicCard(); renderMarginCard(); renderCurveCard(); renderProdCard(); checkSimulatorLocks(); if(typeof loadBossBattle === 'function' && document.getElementById('boss_arena_content')) loadBossBattle(0); } if(t === 'home'){ renderDailyQuests(); } updateFundUI(); updateExchangeTiersUI();
     const activeTabEl = document.getElementById(t);
     if(activeTabEl && !activeTabEl.querySelector('.tab-next-steps')){
       const banner = document.createElement('div');
@@ -38551,6 +38554,72 @@ h+='<div style="margin-top:8px"><button class="btn" onclick="cvPick(true)">🚀 
 box.innerHTML=h}
 function renderCurveCard(){const c=document.getElementById('curve_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=6;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['p2_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_curve_progress')||'null')}catch(x){}let h='<h3>📉 Квест «Кривая-обманщица»</h3><p style="color:var(--mut);font-size:13px">8 бэктестов с красивыми кривыми. 7 с подвохом, 1 честная. Решай, что пойдёт в прод — и не угробь депозит.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки 2.1–2.6, чтобы открыть</span>'}else{h+='<button class="btn" onclick="cvGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить':'📉 Начать заседание')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'%</span>'}c.innerHTML=h}
 window.CVNS={go:cvGo,wipe:cvWipe,pick:cvPick,renderCard:renderCurveCard};
+/* Квест «Ночь в проде» — дежурство по ранбуку (Фаза 5).
+   Инцидент: [название, время, событие, [[текст,уровень,разбор]x4]].
+   Уровень: 0=верно(0₽), 1=допустимо(30к), 2=опасно(120к). Таймаут=200к. */
+const PR_I=[
+['Обрыв фида','02:41','WebSocket-поток котировок замолчал. Сокет «жив», но тиков нет уже 40 секунд. У бота открыта позиция 2 BTC.',
+[['Заморозить новые ордера, проверить позицию через REST, при мёртвом фиде — закрыть вручную',0,'Ранбук: сначала остановить генерацию решений, потом разбираться. Позиция без данных — слепой риск.'],
+['Подождать 5 минут: фиды отваливаются постоянно, само вернётся',2,'40 секунд без данных при открытой позиции — это уже не «постоянно», это инцидент. Ожидание = ставка на удачу.'],
+['Перезапустить бота целиком — авось поможет',1,'Рестарт убьёт состояние и журнал. Позиция останется открытой, а диагностику ты потеряешь.'],
+['Долить позицию по последней цене — раз фид стоит, цена не движется',2,'Классика: отсутствие данных приняли за отсутствие движения. Рынок в это время ходил без тебя.']]],
+['Расхождение позиций','03:07','Бот считает, что в лонге 0.5 BTC. Биржа показывает 0.8 BTC. Где-то потерянный fill.',
+[['Заморозить бота, сверить сделки по API, выровнять позицию вручную',0,'Единственный источник правды — биржа. Бот молчит до полной сверки, иначе он доложит ошибку ошибкой.'],
+['Довериться боту: он вёл учёт аккуратно',2,'Учёт бота после ghost fill уже неправда. «Аккуратно» не отменяет HTTP 504 в логах.'],
+['Закрыть всё до нуля и перезапустить с чистого листа',1,'Работает, но грубо: лишние комиссии и проскальзывание на закрытии правильной части позиции.'],
+['Ничего не делать: при следующей сделке само выровняется',2,'Не выровняется. Бот будет строить решения от фантомных 0.5 BTC, а рискует 0.8.']]],
+['Просадка в лимите','03:33','Стратегия показывает −9% от пика. Устав допускает просадку до −15%. Рука тянется к кнопке «выключить».',
+[['Не трогать. Устав подписан в спокойном состоянии и действует в панике',0,'−9% при лимите −15% — это штатный режим, а не авария. Урок 5.4: рабочий бот, выключенный на дне, — главный убыток алготрейдера.'],
+['Выключить до утра, утром спокойно посмотрю',2,'«Утром посмотрю» = выключил на дне. Просадка зафиксирована, возврат пропущен.'],
+['Снизить риск вдвое — на всякий случай',1,'Мягкий вариант той же ошибки: вмешательство без сигнала. Полдела, но системность сломана.'],
+['Удвоить плечо — отобью быстрее',2,'Реванш — не протокол. Это уже не управление просадкой, а казино.']]],
+['Rate limit','04:02','Волатильность выросла, бот упёрся в HTTP 429. Лимит 1200 запросов/мин исчерпан.',
+[['Включить backoff: очередь запросов с token bucket, приоритет критичным вызовам',0,'429 — просьба биржи сбавить темп, а не препятствие. Backoff чинит причину.'],
+['Крутить ретраи в цикле, пока не пустит',2,'Шторм ретраев добивает лимит и грозит баном IP. Ты стал DDoS-источником для самого себя.'],
+['Переключиться на запасной API-ключ',1,'Работает минуту: лимит привязан к аккаунту/IP, второй ключ разделит ту же участь.'],
+['Проксировать через пачку IP',2,'Прямой путь к перманентному бану. Биржа читает это как атаку.']]],
+['Слухи о бирже','04:28','Выводы с биржи «временно приостановлены». В чатах паника: «это FTX-2». На бирже лежит 60% капитала.',
+[['Оценить экспозицию, выводить излишки поэтапно по мере открытия окон, резерв — на холодный кошелёк',0,'Урок 5.7: риск контрагента не лечится надеждой. Плановое снижение экспозиции — да, паника в общей очереди — нет.'],
+['Вывести всё немедленно, любыми сетями и комиссиями',1,'Понятный рефлекс, но очередь на вывод в панике — худшее место. Поэтапность сохраняет опции.'],
+['Пронесёт. Биржа крупная, не FTX',2,'FTX тоже был крупным. «Крупный» — не гарантия, а масштаб потенциальной потери.'],
+['Продолжать торговать — пока выводы закрыты, работаем',2,'Торговать на площадке с замороженными выводами = увеличивать заложничество.']]],
+['Соблазн реванша','04:55','Инциденты погашены. Потери ночи видны в отчёте. Рука тянется открыть ручную сделку «отбить обратно».',
+[['Закрыть терминал. Записать ночь в журнал. Ребаланс — по плану 40/40/20',0,'Ночь дежурства не отбивается сделкой. Журнал + плановый ребаланс — единственный правильный финал смены.'],
+['Одна маленькая сделка — что может пойти не так',2,'«Отбить» после стресса — чистая тильт-сделка. Устав ручных сделок вне плана не предусматривает.'],
+['Отбивать, но с плечом x1 — консервативно',1,'Плечо скромное, мотив — нет. Тильт с плечом x1 остаётся тильтом.'],
+['Написать в чат трейдеров, спросить идею для отбоя',2,'Чужой тильт к твоему тильту. Комитет по реваншу не собирается.']]]];
+const PR_DMG=[0,30000,120000];
+let PR={order:[],i:0,cap:5000000,loss:0,right:0,hist:[],done:false,t:20,tmr:null,last:'',best:null};
+try{const p=JSON.parse(localStorage.getItem('cn_prod_progress')||'null');if(p&&p.order&&p.order.length===6&&!p.done){PR=Object.assign(PR,p);PR.tmr=null}}catch(x){}
+function prSave(){try{const o=Object.assign({},PR);delete o.tmr;localStorage.setItem('cn_prod_progress',JSON.stringify(o))}catch(x){}}
+function prShuffle(){const o=[0,1,2,3,4];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}o.push(5);return o}
+function prGo(){go('prodquest');prRender()}
+function prBack(){prStop();go('sims')}
+function prWipe(){prStop();PR={order:prShuffle(),i:0,cap:5000000,loss:0,right:0,hist:[],done:false,t:20,tmr:null,last:'',best:PR.best};prSave();prRender()}
+function prStop(){if(PR.tmr){clearInterval(PR.tmr);PR.tmr=null}}
+function prInc(){return PR_I[PR.order[PR.i]]}
+function prTick(){PR.t--;if(PR.t<=0){prStop();PR.last='<div class="sq-sys" style="border-color:var(--bad)">⏱ Промедление. В проде бездействие — тоже решение, и оно самое дорогое: −200 000 ₽.</div>';PR.loss+=200000;PR.cap-=200000;PR.hist.push(0);PR.i++;if(PR.i>=6)PR.done=true;prSave();prRender();return}const e=document.getElementById('pr_timer');if(e)e.textContent='⏱ '+PR.t+'с'}
+function prPick(idx){if(PR.done)return;prStop();const c=prInc(),o=c[3][idx],lvl=o[1],dmg=PR_DMG[lvl];
+PR.loss+=dmg;PR.cap-=dmg;if(lvl===0)PR.right++;PR.hist.push(lvl===0?1:0);
+PR.last='<div class="sq-sys" style="border-color:'+(lvl===0?'var(--ok,#22C55E)':'var(--bad)')+'">'+(lvl===0?'✅ Верно. ':(dmg?'❌ −'+dmg.toLocaleString('ru-RU')+' ₽. ':'❌ '))+o[2]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(lvl===0?'happy':'doubt',32):'')+'<b>Криптик:</b> «'+(lvl===0?'По ранбуку. Так и дежурят.':(lvl===1?'Допустимо. Но в проде «допустимо» копится в убыток.':'В проде это стоит денег. Сегодня — виртуальных.'))+'»</div>';
+PR.i++;if(PR.i>=6)PR.done=true;prSave();prRender()}
+function prRender(){const box=document.getElementById('pr_box');if(!box)return;prStop();
+let h='<button class="btn ghost sm" onclick="prBack()">← К симуляторам</button>';
+if(PR.done){const grade=PR.loss<=60000?['🌙 Спокойная ночь','Протоколы сработали, потери минимальны. Так выглядит зрелый прод.']:PR.loss<=200000?['🔧 Дежурный справился','Ночь прожита, счёт цел. Есть над чем поработать в ранбуке.']:PR.loss<=400000?['🚒 Ночь была дорогой','Прод выжил, но счёт заметный. Разбери каждый инцидент по журналу.']:['🔥 Прод съел дежурного','Без протокола ночь превращается в импровизацию. Импровизация выставляет счёт.'];
+h+='<h2 style="font-size:17px;margin:10px 0">🌙 Смена окончена</h2><div class="sq-assets"><span>💼 '+PR.cap.toLocaleString('ru-RU')+' ₽</span><span>📉 потери: '+PR.loss.toLocaleString('ru-RU')+' ₽</span><span>✅ '+PR.right+'/6</span></div>';
+h+='<div class="sq-sys" style="border-color:'+(PR.loss<=200000?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(PR.loss<=200000?'happy':'doubt',40):'')+'<div><b>'+grade[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+grade[1]+'</div></div></div>';
+h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило ночи:</b> в проде побеждает не тот, кто умнее, а тот, у кого есть протокол и журнал. Решения на берегу, исполнение — в шторм. Уроки 5.3–5.6.</div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="prWipe()">🔄 Новая смена</button><button class="btn ghost sm" onclick="prBack()">← К симуляторам</button></div>';
+const score=Math.max(0,100-Math.round(PR.loss/10000));if(!PR.best||score>PR.best)PR.best=score;prSave();box.innerHTML=h;return}
+const c=prInc();
+h+='<div class="sq-assets"><span>🌙 '+c[1]+'</span><span>💼 '+PR.cap.toLocaleString('ru-RU')+' ₽</span><span>Инцидент '+(PR.i+1)+'/6</span><span id="pr_timer">⏱ '+PR.t+'с</span></div>';
+if(PR.last)h+=PR.last;
+h+='<h2 style="font-size:16px;margin:8px 0">'+c[0]+'</h2><div class="sq-sys">'+c[2]+'</div>';
+c[3].forEach(function(o,idx){h+='<button class="btn ghost" style="display:block;width:100%;text-align:left;margin:6px 0;font-size:13px" onclick="prPick('+idx+')">'+o[0]+'</button>'});
+box.innerHTML=h;
+PR.t=20;PR.tmr=setInterval(prTick,1000)}
+function renderProdCard(){const c=document.getElementById('prod_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=7;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['p5_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_prod_progress')||'null')}catch(x){}let h='<h3>🌙 Квест «Ночь в проде»</h3><p style="color:var(--mut);font-size:13px">02:41. Бот торгует на реальном счёте, ты — дежурный. 6 инцидентов, таймер, ранбук. Доживи до утра без лишних потерь.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши уроки 5.1–5.7, чтобы открыть</span>'}else{h+='<button class="btn" onclick="prGo()">'+(p&&p.i>0&&!p.done?'▶ Продолжить смену':'🌙 Заступить на смену')+'</button>';if(p&&p.best!=null)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best+'/100</span>'}c.innerHTML=h}
+window.PRNS={go:prGo,wipe:prWipe,pick:prPick,stop:prStop,renderCard:renderProdCard};
 </script>
 </body>
 </html>
