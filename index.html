@@ -38216,7 +38216,60 @@ function explainToPanel(){
   explainClose();
 }
 window.explainToPanel = explainToPanel;
-/*__LIVE_APPEND__*/
+
+/* ---------- ФИКС 1: Таймер внимания ленты новостей (10 мин → П6) ---------- */
+(function cnNewsAttentionTimer(){
+  let t=null;
+  const prev=window.newsSyncSubView;
+  if(typeof prev!=='function')return;
+  window.newsSyncSubView=function(){
+    clearTimeout(t);
+    const old=document.getElementById('cn_attention_warn');if(old)old.remove();
+    prev.apply(this,arguments);
+    t=setTimeout(function(){
+      const feed=document.querySelector('[id*="news"],[class*="news"]');
+      if(feed&&feed.offsetParent&&!document.getElementById('cn_attention_warn')){
+        feed.insertAdjacentHTML('afterend',
+          '<div id="cn_attention_warn" style="margin:10px 0;padding:10px 14px;background:rgba(245,158,11,.08);border-left:3px solid var(--amber);border-radius:6px;font-size:12px;color:var(--amber)">⏰ Ты читаешь ленту 10 минут. Тяга к движению растёт — закрой вкладку или запиши строку в журнал.</div>');
+      }
+    },600000);
+  };
+})();
+
+/* ---------- ФИКС 2: Хайп-детектор в ленте новостей ---------- */
+(function cnHypeBadge(){
+  const prev=window.renderNewsView;
+  if(typeof prev!=='function')return;
+  const HYPE=['100x','guaranteed','don\\'+'t miss','last chance','limited time','act now','ограниченное предложен','успей купит','только сегодня','не упустите'];
+  window.renderNewsView=function(){
+    const html=prev.apply(this,arguments);
+    // помечаем карточки с хайповыми заголовками
+    return html.replace(/(<div[^>]*(?:news-card|coach-card)[^>]*>[\s\S]{0,200}?)(<h[34]|<b|<strong)/gi,function(m,pre,h){
+      const lower=m.toLowerCase();
+      const isHype=HYPE.some(w=>lower.includes(w));
+      if(!isHype)return m;
+      return pre+'<span style="font-size:9.5px;color:var(--bad);font-weight:700;text-transform:uppercase;letter-spacing:.5px">📣 возможный хайп — проверь источник</span>'+h;
+    });
+  };
+})();
+
+/* ---------- ФИКС 3: Индикатор «наставник думает» ---------- */
+(function cnMentorThinking(){
+  const prevRun=window.mentorRun;
+  if(typeof prevRun!=='function')return;
+  window.mentorRun=function(action,lessonId){
+    const out=document.getElementById('mentor_result');
+    if(out){
+      out.innerHTML='<div class="mentor-thinking" style="color:var(--mut);font-size:12.5px;padding:8px 0;display:flex;align-items:center;gap:8px">'+
+        '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--acc1);animation:cnPulse 1.2s ease-in-out infinite"></span>'+
+        'Наставник думает…</div>';
+      const st=document.createElement('style');
+      st.textContent='@keyframes cnPulse{0%,100%{opacity:.3}50%{opacity:1}}';
+      if(!document.getElementById('cn_pulse_style')){st.id='cn_pulse_style';document.head.appendChild(st);}
+    }
+    return prevRun.call(this,action,lessonId);
+  };
+})();
 })();
 
 </script>
