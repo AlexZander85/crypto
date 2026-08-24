@@ -36862,6 +36862,11 @@ const MENTOR = {
       const st = (payload && payload.stage) || 1;
       return mk(st === 1 ? 'Сильная сторона: ликвидность BTC реально выше остальных.' : (st === 2 ? 'Контраргумент: низкая просадка ≠ низкий риск хвостов.' : 'Класс: проверяемое. Но концентрация мнения — опасность спарринга.'), null);
     }
+    if(action === 'explain'){
+      const kind = (payload && payload.kind) || 'simpler';
+      const sel = (payload && payload.selection) || '';
+      return mk('Объяснение («' + kind + '»): ' + (sel ? sel.slice(0, 60) + ' — это про то, что урок учит осторожности с деньгами.' : 'Перефраз простыми словами.'), null);
+    }
     return mk('М. не придумал ответа.', null);
   }
 };
@@ -38008,6 +38013,158 @@ window.mentorSettingsRender = mentorSettingsRender;
   if(closeBtn) header.insertBefore(btn, closeBtn);
   else header.appendChild(btn);
 })();
+
+/* =========================================================================
+   EXPLAIN · «Объясни» выделенный фрагмент — всплывающее окно с MENTOR.ask(explain)
+   ========================================================================= */
+
+/* ---------- всплывающий тултип ---------- */
+function explainTooltipHTML(x, y){
+  return '<div id="explain_tooltip" style="position:fixed;left:' + x + 'px;top:' + y + 'px;z-index:99999;background:var(--bg);border:1.5px solid var(--acc2);border-radius:8px;padding:8px 12px;box-shadow:0 4px 20px rgba(0,0,0,.4);font-size:12px;color:var(--txt);max-width:280px">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">' +
+      '<span style="font-weight:800">🤖 Объяснить просто</span>' +
+      '<button class="btn sm ghost" style="font-size:10px;padding:2px 6px" onclick="explainClose()">✕</button>' +
+    '</div>' +
+    '<div id="explain_loading" style="color:var(--mut)">⌛ Переформулирую…</div>' +
+    '<div id="explain_content" style="display:none;margin-top:6px;font-size:11.5px;line-height:1.5"></div>' +
+    '<div style="margin-top:8px;display:none" id="explain_actions">' +
+      '<button class="btn sm" style="font-size:10.5px;padding:4px 8px;margin-right:4px" onclick="explainAction(\'simpler\')">Проще</button>' +
+      '<button class="btn sm" style="font-size:10.5px;padding:4px 8px" onclick="explainAction(\'example\')">Пример</button>' +
+      '<button class="btn sm ghost" style="font-size:10.5px;padding:4px 8px" onclick="explainAction(\'feynman\')">Проверить</button>' +
+    '</div>' +
+  '</div>';
+}
+window.explainTooltipHTML = explainTooltipHTML;
+
+function explainClose(){
+  const el = document.getElementById('explain_tooltip');
+  if(el) el.remove();
+  window._explainSelection = null;
+}
+window.explainClose = explainClose;
+
+/* ---------- главная логика: получить выделение, запустить объяснение ---------- */
+function explainRun(){
+  const sel = window._explainSelection;
+  if(!sel || !sel.text || sel.text.length < 3){
+    explainClose();
+    return;
+  }
+  const lessonId = window._mentorLessonId || (typeof window.lessonsDone === 'object' ? Object.keys(window.lessonsDone).slice(-1)[0] : 'p0_l1');
+  const kind = window._explainKind || 'simpler';
+  // подготовка контекста: соседние 2 предложения для понимания (если есть)
+  const modal = document.getElementById('lessonFullscreenReaderModal');
+  const fullText = modal ? modal.textContent : '';
+  const selIdx = fullText.indexOf(sel.text);
+  const context = selIdx > 50 ? fullText.slice(selIdx - 150, selIdx + sel.text.length + 150) : sel.text;
+  // запрос к модели
+  MENTOR.ask('explain', lessonId, {
+    selection: sel.text,
+    context: context.slice(0, 500),
+    kind: kind,
+    lessonTitle: (LESSONS.find(l => l.id === lessonId) || {}).title
+  }).then(r => {
+    const loading = document.getElementById('explain_loading');
+    const content = document.getElementById('explain_content');
+    const actions = document.getElementById('explain_actions');
+    if(loading) loading.style.display = 'none';
+    if(content){
+      content.style.display = 'block';
+      content.innerHTML = '<div style="border-left:3px solid var(--acc2);padding-left:8px">' + r.text + '</div>';
+    }
+    if(actions) actions.style.display = 'block';
+  }).catch(e => {
+    const loading = document.getElementById('explain_loading');
+    if(loading){
+      loading.textContent = e.message === 'limit' ? '🕐 Лимит исчерпан' : (e.message === 'offline' ? '📡 Нужна сеть' : '🤖 Не удалось');
+    }
+  });
+}
+window.explainRun = explainRun;
+
+/* ---------- обработчики: выделение текста в уроке ---------- */
+(function hookExplainSelection(){
+  function explainCheckSelection(){
+    const sel = window.getSelection();
+    const text = sel ? sel.toString().trim() : '';
+    if(!text || text.length < 3) return;
+    const modal = document.getElementById('lessonFullscreenReaderModal');
+    if(!modal || !sel.anchorNode || !modal.contains(sel.anchorNode)) return;
+    if(!mentorIsMax()) return;
+    if(window._explainSelection && window._explainSelection.text === text) return;
+    const range = sel.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    const x = Math.min(rect.left + rect.width / 2 - 100, window.innerWidth - 300);
+    const y = Math.max(rect.top - 10, 10);
+    window._explainSelection = { text: text, lessonId: window._mentorLessonId };
+    window._explainKind = 'simpler';
+    const tooltip = document.createElement('div');
+    tooltip.innerHTML = explainTooltipHTML(x, y);
+    document.body.appendChild(tooltip.firstElementChild);
+    explainRun();
+  }
+  document.addEventListener('mouseup', function(e){
+    setTimeout(function(){
+      const sel = window.getSelection();
+      const text = sel ? sel.toString().trim() : '';
+      if(!text || text.length < 3) return;
+      const modal = document.getElementById('lessonFullscreenReaderModal');
+      if(!modal || !modal.contains(e.target)) return;
+      if(!mentorIsMax()) return;
+      explainCheckSelection();
+    }, 50);
+  });
+  document.addEventListener('touchend', function(e){
+    setTimeout(function(){
+      const sel = window.getSelection();
+      const text = sel ? sel.toString().trim() : '';
+      if(!text || text.length < 3) return;
+      const modal = document.getElementById('lessonFullscreenReaderModal');
+      if(!modal || !modal.contains(e.target)) return;
+      if(!mentorIsMax()) return;
+      explainCheckSelection();
+    }, 50);
+  });
+  function explainCheckOnSelection(){
+    if(document.getElementById('explain_tooltip')) return;
+    const sel = window.getSelection();
+    if(sel && sel.toString().trim().length >= 3){
+      explainCheckSelection();
+    }
+  }
+  document.addEventListener('selectionchange', function(){
+    setTimeout(explainCheckOnSelection, 150);
+  });
+  document.addEventListener('mousedown', function(e){
+    const tooltip = document.getElementById('explain_tooltip');
+    if(tooltip && !tooltip.contains(e.target)) explainClose();
+  });
+})();
+/* ---------- действия в tooltip: проще/пример/проверить ---------- */
+function explainAction(kind){
+  if(kind === 'feynman'){
+    // копируем выделение в Фейнман
+    const sel = window._explainSelection;
+    if(sel && document.getElementById('feynman_input_' + (window._mentorLessonId || 'p0_l1'))){
+      document.getElementById('feynman_input_' + (window._mentorLessonId || 'p0_l1')).value = sel.text;
+      mentorRun('feynman');
+      explainClose();
+    }
+    return;
+  }
+  window._explainKind = kind;
+  explainRun();
+}
+window.explainAction = explainAction;
+
+/* ---------- кнопка 🤖 в tooltip: открыть панель с выделением ---------- */
+function explainToPanel(){
+  const sel = window._explainSelection;
+  if(!sel) return;
+  mentorOpenPanel(sel.lessonId);
+  explainClose();
+}
+window.explainToPanel = explainToPanel;
 /*__LIVE_APPEND__*/
 })();
 
