@@ -1,0 +1,10 @@
+# Заголовки безопасности §22.3 (Cloudflare Pages / wrangler assets)
+# Движок приложения использует инлайн-скрипты и инлайн-стили (один файл, офлайн-first) —
+# script-src/style-src разрешительны с 'unsafe-inline' (честная оговорка в §22.3);
+# компенсация: строгие connect-src/object-src/base-uri/frame-ancestors + экранирование вывода.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'

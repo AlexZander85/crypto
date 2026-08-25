@@ -1,0 +1,18 @@
+{
+  "name": "cryptonavigator-saas",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply DB --local",
+    "migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "extract": "node tools/extract-content.mjs",
+    "packs:upload": "node tools/upload-packs.mjs",
+    "content:update": "node tools/extract-content.mjs && node tools/upload-packs.mjs",
+    "test": "node test/api.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.125.0"
+  }
+}
