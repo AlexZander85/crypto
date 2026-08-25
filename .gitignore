@@ -34,3 +34,15 @@ home-view.png
 # OS junk
 Thumbs.db
 .DS_Store
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
+
+# отчёты приёмки лендинга (воспроизводятся: node landing2/tools/verify.mjs)
+landing2/reports/
+
+# скрипты сборки/тестов лендинга и SaaS — исключение из глобального *.mjs
+!landing2/tools/*.mjs
+!saas/tools/*.mjs
+!saas/test/*.mjs
