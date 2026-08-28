@@ -42,7 +42,15 @@ Thumbs.db
 # отчёты приёмки лендинга (воспроизводятся: node landing2/tools/verify.mjs)
 landing2/reports/
 
-# скрипты сборки/тестов лендинга и SaaS — исключение из глобального *.mjs
+# .NET Desktop App & Dist
+desktop_app/bin/
+desktop_app/obj/
+dist/
+tools/__pycache__/
+*.pyc
+
+# Whitelist mjs in test/tools
 !landing2/tools/*.mjs
 !saas/tools/*.mjs
 !saas/test/*.mjs
+!tools/*.mjs
