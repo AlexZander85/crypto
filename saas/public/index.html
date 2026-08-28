@@ -842,17 +842,9 @@ body.light-theme select option:hover, body.light-theme select option:checked {
   <div class="nav-group">
     <span class="nav-group-label">🕹️ Практика</span>
     <button class="tab" data-tab="sims">Симуляторы</button>
+    <button class="tab" data-tab="quests">🎮 Квесты</button>
     <button class="tab" data-tab="quiz">Викторина</button>
     <button class="tab" data-tab="live">🌍 Живой рынок</button>
-    <button class="tab" data-tab="quest">🕵️ Квест</button>
-    <button class="tab" data-tab="psyquest">🧠 Семь дней</button>
-    <button class="tab" data-tab="panicquest">🚨 Паника</button>
-    <button class="tab" data-tab="marginquest">💥 Маржин</button>
-    <button class="tab" data-tab="curvequest">📉 Кривые</button>
-    <button class="tab" data-tab="yieldquest">🎯 Доходность</button>
-    <button class="tab" data-tab="firstquest">🌱 Старт</button>
-    <button class="tab" data-tab="launchquest">🚀 Запуск</button>
-    <button class="tab" data-tab="prodquest">🌙 Прод</button>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">📖 Справка</span>
@@ -1234,6 +1226,21 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 <section id="panicquest" class="view"><h1>🚨 Симулятор паники</h1><p class="sub">Отличай «рынок падает» от «инфраструктура сломана».</p><div id="pn_box"></div></section>
 <section id="psyquest" class="view"><h1>🧠 Семь дней: ты против себя</h1><p class="sub">Неделя оператора бота. Враг — внутренний голос.</p><div id="pq_box"></div></section>
 <section id="quest" class="view"><h1>🕵️ Квест: Криптик против Мошенника</h1><p class="sub">Семь атак Ската — семь эпизодов на выживание виртуальных активов.</p><div id="sq_box"></div></section>
+
+<!-- QUESTS HUB VIEW -->
+<section id="quests" class="view">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px">
+    <div>
+      <h1 style="margin:0 0 6px">🎮 Сюжетные квесты и симуляторы выживания</h1>
+      <p class="sub" style="margin:0">9 интерактивных симуляторов боевых ситуаций: кибератаки, психология недели, паника, ликвидации, аудит бэктестов и ночные инциденты.</p>
+    </div>
+  </div>
+
+  <div id="quests_cards_grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:16px; margin-top:20px">
+    <!-- Rendered dynamically by renderQuestsHub() -->
+  </div>
+</section>
+
 <section id="sims" class="view">
   <h1>🕹️ Интерактивные симуляторы</h1>
   <p class="sub">Практические тренажёры рыночной микроструктуры, математики ликвидаций и расчетов комиссий.</p>
@@ -13279,16 +13286,233 @@ function go(t){
   const view=$('#'+t);
   if(view)view.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
-  if(t==='progress')renderStats();
+      if(t==='progress')renderStats();
   if(t==='lessons')renderPhaseLessonsView(curPhaseLesson);
   if(t==='tests')renderPhaseTestView(curPhaseTest);
   if(t==='sims')initSims();
+  if(t==='quests'){ if(typeof renderQuestsHub === 'function') renderQuestsHub(); }
+  if(t==='quest'){ if(typeof qRender === 'function') qRender(); }
+  if(t==='psyquest'){ if(typeof PQ_S === 'object' && PQ_S.d === 0) PQ_S.d = 1; if(typeof pqRender === 'function') pqRender(); }
+  if(t==='panicquest'){ if(typeof PN === 'object' && (!PN.order || PN.order.length < 6) && typeof pnShuffle === 'function') PN.order = pnShuffle(); if(typeof pnRender === 'function') pnRender(); }
+  if(t==='marginquest'){ if(typeof mcRender === 'function') mcRender(); }
+  if(t==='curvequest'){ if(typeof CV === 'object' && (!CV.order || CV.order.length < 8) && typeof cvShuffle === 'function') CV.order = cvShuffle(); if(typeof cvRender === 'function') cvRender(); }
+  if(t==='yieldquest'){ if(typeof YH === 'object' && (!YH.order || YH.order.length < 8) && typeof yhShuffle === 'function') YH.order = yhShuffle(); if(typeof yhRender === 'function') yhRender(); }
+  if(t==='firstquest'){ if(typeof FM === 'object' && (!FM.order || FM.order.length < 8) && typeof fmShuffle === 'function') FM.order = fmShuffle(); if(typeof fmRender === 'function') fmRender(); }
+  if(t==='launchquest'){ if(typeof LN === 'object' && (!LN.order || LN.order.length < 8) && typeof lnShuffle === 'function') LN.order = lnShuffle(); if(typeof lnRender === 'function') lnRender(); }
+  if(t==='prodquest'){ if(typeof PR === 'object' && (!PR.order || PR.order.length < 6) && typeof prShuffle === 'function') PR.order = prShuffle(); if(typeof prRender === 'function') prRender(); }
   if(t==='glossary'){ if(typeof renderChips === 'function') renderChips(); renderGloss(); }
   if(t==='earnings')initEarningMethods();
   if(t==='quiz')startQuiz();
 }
 
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>go(b.dataset.tab));
+
+
+
+/* =========================================================================
+   QUESTS HUB ENGINE (9 ИНТЕРАКТИВНЫХ КВЕСТОВ)
+   ========================================================================= */
+function renderQuestsHub(){
+  const grid = document.getElementById('quests_cards_grid');
+  if(!grid) return;
+
+  const questsData = [
+    {
+      id: 'quest',
+      icon: '🕵️',
+      title: 'Криптик против Мошенника',
+      desc: '7 эпизодов против Ската. Выживи под атаками фишинга, отравленных контрактов, фейковых дропов и P2P-разводов. Сохрани 5 000 USDT.',
+      badge: 'Эпизодов: 7',
+      action: 'qGo()',
+      wipe: 'qWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('sq_progress') || 'null');
+          if (p && p.done && p.done.length) {
+            return { started: true, done: p.done.length === 7, text: 'Пройдено: ' + p.done.length + '/7' };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'psyquest',
+      icon: '🧠',
+      title: 'Семь дней: ты против себя',
+      desc: 'Неделя работы оператора бота. Враг — внутренний голос. Пройди 7 дней с удержанием капитала и устава без импульсивных вмешательств.',
+      badge: 'Дней: 7',
+      action: 'pqGo()',
+      wipe: 'pqWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_psy_quest') || 'null');
+          if (p && p.d > 0) {
+            return { started: true, done: p.done, text: p.done ? ('Итог: ' + (p.right || 0) + '/7') : ('День ' + p.d + '/7') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'panicquest',
+      icon: '🚨',
+      title: 'Симулятор паники',
+      desc: '6 кризисов: научись мгновенно отличать «рынок падает» (норма) от «инфраструктура сломана» (авария). В 90% случаев спасает хладнокровие.',
+      badge: 'Кризисов: 6',
+      action: 'pnGo()',
+      wipe: 'pnWipe(false)',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_panic_progress') || 'null');
+          if (p && p.i > 0) {
+            return { started: true, done: p.done, text: p.done ? ('Результат: ' + (p.best || 0) + '%') : ('Раунд ' + (p.i + 1) + '/6') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'marginquest',
+      icon: '💥',
+      title: 'Маржин-колл: экзамен по сайзингу',
+      desc: '10 сделок на реальной статистике. Стратегия рабочая — единственный вопрос в плече и доле риска. Настрой сайзинг и выживи.',
+      badge: 'Сделок: 10',
+      action: 'mcGo()',
+      wipe: 'mcWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_margin_progress') || 'null');
+          if (p && p.r > 0) {
+            return { started: true, done: p.done, text: p.done ? ('Капитал: ' + (p.cap ? p.cap.toLocaleString('ru-RU') : 0) + ' ₽') : ('Сделка ' + (p.r + 1) + '/10') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'curvequest',
+      icon: '📉',
+      title: 'Кривая-обманщица: аудит бэктестов',
+      desc: 'Инвесткомитет по квант-алгоритмам. 8 стратегий с красивыми эквити: распознай оверфиттинг, заглядывание в будущее и выбери честную.',
+      badge: 'Бэктестов: 8',
+      action: 'cvGo()',
+      wipe: 'cvWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_curve_progress') || 'null');
+          if (p && p.i > 0) {
+            return { started: true, done: p.done, text: p.done ? ('Угадано: ' + (p.ok || 0) + '/8') : ('Кейс ' + (p.i + 1) + '/8') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'yieldquest',
+      icon: '🎯',
+      title: 'Охотник за доходностью',
+      desc: '8 предложений «пассивного дохода»: майнинг, стейкинг, DeFi, NFT, опционы, дропы. Отличи честный процент от скрытых пирамид.',
+      badge: 'Предложений: 8',
+      action: 'yhGo()',
+      wipe: 'yhWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_yield_progress') || 'null');
+          if (p && p.i > 0) {
+            return { started: true, done: p.done, text: p.done ? ('Верно: ' + (p.right || 0) + '/8') : ('Шаг ' + (p.i + 1) + '/8') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'firstquest',
+      icon: '🌱',
+      title: 'Первые деньги: месяц новичка',
+      desc: '100 000 ₽ и ноль опыта. 8 критических решений первого месяца: от первого депозита до плеча x20. Пройди без классических ошибок.',
+      badge: 'Решений: 8',
+      action: 'fmGo()',
+      wipe: 'fmWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_first_progress') || 'null');
+          if (p && p.i > 0) {
+            return { started: true, done: p.done, text: p.done ? ('Счёт: ' + (p.best || 0) + '/100') : ('Шаг ' + (p.i + 1) + '/8') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'launchquest',
+      icon: '🚀',
+      title: 'Первый запуск: чек-лист бота',
+      desc: '8 категорий предстартовой проверки боевого робота до включения: тестнет, лимиты, алерты, проскальзывание, Kill-Switch.',
+      badge: 'Категорий: 8',
+      action: 'lnGo()',
+      wipe: 'lnWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_launch_progress') || 'null');
+          if (p && p.i > 0) {
+            return { started: true, done: p.done, text: p.done ? 'Готов к запуску' : ('Чек ' + (p.i + 1) + '/8') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    },
+    {
+      id: 'prodquest',
+      icon: '🌙',
+      title: 'Ночь в проде: дежурство по ранбуку',
+      desc: '6 аварийных ночных инцидентов до наступления утра: скачок фандинга, зависший API-запрос, отвал лимитного ордера. Решай по уставу.',
+      badge: 'Инцидентов: 6',
+      action: 'prGo()',
+      wipe: 'prWipe()',
+      getProgress: function(){
+        try {
+          const p = JSON.parse(localStorage.getItem('cn_prod_progress') || 'null');
+          if (p && p.i > 0) {
+            return { started: true, done: p.done, text: p.done ? 'Ночь пройдена' : ('Инцидент ' + (p.i + 1) + '/6') };
+          }
+        } catch(e){}
+        return { started: false, done: false, text: 'Не начат' };
+      }
+    }
+  ];
+
+  let html = '';
+  questsData.forEach(q => {
+    const prog = q.getProgress();
+    const btnLabel = prog.done ? '🔄 Пройти заново' : (prog.started ? '▶ Продолжить' : '🎮 Начать квест');
+    const badgeColor = prog.done ? 'var(--ok)' : (prog.started ? 'var(--warn)' : 'var(--mut)');
+    const badgeBg = prog.done ? 'rgba(34,197,94,.1)' : (prog.started ? 'rgba(234,179,8,.1)' : 'rgba(255,255,255,.05)');
+
+    html += `
+      <div style="background:var(--card,#0f172a); border:1px solid var(--line); border-radius:12px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; transition:transform .15s, border-color .15s">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px">
+            <span style="font-size:32px; line-height:1">${q.icon}</span>
+            <span class="badge" style="background:${badgeBg}; color:${badgeColor}; border:1px solid ${badgeColor}; font-size:11.5px; font-weight:700">
+              ${prog.text}
+            </span>
+          </div>
+          <h3 style="margin:0 0 8px; font-size:16px; color:var(--txt); font-weight:700">${q.title}</h3>
+          <p style="margin:0 0 16px; font-size:13px; color:var(--mut); line-height:1.5">${q.desc}</p>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:12px">
+          <button class="btn primary" style="flex:1" onclick="${q.action}">
+            ${btnLabel}
+          </button>
+          ${prog.started && !prog.done ? `<button class="btn ghost sm" title="Сбросить" onclick="${q.wipe}">🔄</button>` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  grid.innerHTML = html;
+}
+
 
 /* =========================================================================
    7. ЛОГИКА УРОКОВ (LESSONS ENGINE)
@@ -43693,16 +43917,16 @@ function qK(e,s){return (window.kryptikAvatar?kryptikAvatar(e,s||36):'')}
 function qAsset(){var a=QP.a;return '<div class="sq-assets"><span>💰 '+a.usdt+' USDT</span><span>₿ '+a.btc+' BTC</span><span>🖼 NFT:'+a.nft+'</span></div>'}
 function qSave(){try{localStorage.setItem('sq_progress',JSON.stringify(QP))}catch(x){}}
 function qGo(){go('quest');qRender()}
-function qBack(){go('sims')}
+function qBack(){go('quests')}
 function qSel(){QP.e=0;qSave();qRender()}
 function qWipe(){try{localStorage.removeItem('sq_progress')}catch(x){};QP={e:0,s:0,a:{usdt:5000,btc:0.1,nft:1},done:[],ch:[],last:''};qSel()}
 function qStart(i){QP={e:i+1,s:0,a:{usdt:5000,btc:0.1,nft:1},done:QP.done.slice(),ch:[],last:''};qSave();qRender()}
 function qPick(ep,sn,ci){if(QP.e!==ep||QP.s!==sn)return;var e=SQ[ep-1],c=e[6][sn][1][ci],loss=c[1];QP.last=loss?'<div class="sq-sys" style="border-color:var(--bad)">❌ Потеряно: '+loss+' USDT</div>':'<div class="sq-sys">✅ Верно. '+e[4]+'</div>';if(loss)QP.a.usdt=Math.max(0,QP.a.usdt-loss);QP.ch.push([ep,sn,loss]);QP.s++;if(QP.s>=e[6].length&&QP.done.indexOf(e[3])<0)QP.done.push(e[3]);qSave();qRender()}
 function qRender(){var box=document.getElementById('sq_box');if(!box)return;var h,e,fin,s,ci;
-if(QP.e===0){h='<button class="btn ghost sm" onclick="qBack()">← К симуляторам</button><div class="sq-sys">'+qK('surprise',36)+'<b>Криптик:</b> «Это Скат. Отбей его атаки и сохрани активы. Финал открывается после всех эпизодов.»</div>';var o7=SQ.slice(0,6).every(function(x){return QP.done.indexOf(x[3])>=0});h+='<div style="display:grid;gap:8px;margin:12px 0">';for(var i=0;i<SQ.length;i++){e=SQ[i];var un=i<6||o7;h+='<button class="sq-opt" '+(un?'onclick="qStart('+i+')"':'disabled')+'>Эп. '+e[0]+' · '+e[3]+' · <span style="font-size:11px;color:var(--mut)">'+SQ_CAT[e[1]]+(QP.done.indexOf(e[3])>=0?' ✅':un?'':' 🔒')+'</span></button>'}h+='</div><button class="btn ghost sm" onclick="qWipe()">🔄 Сбросить прогресс</button>'+(QP.done.length===7?'<button class="btn" onclick="qEnd()">📊 Итог квеста</button> ':'');box.innerHTML=h;return}
+if(QP.e===0){h='<button class="btn ghost sm" onclick="qBack()">← К квестам</button><div class="sq-sys">'+qK('surprise',36)+'<b>Криптик:</b> «Это Скат. Отбей его атаки и сохрани активы. Финал открывается после всех эпизодов.»</div>';var o7=SQ.slice(0,6).every(function(x){return QP.done.indexOf(x[3])>=0});h+='<div style="display:grid;gap:8px;margin:12px 0">';for(var i=0;i<SQ.length;i++){e=SQ[i];var un=i<6||o7;h+='<button class="sq-opt" '+(un?'onclick="qStart('+i+')"':'disabled')+'>Эп. '+e[0]+' · '+e[3]+' · <span style="font-size:11px;color:var(--mut)">'+SQ_CAT[e[1]]+(QP.done.indexOf(e[3])>=0?' ✅':un?'':' 🔒')+'</span></button>'}h+='</div><button class="btn ghost sm" onclick="qWipe()">🔄 Сбросить прогресс</button>'+(QP.done.length===7?'<button class="btn" onclick="qEnd()">📊 Итог квеста</button> ':'');box.innerHTML=h;return}
 e=SQ[QP.e-1];fin=QP.s>=e[6].length;h='<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button>'+qAsset();
 if(!fin){s=e[6][QP.s];h+='<h2 style="font-size:16px;margin:6px 0">Эпизод '+e[0]+' · '+e[3]+'</h2>'+QP.last+'<div class="sq-msg"><span style="float:left;margin-right:8px">'+qSvg(32)+'</span><b>Скат:</b> '+s[0]+'</div><div style="margin-top:10px">';for(ci=0;ci<s[1].length;ci++)h+='<button class="sq-opt" onclick="qPick('+QP.e+','+QP.s+','+ci+')"><b>'+'ABCD'[ci]+'</b> · '+s[1][ci][0]+' </button>';h+='</div>'}else{var loss=QP.ch.some(function(c){return c[2]>0});h+='<h2 style="font-size:16px;margin:6px 0">📋 Разбор: '+e[0]+' · '+e[3]+'</h2>'+QP.last+'<div class="sq-sys">'+qK(loss?'doubt':'happy',36)+'<b>Криптик:</b> «'+(loss?(window.kryptikSay?kryptikSay('error_concept'):'Плохо.'):'Сохранено всё. Не расслабляйся.')+'»</div><div class="sq-sys"><b>Техника:</b> '+e[5]+'</div><div class="sq-sys">🔗 Урок '+e[2].replace('_',' ')+' — <a href="#" onclick="openFullscreenLesson(\''+e[2]+'\');return false" style="color:var(--acc1)">открыть</a></div>';h+=(QP.done.length===7?'<button class="btn" onclick="qEnd()">📊 Итог квеста</button>':'')+'<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button>'}box.innerHTML=h}
-function qEnd(){var box=document.getElementById('sq_box');if(!box)return;var u=QP.a.usdt,p=Math.round(u/5000*100),b=+(localStorage.getItem('sq_best')||0);if(u>b)try{localStorage.setItem('sq_best',u)}catch(x){}var h='<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button><h2 style="font-size:17px;margin:8px 0">📊 Итог квеста</h2><div class="sq-sys"><span>'+qK(p>=80?'happy':'doubt',40)+'</span><div><b>Сохранено: '+u+' из 5000 USDT ('+p+'%)</b><div style="font-size:12px;color:var(--mut)">Лучший результат: '+Math.max(u,b)+'</div></div></div><div style="margin:8px 0">Профиль уязвимостей:</div>';SQ.forEach(function(e){var done=QP.done.indexOf(e[3])>=0,hasLoss=QP.ch.filter(function(c){return c[0]===e[0]&&c[2]>0}).length>0,m=done?(hasLoss?'🔴':'🟢'):'🟡';h+='<div class="sq-sys" style="margin:4px 0;padding:7px 10px"><b>'+m+' '+SQ_CAT[e[1]]+'</b> <span style="font-size:12px;color:var(--mut)">— '+(done?(hasLoss?'есть ошибки':'чисто'):'не пройден')+'</span></div>'});h+='<div style="margin-top:10px"><button class="btn" onclick="qWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="qBack()">← К симуляторам</button></div>';box.innerHTML=h}
+function qEnd(){var box=document.getElementById('sq_box');if(!box)return;var u=QP.a.usdt,p=Math.round(u/5000*100),b=+(localStorage.getItem('sq_best')||0);if(u>b)try{localStorage.setItem('sq_best',u)}catch(x){}var h='<button class="btn ghost sm" onclick="qSel()">← Эпизоды</button><h2 style="font-size:17px;margin:8px 0">📊 Итог квеста</h2><div class="sq-sys"><span>'+qK(p>=80?'happy':'doubt',40)+'</span><div><b>Сохранено: '+u+' из 5000 USDT ('+p+'%)</b><div style="font-size:12px;color:var(--mut)">Лучший результат: '+Math.max(u,b)+'</div></div></div><div style="margin:8px 0">Профиль уязвимостей:</div>';SQ.forEach(function(e){var done=QP.done.indexOf(e[3])>=0,hasLoss=QP.ch.filter(function(c){return c[0]===e[0]&&c[2]>0}).length>0,m=done?(hasLoss?'🔴':'🟢'):'🟡';h+='<div class="sq-sys" style="margin:4px 0;padding:7px 10px"><b>'+m+' '+SQ_CAT[e[1]]+'</b> <span style="font-size:12px;color:var(--mut)">— '+(done?(hasLoss?'есть ошибки':'чисто'):'не пройден')+'</span></div>'});h+='<div style="margin-top:10px"><button class="btn" onclick="qWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="qBack()">← К квестам</button></div>';box.innerHTML=h}
 function renderQuestCard(){var c=document.getElementById('quest_card_in_sims');if(!c)return;var gate=typeof lessonsDone==='object'&&lessonsDone.p0_l20===1,p=null;try{p=JSON.parse(localStorage.getItem('sq_progress')||'null')}catch(x){}var h='<h3>🕵️ Квест «Криптик против Мошенника»</h3><p style="color:var(--mut);font-size:13px">7 эпизодов против Ската. Сохрани виртуальные 5000 USDT + 0.1 BTC + NFT.</p>';if(!gate){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши урок 0.20 «Безопасность», чтобы открыть квест</span>'}else{h+='<button class="btn" onclick="qGo()">'+(p&&p.done&&p.done.length?'▶ Продолжить':'🕵️ Начать квест')+'</button>';if(p&&p.done&&p.done.length)h+=' <button class="btn ghost sm" onclick="qWipe()">🔄 С начала</button>'}c.innerHTML=h}
 window.SQNS={go:qGo,start:qStart,wipe:qWipe,end:qEnd};
 const PQ_D=['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
@@ -43727,12 +43951,12 @@ let PQ_S={d:0,cap:1000000,emo:0,right:0,wrong:0,pat:{},done:false,best:null};
 try{const p=JSON.parse(localStorage.getItem('cn_psy_quest')||'null');if(p&&typeof p.d==='number')PQ_S=p}catch(x){}
 function pqSave(){try{localStorage.setItem('cn_psy_quest',JSON.stringify(PQ_S))}catch(x){}}
 function pqGo(){go('psyquest');pqRender()}
-function pqBack(){go('sims')}
+function pqBack(){go('quests')}
 function pqEmo(){return PQ_S.emo>=2?'😄':PQ_S.emo>=0?'😐':'😰'}
 function pqHud(){return '<div class="sq-assets"><span>💼 '+PQ_S.cap.toLocaleString('ru-RU')+' ₽</span><span>🔥 День '+PQ_S.d+'</span><span>'+pqEmo()+'</span></div>'}
 function pqPick(d,ci){if(PQ_S.d!==d||PQ_S.done)return;const day=PQ[d-1],c=day[6][ci],ok=c[1]===1;PQ_S.cap+=c[2];PQ_S.emo+=ok?1:-1;if(ok)PQ_S.right++;else{PQ_S.wrong++;PQ_S.pat[day[4]]=(PQ_S.pat[day[4]]||0)+1}PQ_S.last=(ok?'<div class="sq-sys">✅ '+day[5]+'</div>':'<div class="sq-sys" style="border-color:var(--bad)">❌ '+(c[2]?'−'+Math.abs(c[2]).toLocaleString('ru-RU')+' ₽. ':'')+day[5]+'</div>')+'<div class="sq-sys" style="border-color:var(--acc2)">'+ (window.kryptikAvatar?kryptikAvatar(ok?'happy':'doubt',32):'') +'<b>Криптик:</b> «'+(ok?(window.kryptikSay?kryptikSay('win_easy'):'Принято.'):'Логично. Неправильно, но логично.')+'»</div>';PQ_S.d++;if(PQ_S.d>7){PQ_S.done=true}pqSave();pqRender()}
-function pqRender(){const box=document.getElementById('pq_box');if(!box)return;let h='<button class="btn ghost sm" onclick="pqBack()">← К симуляторам</button>';
-if(PQ_S.done){const total=PQ_S.right+PQ_S.wrong,pats=Object.keys(PQ_S.pat).sort(function(a,b){return PQ_S.pat[b]-PQ_S.pat[a]}),main=pats[0]||'—';h+='<h2 style="font-size:17px;margin:10px 0">📊 Семь дней: ты против себя</h2>'+pqHud()+'<div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(PQ_S.right>=6?'happy':'doubt',40):'')+'<div><b>Решений по уставу: '+PQ_S.right+' из '+(total||7)+'</b><div style="font-size:12px;color:var(--mut)">Поддался голосу: '+PQ_S.wrong+' · Самая частая ловушка: '+main+'</div></div></div><div class="sq-sys"><b>Паттерн:</b> '+(PQ_S.wrong===0?'Чистая неделя. Дисциплина — твой режим по умолчанию.':'Ты склонен к паттерну «'+main+'». Запомни: неопределённость — не сигнал к действию, а сигнал к проверке фактов (П1).')+'</div><div style="margin-top:10px"><button class="btn" onclick="pqWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="pqBack()">← К симуляторам</button></div>';if(!PQ_S.best||PQ_S.right>PQ_S.best.right)PQ_S.best={right:PQ_S.right,cap:PQ_S.cap};pqSave();box.innerHTML=h;return}
+function pqRender(){const box=document.getElementById('pq_box');if(!box)return;let h='<button class="btn ghost sm" onclick="pqBack()">← К квестам</button>';
+if(PQ_S.done){const total=PQ_S.right+PQ_S.wrong,pats=Object.keys(PQ_S.pat).sort(function(a,b){return PQ_S.pat[b]-PQ_S.pat[a]}),main=pats[0]||'—';h+='<h2 style="font-size:17px;margin:10px 0">📊 Семь дней: ты против себя</h2>'+pqHud()+'<div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(PQ_S.right>=6?'happy':'doubt',40):'')+'<div><b>Решений по уставу: '+PQ_S.right+' из '+(total||7)+'</b><div style="font-size:12px;color:var(--mut)">Поддался голосу: '+PQ_S.wrong+' · Самая частая ловушка: '+main+'</div></div></div><div class="sq-sys"><b>Паттерн:</b> '+(PQ_S.wrong===0?'Чистая неделя. Дисциплина — твой режим по умолчанию.':'Ты склонен к паттерну «'+main+'». Запомни: неопределённость — не сигнал к действию, а сигнал к проверке фактов (П1).')+'</div><div style="margin-top:10px"><button class="btn" onclick="pqWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="pqBack()">← К квестам</button></div>';if(!PQ_S.best||PQ_S.right>PQ_S.best.right)PQ_S.best={right:PQ_S.right,cap:PQ_S.cap};pqSave();box.innerHTML=h;return}
 const d=PQ_S.d,day=PQ[d-1];h+=pqHud()+'<h2 style="font-size:16px;margin:6px 0">📅 День '+d+' · '+PQ_D[d-1]+' · '+day[0]+'</h2>'+(PQ_S.last||'')+'<div class="sq-sys">'+day[1]+'</div><div class="sq-msg" style="border-color:var(--acc2);background:rgba(124,58,237,.08)">🗣 <i>«'+day[2].replace(/^«|»$/g,'')+'»</i></div><div style="margin-top:10px">';day[6].forEach(function(c,ci){h+='<button class="sq-opt" onclick="pqPick('+d+','+ci+')"><b>'+'ABCD'[ci]+'</b> · '+c[0]+'</button>'});h+='</div><div style="font-size:11px;color:var(--mut);margin-top:6px">Связь: '+day[3]+'</div>';box.innerHTML=h}
 function pqWipe(){try{localStorage.removeItem('cn_psy_quest')}catch(x){};PQ_S={d:1,cap:1000000,emo:0,right:0,wrong:0,pat:{},done:false,last:'',best:PQ_S.best};pqSave();pqRender()}
 function renderPsyQuestCard(){const c=document.getElementById('psyquest_card_in_sims');if(!c)return;let all=true;for(let i=1;i<=8;i++)if(!(typeof lessonsDone==='object'&&lessonsDone['ps_l'+i]===1))all=false;let p=null;try{p=JSON.parse(localStorage.getItem('cn_psy_quest')||'null')}catch(x){}let h='<h3>🧠 Квест «Семь дней: ты против себя»</h3><p style="color:var(--mut);font-size:13px">Неделя с работающим ботом. Враг — внутренний голос. Сохрани капитал и устав.</p>';if(!all){h+='<span class="badge" style="border-color:var(--mut);color:var(--mut)">🔒 Заверши все уроки П1–П8, чтобы открыть квест</span>'}else{h+='<button class="btn" onclick="pqGo()">'+(p&&p.d>1?'▶ Продолжить':'🧠 Начать неделю')+'</button>';if(p&&p.best)h+=' <span style="font-size:12px;color:var(--mut)">Лучший: '+p.best.right+'/7</span>'}c.innerHTML=h}
@@ -43759,15 +43983,15 @@ try{const p=JSON.parse(localStorage.getItem('cn_panic_progress')||'null');if(p&&
 function pnSave(){try{localStorage.setItem('cn_panic_progress',JSON.stringify(PN))}catch(x){}}
 function pnShuffle(){const o=[0,1,2,3,4];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}o.push(5);return o}
 function pnGo(){go('panicquest');pnRender()}
-function pnBack(){go('sims')}
+function pnBack(){go('quests')}
 function pnWipe(hard){pnStop();PN={order:pnShuffle(),i:0,t:0,cap:500000,saved:0,results:[],done:false,hard:!!hard,best:PN.best,tmr:null};pnSave();pnRender()}
 function pnStop(){if(PN.tmr){clearInterval(PN.tmr);PN.tmr=null}}
 function pnScen(){return PN.i<5?PNC[PN.order[PN.i]]:PNC_F}
 function pnTick(){PN.t++;const sc=pnScen();const ev=sc[3][Math.min(PN.t,sc[3].length-1)];const el=document.getElementById('pn_ev');if(el)el.textContent=ev;const tm=document.getElementById('pn_time');if(tm)tm.textContent='⏱ 00:0'+PN.t+'0';if(PN.hard&&PN.t>=6){pnPick(PN.i,0)}pnSave()}
 function pnPanic(){const sc=pnScen();return Math.min(95,20+PN.t*12+(sc[0]===1?20:0))}
 function pnEmoji(){const p=pnPanic();return p<35?'😐':p<60?'😟':p<85?'😨':'😱'}
-function pnRender(){const box=document.getElementById('pn_box');if(!box)return;pnStop();let h='<button class="btn ghost sm" onclick="pnBack()">← К симуляторам</button>';
-if(PN.done){const ok=PN.results.filter(function(r){return r===1}).length,tot=PN.results.length,pct=Math.round(ok/tot*100);h+='<h2 style="font-size:17px;margin:10px 0">🚨 Итог кризиса</h2><div class="sq-assets"><span>💼 '+PN.cap.toLocaleString('ru-RU')+' ₽</span><span>✅ '+ok+'/'+tot+'</span><span>'+(pct>=80?'😌':pct>=50?'😐':'😰')+'</span></div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(pct>=80?'happy':'doubt',40):'')+'<div><b>Выдержано: '+pct+'%</b><div style="font-size:12px;color:var(--mut)">'+(pct>=80?'Паника проиграла. Дисциплина победила.':'Паника выигрывала раунды. Повтори через неделю.')+'</div></div></div><div class="sq-sys"><b>Профиль:</b> '+(PN.results[0]===0?'Склонен действовать на рыночной панике — запомни: падение цены ≠ сбой инфраструктуры.':PN.results.slice(1,5).indexOf(0)>=0?'Путаешь штатное и аварийное. Штатное = бот+стопы работают = НЕ трогай. Авария = сломано = действуй.':'Чисто. Отличаешь штатный кризис от аварии.')+'</div><div style="margin-top:10px"><button class="btn" onclick="pnWipe(false)">🔄 Заново</button>'+(PN.best?' <button class="btn ghost sm" onclick="pnWipe(true)">⚡ Хардкор (60 сек на решение)</button>':'')+'<button class="btn ghost sm" onclick="pnBack()">← К симуляторам</button></div>';if(!PN.best||pct>PN.best)PN.best=pct;pnSave();box.innerHTML=h;return}
+function pnRender(){const box=document.getElementById('pn_box');if(!box)return;pnStop();let h='<button class="btn ghost sm" onclick="pnBack()">← К квестам</button>';
+if(PN.done){const ok=PN.results.filter(function(r){return r===1}).length,tot=PN.results.length,pct=Math.round(ok/tot*100);h+='<h2 style="font-size:17px;margin:10px 0">🚨 Итог кризиса</h2><div class="sq-assets"><span>💼 '+PN.cap.toLocaleString('ru-RU')+' ₽</span><span>✅ '+ok+'/'+tot+'</span><span>'+(pct>=80?'😌':pct>=50?'😐':'😰')+'</span></div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(pct>=80?'happy':'doubt',40):'')+'<div><b>Выдержано: '+pct+'%</b><div style="font-size:12px;color:var(--mut)">'+(pct>=80?'Паника проиграла. Дисциплина победила.':'Паника выигрывала раунды. Повтори через неделю.')+'</div></div></div><div class="sq-sys"><b>Профиль:</b> '+(PN.results[0]===0?'Склонен действовать на рыночной панике — запомни: падение цены ≠ сбой инфраструктуры.':PN.results.slice(1,5).indexOf(0)>=0?'Путаешь штатное и аварийное. Штатное = бот+стопы работают = НЕ трогай. Авария = сломано = действуй.':'Чисто. Отличаешь штатный кризис от аварии.')+'</div><div style="margin-top:10px"><button class="btn" onclick="pnWipe(false)">🔄 Заново</button>'+(PN.best?' <button class="btn ghost sm" onclick="pnWipe(true)">⚡ Хардкор (60 сек на решение)</button>':'')+'<button class="btn ghost sm" onclick="pnBack()">← К квестам</button></div>';if(!PN.best||pct>PN.best)PN.best=pct;pnSave();box.innerHTML=h;return}
 const sc=pnScen(),isF=PN.i>=5,ev=sc[3][Math.min(PN.t,sc[3].length-1)],pn=pnPanic();
 h+='<div class="sq-assets"><span>💼 '+PN.cap.toLocaleString('ru-RU')+' ₽</span><span id="pn_time">⏱ 00:00</span><span>'+pnEmoji()+' '+pn+'%</span></div>';
 h+='<h2 style="font-size:16px;margin:6px 0">'+(isF?'🚨 ФИНАЛ · ':'🚨 Сценарий '+(PN.i+1)+'/6 · ')+sc[1]+'</h2>';
@@ -43797,7 +44021,7 @@ let MC={r:0,cap:100000,peak:100000,dd:0,liq:0,hist:[],done:false,best:null,lev:2
 try{const p=JSON.parse(localStorage.getItem('cn_margin_progress')||'null');if(p&&typeof p.r==='number'&&!p.done)MC=Object.assign(MC,p)}catch(x){}
 function mcSave(){try{localStorage.setItem('cn_margin_progress',JSON.stringify(MC))}catch(x){}}
 function mcGo(){go('marginquest');mcRender()}
-function mcBack(){go('sims')}
+function mcBack(){go('quests')}
 function mcWipe(){MC={r:0,cap:100000,peak:100000,dd:0,liq:0,hist:[],done:false,best:MC.best,lev:2,stk:25,stop:1};mcSave();mcRender()}
 function mcSet(k,v){MC[k]=v;mcRender()}
 function mcRound(){return MC_R[MC.r]}
@@ -43816,12 +44040,12 @@ if(MC.dd>50)return['😰 Дорогое обучение','Выжил, но пр
 if(MC.cap>=105000&&MC.dd<=30)return['🏆 Профи','Плюс при контролируемой просадке. Келли бы одобрил.'];
 if(MC.cap>=100000&&MC.dd<=30)return['✅ Дисциплина окупается','Скучный результат — это и есть результат.'];
 return['😐 Прошёл, но нервно','Финиш около нуля с лишними переживаниями. Урежь размер — получишь сон.']}
-function mcRender(){const box=document.getElementById('mc_box');if(!box)return;let h='<button class="btn ghost sm" onclick="mcBack()">← К симуляторам</button>';
+function mcRender(){const box=document.getElementById('mc_box');if(!box)return;let h='<button class="btn ghost sm" onclick="mcBack()">← К квестам</button>';
 if(MC.done){const g=mcGrade();const ok=MC.cap>0;
 h+='<h2 style="font-size:17px;margin:10px 0">💥 Итог серии</h2><div class="sq-assets"><span>💼 '+MC.cap.toLocaleString('ru-RU')+' ₽</span><span>📉 max DD −'+MC.dd+'%</span><span>💥 ликвидаций: '+MC.liq+'</span></div>';
 h+='<div class="sq-sys" style="border-color:'+(ok?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(ok?'happy':'doubt',40):'')+'<div><b>'+g[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+g[1]+'</div></div></div>';
 h+='<div class="sq-sys" style="font-size:12.5px"><b>Эталон (x2 · 20% · стоп):</b> те же 10 сделок → ~106 900 ₽, просадка −2%. Скучно? Именно. Размер позиции решает больше, чем сигнал. Урок 3.2.</div>';
-h+='<div style="margin-top:10px"><button class="btn" onclick="mcWipe()">🔄 Новая серия</button><button class="btn ghost sm" onclick="mcBack()">← К симуляторам</button></div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="mcWipe()">🔄 Новая серия</button><button class="btn ghost sm" onclick="mcBack()">← К квестам</button></div>';
 const score=MC.cap;if(!MC.best||score>MC.best)MC.best=score;mcSave();box.innerHTML=h;return}
 const rd=mcRound(),ddPct=Math.round((1-MC.cap/MC.peak)*100);
 const emo=MC.cap<=0?'💀':ddPct<15?'😐':ddPct<35?'😟':ddPct<60?'😨':'😱';
@@ -43853,7 +44077,7 @@ try{const p=JSON.parse(localStorage.getItem('cn_curve_progress')||'null');if(p&&
 function cvSave(){try{localStorage.setItem('cn_curve_progress',JSON.stringify(CV))}catch(x){}}
 function cvShuffle(){const o=[0,1,2,3,4,5,6,7];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}return o}
 function cvGo(){go('curvequest');cvRender()}
-function cvBack(){go('sims')}
+function cvBack(){go('quests')}
 function cvWipe(){CV={order:cvShuffle(),i:0,dep:1000000,ok:0,bad:0,killed:0,hist:[],done:false,best:CV.best};cvSave();cvRender()}
 function cvCase(){return CV_C[CV.order[CV.i]]}
 function cvSvg(pts){const a=pts.split(' ').map(function(p){const xy=p.split(',');return(+xy[0])*2.2+','+(+xy[1])});return '<svg viewBox="0 0 220 40" preserveAspectRatio="none" style="width:100%;height:64px;background:rgba(56,189,248,.05);border-radius:8px" aria-label="Кривая доходности"><polyline points="'+a.join(' ')+'" fill="none" stroke="#38BDF8" stroke-width="1.5"/></svg>'}
@@ -43865,14 +44089,14 @@ else{ok=true;CV.ok++}
 CV.hist.push(ok?1:0);
 CV.last='<div class="sq-sys" style="border-color:'+(ok?'var(--ok,#22C55E)':'var(--bad)')+'">'+(ok?'✅ Верно. ':'❌ ')+(loss?'−'+loss.toLocaleString('ru-RU')+' ₽. ':'')+c[3]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(ok?'happy':'doubt',32):'')+'<b>Криптик:</b> «'+(ok?(window.kryptikSay?kryptikSay('win_easy'):'Принято.'):(honest?'Ты зарезал единственную честную. Красивых кривых бояться — тоже крайность.':'Красивая кривая — заявление, не доказательство.'))+'»</div>';
 CV.i++;if(CV.i>=8)CV.done=true;cvSave();cvRender()}
-function cvRender(){const box=document.getElementById('cv_box');if(!box)return;let h='<button class="btn ghost sm" onclick="cvBack()">← К симуляторам</button>';
+function cvRender(){const box=document.getElementById('cv_box');if(!box)return;let h='<button class="btn ghost sm" onclick="cvBack()">← К квестам</button>';
 if(CV.done){const pct=Math.round(CV.hist.filter(function(x){return x===1}).length/8*100);
 const verdict=CV.bad===0&&CV.killed===0?'🏛 Инвесткомитет':CV.bad===0?'🛡 Осторожный':CV.bad<=2?'🎲 Оптимист':'🙏 Вера в грааль';
 const vtxt=CV.bad===0&&CV.killed===0?'Ни одной отравленной в проде, честная запущена. Так держится фонд.':CV.bad===0?'Отравленных не пропустил, но зарезал честную. Паранойя дешевле наивности, но тоже стоит денег.':CV.bad<=2?'Пропустил отравленные в прод. Рынок выставил счёт: смотри методику, не кривую.':'Ты запускаешь всё красивое. Это не инвесткомитет, это казино.';
 h+='<h2 style="font-size:17px;margin:10px 0">📉 Итог заседания</h2><div class="sq-assets"><span>💼 '+CV.dep.toLocaleString('ru-RU')+' ₽</span><span>✅ '+CV.ok+'</span><span>💀 пропущено: '+CV.bad+'</span><span>🗑 зарезано честных: '+CV.killed+'</span></div>';
 h+='<div class="sq-sys" style="border-color:'+(CV.bad===0?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(CV.bad===0?'happy':'doubt',40):'')+'<div><b>'+verdict+' · '+pct+'%</b><div style="font-size:12.5px;color:var(--mut)">'+vtxt+'</div></div></div>';
 h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило:</b> красивый бэктест — заявление, а не доказательство. Доказательство — методика: OOS-период, комиссии, честная вселенная, размер выборки. Уроки 2.5–2.6.</div>';
-h+='<div style="margin-top:10px"><button class="btn" onclick="cvWipe()">🔄 Новое заседание</button><button class="btn ghost sm" onclick="cvBack()">← К симуляторам</button></div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="cvWipe()">🔄 Новое заседание</button><button class="btn ghost sm" onclick="cvBack()">← К квестам</button></div>';
 if(!CV.best||pct>CV.best)CV.best=pct;cvSave();box.innerHTML=h;return}
 const c=cvCase();
 h+='<div class="sq-assets"><span>💼 '+CV.dep.toLocaleString('ru-RU')+' ₽</span><span>Кейс '+(CV.i+1)+'/8</span><span>💀 '+CV.bad+'</span></div>';
@@ -43935,12 +44159,12 @@ PR.loss+=dmg;PR.cap-=dmg;if(lvl===0)PR.right++;PR.hist.push(lvl===0?1:0);
 PR.last='<div class="sq-sys" style="border-color:'+(lvl===0?'var(--ok,#22C55E)':'var(--bad)')+'">'+(lvl===0?'✅ Верно. ':(dmg?'❌ −'+dmg.toLocaleString('ru-RU')+' ₽. ':'❌ '))+o[2]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(lvl===0?'happy':'doubt',32):'')+'<b>Криптик:</b> «'+(lvl===0?'По ранбуку. Так и дежурят.':(lvl===1?'Допустимо. Но в проде «допустимо» копится в убыток.':'В проде это стоит денег. Сегодня — виртуальных.'))+'»</div>';
 PR.i++;if(PR.i>=6)PR.done=true;prSave();prRender()}
 function prRender(){const box=document.getElementById('pr_box');if(!box)return;prStop();
-let h='<button class="btn ghost sm" onclick="prBack()">← К симуляторам</button>';
+let h='<button class="btn ghost sm" onclick="prBack()">← К квестам</button>';
 if(PR.done){const grade=PR.loss<=60000?['🌙 Спокойная ночь','Протоколы сработали, потери минимальны. Так выглядит зрелый прод.']:PR.loss<=200000?['🔧 Дежурный справился','Ночь прожита, счёт цел. Есть над чем поработать в ранбуке.']:PR.loss<=400000?['🚒 Ночь была дорогой','Прод выжил, но счёт заметный. Разбери каждый инцидент по журналу.']:['🔥 Прод съел дежурного','Без протокола ночь превращается в импровизацию. Импровизация выставляет счёт.'];
 h+='<h2 style="font-size:17px;margin:10px 0">🌙 Смена окончена</h2><div class="sq-assets"><span>💼 '+PR.cap.toLocaleString('ru-RU')+' ₽</span><span>📉 потери: '+PR.loss.toLocaleString('ru-RU')+' ₽</span><span>✅ '+PR.right+'/6</span></div>';
 h+='<div class="sq-sys" style="border-color:'+(PR.loss<=200000?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(PR.loss<=200000?'happy':'doubt',40):'')+'<div><b>'+grade[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+grade[1]+'</div></div></div>';
 h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило ночи:</b> в проде побеждает не тот, кто умнее, а тот, у кого есть протокол и журнал. Решения на берегу, исполнение — в шторм. Уроки 5.3–5.6.</div>';
-h+='<div style="margin-top:10px"><button class="btn" onclick="prWipe()">🔄 Новая смена</button><button class="btn ghost sm" onclick="prBack()">← К симуляторам</button></div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="prWipe()">🔄 Новая смена</button><button class="btn ghost sm" onclick="prBack()">← К квестам</button></div>';
 const score=Math.max(0,100-Math.round(PR.loss/10000));if(!PR.best||score>PR.best)PR.best=score;prSave();box.innerHTML=h;return}
 const c=prInc();
 h+='<div class="sq-assets"><span>🌙 '+c[1]+'</span><span>💼 '+PR.cap.toLocaleString('ru-RU')+' ₽</span><span>Инцидент '+(PR.i+1)+'/6</span><span id="pr_timer">⏱ '+PR.t+'с</span></div>';
@@ -43968,7 +44192,7 @@ try{const p=JSON.parse(localStorage.getItem('cn_launch_progress')||'null');if(p&
 function lnSave(){try{localStorage.setItem('cn_launch_progress',JSON.stringify(LN))}catch(x){}}
 function lnShuffle(){const o=[0,1,2,3,4,5,6,7];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}return o}
 function lnGo(){go('launchquest');lnRender()}
-function lnBack(){go('sims')}
+function lnBack(){go('quests')}
 function lnWipe(){LN={order:lnShuffle(),i:0,picks:[],score:0,done:false,last:'',best:LN.best};lnSave();lnRender()}
 function lnCat(){return LN_C[LN.order[LN.i]]}
 function lnPick(idx){if(LN.done)return;const c=lnCat(),o=c[2][idx],sc=o[1];
@@ -43976,7 +44200,7 @@ LN.picks.push({cat:LN.order[LN.i],opt:idx,sc:sc});LN.score+=sc;
 LN.last='<div class="sq-sys" style="border-color:'+(sc===2?'var(--ok,#22C55E)':sc===1?'#EAB308':'var(--bad)')+'">'+(sc===2?'✅ ':sc===1?'🟡 ':'❌ ')+o[2]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(sc===2?'happy':sc===1?'neutral':'doubt',32):'')+'<b>Криптик:</b> «'+(sc===2?'По уставу. Так запускают.':sc===1?'Допустимо. Но запиши в техдолг.':'В проде это выстрелит. Вопрос — когда.')+'»</div>';
 LN.i++;if(LN.i>=8)LN.done=true;lnSave();lnRender()}
 function lnRender(){const box=document.getElementById('ln_box');if(!box)return;
-let h='<button class="btn ghost sm" onclick="lnBack()">← К симуляторам</button>';
+let h='<button class="btn ghost sm" onclick="lnBack()">← К квестам</button>';
 if(LN.done){const sc=LN.score,grade=sc>=14?['🟢 К запуску готов','Чек-лист закрыт. Такой прод переживёт и твою ночь, и свою первую неделю.']:sc>=10?['🟡 Запускаемся с ограничениями','Ядро собрано, но техдолг есть. Закрой его до масштабирования.']:sc>=5?['🟠 Первая неделя будет дорогой','Несколько категорий — провал. Запускай, но готовь деньги на уроки.']:['🔴 Это не запуск, это пожар','Чек-носов не закрыт почти ничего. Возвращайся к урокам 4.1–4.9.'];
 h+='<h2 style="font-size:17px;margin:10px 0">🚀 Вердикт комитета</h2><div class="sq-assets"><span>Готовность: '+sc+'/16</span><span>✅ идеально: '+LN.picks.filter(p=>p.sc===2).length+'</span><span>🟡 допустимо: '+LN.picks.filter(p=>p.sc===1).length+'</span><span>❌ провал: '+LN.picks.filter(p=>p.sc===0).length+'</span></div>';
 h+='<div class="sq-sys" style="border-color:'+(sc>=10?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(sc>=10?'happy':'doubt',40):'')+'<div><b>'+grade[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+grade[1]+'</div></div></div>';
@@ -43984,7 +44208,7 @@ const fails=LN.picks.filter(p=>p.sc===0);
 if(fails.length){h+='<div class="sq-sys" style="font-size:12.5px"><b>Сценарий первой недели:</b><ul style="margin:6px 0 0 16px;padding:0">'+fails.map(p=>'<li style="margin:4px 0"><b>'+LN_C[p.cat][0]+':</b> '+LN_C[p.cat][3]+'</li>').join('')+'</ul></div>'}
 else h+='<div class="sq-sys" style="font-size:12.5px"><b>Сценарий первой недели:</b> скучная неделя. Бот торгует, алерты молчат, журнал растёт. Скука — лучший признак живого прода.</div>';
 h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило запуска:</b> чек-лист заполняется до включения, а не после первого инцидента. Уроки 4.1–4.9.</div>';
-h+='<div style="margin-top:10px"><button class="btn" onclick="lnWipe()">🔄 Собрать заново</button><button class="btn ghost sm" onclick="lnBack()">← К симуляторам</button></div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="lnWipe()">🔄 Собрать заново</button><button class="btn ghost sm" onclick="lnBack()">← К квестам</button></div>';
 if(!LN.best||sc>LN.best)LN.best=sc;lnSave();box.innerHTML=h;return}
 const c=lnCat();
 h+='<div class="sq-assets"><span>Категория '+(LN.i+1)+'/8</span><span>Урок '+c[1]+'</span><span>Готовность: '+LN.score+'</span></div>';
@@ -44035,7 +44259,7 @@ try{const p=JSON.parse(localStorage.getItem('cn_first_progress')||'null');if(p&&
 function fmSave(){try{localStorage.setItem('cn_first_progress',JSON.stringify(FM))}catch(x){}}
 function fmShuffle(){const o=[0,1,2,3,4,5,6,7];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}return o}
 function fmGo(){go('firstquest');fmRender()}
-function fmBack(){go('sims')}
+function fmBack(){go('quests')}
 function fmWipe(){FM={order:fmShuffle(),i:0,picks:[],loss:0,right:0,done:false,last:'',best:FM.best};fmSave();fmRender()}
 function fmStep(){return FM_D[FM.order[FM.i]]}
 function fmPick(idx){if(FM.done)return;const c=fmStep(),o=c[2][idx],lvl=o[1],loss=o[2];
@@ -44043,7 +44267,7 @@ FM.picks.push({step:FM.order[FM.i],opt:idx,lvl:lvl});FM.loss+=loss;if(lvl===0)FM
 FM.last='<div class="sq-sys" style="border-color:'+(lvl===0?'var(--ok,#22C55E)':lvl===1?'#EAB308':'var(--bad)')+'">'+(lvl===0?'✅ ':lvl===1?'🟡 −'+loss.toLocaleString('ru-RU')+' ₽. ':'❌ −'+loss.toLocaleString('ru-RU')+' ₽. ')+o[3]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(lvl===0?'happy':lvl===1?'neutral':'doubt',32):'')+'<b>Криптик:</b> «'+(lvl===0?'База работает. Так держать.':lvl===1?'Могло быть хуже. Но могло быть и лучше.':'Классика новичка. Запомни цену этого урока.')+'»</div>';
 FM.i++;if(FM.i>=8)FM.done=true;fmSave();fmRender()}
 function fmRender(){const box=document.getElementById('fm_box');if(!box)return;
-let h='<button class="btn ghost sm" onclick="fmBack()">← К симуляторам</button>';
+let h='<button class="btn ghost sm" onclick="fmBack()">← К квестам</button>';
 if(FM.done){const left=100000-FM.loss,grade=FM.loss<=10000?['🌱 Первый месяц без потерь','База усвоена: ты не сделал ни одной классической ошибки новичка. Так держать.']:FM.loss<=30000?['📚 Дорогой, но полезный месяц','Несколько уроков оплачены. Главное — они усвоены, а не повторены.']:FM.loss<=60000?['💸 Заплатил за обучение','Рынок взял плату. Вопрос — усвоил ли ты урок, или заплатишь ещё раз.']:['🔥 Классический новичок','Все ловушки собраны. Перечитай уроки 0.1–0.20 — они дешевле, чем рынок.'];
 h+='<h2 style="font-size:17px;margin:10px 0">🌱 Итог первого месяца</h2><div class="sq-assets"><span>Осталось: '+left.toLocaleString('ru-RU')+' ₽</span><span>📉 потери: '+FM.loss.toLocaleString('ru-RU')+' ₽</span><span>✅ верных: '+FM.right+'/8</span></div>';
 h+='<div class="sq-sys" style="border-color:'+(FM.loss<=30000?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(FM.loss<=30000?'happy':'doubt',40):'')+'<div><b>'+grade[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+grade[1]+'</div></div></div>';
@@ -44051,7 +44275,7 @@ const fails=FM.picks.filter(p=>p.lvl===2);
 if(fails.length){h+='<div class="sq-sys" style="font-size:12.5px"><b>Где ты заплатил:</b><ul style="margin:6px 0 0 16px;padding:0">'+fails.map(p=>'<li style="margin:4px 0"><b>'+FM_D[p.step][0]+':</b> '+FM_D[p.step][2][p.opt][3]+'</li>').join('')+'</ul></div>'}
 else h+='<div class="sq-sys" style="font-size:12.5px"><b>Где ты заплатил:</b> нигде. Ноль классических ошибок — редкость для первого месяца.</div>';
 h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило первого месяца:</b> рынок не прощает базовых ошибок, но щедро платит за базовую дисциплину. Уроки 0.1–0.20.</div>';
-h+='<div style="margin-top:10px"><button class="btn" onclick="fmWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="fmBack()">← К симуляторам</button></div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="fmWipe()">🔄 Пройти заново</button><button class="btn ghost sm" onclick="fmBack()">← К квестам</button></div>';
 const score=Math.max(0,100-Math.round(FM.loss/1000));if(!FM.best||score>FM.best)FM.best=score;fmSave();box.innerHTML=h;return}
 const c=fmStep();
 h+='<div class="sq-assets"><span>Шаг '+(FM.i+1)+'/8</span><span>💼 '+(100000-FM.loss).toLocaleString('ru-RU')+' ₽</span><span>✅ '+FM.right+'</span></div>';
@@ -44102,7 +44326,7 @@ try{const p=JSON.parse(localStorage.getItem('cn_yield_progress')||'null');if(p&&
 function yhSave(){try{localStorage.setItem('cn_yield_progress',JSON.stringify(YH))}catch(x){}}
 function yhShuffle(){const o=[0,1,2,3,4,5,6,7];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t}return o}
 function yhGo(){go('yieldquest');yhRender()}
-function yhBack(){go('sims')}
+function yhBack(){go('quests')}
 function yhWipe(){YH={order:yhShuffle(),i:0,picks:[],right:0,done:false,last:'',best:YH.best};yhSave();yhRender()}
 function yhOffer(){return YH_O[YH.order[YH.i]]}
 function yhPick(idx){if(YH.done)return;const c=yhOffer(),o=c[2][idx],lvl=o[1];
@@ -44110,7 +44334,7 @@ YH.picks.push({offer:YH.order[YH.i],opt:idx,lvl:lvl});if(lvl===0)YH.right++;
 YH.last='<div class="sq-sys" style="border-color:'+(lvl===0?'var(--ok,#22C55E)':lvl===1?'#EAB308':'var(--bad)')+'">'+(lvl===0?'✅ ':lvl===1?'🟡 ':'❌ ')+o[2]+'</div><div class="sq-sys">'+(window.kryptikAvatar?kryptikAvatar(lvl===0?'happy':lvl===1?'neutral':'doubt',32):'')+'<b>Криптик:</b> «'+(lvl===0?'Ты видишь, кто платит. Это редкость.':lvl===1?'Половина понимания. Лучше, чем ноль.':'Процент взял тебя. Ты не взял процент.')+'»</div>';
 YH.i++;if(YH.i>=8)YH.done=true;yhSave();yhRender()}
 function yhRender(){const box=document.getElementById('yh_box');if(!box)return;
-let h='<button class="btn ghost sm" onclick="yhBack()">← К симуляторам</button>';
+let h='<button class="btn ghost sm" onclick="yhBack()">← К квестам</button>';
 if(YH.done){const grade=YH.right>=7?['🎯 Охотник с опытом','Ты видишь, откуда берётся процент. Это главный навык в альтернативной доходности.']:YH.right>=5?['🎣 Почти не попался','Пара ловушек сработала. Но ты уже задаёшь правильный вопрос: «кто платит?»']:YH.right>=3?['🪤 Собрал несколько ловушек','Процент ослепляет. Перечитай уроки Б1–Б9 — они дешевле, чем ловушки.']:['💀 Доходность съела капитал','Все ловушки собраны. Пассивный доход не бывает бесплатным — кто-то за него платит.'];
 h+='<h2 style="font-size:17px;margin:10px 0">🎯 Итог охоты</h2><div class="sq-assets"><span>✅ верных: '+YH.right+'/8</span><span>🟡 допустимых: '+YH.picks.filter(p=>p.lvl===1).length+'</span><span>❌ провалов: '+YH.picks.filter(p=>p.lvl===2).length+'</span></div>';
 h+='<div class="sq-sys" style="border-color:'+(YH.right>=5?'var(--ok,#22C55E)':'var(--bad)')+'">'+(window.kryptikAvatar?kryptikAvatar(YH.right>=5?'happy':'doubt',40):'')+'<div><b>'+grade[0]+'</b><div style="font-size:12.5px;color:var(--mut)">'+grade[1]+'</div></div></div>';
@@ -44118,7 +44342,7 @@ const fails=YH.picks.filter(p=>p.lvl===2);
 if(fails.length){h+='<div class="sq-sys" style="font-size:12.5px"><b>Где процент взял тебя:</b><ul style="margin:6px 0 0 16px;padding:0">'+fails.map(p=>'<li style="margin:4px 0"><b>'+YH_O[p.offer][0]+':</b> '+YH_O[p.offer][2][p.opt][2]+'</li>').join('')+'</ul></div>'}
 else h+='<div class="sq-sys" style="font-size:12.5px"><b>Где процент взял тебя:</b> нигде. Ты ни разу не перепутал доходность с ловушкой.</div>';
 h+='<div class="sq-sys" style="font-size:12.5px"><b>Правило охотника:</b> пассивный доход не бывает бесплатным. Всегда спрашивай: кто за него платит? Уроки Б1–Б9.</div>';
-h+='<div style="margin-top:10px"><button class="btn" onclick="yhWipe()">🔄 Новая охота</button><button class="btn ghost sm" onclick="yhBack()">← К симуляторам</button></div>';
+h+='<div style="margin-top:10px"><button class="btn" onclick="yhWipe()">🔄 Новая охота</button><button class="btn ghost sm" onclick="yhBack()">← К квестам</button></div>';
 const score=YH.right*12+YH.picks.filter(p=>p.lvl===1).length*4;if(!YH.best||score>YH.best)YH.best=score;yhSave();box.innerHTML=h;return}
 const c=yhOffer();
 h+='<div class="sq-assets"><span>Предложение '+(YH.i+1)+'/8</span><span>✅ '+YH.right+'</span></div>';
