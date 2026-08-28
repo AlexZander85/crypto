@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КриптоНавигатор — симулятор криптотрейдинга. Учись до того, как рынок научит</title>
+<meta name="description" content="Офлайн-симулятор криптотрейдинга: 134 урока, 145 интерактивных виджетов, 21 мини-игра, 205 терминов. Фаза 0 бесплатно. Не финансовый совет.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/cyrillic-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/cyrillic-600-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/cyrillic-800-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/cyrillic-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/cyrillic-600-normal.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Я совсем новичок. Это для меня?","acceptedAnswer":{"@type":"Answer","text":"Да. Курс начинается с вопроса «что такое блокчейн» и не предполагает опыта. Фаза 0 из 20 уроков бесплатна — можно проверить на себе, прежде чем платить."}},
+{"@type":"Question","name":"Это сигналы или финансовый совет?","acceptedAnswer":{"@type":"Answer","text":"Нет. КриптоНавигатор — образовательный симулятор. Он не говорит, что покупать, и не обещает прибыль. Он учит читать рынок, считать риск и не мешать себе."}},
+{"@type":"Question","name":"Что именно я получу бесплатно?","acceptedAnswer":{"@type":"Answer","text":"Фазу 0 целиком: 20 уроков, тренажёры и блок психологии П1–П8. Регистрация по почте, карта не нужна."}},
+{"@type":"Question","name":"А обновления? За них нужно платить отдельно?","acceptedAnswer":{"@type":"Answer","text":"Нет. Разовый платёж включает все будущие обновления. Купил один раз — получаешь новые уроки и фазы без доплат."}},
+{"@type":"Question","name":"Как оплатить из России или другой страны?","acceptedAnswer":{"@type":"Answer","text":"Из России — картой, счёт в рублях. Из остальных стран — $12 через международных провайдеров. Подписка не нужна ни там, ни там."}},
+{"@type":"Question","name":"Что происходит с моими данными?","acceptedAnswer":{"@type":"Answer","text":"Прогресс хранится в браузере и в облаке, если создаёшь аккаунт. Аналитика приватная, без куки. Мы не продаём данные и не показываем рекламу."}}
+]}
+</script>
+<style>
+:root{
+  --bg:#0B1220; --bg2:#0D1526; --surface:#101A30; --surface2:#13203B; --ink:#0A101E;
+  --line:rgba(148,163,184,.14); --line2:rgba(148,163,184,.28);
+  --text:#E8EEF9; --muted:#93A1BC; --dim:#64748B;
+  --green:#22C55E; --red:#F43F5E; --sky:#38BDF8; --amber:#F59E0B; --violet:#7C3AED;
+  --r:16px; --rs:12px; --maxw:1080px;
+  --fb:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fm:'JetBrains Mono',ui-monospace,'SF Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:rgba(34,197,94,.35)}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font-family:inherit}
+section[id]{scroll-margin-top:84px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.mono{font-family:var(--fm)}
+.skip{position:absolute;left:-999px;top:0;background:var(--green);color:#04170B;padding:10px 16px;border-radius:0 0 12px 0;z-index:200;font-weight:600;text-decoration:none}
+.skip:focus{left:0}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px;border-radius:4px}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:90;background:rgba(11,18,32,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);transition:box-shadow .3s}
+.site-head.scrolled{box-shadow:0 8px 32px rgba(0,0,0,.45)}
+.head-in{display:flex;align-items:center;gap:28px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;letter-spacing:-.02em;font-size:17px}
+.logo b{color:var(--green);font-weight:800}
+.logo svg{flex:none}
+.nav{margin-left:auto;display:flex;gap:22px}
+.nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s}
+.nav a:hover{color:var(--text)}
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--rs);font-weight:600;font-size:15px;padding:14px 22px;border:1px solid transparent;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s,background .18s;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--green);color:#04170B;box-shadow:0 8px 28px rgba(34,197,94,.28)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 34px rgba(34,197,94,.4)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{border-color:var(--line);color:var(--text);background:transparent}
+.btn-ghost:hover{border-color:var(--line2);background:var(--surface)}
+.btn-sm{padding:9px 16px;font-size:14px}
+.btn-block{width:100%}
+.btn[disabled]{opacity:.6;cursor:wait;transform:none}
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac,var(--green));margin-bottom:14px}
+h1{font-size:clamp(32px,5vw,54px);line-height:1.08;letter-spacing:-.03em;font-weight:800}
+h2{font-size:clamp(26px,3.6vw,38px);line-height:1.15;letter-spacing:-.02em;font-weight:800}
+.lead{color:var(--muted);font-size:17px;line-height:1.65;max-width:660px;margin-top:14px}
+.grad{background:linear-gradient(92deg,var(--green),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-head{margin-bottom:44px}
+section{padding:92px 0}
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+/* ---------- hero ---------- */
+.hero{padding:110px 0 72px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(700px 340px at 12% -10%,rgba(34,197,94,.12),transparent 60%),
+  radial-gradient(640px 320px at 88% 0%,rgba(56,189,248,.09),transparent 60%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(80% 70% at 50% 20%,#000 0%,transparent 100%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;position:relative;z-index:1}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.trust{margin-top:18px;font-family:var(--fm);font-size:12.5px;color:var(--dim);letter-spacing:.04em}
+.stats{list-style:none;display:flex;gap:36px;flex-wrap:wrap;margin-top:38px;padding-top:26px;border-top:1px solid var(--line)}
+.stats b{display:block;font-family:var(--fm);font-weight:600;font-size:30px;color:var(--text);letter-spacing:-.02em}
+.stats span{color:var(--dim);font-size:13px}
+.hero-visual{position:relative}
+.window{border:1px solid var(--line);border-radius:var(--r);background:var(--ink);overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.55)}
+.win-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+.win-bar i{width:9px;height:9px;border-radius:50%;background:var(--dim);opacity:.5}
+.win-bar i:first-child{background:var(--red);opacity:.8}
+.win-bar i:nth-child(2){background:var(--amber);opacity:.8}
+.win-bar i:nth-child(3){background:var(--green);opacity:.8}
+.win-bar span{margin-left:auto;font-size:11px;color:var(--dim)}
+.window img{width:100%;aspect-ratio:1/0.94;object-fit:cover;object-position:top}
+.chip{position:absolute;background:var(--surface2);border:1px solid var(--line2);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--text);box-shadow:0 12px 32px rgba(0,0,0,.5);animation:float 5s ease-in-out infinite}
+.chip-1{top:14%;left:-26px;color:var(--green)}
+.chip-2{bottom:12%;right:-18px;animation-delay:2.2s;color:var(--amber)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+/* ---------- ticker ---------- */
+.ticker{overflow:hidden;border-block:1px solid var(--line);background:var(--ink)}
+.ticker-track{display:flex;gap:40px;width:max-content;padding:11px 0;animation:tick 48s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ti{font-family:var(--fm);font-size:12px;color:var(--dim);white-space:nowrap;letter-spacing:.03em}
+.ti b{color:var(--muted);font-weight:600}
+.ti .up{color:var(--green)} .ti .dn{color:var(--red)}
+@keyframes tick{to{transform:translateX(-50%)}}
+/* ---------- cards / grids ---------- */
+.grid-3{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+.grid-4{display:grid;gap:16px;grid-template-columns:repeat(4,1fr)}
+.grid-2{display:grid;gap:16px;grid-template-columns:repeat(2,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-3px);border-color:var(--line2)}
+.card .ico{font-size:24px;display:block;margin-bottom:14px}
+.card h3{font-size:16px;letter-spacing:-.01em;margin-bottom:8px}
+.card p{font-size:14px;color:var(--muted);line-height:1.6}
+/* ---------- traps ---------- */
+#traps .card{border-top:2px solid rgba(244,63,94,.5)}
+/* ---------- transform ---------- */
+#transform{background:var(--bg2);border-block:1px solid var(--line)}
+.tr-list{display:grid;gap:12px;max-width:860px;margin:0 auto}
+.tr-row{display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:16px 20px;transition:border-color .25s,transform .25s}
+.tr-row:hover{border-color:rgba(34,197,94,.4);transform:translateX(4px)}
+.tr-before{color:var(--muted);font-size:15px;position:relative;padding-left:16px}
+.tr-before::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:rgba(244,63,94,.55)}
+.tr-arrow{font-family:var(--fm);color:var(--green);text-align:center;font-size:18px}
+.tr-after{color:var(--text);font-weight:600;font-size:15px;padding-left:16px;position:relative}
+.tr-after::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:var(--green)}
+/* ---------- program ---------- */
+.ph{position:relative}
+.ph .num{font-family:var(--fm);font-size:12px;color:var(--sky);letter-spacing:.1em}
+.ph h3{margin:10px 0 8px;font-size:16px}
+.ph p{font-size:13.5px}
+.badge{position:absolute;top:18px;right:18px;font-family:var(--fm);font-size:10.5px;letter-spacing:.08em;color:var(--green);border:1px solid rgba(34,197,94,.4);background:rgba(34,197,94,.08);border-radius:999px;padding:4px 10px}
+/* ---------- live demo ---------- */
+#live{background:var(--bg2);border-block:1px solid var(--line)}
+.live-head{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;margin-bottom:36px}
+.live-head img{border-radius:var(--r);border:1px solid var(--line);aspect-ratio:1/0.82;object-fit:cover;width:100%}
+.demo{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);padding:22px}
+.demo-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.dtab{font-family:var(--fm);font-size:12px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:transparent;cursor:pointer;transition:.2s}
+.dtab:hover{color:var(--text);border-color:var(--line2)}
+.dtab.on{color:var(--green);border-color:rgba(34,197,94,.45);background:rgba(34,197,94,.08)}
+.demo-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+.book{background:var(--ink);border:1px solid var(--line);border-radius:var(--rs);padding:14px;font-size:12.5px}
+.brow{position:relative;display:flex;justify-content:space-between;gap:12px;padding:4px 10px;overflow:hidden}
+.brow i{position:absolute;top:2px;bottom:2px;left:0;width:var(--w);border-radius:4px;opacity:.16}
+.ask .bp{color:#FB7185}.ask i{background:var(--red)}
+.bid .bp{color:#4ADE80}.bid i{background:var(--green)}
+.brow .bp,.brow .bs{position:relative;z-index:1}
+.brow .bs{color:var(--dim)}
+.bhead{display:flex;justify-content:space-between;padding:0 10px 6px;color:var(--dim);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.bmid{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;border-block:1px solid var(--line);margin:8px 0;flex-wrap:wrap}
+.bmid b{font-size:17px;letter-spacing:-.01em}
+.bmid .sp{font-size:11px;color:var(--dim)}
+.hint{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:20px;display:flex;flex-direction:column;gap:10px}
+.hint-head{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.hint-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.hint h4{font-size:16px;letter-spacing:-.01em}
+.hint p{font-size:14px;color:var(--muted);line-height:1.65;min-height:110px}
+.demo-note{margin-top:14px;font-size:11px;color:var(--dim);letter-spacing:.05em}
+/* ---------- news ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+.news-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.news-top{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ntype{font-family:var(--fm);font-size:11px;color:var(--sky);border:1px solid rgba(56,189,248,.4);background:rgba(56,189,248,.08);border-radius:999px;padding:4px 10px}
+.news-top h4{font-size:15.5px;width:100%;margin-top:4px}
+.nrows{padding:18px 22px;display:grid;gap:12px}
+.nrow{display:grid;grid-template-columns:150px 1fr;gap:12px;font-size:13.5px}
+.nrow b{font-family:var(--fm);font-weight:400;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);padding-top:2px}
+.nrow span{color:var(--muted)}
+.xchips{display:flex;gap:8px;flex-wrap:wrap;padding:0 22px 20px}
+.xchip{font-family:var(--fm);font-size:11.5px;color:var(--sky);border:1px dashed rgba(56,189,248,.4);border-radius:999px;padding:6px 12px}
+/* ---------- max ---------- */
+#max{background:var(--bg2);border-block:1px solid var(--line)}
+.max-demo{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.max-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mtab{font-family:var(--fm);font-size:11.5px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:transparent;cursor:pointer;transition:.2s}
+.mtab:hover{color:var(--text)}
+.mtab.on{color:#C4B5FD;border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.12)}
+.max-chat{display:grid;gap:10px;min-height:210px}
+.ln{border:1px solid var(--line);background:var(--ink);border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.6;color:var(--muted)}
+.ln .who{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.ln.mx{border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.07)}
+.ln.mx .who{color:#A78BFA}
+/* ---------- constructors ---------- */
+.step{font-family:var(--fm);font-size:10.5px;letter-spacing:.08em;color:var(--amber);border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.08);border-radius:999px;padding:4px 10px;display:inline-block;margin-bottom:12px}
+/* ---------- psychology ---------- */
+#psychology{background:var(--bg2);border-block:1px solid var(--line)}
+.psy-frame{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.psy-frame img{width:100%;height:100%;object-fit:cover;object-position:top}
+.trn{display:grid;gap:14px;margin-top:28px}
+.trn-item{border-left:2px solid var(--amber);padding-left:16px}
+.trn-item h4{font-size:14.5px;margin-bottom:3px}
+.trn-item p{font-size:13.5px;color:var(--muted)}
+/* ---------- kriptik ---------- */
+.kr-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:52px;align-items:center}
+.kr-img{border-radius:var(--r);border:1px solid var(--line);overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.kr-img img{aspect-ratio:1/1;object-fit:cover;width:100%}
+.quote{font-family:var(--fm);font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:12px;padding:13px 16px;color:var(--muted);margin-top:10px}
+.kr-list{list-style:none;margin-top:22px;display:grid;gap:8px}
+.kr-list li{font-size:14px;color:var(--muted);padding-left:22px;position:relative}
+.kr-list li::before{content:"▸";position:absolute;left:2px;color:var(--green)}
+/* ---------- quests ---------- */
+.qcard .qmeta{font-family:var(--fm);font-size:11px;color:var(--red);letter-spacing:.08em;margin-bottom:12px;display:block}
+.qcard h3{font-size:17px;margin-bottom:10px}
+.qcard p{font-size:14px}
+.qcard .trains{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.qcard .trains b{color:var(--text);font-weight:600}
+/* ---------- features bento ---------- */
+.bento{display:grid;gap:16px;grid-template-columns:repeat(4,1fr)}
+.span2{grid-column:span 2}
+.bento .shot{margin-top:16px;border-radius:var(--rs);border:1px solid var(--line);overflow:hidden}
+.bento .shot img{aspect-ratio:16/8;object-fit:cover;width:100%}
+/* ---------- adaptive ---------- */
+#adaptive{background:var(--bg2);border-block:1px solid var(--line)}
+.ad .n{font-family:var(--fm);font-size:11px;color:var(--violet);letter-spacing:.1em}
+.ad h3{margin:8px 0 6px;font-size:15px}
+.ad p{font-size:13.5px}
+/* ---------- mobile ---------- */
+.mob-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:52px;align-items:center}
+.mob-img img{border-radius:24px;aspect-ratio:1/1;object-fit:cover;width:100%}
+.mob-list{list-style:none;margin-top:26px;display:grid;gap:12px}
+.mob-list li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:var(--muted)}
+.mob-list .mk{font-family:var(--fm);color:var(--green);font-size:13px;padding-top:2px}
+/* ---------- pricing ---------- */
+.price-grid{display:grid;gap:16px;grid-template-columns:repeat(4,1fr);align-items:stretch}
+.plan{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.plan h3{font-size:16px}
+.plan .price{font-family:var(--fm);font-size:26px;font-weight:600;margin:14px 0 4px;letter-spacing:-.02em}
+.plan .per{font-family:var(--fm);font-size:11px;color:var(--dim);letter-spacing:.06em}
+.plan ul{list-style:none;margin:18px 0 22px;display:grid;gap:9px;flex:1}
+.plan li{font-size:13.5px;color:var(--muted);padding-left:20px;position:relative}
+.plan li::before{content:"✓";position:absolute;left:0;color:var(--green);font-size:12px}
+.plan.hot{border-color:rgba(34,197,94,.55);background:linear-gradient(180deg,rgba(34,197,94,.07),var(--surface) 55%);box-shadow:0 20px 60px rgba(34,197,94,.12)}
+.pbadge{position:absolute;top:-12px;left:24px;font-family:var(--fm);font-size:10.5px;letter-spacing:.1em;color:#04170B;background:var(--green);border-radius:999px;padding:4px 12px;font-weight:600}
+.price-note{margin-top:22px;text-align:center;font-family:var(--fm);font-size:12px;color:var(--dim)}
+/* ---------- faq ---------- */
+.faq-list{max-width:780px;margin:0 auto;display:grid;gap:10px}
+.qa{border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);overflow:hidden;transition:border-color .25s}
+.qa.open{border-color:var(--line2)}
+.qa-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;font-weight:600;background:none;border:0;color:var(--text);cursor:pointer;font-size:15.5px;text-align:left}
+.qa-i{flex:none;width:12px;height:12px;position:relative}
+.qa-i::before,.qa-i::after{content:"";position:absolute;background:var(--green);transition:transform .3s}
+.qa-i::before{left:0;right:0;top:5px;height:2px}
+.qa-i::after{top:0;bottom:0;left:5px;width:2px}
+.qa.open .qa-i::after{transform:scaleY(0)}
+.qa-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.qa-a p{padding:0 22px 20px;color:var(--muted);font-size:14.5px;line-height:1.7}
+/* ---------- final ---------- */
+#final{text-align:center;position:relative;overflow:hidden}
+#final::before{content:"";position:absolute;inset:0;background:radial-gradient(560px 280px at 50% 100%,rgba(34,197,94,.14),transparent 70%);pointer-events:none}
+#final .lead{margin-inline:auto}
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:56px 0 40px;background:var(--bg2)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.foot-grid h5{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.foot-grid a{display:block;color:var(--muted);text-decoration:none;font-size:14px;margin-bottom:9px}
+.foot-grid a:hover{color:var(--text)}
+.disclaimer{border:1px solid var(--line);border-radius:var(--rs);padding:18px 20px;font-size:12.5px;color:var(--dim);line-height:1.7;margin-bottom:28px}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--fm);font-size:11.5px;color:var(--dim)}
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:20px}
+.modal[hidden]{display:none}
+.modal-back{position:absolute;inset:0;background:rgba(4,8,18,.75);backdrop-filter:blur(6px)}
+.modal-card{position:relative;width:100%;max-width:470px;background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r);padding:30px;animation:pop .28s ease;max-height:90vh;overflow:auto}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}}
+.modal-x{position:absolute;top:14px;right:14px;background:none;border:0;color:var(--dim);font-size:22px;cursor:pointer;line-height:1;padding:6px}
+.modal-x:hover{color:var(--text)}
+.modal-card h3{font-size:22px;letter-spacing:-.02em}
+.m-sub{color:var(--muted);font-size:14px;margin:8px 0 22px}
+.modal-card label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.modal-card input[type=email],.modal-card input[type=password],.modal-card input[type=text]{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:14.5px;font-family:inherit;transition:border-color .2s}
+.modal-card input:focus{outline:none;border-color:var(--green)}
+.f-err{color:#FB7185;font-size:12.5px;min-height:18px;margin:6px 0 10px}
+.pass-wrap{position:relative}
+.pass-wrap button{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--dim);font-family:var(--fm);font-size:11px;cursor:pointer}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13px}
+.check input{width:auto;margin-top:3px;accent-color:var(--green)}
+.m-note{margin-top:16px;font-size:12px;color:var(--dim);line-height:1.6}
+.wait-ico{width:52px;height:52px;border-radius:50%;border:2px solid var(--green);display:grid;place-items:center;color:var(--green);font-size:22px;margin-bottom:18px;box-shadow:0 0 30px rgba(34,197,94,.25)}
+.wait-mail{margin:14px 0 20px;font-size:13px;color:var(--green)}
+/* ---------- responsive ---------- */
+@media(max-width:980px){
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .price-grid{grid-template-columns:repeat(2,1fr)}
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .hero-grid,.split,.live-head,.kr-grid,.mob-grid{grid-template-columns:1fr;gap:40px}
+  .demo-grid{grid-template-columns:1fr}
+  .chip-1{left:8px}.chip-2{right:8px}
+}
+@media(max-width:860px){.nav{display:none}}
+@media(max-width:640px){
+  section{padding:64px 0}
+  .grid-3,.grid-2,.grid-4,.bento,.price-grid{grid-template-columns:1fr}
+  .span2{grid-column:auto}
+  .tr-row{grid-template-columns:1fr;gap:6px;padding:16px}
+  .tr-arrow{transform:rotate(90deg)}
+  .nrow{grid-template-columns:1fr}
+  .stats{gap:22px}
+  .hero{padding-top:84px}
+  .head-in .btn{margin-left:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+
+<header class="site-head" id="siteHead">
+  <div class="wrap head-in">
+    <a class="logo" href="#top" aria-label="КриптоНавигатор — к началу страницы">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true"><circle cx="13" cy="13" r="11.5" stroke="#22C55E" stroke-width="1.6"/><path d="M13 5l2.6 5.4L21 13l-5.4 2.6L13 21l-2.6-5.4L5 13l5.4-2.6L13 5z" fill="#22C55E"/></svg>
+      <span>Крипто<b>Навигатор</b></span>
+    </a>
+    <nav class="nav" aria-label="Основная навигация">
+      <a href="#program">Программа</a>
+      <a href="#live">Живой рынок</a>
+      <a href="#psychology">Психология</a>
+      <a href="#pricing">Цена</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="btn btn-primary btn-sm" data-open-modal>Создать аккаунт</button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow rv">симулятор криптотрейдинга · v7 · офлайн</p>
+      <h1 class="rv">95% новичков теряют депозит в первые месяцы. <span class="grad">Остальные — сначала учатся.</span></h1>
+      <p class="lead rv">КриптоНавигатор — тренажёр в одном файле на 2,8 МБ: 134 урока, 145 интерактивных виджетов, 21 мини-игра, 205 терминов. Учит читать рынок, считать риск и не мешать себе. Прибыль не обещаем — обещаем систему.</p>
+      <div class="cta-row rv">
+        <button class="btn btn-primary" data-open-modal data-cta="start">Создать аккаунт — Фаза 0 бесплатно</button>
+        <a class="btn btn-ghost" href="#live">Посмотреть, как это работает ↓</a>
+      </div>
+      <p class="trust rv">старт без карты · демо-доступ навсегда · работает офлайн</p>
+      <ul class="stats rv" id="stats">
+        <li><b data-count="134">0</b><span>урока</span></li>
+        <li><b data-count="145">0</b><span>виджетов</span></li>
+        <li><b data-count="21">0</b><span>мини-игра</span></li>
+        <li><b data-count="205">0</b><span>терминов</span></li>
+      </ul>
+    </div>
+    <div class="hero-visual rv">
+      <figure class="window">
+        <figcaption class="win-bar"><i></i><i></i><i></i><span class="mono">index.html · 2,8 МБ · офлайн</span></figcaption>
+        <img src="https://image.qwenlm.ai/public_source/ffbf3279-c507-459a-9d67-798f794fec58/1a8201533-c446-46fc-a2b8-e4feb7166b83.png" alt="Главный экран КриптоНавигатора: прогресс 34%, ранг «Стажёр», дорожная карта из девяти фаз" width="1024" height="1024" fetchpriority="high">
+      </figure>
+      <div class="chip chip-1 mono">ранг: Стажёр</div>
+      <div class="chip chip-2 mono">+1 урок · стрик 7</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<!-- ============ ПРОБЛЕМА ============ -->
+<section id="traps">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="eyebrow" style="--ac:var(--red)">// проблема</p>
+      <h2>Крипта не прощает самоучек без системы</h2>
+      <p class="lead">Три ловушки, в которых остаётся большинство депозитов. Мы построили курс вокруг них.</p>
+    </header>
+    <div class="grid-3">
+      <article class="card rv"><span class="ico">🎰</span><h3>Ставка на удачу</h3><p>«Растёт — беру». Статистика таких входов известна заранее: рынок перекладывает деньги из нетерпеливых рук в дисциплинированные.</p></article>
+      <article class="card rv"><span class="ico">📉</span><h3>Плечо до ликвидации</h3><p>x10 выглядит как ускоритель. На деле это лупа: движение на 10% против тебя сжигает депозит целиком. Математика, а не злой рок.</p></article>
+      <article class="card rv"><span class="ico">🌪️</span><h3>Эмоции вместо системы</h3><p>Ночной алерт, чужой скриншот прибыли, «ещё одну и спать». Когда решения принимает пульс, устав пишет он же.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ДО / ПОСЛЕ ============ -->
+<section id="transform">
+  <div class="wrap">
+    <header class="sec-head rv" style="text-align:center">
+      <p class="eyebrow">// решение</p>
+      <h2>До → После</h2>
+      <p class="lead" style="margin-inline:auto">Пять пар, которые описывают путь через симулятор. Это сердце страницы.</p>
+    </header>
+    <div class="tr-list">
+      <div class="tr-row rv"><div class="tr-before">Купил по хайпу</div><div class="tr-arrow">→</div><div class="tr-after">Читает стакан и считает спред</div></div>
+      <div class="tr-row rv"><div class="tr-before">Плечо x10 «для верности»</div><div class="tr-arrow">→</div><div class="tr-after">Считает цену ликвидации до входа</div></div>
+      <div class="tr-row rv"><div class="tr-before">Паника при −17%</div><div class="tr-arrow">→</div><div class="tr-after">План на флеш-крэш написан заранее</div></div>
+      <div class="tr-row rv"><div class="tr-before">Ищет сигналы в чатах</div><div class="tr-arrow">→</div><div class="tr-after">Ведёт журнал ошибок и видит свои паттерны</div></div>
+      <div class="tr-row rv"><div class="tr-before">Боится оставить бота на ночь</div><div class="tr-arrow">→</div><div class="tr-after">Спит, пока бот работает: есть kill-switch и устав</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ПРОГРАММА ============ -->
+<section id="program">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="eyebrow" style="--ac:var(--sky)">// программа</p>
+      <h2>9 фаз: от первой свечи до бота</h2>
+      <p class="lead">После каждой фазы — аттестация с порогом 80%. Ответы перемешиваются, каждый вопрос с разбором: зубрёжка бесполезна.</p>
+    </header>
+    <div class="grid-3">
+      <article class="card ph rv"><span class="badge">бесплатно · 20 уроков</span><span class="num">ФАЗА 0</span><h3>База</h3><p>Блокчейн как общая тетрадь, адрес и приватный ключ, стакан, свечи, плечо.</p></article>
+      <article class="card ph rv"><span class="num">ФАЗА 1</span><h3>Математика рынка</h3><p>Доходности, толстые хвосты, стационарность, смена режимов.</p></article>
+      <article class="card ph rv"><span class="num">ФАЗА 2</span><h3>Риск и капитал</h3><p>Критерий Келли, асимметрия просадки: −50% требует +100%. Размер позиции.</p></article>
+      <article class="card ph rv"><span class="num">ФАЗА 3</span><h3>Проверка стратегий</h3><p>Walk-forward анализ, overfitting lab, alpha/beta декомпозиция.</p></article>
+      <article class="card ph rv"><span class="num">ФАЗА 4</span><h3>Учёт и налоги</h3><p>FIFO, журнал сделок, отчётность без паники в конце года.</p></article>
+      <article class="card ph rv"><span class="num">ФАЗА 5</span><h3>Торговые боты</h3><p>Kill-switch, фандинг-арбитраж, хаос-инженерия, отклонение исполнения.</p></article>
+      <article class="card ph rv"><span class="num">ФАЗА 6</span><h3>DeFi и рынки прогнозов</h3><p>Стейкинг и реальный APY, кривые комиссий, оракулы и их поломки.</p></article>
+      <article class="card ph rv"><span class="num">ПСИХОЛОГИЯ</span><h3>Оператор бота</h3><p>8 уроков и 8 тренажёров про главное слабое звено системы — тебя.</p></article>
+      <article class="card ph rv"><span class="num">ВЫПУСКНОЙ</span><h3>Собери бота</h3><p>Построй, прогони на истории, защити устав. Ранг: Управляющий фондом.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ЖИВОЙ РЫНОК ============ -->
+<section id="live">
+  <div class="wrap">
+    <div class="live-head">
+      <header class="rv">
+        <p class="eyebrow">// живой рынок с наставником</p>
+        <h2>Рынок настоящий. Деньги — нет.</h2>
+        <p class="lead">В приложение встроены реальные данные: стакан, свечи, фандинг, индекс страха и жадности. Движок детекторов подсказывает «что это значит». Не сигналы — обучение чтению рынка. Ниже — живой пример, потрогай.</p>
+      </header>
+      <img class="rv" src="https://image.qwenlm.ai/public_source/ffbf3279-c507-459a-9d67-798f794fec58/1d99b8608-8f91-4f56-bdd7-83093d1b0881.png" alt="Криптик объясняет свечной график с аннотацией детектора" width="1024" height="1024" loading="lazy">
+    </div>
+
+    <div class="demo rv" id="demo">
+      <div class="demo-tabs" role="tablist" aria-label="Сценарии рынка">
+        <button class="dtab on" data-sc="calm" role="tab" aria-selected="true">Спокойно</button>
+        <button class="dtab" data-sc="wall" role="tab" aria-selected="false">Стена на продажу</button>
+        <button class="dtab" data-sc="fund" role="tab" aria-selected="false">Фандинг перегрет</button>
+        <button class="dtab" data-sc="panic" role="tab" aria-selected="false">Паника</button>
+      </div>
+      <div class="demo-grid">
+        <div class="book mono" id="book" aria-label="Демо-стакан заявок"></div>
+        <aside class="hint">
+          <div class="hint-head mono"><span class="hint-dot"></span>Криптик · детектор рынка</div>
+          <h4 id="hintTitle"></h4>
+          <p id="hintText"></p>
+        </aside>
+      </div>
+      <p class="demo-note mono">демо-данные для примера · внутри приложения — живой рынок с подсказками наставника</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ НОВОСТИ ============ -->
+<section id="news">
+  <div class="wrap split">
+    <header class="rv">
+      <p class="eyebrow" style="--ac:var(--sky)">// новости как учебный материал</p>
+      <h2>Заголовок — это тоже позиция</h2>
+      <p class="lead">Лента крипто-новостей с классификатором по 7 типам. К каждой — карточка наставника: что произошло, на какую часть рынка давит, чего новость не говорит и вопрос себе.</p>
+      <p class="lead">Сначала приложение спрашивает твоё мнение, потом раскрывает эталон и считает Brier-оценку твоей точности.</p>
+    </header>
+    <div class="news-card rv">
+      <div class="news-top">
+        <span class="ntype">тип: регуляторика</span>
+        <span class="ntype" style="color:var(--muted);border-color:var(--line)">лента · 14:02</span>
+        <h4>Крупный фонд подал заявку на спот-ETF</h4>
+      </div>
+      <div class="nrows">
+        <div class="nrow"><b>что произошло</b><span>Заявка подана. Решения нет, сроки не определены.</span></div>
+        <div class="nrow"><b>на что давит</b><span>На ожидания притока. В первую очередь — в BTC.</span></div>
+        <div class="nrow"><b>чего не говорит</b><span>Одобрят ли. Когда. И не куплено ли это заранее.</span></div>
+        <div class="nrow"><b>вопрос себе</b><span>Ты реагируешь на факт или на заголовок?</span></div>
+      </div>
+      <div class="xchips">
+        <span class="xchip">упражнение: угадай тип</span>
+        <span class="xchip">история знает ответ</span>
+        <span class="xchip">анти-FUD</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AI МАКС ============ -->
+<section id="max">
+  <div class="wrap split">
+    <header class="rv">
+      <p class="eyebrow" style="--ac:var(--violet)">// ai-наставник макс</p>
+      <h2>Девять действий вместо готовых ответов</h2>
+      <p class="lead">Макс не даёт сигналы. Он проверяет, понимаешь ли ты. Хвалит редко, по делу и по адресу. Выбери действие — покажем, как это звучит.</p>
+    </header>
+    <div class="max-demo rv">
+      <div class="max-tabs" id="maxTabs" role="tablist" aria-label="Действия Макса"></div>
+      <div class="max-chat mono" id="maxChat" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ КОНСТРУКТОРЫ ============ -->
+<section id="constructors">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="eyebrow" style="--ac:var(--amber)">// конструкторы «артефакты рынка»</p>
+      <h2>Собери артефакт — и пойми, где он ломается</h2>
+      <p class="lead">8 конструкторов. Каждый заканчивается не оценкой, а пониманием механики изнутри.</p>
+    </header>
+    <div class="grid-4">
+      <article class="card rv"><span class="step">5 шагов</span><h3>Токен</h3><p>Эмиссия, распределение, ликвидность — по шагам, пока не станет скучно понятно.</p></article>
+      <article class="card rv"><span class="step">3 клика</span><h3>Мемкоин</h3><p>Запустишь и увидишь, почему 99% таких историй заканчиваются одинаково.</p></article>
+      <article class="card rv"><span class="step">набег</span><h3>Стейблкоин</h3><p>Удержи привязку, когда все хотят выйти одновременно.</p></article>
+      <article class="card rv"><span class="step">минт + продажа</span><h3>NFT</h3><p>Создай, оцени, попробуй продать. Рынок ответит честно.</p></article>
+      <article class="card rv"><span class="step">голос</span><h3>DAO</h3><p>Делегаты, квадратичные голоса, атака кито-кошелька на предложение.</p></article>
+      <article class="card rv"><span class="step">атака</span><h3>Оракул</h3><p>Сломай данные снаружи и посмотри, что случится с контрактом внутри.</p></article>
+      <article class="card rv"><span class="step">выпускной экзамен</span><h3>Торговый бот</h3><p>Собери, прогони на истории, защити устав перед боссом-дуэлью.</p></article>
+      <article class="card rv"><span class="step">1 год</span><h3>Токенизированный фонд</h3><p>Ребалансировки, отчётность и инвесторы с неудобными вопросами.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ПСИХОЛОГИЯ ============ -->
+<section id="psychology">
+  <div class="wrap split">
+    <div class="psy-frame rv">
+      <img src="https://image.qwenlm.ai/public_source/ffbf3279-c507-459a-9d67-798f794fec58/108cbe0ee-e633-41dd-a892-4621f8ee65e2.png" alt="Психотренажёр «Тревога в 03:00»: ночной алерт и дыхательный круг" width="1024" height="1024" loading="lazy">
+    </div>
+    <div>
+      <header class="rv">
+        <p class="eyebrow" style="--ac:var(--amber)">// психология оператора</p>
+        <h2>Единственный курс, где целая фаза — про тебя</h2>
+        <p class="lead">Главное слабое звено торговой системы — человек за экраном. 8 уроков и 8 тренажёров учат не терять голову там, где её теряют.</p>
+      </header>
+      <div class="trn">
+        <div class="trn-item rv"><h4>«Тревога в 03:00»</h4><p>Бот прислал алерт ночью. Задача — не чинить, а не сломать.</p></div>
+        <div class="trn-item rv"><h4>«Головокружение от успехов»</h4><p>Три зелёные недели подряд. Самая опасная точка курса.</p></div>
+        <div class="trn-item rv"><h4>«Хоть бы в ноль»</h4><p>Мозг торгуется с планом. Урок о том, кто в доме хозяин.</p></div>
+        <div class="trn-item rv"><h4>«Тяга к движениям»</h4><p>Рынок скучный, руки чешутся. Тренажёр скуки и терпения.</p></div>
+        <div class="trn-item rv"><h4>«Письмо из будущего»</h4><p>Пишешь себе письмо от оператора через год. Читаешь его в просадку.</p></div>
+        <div class="trn-item rv"><h4>«Судьи считают технику»</h4><p>Оценивается процесс, а не результат сделки. Как у взрослых.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ КРИПТИК ============ -->
+<section id="kriptik">
+  <div class="wrap kr-grid">
+    <div class="kr-img rv">
+      <img src="https://image.qwenlm.ai/public_source/ffbf3279-c507-459a-9d67-798f794fec58/136dc3708-b5db-4e9e-86e8-3e9bd9ff99c1.png" alt="Криптик — саркастичный робот-наставник со скрещёнными руками" width="1024" height="1024" loading="lazy">
+    </div>
+    <div>
+      <header class="rv">
+        <p class="eyebrow">// герой продукта</p>
+        <h2>Криптик</h2>
+        <p class="lead">У Duolingo — сова. У нас — саркастичный старший товарищ, который сам прошёл все 134 урока и теперь ведёт твоё обучение. Не милый. Не утешает ложью. Не обещает прибыль. Просто знает больше тебя — и учит тому, что знает.</p>
+      </header>
+      <div class="quote rv">«Логично. Неправильно, но логично.»</div>
+      <div class="quote rv">«Спред 4 пункта. Спокойно.»</div>
+      <div class="quote rv">«На сегодня всё. Завтра продолжим.»</div>
+      <ul class="kr-list rv">
+        <li>Разбирает каждую ошибку и называет тип ловушки</li>
+        <li>Комментирует живой рынок одной строкой</li>
+        <li>Задаёт Сократовы вопросы вместо готовых ответов</li>
+        <li>Ведёт тур онбординга и комментирует боссов-дуэли</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ КВЕСТЫ ============ -->
+<section id="quests">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="eyebrow" style="--ac:var(--red)">// три виртуальных квеста</p>
+      <h2>Прожить ситуацию до того, как она станет реальной</h2>
+      <p class="lead">Виртуальный портфель, выборы с последствиями, счётчик потерь, разбор после каждого шага и финальный отчёт с профилем уязвимостей. Прохождение засчитывается в прогресс и открывает бейджи.</p>
+    </header>
+    <div class="grid-3">
+      <article class="card qcard rv"><span class="qmeta">🕵️ 7 эпизодов</span><h3>Криптик против Мошенника</h3><p>Персонаж «Скат» пытается украсть твои виртуальные активы: фишинг, вредоносные контракты, deepfake, сим-своп.</p><p class="trains"><b>Тренирует:</b> распознавание социальной инженерии — до того, как встретишь её на реальных деньгах.</p></article>
+      <article class="card qcard rv"><span class="qmeta">🧠 7 дней</span><h3>Семь дней: ты против себя</h3><p>Неделя из жизни трейдера с ботом. Каждый день новая ловушка генерирует соблазнительную мысль, ты выбираешь действие.</p><p class="trains"><b>Тренирует:</b> устойчивость к эйфории, ночной тревоге, скуке и чужим скриншотам прибыли.</p></article>
+      <article class="card qcard rv"><span class="qmeta">🚨 6 сценариев</span><h3>Паника</h3><p>Флеш-крэш −17%, каскад ликвидаций, биржа заморозила выводы, регуляторный шок, восстановление после краха.</p><p class="trains"><b>Тренирует:</b> отличать «рынок падает» (ничего не делать) от «инфраструктура сломалась» (действовать немедленно).</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ВНУТРИ ============ -->
+<section id="features">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="eyebrow" style="--ac:var(--sky)">// внутри</p>
+      <h2>134 урока, в которых всё трогается руками</h2>
+      <p class="lead">Каждый урок — практика: виджеты, симуляторы, игры. Чтения без рук здесь нет.</p>
+    </header>
+    <div class="bento">
+      <article class="card span2 rv"><span class="ico">🧩</span><h3>145 интерактивных виджетов встроены в уроки</h3><p>Стакан, ликвидации с gauge, фандинг, DeFi-yield, эквити-кривые, карта корреляций, дельта-нейтрал, MEV-сэндвич.</p><div class="shot"><img src="https://image.qwenlm.ai/public_source/ffbf3279-c507-459a-9d67-798f794fec58/14d5392ff-2624-457a-b91f-7c60f806328b.png" alt="Симулятор биржевого стакана: заявки bid/ask и график свечей" width="1024" height="1024" loading="lazy"></div></article>
+      <article class="card span2 rv"><span class="ico">🎮</span><h3>21 мини-игра: 18 тренажёров + 3 игры</h3><p>Гонка блоков, коридор ликвидаций, жирные хвосты, веер Келли, лента коинтеграции, шторм корреляций, ASIC под напряжением, защита seed-фразы, угадай режим рынка, спаси депозит.</p></article>
+      <article class="card rv"><span class="ico">🔬</span><h3>Симуляторы процессов</h3><p>Стакан, плечо и ликвидация, издержки, walk-forward, overfitting lab, alpha/beta, kill-switch, хаос-инженерия.</p></article>
+      <article class="card rv"><span class="ico">🏗️</span><h3>8 конструкторов</h3><p>От токена за пять шагов до торгового бота — выпускного экзамена.</p></article>
+      <article class="card rv"><span class="ico">📖</span><h3>Глоссарий: 205 терминов</h3><p>Четыре уровня глубины, аналогия из жизни, английский эквивалент.</p></article>
+      <article class="card rv"><span class="ico">✅</span><h3>Аттестации: порог 80%</h3><p>Каждый вопрос с подробным разбором. Перемешивание ответов.</p></article>
+      <article class="card rv"><span class="ico">🏆</span><h3>Карьерная лестница</h3><p>Стажёр → Управляющий фондом. Ранги, бейджи, стрики, боссы-дуэли, спидраны.</p></article>
+      <article class="card rv"><span class="ico">⏱️</span><h3>Помодоро 25 минут</h3><p>Встроенный таймер, чтобы не залипать.</p></article>
+      <article class="card rv"><span class="ico">🔄</span><h3>Интерливинг + SM-2</h3><p>Смешанные вопросы из разных фаз и интервальные повторения каждых 5 уроков.</p></article>
+      <article class="card rv"><span class="ico">🧘</span><h3>NSDR-консолидация</h3><p>Экран тишины с дыханием 4-4-6 после урока: мозг закрепляет изученное.</p></article>
+      <article class="card rv"><span class="ico">🔀</span><h3>Перемешивание ответов</h3><p>Детерминированный ГСЧ: выучить «правильный — всегда второй» не выйдет.</p></article>
+      <article class="card rv"><span class="ico">📊</span><h3>Brier-калибровка</h3><p>Прогнозируй события рынка и учись отличать «знаю» от «кажется».</p></article>
+      <article class="card rv"><span class="ico">📓</span><h3>Журнал когнитивных ошибок</h3><p>Твои повторяющиеся ловушки — в одном месте, с классификацией по типам.</p></article>
+      <article class="card rv"><span class="ico">💾</span><h3>Один файл, офлайн</h3><p>2,8 МБ, без установки, без сервера, без внешних зависимостей. Скачал — пользуешься.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ АДАПТАЦИЯ ============ -->
+<section id="adaptive">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="eyebrow" style="--ac:var(--violet)">// адаптация</p>
+      <h2>Симулятор видит твои ошибки и подстраивается</h2>
+      <p class="lead">Не «персонализация» из презентации, а десять конкретных механик.</p>
+    </header>
+    <div class="grid-2">
+      <article class="card ad rv"><span class="n">01</span><h3>Диагноз каждой ошибки</h3><p>После неверного ответа наставник определяет тип ловушки: концептуальная, расчётная, невнимательность, эмоциональный выбор — и пишет в журнал, что перечитать.</p></article>
+      <article class="card ad rv"><span class="n">02</span><h3>Журнал когнитивных ошибок</h3><p>Через месяц видны паттерны: «четверг вечером», «после чтения новостей», «когда тороплюсь».</p></article>
+      <article class="card ad rv"><span class="n">03</span><h3>Интерливинг подмешивает слабые места</h3><p>Вопросы из тем, где ты ошибался чаще, возвращаются чаще — пока не закрепишь.</p></article>
+      <article class="card ad rv"><span class="n">04</span><h3>SM-2 «Сборочный пункт»</h3><p>Каждые 5 уроков — интервальные повторения именно того, что начинает забываться. Алгоритм SuperMemo-2.</p></article>
+      <article class="card ad rv"><span class="n">05</span><h3>Сначала подумай — потом эталон</h3><p>На живых данных и новостях приложение сначала спрашивает твоё мнение, потом раскрывает разбор и считает Brier-оценку.</p></article>
+      <article class="card ad rv"><span class="n">06</span><h3>Калибровка уверенности</h3><p>Ты оцениваешь, насколько уверен в ответе. Со временем видно, где ты силён, а где «кажется, что знаешь».</p></article>
+      <article class="card ad rv"><span class="n">07</span><h3>Адаптивный лимит наставника</h3><p>Прошёл урок без подсказок — больше запросов к ИИ. Нарушал дисциплину — меньше. Система награждает самостоятельность.</p></article>
+      <article class="card ad rv"><span class="n">08</span><h3>Персонализация детекторов</h3><p>Сложные детекторы живого рынка открываются после соответствующих уроков — новичок не захлебнётся.</p></article>
+      <article class="card ad rv"><span class="n">09</span><h3>Pre-test перед каждым уроком</h3><p>Замер «до» и замер «после». Видно реальный прирост понимания, а не галочку «прочитал».</p></article>
+      <article class="card ad rv"><span class="n">10</span><h3>Криптик с характером</h3><p>Саркастичный старший товарищ: разбирает ошибки, ведёт по рынку, хвалит редко, но заслуженно.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ОФЛАЙН / МОБИЛЬНО ============ -->
+<section id="mobile">
+  <div class="wrap mob-grid">
+    <div class="mob-img rv">
+      <img src="https://image.qwenlm.ai/public_source/ffbf3279-c507-459a-9d67-798f794fec58/18f7960df-40aa-43f6-b532-d6615f4735b8.png" alt="Мобильная версия КриптоНавигатора на экране телефона, 360px" width="1024" height="1024" loading="lazy">
+    </div>
+    <div>
+      <header class="rv">
+        <p class="eyebrow">// офлайн и телефон</p>
+        <h2>Один файл. 2,8 МБ. Ноль серверов.</h2>
+        <p class="lead">Скачал — пользуешься. На компьютере, на телефоне, в самолёте. Без установки, без аккаунта в магазине приложений, без внешних зависимостей.</p>
+      </header>
+      <ul class="mob-list rv">
+        <li><span class="mk">[✓]</span>Интерфейс от 360px: уроки, тренажёры и квизы на телефоне</li>
+        <li><span class="mk">[✓]</span>Прогресс — в браузере и в облаке, если создаёшь аккаунт</li>
+        <li><span class="mk">[✓]</span>Работает без сети: котировки кэшируются, уроки доступны всегда</li>
+        <li><span class="mk">[✓]</span>Никаких трекеров и рекламы внутри: это тренажёр, а не витрина</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ЦЕНА ============ -->
+<section id="pricing">
+  <div class="wrap">
+    <header class="sec-head rv" style="text-align:center">
+      <p class="eyebrow">// цена</p>
+      <h2>Честная лестница без подписок</h2>
+      <p class="lead" style="margin-inline:auto">Демо бесплатно навсегда. Остальное — разовые платежи, все будущие обновления включены.</p>
+    </header>
+    <div class="price-grid">
+      <article class="plan rv"><h3>Демо</h3><div class="price">0 ₽</div><span class="per">навсегда · без карты</span>
+        <ul><li>Фаза 0 целиком: 20 уроков</li><li>Блок психологии П1–П8</li><li>Тренажёры и квизы фазы</li><li>Прогресс в браузере</li></ul>
+        <button class="btn btn-ghost btn-block" data-open-modal>Начать бесплатно</button>
+      </article>
+      <article class="plan hot rv"><span class="pbadge">весь курс навсегда</span><h3>Лайт</h3><div class="price">990 ₽ <span style="font-size:14px;color:var(--dim)">/ $12</span></div><span class="per">разовый платёж</span>
+        <ul><li>Все 9 фаз: 134 урока</li><li>145 виджетов, 21 игра, квесты</li><li>Аттестации, ранги, боссы</li><li>Все будущие обновления</li></ul>
+        <button class="btn btn-primary btn-block" data-open-modal>Создать аккаунт</button>
+      </article>
+      <article class="plan rv"><h3>Про</h3><div class="price">1 990 ₽</div><span class="per">разовый платёж</span>
+        <ul><li>Всё из Лайт</li><li>Живой рынок с детекторами</li><li>Новости с классификатором</li><li>Все будущие обновления</li></ul>
+        <button class="btn btn-ghost btn-block" data-open-modal>Выбрать Про</button>
+      </article>
+      <article class="plan rv"><h3>Макс</h3><div class="price">299 ₽<span style="font-size:14px;color:var(--dim)">/мес</span></div><span class="per">или 1 990 ₽/год</span>
+        <ul><li>Всё из Про</li><li>AI-наставник Макс без лимитов</li><li>Спарринги и ревизии устава</li></ul>
+        <button class="btn btn-ghost btn-block" data-open-modal>Выбрать Макс</button>
+      </article>
+    </div>
+    <p class="price-note rv">разовые платежи · обновления включены · подписка одна — и та по желанию</p>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="wrap">
+    <header class="sec-head rv" style="text-align:center">
+      <p class="eyebrow" style="--ac:var(--sky)">// вопросы и возражения</p>
+      <h2>Спрашивали — отвечаем честно</h2>
+    </header>
+    <div class="faq-list">
+      <div class="qa rv"><button class="qa-q" aria-expanded="false">Я совсем новичок. Потяну?<span class="qa-i" aria-hidden="true"></span></button><div class="qa-a"><p>Да. Курс начинается с вопроса «что такое блокчейн» и не предполагает опыта. Фаза 0 из 20 уроков бесплатна — можно проверить на себе, прежде чем платить.</p></div></div>
+      <div class="qa rv"><button class="qa-q" aria-expanded="false">Это сигналы или финансовый совет?<span class="qa-i" aria-hidden="true"></span></button><div class="qa-a"><p>Нет. КриптоНавигатор — образовательный симулятор. Он не говорит, что покупать, и не обещает прибыль. Он учит читать рынок, считать риск и не мешать себе.</p></div></div>
+      <div class="qa rv"><button class="qa-q" aria-expanded="false">Что именно я получу бесплатно?<span class="qa-i" aria-hidden="true"></span></button><div class="qa-a"><p>Фазу 0 целиком: 20 уроков, тренажёры и блок психологии П1–П8. Регистрация по почте, карта не нужна.</p></div></div>
+      <div class="qa rv"><button class="qa-q" aria-expanded="false">А обновления? За них нужно платить отдельно?<span class="qa-i" aria-hidden="true"></span></button><div class="qa-a"><p>Нет. Разовый платёж включает все будущие обновления. Купил один раз — получаешь новые уроки и фазы без доплат.</p></div></div>
+      <div class="qa rv"><button class="qa-q" aria-expanded="false">Как оплатить из России или другой страны?<span class="qa-i" aria-hidden="true"></span></button><div class="qa-a"><p>Из России — картой, счёт в рублях. Из остальных стран — $12 через международных провайдеров. Подписка не нужна ни там, ни там.</p></div></div>
+      <div class="qa rv"><button class="qa-q" aria-expanded="false">Что происходит с моими данными?<span class="qa-i" aria-hidden="true"></span></button><div class="qa-a"><p>Прогресс хранится в браузере и в облаке, если создаёшь аккаунт. Аналитика приватная, без куки. Мы не продаём данные и не показываем рекламу.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ФИНАЛ ============ -->
+<section id="final">
+  <div class="wrap">
+    <p class="eyebrow rv" style="text-align:center">// старт</p>
+    <h2 class="rv">Фаза 0 уже открыта</h2>
+    <p class="lead rv">Регистрация бесплатна, карта не нужна. 20 уроков и блок психологии ждут прямо сейчас. Остальное — когда будешь готов.</p>
+    <div class="cta-row rv" style="justify-content:center">
+      <button class="btn btn-primary" data-open-modal>Создать аккаунт — бесплатно</button>
+      <a class="btn btn-ghost" href="#program">Вернуться к программе</a>
+    </div>
+    <p class="trust rv" style="text-align:center">симулятор · не финансовый совет · прибыль не обещаем</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#top" style="margin-bottom:14px">
+          <svg width="22" height="22" viewBox="0 0 26 26" fill="none" aria-hidden="true"><circle cx="13" cy="13" r="11.5" stroke="#22C55E" stroke-width="1.6"/><path d="M13 5l2.6 5.4L21 13l-5.4 2.6L13 21l-2.6-5.4L5 13l5.4-2.6L13 5z" fill="#22C55E"/></svg>
+          <span>Крипто<b>Навигатор</b></span>
+        </a>
+        <p style="color:var(--dim);font-size:13.5px;max-width:320px">Образовательный симулятор криптотрейдинга. Один файл, 2,8 МБ, работает офлайн. Учим не терять.</p>
+      </div>
+      <div>
+        <h5>Продукт</h5>
+        <a href="#program">Программа</a>
+        <a href="#live">Живой рынок</a>
+        <a href="#psychology">Психология</a>
+        <a href="#pricing">Цена</a>
+      </div>
+      <div>
+        <h5>Помощь</h5>
+        <a href="#faq">FAQ</a>
+        <a href="#traps">С чего начать</a>
+        <a href="#final">Регистрация</a>
+      </div>
+    </div>
+    <p class="disclaimer">КриптоНавигатор — образовательный симулятор. Все сделки, балансы и котировки внутри — виртуальные. Материалы не являются инвестиционной рекомендацией, финансовым советом или офертой. Криптовалюты — рискованный актив; решение торговать на реальные деньги ты принимаешь сам и под свою ответственность. Мы не обещаем прибыль — и не знаем никого, кто мог бы пообещать её честно.</p>
+    <div class="foot-bottom">
+      <span>© 2025 КриптоНавигатор · v7</span>
+      <span>134 урока · 145 виджетов · 21 игра · 205 терминов</span>
+      <span>не финансовый совет</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ МОДАЛКА РЕГИСТРАЦИИ ============ -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+  <div class="modal-back" data-close></div>
+  <div class="modal-card">
+    <button class="modal-x" data-close aria-label="Закрыть окно регистрации">×</button>
+    <div id="mFormView">
+      <h3 id="mTitle">Создать аккаунт</h3>
+      <p class="m-sub">Фаза 0 — 20 уроков и блок психологии — откроется сразу после регистрации. Карта не нужна.</p>
+      <form id="regForm" novalidate>
+        <label for="fEmail">Почта</label>
+        <input type="email" id="fEmail" name="email" autocomplete="email" placeholder="you@example.com">
+        <p class="f-err" id="eEmail" role="alert"></p>
+        <label for="fPass">Пароль</label>
+        <div class="pass-wrap">
+          <input type="password" id="fPass" name="password" autocomplete="new-password" placeholder="минимум 8 символов">
+          <button type="button" id="passTog" aria-label="Показать пароль">показать</button>
+        </div>
+        <p class="f-err" id="ePass" role="alert"></p>
+        <label class="check"><input type="checkbox" id="fTerms"> <span>Согласен с условиями и с тем, что это симулятор, а не финансовый совет</span></label>
+        <p class="f-err" id="eTerms" role="alert"></p>
+        <button class="btn btn-primary btn-block" id="regBtn" type="submit">Создать аккаунт</button>
+        <p class="m-note">Если облако ещё не поднялось — честно запишем тебя в очередь. Имитировать аккаунт мы не умеем и не хотим.</p>
+      </form>
+    </div>
+    <div id="mWaitView" hidden>
+      <div class="wait-ico" aria-hidden="true">✓</div>
+      <h3>Ты в очереди</h3>
+      <p class="m-sub" style="margin-bottom:0">Регистрация откроется вместе с облаком. Почту записали честно, без имитации аккаунта, — напомним первыми, когда всё будет готово.</p>
+      <p class="wait-mail mono" id="waitMail"></p>
+      <button class="btn btn-ghost btn-block" data-close>Понятно</button>
+    </div>
+  </div>
+</div>
+
+<noscript><style>.rv{opacity:1;transform:none}</style></noscript>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,c){return (c||document).querySelector(s)};
+var $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+var reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* приватная аналитика-заглушка: события копятся локально, внешних вызовов нет */
+var cnEvents=[];
+function track(n){cnEvents.push({n:n,t:Date.now()});if(window.console&&console.debug){console.debug("[cn:event]",n)}}
+track("view_hero");
+
+/* header shadow + scroll depth */
+var headEl=$("#siteHead"),t50=false,t90=false;
+window.addEventListener("scroll",function(){
+  headEl.classList.toggle("scrolled",window.scrollY>8);
+  var h=document.documentElement;
+  var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
+  if(p>.5&&!t50){t50=true;track("scroll_50")}
+  if(p>.9&&!t90){t90=true;track("scroll_90")}
+},{passive:true});
+
+/* reveal on scroll + counters + price_view */
+function countUp(el){
+  var target=+el.getAttribute("data-count");
+  if(reduced){el.textContent=target;return}
+  var start=performance.now(),dur=1200;
+  function frame(now){
+    var p=Math.min(1,(now-start)/dur);
+    el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+    if(p<1)requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(!e.isIntersecting)return;
+    e.target.classList.add("in");
+    if(e.target.id==="stats"){$$("[data-count]",e.target).forEach(countUp)}
+    if(e.target.id==="pricing"){track("price_view")}
+    io.unobserve(e.target);
+  });
+},{threshold:.15});
+$$(".rv").forEach(function(el){io.observe(el)});
+
+/* ticker (демо-лента) */
+var tickItems=[
+  '<span class="ti"><b>демо-лента</b> · данные для примера</span>',
+  '<span class="ti">BTC/USDT <b>64 210</b> <span class="up">▲1,2%</span></span>',
+  '<span class="ti">ETH/USDT <b>3 412</b> <span class="dn">▼0,4%</span></span>',
+  '<span class="ti">ФАНДИНГ 8Ч <b>+0,0100%</b></span>',
+  '<span class="ti">СТРАХ/ЖАДНОСТЬ <b>61</b> · жадность</span>',
+  '<span class="ti">СПРЕД <b>4 п.</b></span>',
+  '<span class="ti">ЛИКВИДАЦИИ 24Ч <b>$182M</b></span>',
+  '<span class="ti">O.I. <b>$18,2B</b></span>',
+  '<span class="ti">ДОМИНАЦИЯ BTC <b>54,1%</b></span>'
+];
+var trackEl=$("#tickerTrack");
+trackEl.innerHTML=tickItems.join("")+tickItems.join("");
+
+/* ---------- живой стакан: демо-виджет ---------- */
+var SCEN={
+  calm:{mid:64210,spread:4,step:2,askMul:1,bidMul:1,wall:null,funding:"+0,0100%",
+    title:"Спред 4 пункта",
+    text:"Стакан плотный с обеих сторон, разрыв минимальный. Никаких причин дёргаться. Урок первый: спокойный рынок — тоже информация."},
+  wall:{mid:64210,spread:6,step:4,askMul:1,bidMul:1,wall:{at:3,size:18.4},funding:"+0,0100%",
+    title:"Стена на продажу",
+    text:"На 64 300 заявка в восемь раз больше соседних. Это может быть реальное желание продать — или пугало, которое уберут за секунду до исполнения. Вопрос себе: кто оставляет след, а кто его рисует?"},
+  fund:{mid:64214,spread:5,step:3,askMul:1.2,bidMul:.8,wall:null,funding:"+0,0800%",
+    title:"Фандинг перегрет",
+    text:"+0,08% каждые восемь часов: лонгисты платят шортстам. Толпа стоит в одну сторону. Исторически это не аргумент за продолжение — а повод проверить, не стоишь ли ты в очереди последним."},
+  panic:{mid:63180,spread:38,step:12,askMul:1.6,bidMul:.3,wall:null,funding:"−0,0300%",
+    title:"Спред 38 пунктов",
+    text:"Покупки тонкие, продавцы бьют по рынку. Это паника, а не новость. План на такой случай пишется заранее: сегодня ты его вспоминаешь, а не сочиняешь на ходу."}
+};
+var curSc="calm",demoVisible=false,typeTimer=null;
+var bookEl=$("#book"),hintTitle=$("#hintTitle"),hintText=$("#hintText");
+function fmtNum(n){return n.toLocaleString("ru-RU")}
+function renderBook(){
+  var s=SCEN[curSc],asks=[],bids=[],maxV=0,i,av,bv;
+  for(i=1;i<=5;i++){
+    av=(0.4+Math.random()*1.1)*(s.askMul||1);
+    bv=(0.4+Math.random()*1.1)*(s.bidMul||1);
+    if(s.wall&&i===s.wall.at)av=s.wall.size;
+    maxV=Math.max(maxV,av,bv);
+    asks.push({p:s.mid+s.spread/2+i*s.step,v:av});
+    bids.push({p:s.mid-s.spread/2-i*s.step,v:bv});
+  }
+  var html='<div class="bhead"><span>цена</span><span>размер</span></div>';
+  for(i=asks.length-1;i>=0;i--){
+    html+='<div class="brow ask"><i style="--w:'+Math.round(asks[i].v/maxV*100)+'%"></i><span class="bp">'+fmtNum(asks[i].p)+'</span><span class="bs">'+asks[i].v.toFixed(2)+'</span></div>';
+  }
+  html+='<div class="bmid"><b>'+fmtNum(s.mid)+'</b><span class="sp mono">спред '+s.spread+' п. · фандинг '+s.funding+'</span></div>';
+  for(i=0;i<bids.length;i++){
+    html+='<div class="brow bid"><i style="--w:'+Math.round(bids[i].v/maxV*100)+'%"></i><span class="bp">'+fmtNum(bids[i].p)+'</span><span class="bs">'+bids[i].v.toFixed(2)+'</span></div>';
+  }
+  bookEl.innerHTML=html;
+}
+function typeHint(t){
+  clearInterval(typeTimer);
+  if(reduced){hintText.textContent=t;return}
+  var i=0;hintText.textContent="";
+  typeTimer=setInterval(function(){
+    i+=2;hintText.textContent=t.slice(0,i);
+    if(i>=t.length)clearInterval(typeTimer);
+  },14);
+}
+function setScenario(key){
+  curSc=key;
+  $$(".dtab").forEach(function(b){
+    var on=b.getAttribute("data-sc")===key;
+    b.classList.toggle("on",on);
+    b.setAttribute("aria-selected",on?"true":"false");
+  });
+  renderBook();
+  hintTitle.textContent=SCEN[key].title;
+  typeHint(SCEN[key].text);
+}
+$$(".dtab").forEach(function(b){
+  b.addEventListener("click",function(){setScenario(b.getAttribute("data-sc"))});
+});
+new IntersectionObserver(function(en){demoVisible=en[0].isIntersecting},{threshold:.2}).observe($("#demo"));
+setInterval(function(){if(demoVisible&&!reduced)renderBook()},1600);
+setScenario("calm");
+
+/* ---------- AI Макс: девять действий ---------- */
+var MAX_ACTS=[
+  ["feynman","Фейнман-чек",[["you","Фандинг — это чтобы цена фьючерса не убегала от спота?"],["max","Механику понял. Вердикт 7/10. Пропустил, кто кому платит при отрицательном фандинге. Дойди до конца — будет 10."]]],
+  ["explain","Объясни иначе",[["max","Три раза по-другому. 1) Фандинг — аренда позиции. 2) Толпа платит за то, чтобы стоять в одну сторону. 3) Рынок доплачивает тем, кто готов встать против."]]],
+  ["socrates","Сократ",[["you","Почему мой стоп выбило, а цена потом выросла?"],["max","Вопрос на вопрос: а где в стакане стояли ликвидации таких же стопов, как твой?"]]],
+  ["tasks","Генератор задач",[["max","Задача: депозит 1 000$, риск на сделку 1%, стоп 2,5% от входа. Каков размер позиции с плечом и без? Ответишь — проверю расчёт."]]],
+  ["hints","Подсказки",[["max","Ступень 1: посмотри, какая величина в условии лишняя. Ступень 2 откроется, если всё равно застрянешь. Ступень 3 — почти готовый разбор, она стоит лимита."]]],
+  ["critic","Критик гипотезы",[["max","Гипотеза «покупаю после трёх зелёных дней». Оси: данные 3/10, логика 4/10, риск 2/10, исполнение 5/10, психология 3/10. Вердикт: сначала тест на истории."]]],
+  ["audit","Ревизор устава",[["max","В правиле «не торговать в пятницу» найдена лазейка: «в четверг вечером, ведь это ещё не пятница». Переформулируем по событию, а не по дню недели."]]],
+  ["diagnosis","Диагноз ошибки",[["max","Тип ловушки: расчётная. Ты перепутал плечо с размером позиции. Записал в журнал и добавил задачу на закрепление через 5 уроков."]]],
+  ["sparring","Спарринг",[["max","Убеждение «стоп — это слабость». Steelman: стоп защищает от хвостов. Атака: тогда почему выбитых стопов статистически больше, чем хвостов? Check: где твои данные?"]]]
+];
+var maxTabs=$("#maxTabs"),maxChat=$("#maxChat");
+function renderMax(key){
+  var act=null;
+  MAX_ACTS.forEach(function(a){if(a[0]===key)act=a});
+  $$(".mtab",maxTabs).forEach(function(b){b.classList.toggle("on",b.getAttribute("data-act")===key)});
+  maxChat.innerHTML=act[2].map(function(ln){
+    var who=ln[0]==="max"?"Макс":"ты";
+    return '<div class="ln'+(ln[0]==="max"?" mx":"")+'"><span class="who">'+who+'</span>'+ln[1]+'</div>';
+  }).join("");
+}
+MAX_ACTS.forEach(function(a,idx){
+  var b=document.createElement("button");
+  b.className="mtab";b.type="button";
+  b.setAttribute("data-act",a[0]);
+  b.setAttribute("role","tab");
+  b.textContent=a[1];
+  b.addEventListener("click",function(){renderMax(a[0])});
+  maxTabs.appendChild(b);
+  if(idx===0)b.classList.add("on");
+});
+renderMax("feynman");
+
+/* ---------- FAQ accordion ---------- */
+$$(".qa-q").forEach(function(b){
+  b.addEventListener("click",function(){
+    var qa=b.parentElement,a=$(".qa-a",qa);
+    var open=qa.classList.toggle("open");
+    b.setAttribute("aria-expanded",open?"true":"false");
+    a.style.maxHeight=open?a.scrollHeight+"px":"0px";
+    if(open)track("faq_open");
+  });
+});
+
+/* ---------- модалка регистрации ---------- */
+var modal=$("#modal"),formView=$("#mFormView"),waitView=$("#mWaitView");
+var fEmail=$("#fEmail"),fPass=$("#fPass"),fTerms=$("#fTerms");
+var eEmail=$("#eEmail"),ePass=$("#ePass"),eTerms=$("#eTerms");
+var regBtn=$("#regBtn"),lastFocus=null;
+function openModal(){
+  lastFocus=document.activeElement;
+  modal.hidden=false;document.body.style.overflow="hidden";
+  track("click_start_free");
+  setTimeout(function(){fEmail.focus()},60);
+}
+function closeModal(){
+  modal.hidden=true;document.body.style.overflow="";
+  if(lastFocus)lastFocus.focus();
+}
+$$("[data-open-modal]").forEach(function(b){b.addEventListener("click",openModal)});
+$$("[data-close]",modal).forEach(function(b){b.addEventListener("click",closeModal)});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"&&!modal.hidden)closeModal();
+});
+$("#passTog").addEventListener("click",function(){
+  var show=fPass.type==="password";
+  fPass.type=show?"text":"password";
+  this.textContent=show?"скрыть":"показать";
+});
+function showWait(email,dup){
+  formView.hidden=true;waitView.hidden=false;
+  $("#waitMail").textContent=(dup?"уже в очереди: ":"записали: ")+email;
+}
+$("#regForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  eEmail.textContent="";ePass.textContent="";eTerms.textContent="";
+  var email=fEmail.value.trim(),pass=fPass.value,ok=true;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){eEmail.textContent="Похоже, в адресе опечатка. Проверь и попробуй ещё раз.";ok=false}
+  if(pass.length<8){ePass.textContent="Пароль короче 8 символов — давай длиннее.";ok=false}
+  if(!fTerms.checked){eTerms.textContent="Нужно согласиться с условиями — без этого никак.";ok=false}
+  if(!ok)return;
+  track("signup_start");
+  regBtn.disabled=true;regBtn.textContent="Отправляем…";
+  var ctrl=("AbortController" in window)?new AbortController():null;
+  var to=ctrl?setTimeout(function(){ctrl.abort()},2500):null;
+  fetch("/api/auth/register",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:email,password:pass}),
+    signal:ctrl?ctrl.signal:undefined
+  }).then(function(res){
+    clearTimeout(to);
+    if(res.ok){track("signup_success");window.location.href="/index.html?welcome=phase0";return}
+    if(res.status===409){regBtn.disabled=false;regBtn.textContent="Создать аккаунт";eEmail.textContent="Такая почта уже занята — может, войти?";return}
+    enterWaitlist(email);
+  }).catch(function(){
+    clearTimeout(to);
+    enterWaitlist(email);
+  });
+  function enterWaitlist(mail){
+    regBtn.disabled=false;regBtn.textContent="Создать аккаунт";
+    var list=[];
+    try{list=JSON.parse(localStorage.getItem("cn_waitlist")||"[]")}catch(err){}
+    var dup=list.indexOf(mail)>-1;
+    if(!dup){list.push(mail);try{localStorage.setItem("cn_waitlist",JSON.stringify(list))}catch(err){}}
+    track("signup_waitlist");
+    showWait(mail,dup);
+  }
+});
+})();
+</script>
+</body>
+</html>

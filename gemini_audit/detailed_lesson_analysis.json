@@ -1,0 +1,1273 @@
+[
+  {
+    "id": "p0_l1",
+    "phase": 0,
+    "num": "0.1",
+    "title": "Что вообще такое криптовалюта?",
+    "blockTypes": [
+      "concept",
+      "interactive_network",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l2",
+    "phase": 0,
+    "num": "0.2",
+    "title": "Кошелёк, адрес и перевод средств",
+    "blockTypes": [
+      "concept",
+      "interactive_wallet",
+      "interactive_share_check",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l3",
+    "phase": 0,
+    "num": "0.3",
+    "title": "Спотовая покупка и криптобиржи (CEX и DEX)",
+    "blockTypes": [
+      "concept",
+      "interactive_exchange_choice",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l4",
+    "phase": 0,
+    "num": "0.4",
+    "title": "Как формируется цена? (Цена покупки, продажи и спред)",
+    "blockTypes": [
+      "concept",
+      "interactive_market_discovery",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l5",
+    "phase": 0,
+    "num": "0.5",
+    "title": "Как устроен ценовой график (Цена, Время, Объём)",
+    "blockTypes": [
+      "concept",
+      "interactive_line_chart",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l6",
+    "phase": 0,
+    "num": "0.6",
+    "title": "Тренажёр чтения графика: Анализ движений",
+    "blockTypes": [
+      "concept",
+      "interactive_chart_reader_trainer",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l7",
+    "phase": 0,
+    "num": "0.7",
+    "title": "Японская свеча: 4 главных числа (OHLC)",
+    "blockTypes": [
+      "concept",
+      "interactive_candlestick_builder",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l8",
+    "phase": 0,
+    "num": "0.8",
+    "title": "Тренажёр «Прочитай свечу» и что график НЕ может сказать",
+    "blockTypes": [
+      "concept",
+      "interactive_candle_reader_trainer",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l9",
+    "phase": 0,
+    "num": "0.9",
+    "title": "Биржевой стакан и типы заявок (Лимитные и Рыночные)",
+    "blockTypes": [
+      "concept",
+      "interactive_mini_orderbook",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l10",
+    "phase": 0,
+    "num": "0.10",
+    "title": "Ликвидность и проскальзывание цены (Slippage)",
+    "blockTypes": [
+      "concept",
+      "interactive_slippage_slider",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l11",
+    "phase": 0,
+    "num": "0.11",
+    "title": "Прибыль и убыток (Спотовый PnL)",
+    "blockTypes": [
+      "concept",
+      "interactive_pnl_slider",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l12",
+    "phase": 0,
+    "num": "0.12",
+    "title": "Просадка капитала (Drawdown) и Закон асимметрии потерь",
+    "blockTypes": [
+      "interactive_pos_sizer",
+      "concept",
+      "interactive_drawdown_calc",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 2,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l13",
+    "phase": 0,
+    "num": "0.13",
+    "title": "Вероятность с нуля: Закон больших чисел",
+    "blockTypes": [
+      "concept",
+      "interactive_coin_flip",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l14",
+    "phase": 0,
+    "num": "0.14",
+    "title": "Среднее значение и математическое ожидание (Expected Value)",
+    "blockTypes": [
+      "concept",
+      "interactive_ev_calc",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 2,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l15",
+    "phase": 0,
+    "num": "0.15",
+    "title": "Разброс результатов и стабильность (Дисперсия и Риск)",
+    "blockTypes": [
+      "concept",
+      "interactive_dispersion_compare",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l16",
+    "phase": 0,
+    "num": "0.16",
+    "title": "Знакомство с деривативами и рисками (Шорт, Плечо, Ликвидация)",
+    "blockTypes": [
+      "concept",
+      "interactive_leverage_risk",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l17",
+    "phase": 0,
+    "num": "0.17",
+    "title": "Мемкоины: памп и дамп изнутри",
+    "blockTypes": [
+      "concept",
+      "interactive_pd_sim",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l18",
+    "phase": 0,
+    "num": "0.18",
+    "title": "Почему большинство трейдеров теряют деньги",
+    "blockTypes": [
+      "concept",
+      "interactive_ruin_calc",
+      "interactive_ev_calc",
+      "recap",
+      "concept"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l19",
+    "phase": 0,
+    "num": "0.19",
+    "title": "Шиткоин или проект? Чек-лист из 5 вопросов",
+    "blockTypes": [
+      "concept",
+      "interactive_onchain_check",
+      "interactive_dd_trainer",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p0_l20",
+    "phase": 0,
+    "num": "0.20",
+    "title": "Безопасность: ключи, seed-фраза и фишинг",
+    "blockTypes": [
+      "concept",
+      "interactive_share_check",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l1",
+    "phase": 1,
+    "num": "1.1",
+    "title": "Лог-доходности vs абсолютные цены: почему модели строят на логарифмах",
+    "blockTypes": [
+      "concept",
+      "interactive_logret",
+      "simple",
+      "analogy",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l2",
+    "phase": 1,
+    "num": "1.2",
+    "title": "Распределения доходностей, эксцесс и QQ-plot: эмпирическая проверка \"толстых хвостов\"",
+    "blockTypes": [
+      "concept",
+      "interactive_fattails",
+      "simple",
+      "analogy",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l3",
+    "phase": 1,
+    "num": "1.3",
+    "title": "Стационарность временных рядов: комплексная проверка (ADF + KPSS + rolling statistics)",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l4",
+    "phase": 1,
+    "num": "1.4",
+    "title": "Автокорреляция и частичная автокорреляция (ACF/PACF): поиск скрытой памяти",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l5",
+    "phase": 1,
+    "num": "1.5",
+    "title": "Научный метод кванта: как формулировать рыночную гипотезу (Idea → Data → Model)",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l6",
+    "phase": 1,
+    "num": "1.6",
+    "title": "Архитектура векторного бэктеста: быстрый матричный расчет сигналов и доходностей",
+    "blockTypes": [
+      "interactive_ob_bridge",
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l7",
+    "phase": 1,
+    "num": "1.7",
+    "title": "Look-ahead bias: как заглядывание в будущее убивает бэктесты и как его найти в коде",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l8",
+    "phase": 1,
+    "num": "1.8",
+    "title": "Учет трения: комиссии Maker/Taker, слиппедж и стоимость заемных средств",
+    "blockTypes": [
+      "concept",
+      "interactive_costs",
+      "simple",
+      "analogy",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 7,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l9",
+    "phase": 1,
+    "num": "1.9",
+    "title": "Схема валидации данных: Train / Holdout / Final Test и скользящий Walk-Forward анализ",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l10",
+    "phase": 1,
+    "num": "1.10",
+    "title": "Метрики эффективности: Sharpe Ratio, Sortino Ratio, Max Drawdown и Calmar",
+    "blockTypes": [
+      "concept",
+      "interactive_overfit",
+      "simple",
+      "analogy",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 7,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l11",
+    "phase": 1,
+    "num": "1.11",
+    "title": "Бенчмарки и атрибуция доходности: BTC, ETH, Vol-matched и Risk-free (Alpha vs Beta)",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "ai_agent_task",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p1_l12",
+    "phase": 1,
+    "num": "1.12",
+    "title": "Тестирование робастности (Robustness ±20%): устойчивость параметров к рыночному шуму",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p2_l1",
+    "phase": 2,
+    "num": "2.1",
+    "title": "Сентимент рынка: источники, метрики страха и жадности, асимметрия настроений",
+    "blockTypes": [
+      "interactive_llm_sentiment",
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p2_l2",
+    "phase": 2,
+    "num": "2.2",
+    "title": "NLP и парсинг Telegram-каналов: опережающие сигналы из русскоязычного инфополя",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p2_l3",
+    "phase": 2,
+    "num": "2.3",
+    "title": "On-chain аналитика: движение монет, балансы кошельков и притоки/оттоки с CEX",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p2_l4",
+    "phase": 2,
+    "num": "2.4",
+    "title": "Кластеризация китов: выявление крупных игроков и фильтрация рыночного шума",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p2_l5",
+    "phase": 2,
+    "num": "2.5",
+    "title": "Микроструктура стакана: дисбаланс книги ордеров (Order Book Imbalance) и ликвидность",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p2_l6",
+    "phase": 2,
+    "num": "2.6",
+    "title": "Качество данных и цикл «Гипотеза → Данные» против ловушки Data Hoarding",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "ai_agent_task",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 6,
+    "hasQuiz": true
+  },
+  {
+    "id": "p3_l1",
+    "phase": 3,
+    "num": "3.1",
+    "title": "Корреляция vs Коинтеграция: почему коинтегрированный спред устойчивее коррелированных цен",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p3_l2",
+    "phase": 3,
+    "num": "3.2",
+    "title": "Статистический арбитраж (Pairs Trading): построение и торговля z-score спреда",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p3_l3",
+    "phase": 3,
+    "num": "3.3",
+    "title": "Критерий Келли и Дробный Келли (Fractional Kelly): сайзинг позиций без риска разорения",
+    "blockTypes": [
+      "interactive_pos_sizer",
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p3_l4",
+    "phase": 3,
+    "num": "3.4",
+    "title": "Риск-паритет (Risk Parity) и диверсификация портфеля некоррелированных альф",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p3_l5",
+    "phase": 3,
+    "num": "3.5",
+    "title": "Дельта-нейтральные стратегии: фандинг-арбитраж как гипотеза и скрытые риски",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 5,
+    "hasQuiz": true
+  },
+  {
+    "id": "p3_l6",
+    "phase": 3,
+    "num": "3.6",
+    "title": "Стресс-тестирование портфеля: сценарный анализ и проверка корреляций в крах-дни",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l1",
+    "phase": 4,
+    "num": "4.1",
+    "title": "Ноутбук → Продакшн: перевод кода из Jupyter Notebook в модульные сервисы",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l2",
+    "phase": 4,
+    "num": "4.2",
+    "title": "VPS, Docker, мониторинг и Telegram-алерты: отказоустойчивость 24/7",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l3",
+    "phase": 4,
+    "num": "4.3",
+    "title": "Безопасность биржевых API: права только Trade, IP Whitelist и шифрование ключей",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l4",
+    "phase": 4,
+    "num": "4.4",
+    "title": "Автономный Kill-Switch: экстренное закрытие позиций и защита от аномалий",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l5",
+    "phase": 4,
+    "num": "4.5",
+    "title": "Paper Trading в реальном времени и метрика Execution Deviation",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap",
+      "concept"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 5,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l6",
+    "phase": 4,
+    "num": "4.6",
+    "title": "Российская специфика: P2P-гигиена, 115-ФЗ и расчет 3-НДФЛ (13–15%) по методу FIFO",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap",
+      "concept"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 5,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l7",
+    "phase": 4,
+    "num": "4.7",
+    "title": "Автономные агенты и DeFAI: где граница между «предлагает» и «решает»",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l8",
+    "phase": 4,
+    "num": "4.8",
+    "title": "Не пиши бота с нуля: карта открытых фреймворков (Freqtrade / Hummingbot / CCXT)",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p4_l9",
+    "phase": 4,
+    "num": "4.9",
+    "title": "Торговля на Perp-DEX: Hyperliquid, dYdX и on-chain деривативы",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p5_l1",
+    "phase": 5,
+    "num": "5.1",
+    "title": "Микро-лайв (100–200 тыс ₽) и его цели: калибровка психологии и сверка с Paper",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p5_l2",
+    "phase": 5,
+    "num": "5.2",
+    "title": "Масштабирование капитала и ёмкость стратегии (Capacity): почему алгоритм на $1k ломается на $50k",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p5_l3",
+    "phase": 5,
+    "num": "5.3",
+    "title": "Архитектура капитала 40/40/20: базовый фундамент, активный эдж и резерв",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 5,
+    "hasQuiz": true
+  },
+  {
+    "id": "p5_l4",
+    "phase": 5,
+    "num": "5.4",
+    "title": "Ребалансировка, журнал алготрейдера и мониторинг деградации альфы (Alpha Decay)",
+    "blockTypes": [
+      "concept",
+      "simple",
+      "analogy",
+      "interactive_inline",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 0,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p5_l5",
+    "phase": 5,
+    "num": "5.5",
+    "title": "Психология просадки: как не выключить работающего бота в худший момент",
+    "blockTypes": [
+      "concept",
+      "interactive_streak",
+      "numbers",
+      "table",
+      "warn",
+      "ai_agent_task",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p5_l6",
+    "phase": 5,
+    "num": "5.6",
+    "title": "Торговый устав: письменные правила, которые сильнее эмоций",
+    "blockTypes": [
+      "concept",
+      "interactive_charter",
+      "table",
+      "warn",
+      "ai_agent_task",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p5_l7",
+    "phase": 5,
+    "num": "5.7",
+    "title": "Риск контрагента: где на самом деле хранить 5–6 млн ₽",
+    "blockTypes": [
+      "concept",
+      "interactive_counterparty",
+      "numbers",
+      "warn",
+      "table",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l1",
+    "phase": 6,
+    "num": "Б1",
+    "title": "Майнинг: печатаешь монеты, а платишь за свет",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l2",
+    "phase": 6,
+    "num": "Б2",
+    "title": "Стейкинг: проценты за помощь сети — но риск не в APY",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l3",
+    "phase": 6,
+    "num": "Б3",
+    "title": "DeFi-доходность: откуда берётся и кто за неё платит",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l4",
+    "phase": 6,
+    "num": "Б4",
+    "title": "NFT: сертификат владения и миф о лёгкой продаже",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l5",
+    "phase": 6,
+    "num": "Б5",
+    "title": "Опционы Call/Put: страховка или лотерейный билет",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l6",
+    "phase": 6,
+    "num": "Б6",
+    "title": "Рынки предсказаний: торгуй вероятностями событий",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l17",
+    "phase": 6,
+    "num": "Б6+",
+    "title": "Полимаркет: как возник и почему его цены смотрит весь рынок",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l7",
+    "phase": 6,
+    "num": "Б7",
+    "title": "GameFi/P2E и метавселенные: играть за деньги?",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l8",
+    "phase": 6,
+    "num": "Б8",
+    "title": "Airdrop, ретродропы и Launchpad: награда за активность",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l9",
+    "phase": 6,
+    "num": "Б9",
+    "title": "Крипто-краны: почему этот способ умер (ретро-справка)",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l10",
+    "phase": 6,
+    "num": "Б10",
+    "title": "Polymarket изнутри: CLOB, UMA и цена выхода",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l11",
+    "phase": 6,
+    "num": "Б11",
+    "title": "Стратегии Polymarket: от чистого арбитража до продажи хвостов",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 4,
+    "hasQuiz": true
+  },
+  {
+    "id": "p6_l13",
+    "phase": 6,
+    "num": "Б13",
+    "title": "RWA: облигации, фонды и золото на блокчейне",
+    "blockTypes": [
+      "concept",
+      "recap"
+    ],
+    "hasSimple": true,
+    "codeBlocksCount": 1,
+    "termsCount": 3,
+    "hasQuiz": true
+  }
+]

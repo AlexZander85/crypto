@@ -1,97 +1,97 @@
 {
-  "version": "ru.82c6e594",
+  "version": "ru.55b0c6fe",
   "locale": "ru",
-  "generated": "2026-08-25T14:07:44.263Z",
+  "generated": "2026-08-28T13:15:06.896Z",
   "source": "index_v9.html",
   "packs": [
     {
       "name": "core_demo",
       "demo": true,
-      "version": "5e00b565cd1c",
-      "bytes": 154413,
-      "brotli_bytes": 36449
+      "version": "c00f229a2428",
+      "bytes": 326418,
+      "brotli_bytes": 71247
     },
     {
       "name": "core_p0",
       "demo": false,
-      "version": "fab23a7bf4ed",
+      "version": "72adc8901c68",
       "bytes": 99345,
-      "brotli_bytes": 23868
+      "brotli_bytes": 23860
     },
     {
       "name": "core_p1",
       "demo": false,
-      "version": "08dba1968330",
+      "version": "6de786f44e5c",
       "bytes": 131154,
-      "brotli_bytes": 31935
+      "brotli_bytes": 31969
     },
     {
       "name": "core_p2",
       "demo": false,
-      "version": "fa0908220da6",
+      "version": "4fa02e2ac390",
       "bytes": 57331,
       "brotli_bytes": 15491
     },
     {
       "name": "core_p3",
       "demo": false,
-      "version": "255188e128e0",
+      "version": "a6530f3532ce",
       "bytes": 58441,
       "brotli_bytes": 15087
     },
     {
       "name": "core_p4",
       "demo": false,
-      "version": "3cc4052eace6",
+      "version": "f45607f5c050",
       "bytes": 71885,
-      "brotli_bytes": 18907
+      "brotli_bytes": 18908
     },
     {
       "name": "core_p5",
       "demo": false,
-      "version": "1a9e3e4f1a69",
+      "version": "ce75dc0a2963",
       "bytes": 74155,
-      "brotli_bytes": 18401
+      "brotli_bytes": 18415
     },
     {
       "name": "core_p6",
       "demo": false,
-      "version": "21e2e1629073",
+      "version": "1b46da444fd9",
       "bytes": 143175,
-      "brotli_bytes": 33765
+      "brotli_bytes": 33778
     },
     {
       "name": "core_p7",
       "demo": false,
-      "version": "b064fbc72017",
+      "version": "798eae06fae9",
       "bytes": 74782,
-      "brotli_bytes": 13022
+      "brotli_bytes": 13019
     },
     {
       "name": "core_p8",
       "demo": false,
-      "version": "0ba19d006994",
-      "bytes": 55138,
-      "brotli_bytes": 13954
+      "version": "97f22a6e0bea",
+      "bytes": 227143,
+      "brotli_bytes": 49847
     },
     {
       "name": "terms",
       "demo": false,
-      "version": "48c5e014684e",
+      "version": "17160f5f3e96",
       "bytes": 98162,
-      "brotli_bytes": 24736
+      "brotli_bytes": 24742
     },
     {
       "name": "tests",
       "demo": false,
-      "version": "59ef79f0e1c1",
+      "version": "72cc1473e7fc",
       "bytes": 93592,
-      "brotli_bytes": 21969
+      "brotli_bytes": 21986
     },
     {
       "name": "earning",
       "demo": false,
-      "version": "73dee9efab34",
+      "version": "fe48a07fd2e4",
       "bytes": 38505,
       "brotli_bytes": 10611
     }

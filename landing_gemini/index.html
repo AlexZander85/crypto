@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>КриптоНавигатор — Образовательный симулятор криптотрейдинга и ботов</title>
+  <meta name="description" content="Практический симулятор криптотрейдинга от основ блокчейна до управления торговыми ботами. 134 урока, 145 виджетов, 21 мини-игра. Бесплатная Фаза 0.">
+  
+  <!-- Hreflang Tags -->
+  <link rel="canonical" href="https://cryptonavigator.app/">
+  <link rel="alternate" hreflang="ru" href="https://cryptonavigator.app/">
+  <link rel="alternate" hreflang="en" href="https://cryptonavigator.app/en/">
+  <link rel="alternate" hreflang="es" href="https://cryptonavigator.app/es/">
+  <link rel="alternate" hreflang="pt" href="https://cryptonavigator.app/pt/">
+  <link rel="alternate" hreflang="x-default" href="https://cryptonavigator.app/">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./styles.css">
+
+  <!-- Schema.org JSON-LD FAQ -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Нужен ли опыт в программировании или трейдинге для старта?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Нет. Программа начинается с нулевого уровня: наглядные аналогии, интерактивные схемы и пошаговые симуляторы без сложного кода."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Даёт ли симулятор финансовые советы или торговые сигналы?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Нет. Продукт обучает принципам математики, управления рисками и психологии принятия решений. Сигналы и гарантии дохода отсутствуют."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Что входит в бесплатную версию?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Все 20 уроков Фазы 0 и базовый блок психологии оператора (П1–П8). Доступ остаётся навсегда без ввода данных банковской карты."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Будут ли обновления платными после покупки?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Нет. Единоразовый платёж 990 ₽ открывает полный курс и все последующие материалы без ежемесячных списаний."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Как устроена оплата из России и других стран?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Поддерживаются банковские карты РФ (МИР), СБП, а также международные карты через защищённый платёжный шлюз."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Где сохраняются мои данные и результаты прохождения?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Прогресс хранится локально в вашем браузере, а при создании аккаунта синхронизируется с защищённым облаком."
+      }
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+  <!-- Top HUD Ticker -->
+  <div class="hud-ticker">
+    <div class="container hud-ticker-inner">
+      <div class="hud-pulse">РЕЖИМ СИМУЛЯЦИИ: АКТИВЕН</div>
+      <div class="hud-item">BTC/USDT $64,280</div>
+      <div class="hud-item">ФАНДИНГ: +0.0100%</div>
+      <div class="hud-item"><span>ОФЛАЙН ЯДРО 2.8 MB</span></div>
+    </div>
+  </div>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./index.html" class="brand-logo" aria-label="КриптоНавигатор">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        </svg>
+        <span>КриптоНавигатор</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#showcase" class="nav-link">Возможности</a></li>
+        <li><a href="#curriculum" class="nav-link">Программа</a></li>
+        <li><a href="#psychology" class="nav-link">Психология</a></li>
+        <li><a href="#kryptik" class="nav-link">Криптик</a></li>
+        <li><a href="#quests" class="nav-link">Квесты</a></li>
+        <li><a href="#pricing" class="nav-link">Тарифы</a></li>
+        <li><a href="#faq" class="nav-link">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="lang-switch" role="navigation" aria-label="Language selection">
+          <a href="./" class="lang-btn active">RU</a>
+          <a href="en/" class="lang-btn ">EN</a>
+          <a href="es/" class="lang-btn ">ES</a>
+          <a href="pt/" class="lang-btn ">PT</a>
+        </div>
+        <button class="btn btn-primary js-open-reg">Начать бесплатно</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="badge-tag">
+          <span>●</span> Образовательный симулятор криптотрейдинга
+        </div>
+        <h1 class="hero-title">95% новичков теряют депозит в первые месяцы. Остальные — сначала учатся.</h1>
+        <p class="hero-subtitle">Интерактивный симулятор от основ блокчейна до управления торговыми ботами. Без риска реальных денег, без платных сигналов, без иллюзий лёгкого заработка.</p>
+        
+        <div class="hero-cta-group">
+          <button class="btn btn-primary btn-cta-large js-open-reg">Создать аккаунт</button>
+          <a href="#showcase" class="btn btn-secondary btn-cta-large">Посмотреть, как это работает ↓</a>
+        </div>
+        
+        <div class="hero-trust">Старт без карты · Бесплатная Фаза 0 навсегда · Работает офлайн</div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-bar">
+          <div class="metric-item">
+            <div class="metric-value">134</div>
+            <div class="metric-label">урока курса</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">145</div>
+            <div class="metric-label">интерактивных виджетов</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">21</div>
+            <div class="metric-label">мини-игра и тренажёр</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">205</div>
+            <div class="metric-label">терминов в глоссарии</div>
+          </div>
+        </div>
+
+        <!-- Interactive Product Showcase -->
+        <div class="showcase-container" id="showcase">
+          <div class="showcase-tabs" role="tablist">
+            <button class="showcase-tab-btn active" data-target="panel-home">🖥️ Пульт управления</button>
+            <button class="showcase-tab-btn" data-target="panel-sim">📊 Биржевой стакан</button>
+            <button class="showcase-tab-btn" data-target="panel-psy">🧠 Психотренажёр</button>
+            <button class="showcase-tab-btn" data-target="panel-road">🗺️ Карта 9 фаз</button>
+            <button class="showcase-tab-btn" data-target="panel-mobile">📱 Мобильный режим</button>
+          </div>
+
+          <div class="showcase-viewport">
+            <div class="showcase-panel active" id="panel-home">
+              <img src="./assets/screenshots/01-home.png" width="1080" height="600" alt="CryptoNavigator Home Cockpit" loading="eager">
+            </div>
+            <div class="showcase-panel" id="panel-sim">
+              <img src="./assets/screenshots/04-simulator.png" width="1080" height="600" alt="Order Book Depth Simulator" loading="lazy">
+            </div>
+            <div class="showcase-panel" id="panel-psy">
+              <img src="./assets/screenshots/05-psychology.png" width="1080" height="600" alt="Psychology Trainer 03:00 Alarm" loading="lazy">
+            </div>
+            <div class="showcase-panel" id="panel-road">
+              <img src="./assets/screenshots/02-roadmap.png" width="1080" height="600" alt="Curriculum Roadmap" loading="lazy">
+            </div>
+            <div class="showcase-panel" id="panel-mobile">
+              <img src="./assets/screenshots/08-mobile.png" width="1080" height="600" alt="Mobile Responsive Simulation" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Career Progression Track -->
+    <section class="section" id="career">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Карьерный трек</span>
+          <h2 class="section-title">Путь от Стажёра до Управляющего фондом</h2>
+        </div>
+
+        <div class="career-grid">
+          <div class="career-card">
+            <div class="career-rank-num">LEVEL 01</div>
+            <h3 class="career-title">🌱 Стажёр</h3>
+            <p class="career-desc">Основы блокчейна, механика стакана, холодные кошельки и безопасность.</p>
+          </div>
+          <div class="career-card">
+            <div class="career-rank-num">LEVEL 02</div>
+            <h3 class="career-title">⚡ Младший оператор</h3>
+            <p class="career-desc">Математика вероятностей, толстые хвосты, критерий Келли и асимметрия просадок.</p>
+          </div>
+          <div class="career-card">
+            <div class="career-rank-num">LEVEL 03</div>
+            <h3 class="career-title">🤖 Разработчик стратегий</h3>
+            <p class="career-desc">Бэктестинг, стейт-машины ботов, арбитраж фандинга и защита kill-switch.</p>
+          </div>
+          <div class="career-card" style="border-color: var(--accent-sky);">
+            <div class="career-rank-num" style="color: var(--accent-green);">LEVEL 04 (MASTER)</div>
+            <h3 class="career-title">👑 Управляющий фондом</h3>
+            <p class="career-desc">DeFi протоколы, MEV, хаос-инженерия стресс-тестов и защита капитала.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="section" id="problem">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Реальность рынка</span>
+          <h2 class="section-title">Почему 9 из 10 новичков сливают первый депозит</h2>
+        </div>
+
+        <div class="problem-grid">
+          <div class="problem-card">
+            <div class="problem-icon">🎰</div>
+            <h3 class="problem-card-title">Покупка по чужим сигналам</h3>
+            <p class="problem-card-desc">Вход в позицию на пике хайпа из соцсетей без понимания механики стакана, ликвидности и распределения объёмов.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">📉</div>
+            <h3 class="problem-card-title">Кредитное плечо как рулетка</h3>
+            <p class="problem-card-desc">Использование плеча x20 без расчёта цены ликвидации и стоимости финансирования позиции.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">🧠</div>
+            <h3 class="problem-card-title">Ночной тилт и панические сделки</h3>
+            <p class="problem-card-desc">Попытки отыграться после убытка, усреднение падающего ножа и нарушение собственных правил в 3 часа ночи.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transformation Section (Before -> After) -->
+    <section class="section" id="transformation">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Метод подготовки</span>
+          <h2 class="section-title">Как меняется твоё мышление за 9 фаз практики</h2>
+        </div>
+
+        <div class="transformation-list">
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Покупает токен, потому что «все говорят, что вырастет».</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Открывает биржевой стакан, оценивает глубину, спред и объём заявок до входа.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Берёт плечо x50 и ловит ликвидацию на первом скачке в 2%.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Рассчитывает размер позиции по формуле Келли с учётом волатильности и лимита риска на сделку.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Не спит ночами, проверяя график каждые пять минут.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Настраивает торгового бота с чётким алгоритмом kill-switch и спит спокойно.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Теряет средства на фишинге, сомнительных аппрувах и скам-контрактах.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Проверяет контракты, права доступа и держит активы в защищённом холодном хранилище.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Считает рынок казино и винит манипуляторов.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Понимает механику комиссий, фандинга, MEV и вероятностную природу исходов.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Simulator Section -->
+    <section class="section" id="simulator">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Практика без риска</span>
+          <h2 class="section-title">Тренажёр биржевого стакана прямо в браузере</h2>
+          <p class="section-desc">Изучай механику сведения ордеров, спред и плотность ликвидности на интерактивном симуляторе. Встроенные детекторы подсказывают рыночные аномалии в реальном времени.</p>
+        </div>
+
+        <div class="sim-container">
+          <div class="sim-header">
+            <div class="sim-title">⚡ Симулятор стакана заявок (Order Book)</div>
+            <div class="sim-spread">Текущий спред: <span id="sim-spread-val">0.02%</span></div>
+          </div>
+
+          <div class="sim-book-grid">
+            <div class="order-col">
+              <div class="col-header bids">
+                <span>Покупка (Bid)</span>
+                <span>Volume</span>
+              </div>
+              <div class="order-row"><span class="price bid">64,195.00</span><span class="size">4.21 BTC</span></div>
+              <div class="order-row"><span class="price bid">64,190.50</span><span class="size">8.50 BTC</span></div>
+              <div class="order-row"><span class="price bid">64,185.00</span><span class="size">12.10 BTC</span></div>
+            </div>
+
+            <div class="order-col">
+              <div class="col-header asks">
+                <span>Продажа (Ask)</span>
+                <span>Volume</span>
+              </div>
+              <div class="order-row"><span class="price ask">64,200.00</span><span class="size">3.80 BTC</span></div>
+              <div class="order-row"><span class="price ask">64,205.50</span><span class="size">6.15 BTC</span></div>
+              <div class="order-row"><span class="price ask">64,210.00</span><span class="size">15.40 BTC</span></div>
+            </div>
+          </div>
+
+          <div class="sim-detector">
+            <span class="detector-badge">Детектор наставника</span>
+            <span class="detector-text" id="sim-detector-text">Спред узкий (0.02%). Ликвидность плотная, проскальзывание минимально.</span>
+          </div>
+
+          <div class="sim-controls">
+            <button class="btn btn-primary" id="btn-sim-buy">Смоделировать покупку</button>
+            <button class="btn btn-secondary" id="btn-sim-sell">Смоделировать продажу</button>
+            <span class="sim-status" id="sim-status-msg">Ордер исполнен по рынку без проскальзывания.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Infographics Models -->
+    <section class="section" id="infographics">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Визуальные модели</span>
+          <h2 class="section-title">Сложная теория на наглядных схемах</h2>
+          <p class="section-desc">17 авторских визуальных схем встроены в уроки: от анатомии японских свечей до толстых хвостов распределения.</p>
+        </div>
+
+        <div class="infographics-grid">
+          <div class="info-card">
+            <img src="./assets/infographics/img-01.jpg" alt="Blockchain Architecture" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Что такое блокчейн: общая тетрадь</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="./assets/infographics/img-02.jpg" alt="Public vs Private Key" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Адрес vs приватный ключ</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="./assets/infographics/img-03.jpg" alt="Bid/Ask Depth" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Стакан Bid/Ask и глубина спреда</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="./assets/infographics/img-04.jpg" alt="OHLC Candlestick Anatomy" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Анатомия свечи OHLC</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="./assets/infographics/img-05.jpg" alt="Leverage Liquidation Gauge" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Плечо как лупа: ликвидация x10</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="./assets/infographics/img-07.jpg" alt="Fat Tails Distribution" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Fat Tails: Вероятностные хвосты</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section (14 elements) -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Инструменты</span>
+          <h2 class="section-title">14 элементов профессиональной подготовки</h2>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-card-title">🧩 145 интерактивных виджетов</div>
+            <p class="feature-card-desc">Стакан, ликвидации с gauge, фандинг, DeFi yield, эквити-кривые, карта корреляций, дельта-нейтрал, MEV-сэндвич.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🎮 21 мини-игра</div>
+            <p class="feature-card-desc">Гонка блоков, коридор ликвидаций, жирные хвосты, веер Келли, лента коинтеграции, шторм корреляций, спаси депозит.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🔬 Симуляторы реальных процессов</div>
+            <p class="feature-card-desc">Walk-forward анализ, overfitting lab, alpha/beta декомпозитор, kill-switch, execution deviation, хаос-инженерия.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🏗️ 8 конструкторов артефактов</div>
+            <p class="feature-card-desc">Токен за пять шагов, мемкоин в три клика, стейблкоин под набегом, NFT минт, DAO голосование, торговый бот.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">📖 Глоссарий на 205 терминов</div>
+            <p class="feature-card-desc">4 уровня глубины для каждого понятия, жизненные аналогии и английские эквиваленты.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">✅ Аттестации после каждой фазы</div>
+            <p class="feature-card-desc">Порог 80%, подробный разбор каждого вопроса, защита от механического заучивания.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🏆 Карьерная лестница</div>
+            <p class="feature-card-desc">Ранги от Стажёра до Управляющего фондом, стрики, бейджи, боссы-дуэли и спидраны.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">⏱️ Помодоро-таймер 25 минут</div>
+            <p class="feature-card-desc">Встроенный инструмент контроля учебных сессий для сохранения высокой концентрации.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🔄 Интерливинг и SM-2 повторы</div>
+            <p class="feature-card-desc">Интервальное повторение по алгоритму SuperMemo-2 каждые 5 уроков для прочного закрепления.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🧘 NSDR-консолидация</div>
+            <p class="feature-card-desc">Сессии тишины с дыханием 4-4-6 после уроков для усвоения изученного материала.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🔀 Перемешивание ответов</div>
+            <p class="feature-card-desc">Детерминированный генератор случайных чисел исключает запоминание номеров ответов.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">📊 Brier-калибровка прогнозов</div>
+            <p class="feature-card-desc">Оценка точности прогнозов помогает объективно отличать знания от интуитивных догадок.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">📓 Журнал когнитивных ошибок</div>
+            <p class="feature-card-desc">Фиксация повторяющихся поведенческих ловушек с персональными рекомендациями наставника.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">💾 Один файл, офлайн-режим</div>
+            <p class="feature-card-desc">Размер 2,8 МБ, работает автономно в браузере без серверов и сторонних трекеров.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Psychology & Kryptik Section -->
+    <section class="section" id="psychology">
+      <div class="container">
+        <div class="two-column-block">
+          <div>
+            <span class="section-tag">Человеческий фактор</span>
+            <h2 class="section-title">Главная уязвимость торговой системы — человек за монитором</h2>
+            <p class="section-desc" style="margin-bottom: 24px;">Единственная программа с отдельной фазой о психологии оператора алгоритмических систем.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="feature-card">
+                <div class="feature-card-title">🌙 Тревога в 03:00</div>
+                <p class="feature-card-desc">Симуляция ночных оповещений и отработка дисциплины невмешательства в работу алгоритма.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-card-title">📈 Головокружение от успехов</div>
+                <p class="feature-card-desc">Предотвращение завышения рисков и нарушения риск-менеджмента после серии прибыльных сделок.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-card-title">⚖️ Ловушка «хоть бы в ноль»</div>
+                <p class="feature-card-desc">Преодоление страха фиксации системного убытка и отказ от усреднения убыточных позиций.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-card-title">✉️ Письмо из будущего</div>
+                <p class="feature-card-desc">Формулирование и фиксация торгового плана до входа в позицию с оценкой наихудшего сценария.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="kryptik">
+            <div class="kryptik-card">
+              <span class="section-tag" style="color: var(--accent-purple); border-color: var(--accent-purple); background: var(--accent-purple-bg);">AI-наставник</span>
+              <h3 class="section-title" style="font-size: 24px; margin-bottom: 12px;">Криптик — твой требовательный наставник</h3>
+              <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">Саркастичный старший товарищ, знающий структуру всех 134 уроков:</p>
+              
+              <!-- Kryptik Terminal Sandbox -->
+              <div class="kryptik-terminal">
+                <div class="terminal-header">
+                  <div class="terminal-dot"></div>
+                  <span>KRYPTIK AI CONSOLE v7.4</span>
+                </div>
+                <div class="kryptik-dialog-box">Криптик: «Твой бот открыл позицию, цена пошла против плана на 3%, сработал лимит риска. Твоё действие?»</div>
+                <div class="kryptik-choice-btns">
+                  <button class="kryptik-choice-btn" id="kryptik-btn-1">▶ Отключить стоп и усреднить</button>
+                  <button class="kryptik-choice-btn" id="kryptik-btn-2">▶ Дать сработать kill-switch по уставу</button>
+                </div>
+                <div class="kryptik-reply" id="kryptik-reply-1">«Классическая ловушка неприятия потерь. Ты нарушил устав бота и удвоил риск. Ошибка зафиксирована в журнале.»</div>
+                <div class="kryptik-reply" id="kryptik-reply-2" style="border-left-color: var(--accent-green); color: #86EFAC;">«Верно. Дисциплина процесса важнее единичной сделки. Судьи считают технику, а не случайные голы.»</div>
+              </div>
+
+              <ul class="kryptik-list">
+                <li>Называет точный тип ошибки: концептуальная, расчётная или эмоциональная ловушка.</li>
+                <li>Комментирует живой рынок: «Спред 4 пункта. Спокойно, без резких движений».</li>
+                <li>Задаёт Сократовы вопросы вместо выдачи готовых шпаргалок.</li>
+                <li>Не утешает ложью и не обещает лёгких денег, но помогает выстроить железную дисциплину.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quests Section -->
+    <section class="section" id="quests">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Практические сценарии</span>
+          <h2 class="section-title">Три виртуальных квеста с последствиями</h2>
+        </div>
+
+        <div class="quests-grid">
+          <div class="quest-card">
+            <span class="quest-tag">Безопасность</span>
+            <h3 class="quest-title">🕵️ Криптик против Мошенника</h3>
+            <p class="quest-desc">7 эпизодов отражения атак: фишинг, вредоносные смарт-контракты, дипфейки и сим-своп до выхода на реальный рынок.</p>
+          </div>
+          <div class="quest-card">
+            <span class="quest-tag">Психология</span>
+            <h3 class="quest-title">🧠 Семь дней: ты против себя</h3>
+            <p class="quest-desc">Неделя управления ботом: отработка устойчивости к фомо, скуке и чужим отчётам о сверхприбылях.</p>
+          </div>
+          <div class="quest-card">
+            <span class="quest-tag">Стресс-тест</span>
+            <h3 class="quest-title">🚨 Паника</h3>
+            <p class="quest-desc">6 кризисных сценариев: падение рынка на 17%, каскад ликвидаций, заморозка выводов на бирже и проверка инфраструктуры.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Curriculum (9 phases) -->
+    <section class="section" id="curriculum">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Структура курса</span>
+          <h2 class="section-title">9 фаз от основ до управления фондом</h2>
+        </div>
+
+        <div class="curriculum-grid">
+          <div class="phase-card featured">
+            <span class="phase-badge">Бесплатно</span>
+            <h3 class="phase-title">Фаза 0: Нулевой горизонт</h3>
+            <p class="phase-desc">20 уроков: блокчейн, кошельки, безопасность, стакан, свечи OHLC, основы деривативов.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 1: Математика рынка</h3>
+            <p class="phase-desc">14 уроков: вероятности, доходности, стационарность, распределения и толстые хвосты.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 2: Управление капиталом</h3>
+            <p class="phase-desc">12 уроков: критерий Келли, асимметрия просадок, расчёт риска банкротства.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 3: Разработка стратегий</h3>
+            <p class="phase-desc">16 уроков: бэктестинг, walk-forward анализ, защита от переобучения.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 4: Инфраструктура и данные</h3>
+            <p class="phase-desc">14 уроков: API бирж, вебсокеты, порядок ордеров, задержки сети.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 5: Архитектура торговых ботов</h3>
+            <p class="phase-desc">18 уроков: стейт-машины, kill-switch, арбитраж фандинга, грид-боты.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 6: DeFi и ончейн-механика</h3>
+            <p class="phase-desc">16 уроков: пулы ликвидности AMM, MEV, ликвидации в протоколах.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 7: Стресс-тестирование систем</h3>
+            <p class="phase-desc">16 уроков: хаос-инженерия, флеш-крэши, сбои ликвидности.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Фаза 8: Управление фондом</h3>
+            <p class="phase-desc">8 уроков: портфельный риск, аудит алгоритмов, выпускной симулятор.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Честные тарифы</span>
+          <h2 class="section-title">Выбирай формат обучения</h2>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Free Start Card -->
+          <div class="pricing-card">
+            <div class="pricing-name">Бесплатный старт</div>
+            <div class="pricing-price-box">
+              <span class="pricing-price">0 ₽</span>
+              <span class="pricing-period"> / навсегда</span>
+            </div>
+            <ul class="pricing-features-list">
+              <li>20 уроков Фазы 0 полностью</li>
+              <li>Блок психологии П1–П8 с тренажёрами</li>
+              <li>Базовый глоссарий и симуляторы</li>
+              <li>Сохранение прогресса в браузере</li>
+              <li>Без ввода банковской карты</li>
+            </ul>
+            <button class="btn btn-secondary btn-block btn-cta-large js-open-reg">Начать бесплатно</button>
+          </div>
+
+          <!-- Pro Lifetime Card -->
+          <div class="pricing-card featured">
+            <span class="pricing-featured-badge">Популярный выбор</span>
+            <div class="pricing-name">Полный доступ навсегда</div>
+            <div class="pricing-price-box">
+              <span class="pricing-price">990 ₽</span>
+              <span class="pricing-period"> / разовый платёж ≈ $12</span>
+            </div>
+            <ul class="pricing-features-list">
+              <li>Все 9 фаз программы (134 урока)</li>
+              <li>145 интерактивных виджетов и симуляторов</li>
+              <li>21 мини-игра и 3 виртуальных квеста</li>
+              <li>Конструктор торгового бота и выпускной экзамен</li>
+              <li>Все будущие обновления включены</li>
+              <li>Оплата картами РФ и международными картами</li>
+            </ul>
+            <button class="btn btn-primary btn-block btn-cta-large js-open-reg">Получить полный доступ</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Вопросы и ответы</span>
+          <h2 class="section-title">Часто задаваемые вопросы</h2>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Нужен ли опыт в программировании или трейдинге для старта?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Нет. Программа начинается с нулевого уровня: наглядные аналогии, интерактивные схемы и пошаговые симуляторы без сложного кода.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Даёт ли симулятор финансовые советы или торговые сигналы?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Нет. Продукт обучает принципам математики, управления рисками и психологии принятия решений. Сигналы и гарантии дохода отсутствуют.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Что входит в бесплатную версию?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Все 20 уроков Фазы 0 и базовый блок психологии оператора (П1–П8). Доступ остаётся навсегда без ввода данных банковской карты.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Будут ли обновления платными после покупки?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Нет. Единоразовый платёж 990 ₽ открывает полный курс и все последующие материалы без ежемесячных списаний.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Как устроена оплата из России и других стран?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Поддерживаются банковские карты РФ (МИР), СБП, а также международные карты через защищённый платёжный шлюз.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Где сохраняются мои данные и результаты прохождения?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Прогресс хранится локально в вашем браузере, а при создании аккаунта синхронизируется с защищённым облаком.</div>
+          </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="bottom-cta">
+          <h2 class="bottom-cta-title">Готов проверить свои навыки на симуляторе до выхода на реальный рынок?</h2>
+          <p class="bottom-cta-subtitle">Начни с бесплатной Фазы 0 прямо сейчас. Без привязки карты.</p>
+          <button class="btn btn-primary btn-cta-large js-open-reg">Создать аккаунт бесплатно</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="disclaimer-box">
+        <p>«КриптоНавигатор» является исключительно образовательным интерактивным симулятором. Сервис не оказывает брокерских услуг, не привлекает инвестиции и не предоставляет индивидуальных инвестиционных рекомендаций. Торговля криптовалютными активами сопряжена с высоким риском потери капитала.</p>
+      </div>
+      <p style="text-align: center;">© 2026 КриптоНавигатор. Все права защищены.</p>
+    </div>
+  </footer>
+
+  <!-- Registration / Early Access Modal -->
+  <div class="modal-overlay" id="reg-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h3 class="modal-title" id="modal-title">Создание аккаунта</h3>
+      <p class="modal-subtitle">Бесплатный доступ к Фазе 0 и тренажёрам психологии</p>
+
+      <form id="reg-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Электронная почта</label>
+          <input type="email" id="reg-email" class="form-input" placeholder="name@example.com" required>
+          <div class="form-error" id="err-email">Пожалуйста, укажи корректный адрес почты.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-pass">Пароль</label>
+          <input type="password" id="reg-pass" class="form-input" placeholder="Минимум 8 символов" required minlength="8">
+          <div class="form-error" id="err-pass">Пароль должен содержать не менее 8 символов.</div>
+        </div>
+
+        <label class="form-checkbox-label">
+          <input type="checkbox" id="reg-terms" required>
+          <span>Я согласен с условиями использования и политикой конфиденциальности</span>
+        </label>
+        <div class="form-error" id="err-terms" style="margin-top: -12px; margin-bottom: 12px;">Необходимо подтвердить согласие с условиями.</div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-cta-large" id="reg-submit-btn">Зарегистрироваться</button>
+        <div class="form-alert-waitlist" id="waitlist-alert">Регистрация в облаке открывается поэтапно. Мы сохранили твою заявку в списке раннего доступа.</div>
+      </form>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
