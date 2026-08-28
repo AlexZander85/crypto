@@ -1,15 +1,15 @@
 {
-  "version": "ru.55b0c6fe",
+  "version": "ru.e1283397",
   "locale": "ru",
-  "generated": "2026-08-28T13:15:06.896Z",
-  "source": "index_v9.html",
+  "generated": "2026-08-28T13:28:53.687Z",
+  "source": "index.html",
   "packs": [
     {
       "name": "core_demo",
       "demo": true,
-      "version": "c00f229a2428",
-      "bytes": 326418,
-      "brotli_bytes": 71247
+      "version": "5c71cf464de4",
+      "bytes": 377252,
+      "brotli_bytes": 80624
     },
     {
       "name": "core_p0",
@@ -70,9 +70,9 @@
     {
       "name": "core_p8",
       "demo": false,
-      "version": "97f22a6e0bea",
-      "bytes": 227143,
-      "brotli_bytes": 49847
+      "version": "074110ac4bdc",
+      "bytes": 277977,
+      "brotli_bytes": 59422
     },
     {
       "name": "terms",

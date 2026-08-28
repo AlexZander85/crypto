@@ -105,7 +105,7 @@ try {
 
   // 9. демо-пак отдаётся, платный закрыт
   const demoPack = await api('/api/content/pack/ru/core_demo');
-  check('demo pack public with real lessons', demoPack.status === 200 && demoPack.body?.meta?.demo === true && demoPack.body?.lessons?.length === 52,
+  check('demo pack public with real lessons', demoPack.status === 200 && demoPack.body?.meta?.demo === true && demoPack.body?.lessons?.length === 60,
     `status=${demoPack.status} lessons=${demoPack.body?.lessons?.length}`);
   const paidNoAuth = await api('/api/content/pack/ru/core_p1');
   check('paid pack 401 without JWT', paidNoAuth.status === 401);
