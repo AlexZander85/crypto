@@ -73,9 +73,9 @@ const expect = (cond, msg) => { if (!cond) { console.error('FAIL: ' + msg); proc
 expect(lessons.length >= 70, `LESSONS=${lessons.length}, ожидалось ≥70`);
 expect(terms.length === 205, `TERMS_RAW=${terms.length}, ожидалось 205`);
 expect(phaseTests.length === 6, `PHASE_TESTS=${phaseTests.length}, ожидалось 6`);
-expect(psy.length === 40, `PSY=${psy.length}, ожидалось 40 (П1–П40)`);
+expect(psy.length === 48, `PSY=${psy.length}, ожидалось 48 (П1–П48)`);
 const psyNums = psy.map(l => l.num).join(',');
-expect(psyNums === 'П1,П2,П3,П4,П5,П6,П7,П8,П9,П10,П11,П12,П13,П14,П15,П16,П17,П18,П19,П20,П21,П22,П23,П24,П25,П26,П27,П28,П29,П30,П31,П32,П33,П34,П35,П36,П37,П38,П39,П40', 'нумерация психологии: ' + psyNums);
+expect(psyNums === 'П1,П2,П3,П4,П5,П6,П7,П8,П9,П10,П11,П12,П13,П14,П15,П16,П17,П18,П19,П20,П21,П22,П23,П24,П25,П26,П27,П28,П29,П30,П31,П32,П33,П34,П35,П36,П37,П38,П39,П40,П41,П42,П43,П44,П45,П46,П47,П48', 'нумерация психологии: ' + psyNums);
 
 // квизы не пустые у уроков (выборочно)
 const allSets = [...lessons, ...mathLessons, ...psy, ...vibe, ...v4];
