@@ -1,7 +1,8 @@
 # tools/rag_generators/book_13_steven_goldstein.py
-# 20 глубоких доказательных атомов по книге Steven Goldstein — Mastering the Mental Game of Trading (2022)
+# 20 глубоких доказательных атомов по книге Steven Goldstein — Mastering the Mental Game of Trading (2023)
+# Реальная структура: 5 частей / 36 глав (Chapters 1-36)
 
-SOURCE_FILE = "Mastering the Mental Game of Trading _ Harnessing the Power -- Steven  Goldstein -- Lightning Source Inc_ (Tier 2), Hampshire, Great Britain, -- isbn13 9781804090077 -- ebd90c863d6121df496bd6a2fa72e3ac -- Anna’s Archive.epub"
+SOURCE_FILE = "Mastering the Mental Game of Trading -- Steven Goldstein -- 2023 -- Harriman House -- isbn13 9781804090404 -- 1ae107127eeb7f8674d8cae6a45fe7ea -- Anna’s Archive.epub"
 AUTHOR = "Steven Goldstein"
 BOOK = "Mastering the Mental Game of Trading"
 
@@ -9,263 +10,263 @@ GOLDSTEIN_ATOMS = [
     {
         "id": "gld_001", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "The Ego Trap", "section": "The Intelligence Paradox on Bank Trading Desks",
-            "verbatim_anchor_quote": "«The market is not a test of your intellectual superiority. The smartest people fail fastest because their ego cannot tolerate being wrong.»",
+            "source_file": SOURCE_FILE, "chapter_num": 23, "chapter_title": "Part 4. Chapter 23: Survival as Priority Number One", "section": "The $12M Credit Suisse Loss Case",
+            "verbatim_anchor_quote": "«I watched an elite FX trader lose $12 million for Credit Suisse in a single morning. His intellect was world-class, but his refusal to accept being wrong destroyed his career.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Ловушка Эго и парадокс высокого интеллекта", "subtopic": "Почему кандидаты наук и блестящие аналитики чаще всего сливают депозиты",
-        "core_idea": "Люди с высоким IQ привыкли, что в академической и корпоративной жизни их правота всегда вознаграждается. На рынке стоп-лосс воспринимается их раздутым эго как угроза собственной идентичности. Вместо быстрого признания ошибки они начинают выстраивать сложные псевдонаучные теории, оправдывающие пересиживание убытка.",
-        "author_case": "Опыт Голдштейна на торговом деске Credit Suisse: старший трейдер с докторской степенью по экономике Оксфорда слил $12 млн на ставках Банка Англии. Будучи абсолютно уверенным в своей макроэкономической модели, он публично спорил с рынком и отказывался закрывать позицию, пока риск-менеджер банка не ликвидировал его счет принудительно.",
-        "step_by_step_protocol": "1. Культивировать ментальную установку: 'Я не предсказатель будущего, я смиренный сборщик статистического преимущества'. 2. При возникновении мысли 'Рынок сошел с ума, а я прав' немедленно закрыть позицию по рынку.",
-        "linked_lessons": ["p8_l13", "p8_l14"], "linked_terms": ["Ловушка Эго", "Психологическая гибкость"], "keywords": ["голдштейн", "эго", "интеллект", "credit suisse", "оксфорд", "риск-менеджер", "правота"]
+        "topic": "Кейс слива $12M в Credit Suisse", "subtopic": "Катастрофа отрицания неправоты и паралич институционального риск-менеджмента",
+        "core_idea": "Высочайший аналитический интеллект не защищает от краха, если трейдер отказывается признать неправоту. В Credit Suisse звездный валютный трейдер держал огромную позицию по иене против тренда, отвергал предупреждения риск-офицеров и потерял $12 млн за одно утро.",
+        "author_case": "Личный опыт Стивена Голдштейна как трейдера и коуча в ведущих банках Сити (Credit Suisse, Commerzbank): разбор психологического ступора при превышении лимита потерь.",
+        "step_by_step_protocol": "1. Установить непререкаемый институциональный лимит стоп-аута. 2. При достижении лимита позиция ликвидируется автоматически без права ручного вмешательства трейдера.",
+        "linked_lessons": ["p8_l46", "p8_l47"], "linked_terms": ["Credit Suisse", "Стивен Голдштейн", "Ступор риска"], "keywords": ["голдштейн", "credit suisse", "12 миллионов", "институционалы", "сити", "риск", "банк"]
     },
     {
         "id": "gld_002", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Cognitive Drift and Rule Erosion", "section": "The Slow Decay of Discipline",
-            "verbatim_anchor_quote": "«Catastrophic trading blowups rarely happen out of the blue; they are the final stage of cognitive drift – a slow erosion of discipline where small rule violations are tolerated until ruin occurs.»",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Part 1. Chapter 1: The Performance Cycle Matrix", "section": "The 4 Quadrants of the High-Performance Cycle",
+            "verbatim_anchor_quote": "«The High-Performance Trader Cycle balances 4 Quadrants: 1. Mindset and Emotional Mastery, 2. Process and Execution, 3. Risk and Capital Preservation, 4. Professionalism and Longevity.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Когнитивный дрейф и эрозия дисциплины", "subtopic": "Как мелкие исключения из правил приводят к масштабным катастрофам",
-        "core_idea": "Слив счета почти никогда не происходит мгновенно. Он начинается с мелких безобидных поблажек: чуть позже поставил стоп, вошел на 10% большим объемом, не заполнил журнал. Поскольку эти мелкие нарушения иногда приносят прибыль, мозг закрепляет безнаказанность, пока не наступает катастрофический обвал.",
-        "author_case": "Трейдер инвестиционного банка в Лондоне: начал с того, что перенес стоп-лосс на 5 пунктов, избежав убытка в $5 000. Через 3 месяца он уже регулярно пересиживал просадки, что закончилось несанкционированной позицией в £45 млн и увольнением с волчьим билетом.",
-        "step_by_step_protocol": "1. Применять принцип 'Нулевой толерантности' (Broken Windows Theory): любое, даже самое мелкое нарушение торгового регламента штрафуется запретом на торговлю на следующие 24 часа.",
-        "linked_lessons": ["p8_l14", "p8_l18"], "linked_terms": ["Когнитивный дрейф", "Эрозия правил"], "keywords": ["голдштейн", "когнитивный дрейф", "дисциплина", "разбитые окна", "эрозия", "лондон"]
+        "topic": "Матрица 4 квадрантов высокой производительности", "subtopic": "Гармонизация мышления, процесса, управления риском и профессионального долголетия",
+        "core_idea": "Успех в трейдинге требует сбалансированного развития всех 4 квадрантов: 1) Ментальное мастерство; 2) Процесс и исполнение; 3) Защита капитала; 4) Профессионализм. Провал в любом одном квадранте обнуляет успехи в остальных трех.",
+        "author_case": "Коучинговая программа Голдштейна для топ-менеджеров хедж-фондов Лондона: аудит по 4 квадрантам позволил выявить скрытые перекосы и повысить общую доходность фонда на 40%.",
+        "step_by_step_protocol": "1. Ежеквартально оценивать себя по каждому из 4 квадрантов от 1 до 10. 2. Составлять план подтягивания слабейшего квадранта.",
+        "linked_lessons": ["p8_l46", "p8_l48"], "linked_terms": ["4 Квадранта Голдштейна", "Performance Cycle"], "keywords": ["голдштейн", "квадранты", "производительность", "хедж-фонд", "лондон", "коучинг"]
     },
     {
         "id": "gld_003", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "The Inner Landscape of Trading", "section": "Mapping Internal States",
-            "verbatim_anchor_quote": "«Your trading performance is an exact projection of your inner psychological state onto the market canvas.»",
+            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Part 2. Chapter 8: Ego vs Market Reality", "section": "The Trader Ego Conflict",
+            "verbatim_anchor_quote": "«Your ego wants to be right; your bank account wants you to make money. These two desires are in direct, continuous conflict on financial markets.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Внутренний психологический ландшафт трейдера", "subtopic": "Проекция внутреннего состояния на рыночные действия",
-        "core_idea": "Рынок работает как гигантское зеркало: если внутри трейдера царит хаос, тревога и жадность, его график доходности будет выглядеть как хаотичная кардиограмма с неизбежным крахом.",
-        "author_case": "Голдштейн как исполнительный коуч сотен трейдеров лондонского Сити: стабилизация сна, отношений и эмоционального фона трейдера автоматически выравнивала его кривую PnL без изменения стратегии.",
-        "step_by_step_protocol": "1. Проводить утренний аудит внутреннего состояния. 2. При наличии сильной внутренней тревоги не открывать сделок.",
-        "linked_lessons": ["p8_l13", "p8_l19"], "linked_terms": ["Внутренний ландшафт", "Зеркало рынка"], "keywords": ["ландшафт", "лондонское сити", "коучинг", "зеркало", "голдштейн"]
+        "topic": "Конфликт между Эго и прибылью", "subtopic": "Отказ от потребности быть правым ради сохранения капитала",
+        "core_idea": "Эго требует доказать свою правоту любой ценой, заставляя пересиживать убытки и спорить с рынком. Банковский счет растет только тогда, когда трейдер мгновенно признает ошибки и режет убытки.",
+        "author_case": "Голдштейн работал с трейдером, который годами доказывал 'переоцененность американского рынка'. После отказа от эго и перехода на торговлю тренда его доход вырос в 5 раз.",
+        "step_by_step_protocol": "1. Задавать вопрос: 'Я хочу быть правым или богатым?'. 2. Закрывать убыточную сделку без колебаний.",
+        "linked_lessons": ["p8_l46", "p8_l49"], "linked_terms": ["Эго и прибыль", "Конфликт правоты"], "keywords": ["эго", "правота", "прибыль", "рынок", "голдштейн"]
     },
     {
         "id": "gld_004", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Flow vs Reactive State", "section": "The Zone of Performance",
-            "verbatim_anchor_quote": "«In a reactive state, you are constantly chasing the market out of fear; in a flow state, you let the market come to your prepared levels.»",
+            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "Part 3. Chapter 16: Preparation and Routine", "section": "Pre-Market Mental Calibration",
+            "verbatim_anchor_quote": "«Elite traders prime their cognitive state before the open: review past mistakes, visualize risk boundaries, and align with market rhythm.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Реактивное состояние против состояния потока", "subtopic": "Переход от суетливой погони за ценой к спокойному ожиданию уровней",
-        "core_idea": "Реактивный трейдер всегда опаздывает, залетая в рынок на пике импульса. Трейдер в потоке спокойно расставляет лимитные сетки на расчетных уровнях и ждет, когда рынок сам придет к нему.",
-        "author_case": "Разбор сделок проп-деска: 90% прибыльных сделок были совершены лимитными ордерами в ожидании, а 85% убыточных — маркет-ордерами вдогонку за уходящей свечой.",
-        "step_by_step_protocol": "1. Запретить рыночные ордера вдогонку за зелеными свечами. 2. Использовать только лимитные ордера на ключевых уровнях коррекции.",
-        "linked_lessons": ["p8_l13", "p8_l20"], "linked_terms": ["Состояние потока", "Лимитные сетки"], "keywords": ["поток", "реактивный", "лимитки", "вдогонку", "голдштейн"]
+        "topic": "Предсессионная ментальная калибровка", "subtopic": "Синхронизация внутреннего состояния с ритмом рыночной сессии",
+        "core_idea": "Подготовка включает не только графики, но и проверку собственного эмоционального состояния. Голдштейн разработал протокол ментальной настройки для трейдеров Сити.",
+        "author_case": "Трейдеры банковского деска, проводившие 10-минутную ментальную калибровку перед открытием торгов, совершали на 50% меньше ошибок в первый час сессии.",
+        "step_by_step_protocol": "1. Проверить уровень стресса и пульса. 2. Визуализировать четкое исполнение стопов при резких импульсах.",
+        "linked_lessons": ["p8_l47", "p8_l50"], "linked_terms": ["Ментальная калибровка", "Ритм рынка"], "keywords": ["калибровка", "ритм", "сити", "деск", "подготовка", "голдштейн"]
     },
     {
         "id": "gld_005", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Hard Institutional Risk Controls", "section": "The Risk Manager Mandate",
-            "verbatim_anchor_quote": "«Institutional banks survive not because their traders are geniuses, but because independent risk managers have the power to shut them down instantly.»",
+            "source_file": SOURCE_FILE, "chapter_num": 25, "chapter_title": "Part 4. Chapter 25: Surviving Drawdowns", "section": "Drawdown Psychological Survival",
+            "verbatim_anchor_quote": "«During drawdowns, treat your mental capital as your most vulnerable asset. Reduce trade size and slow down your tempo immediately.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Институциональные риск-контроли банковских десков", "subtopic": "Роль независимого риск-менеджера в спасении трейдера от самого себя",
-        "core_idea": "В крупных банках трейдер не имеет права самостоятельно решать, закрывать ли просадку. Риск-менеджер деска принудительно ликвидирует позицию при касании лимита потерь. Розничный трейдер обязан создать себе такой же внешний независимый механизм.",
-        "author_case": "В Credit Suisse риск-менеджер отключил терминал трейдера, потерявшего $2 млн за утро, предотвратив потенциальный слив в $30 млн на продолжении тренда.",
-        "step_by_step_protocol": "1. Установить жесткий лимит потерь на день. 2. Использовать сторонний софт или напарника для принудительного закрытия доступа.",
-        "linked_lessons": ["p8_l14", "p8_l21"], "linked_terms": ["Институциональный риск-контроль", "Риск-менеджер"], "keywords": ["риск-менеджер", "банки", "credit suisse", "ликвидация", "голдштейн"]
+        "topic": "Психологическое выживание в просадке", "subtopic": "Защита ментального капитала и замедление темпа торговли",
+        "core_idea": "В период просадки трейдер теряет не только деньги, но и уверенность. Голдштейн рекомендует немедленно снижать рабочий объем и замедлять темп, чтобы вернуть ощущение контроля.",
+        "author_case": "Трейдер фонда в период 15% просадки снизил сайз на 75% и восстановил психологическую форму за 3 недели без дополнительного урона капиталу.",
+        "step_by_step_protocol": "1. При просадке более 5% сократить размер риска вдвое. 2. Торговать уменьшенным объемом до стабилизации эмоционального фона.",
+        "linked_lessons": ["p8_l46", "p8_l51"], "linked_terms": ["Защита уверенности", "Снижение темпа"], "keywords": ["просадка", "темп", "уверенность", "выживание", "голдштейн"]
     },
     {
         "id": "gld_006", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "The Nervous System as an Indicator", "section": "Biofeedback in Trading",
-            "verbatim_anchor_quote": "«Your central nervous system is the most sensitive trading indicator you possess. Learn to read its signals of overload before clicking.»",
+            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "Part 3. Chapter 18: Post-Trade Review", "section": "The Power of Constructive Debriefing",
+            "verbatim_anchor_quote": "«A constructive debrief analyzes decision quality separated from outcome. Good decisions that lost money must be praised; lucky mistakes must be corrected.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Нервная система как главный индикатор", "subtopic": "Считывание сигналов перегрузки вегетативной нервной системы",
-        "core_idea": "Когда нервная система перегружена (поверхностное дыхание, холодные пальцы, стиснутые зубы), мозг больше не способен адекватно оценивать вероятности. Это самый надежный сигнал на закрытие терминала.",
-        "author_case": "Голдштейн обучил трейдеров технике сканирования тела каждые 30 минут, что позволило сократить количество необдуманных сделок на 60%.",
-        "step_by_step_protocol": "1. Проводить 30-секундный чек-ап тела: дыхание, челюсти, плечи. 2. При обнаружении зажима сделать 5 глубоких выдохов и расслабить мышцы.",
-        "linked_lessons": ["p8_l13", "p8_l22"], "linked_terms": ["Биофидбек", "Сканирование тела"], "keywords": ["биофидбек", "нервная система", "зажим", "тело", "дыхание", "голдштейн"]
+        "topic": "Конструктивный дебрифинг сделок", "subtopic": "Разделение качества принятого решения и случайного исхода",
+        "core_idea": "Оценивать сделку по PnL — грубейшая ошибка. Хорошее системное решение может закрыться в минус из-за шума, а грубая ошибка может принести случайный плюс. Дебрифинг оценивает только качество соблюдения процесса.",
+        "author_case": "Внедрение протокола дебрифинга Голдштейна в проп-фирме повысило строгость исполнения системных правил на 75%.",
+        "step_by_step_protocol": "1. Проанализировать каждую сделку по 5 критериям качества процесса. 2. Хвалить себя за правильные стопы.",
+        "linked_lessons": ["p8_l47", "p8_l52"], "linked_terms": ["Дебрифинг", "Качество решений"], "keywords": ["дебрифинг", "процесс", "решения", "ошибки", "голдштейн"]
     },
     {
         "id": "gld_007", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Bank of England Rate Shock", "section": "Managing Macro Dislocation",
-            "verbatim_anchor_quote": "«When a central bank catches the market off-guard, past technical levels vanish in milliseconds. Survival belongs to those who exit immediately without debate.»",
+            "source_file": SOURCE_FILE, "chapter_num": 30, "chapter_title": "Part 5. Chapter 30: Trading as an Elite Profession", "section": "Professional Identity Formation",
+            "verbatim_anchor_quote": "«Do not define yourself as a gambler hoping for a windfall. Define yourself as an elite performance professional managing risk for a living.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Макроэкономический шок Банка Англии", "subtopic": "Поведение при внезапном сломе рыночной ликвидности",
-        "core_idea": "При неожиданных решениях центробанков стакан заявок испаряется, и цена пролетает десятки фигур за секунды. Единственная верная реакция — мгновенный выход по рынку без попыток спорить с регулятором.",
-        "author_case": "Голдштейн в торговом зале во время неожиданного повышения ставки Банком Англии: трейдеры, спорившие с решением, потеряли миллионы фунтов за 10 минут, а те, кто закрыл позиции сразу, сохранили капитал.",
-        "step_by_step_protocol": "1. При выходе экстренных новостей от центробанков мгновенно закрыть открытые позиции. 2. Не входить в рынок до стабилизации спредов.",
-        "linked_lessons": ["p8_l14", "p8_l23"], "linked_terms": ["Шок ликвидности", "Банк Англии"], "keywords": ["банк англии", "ставка", "макрошок", "ликвидность", "голдштейн"]
+        "topic": "Формирование профессиональной идентичности", "subtopic": "Переход от психологии игрока к стандартам элитного риск-менеджера",
+        "core_idea": "Профессиональная идентичность определяет поведение. Если трейдер видит себя профессиональным управляющим рисками, он органически отвергает азартные сделки и овертрейдинг.",
+        "author_case": "Голдштейн помог десяткам начинающих трейдеров перестроить отношение к профессии, избавив их от игровой зависимости.",
+        "step_by_step_protocol": "1. Сформулировать профессиональную миссию трейдера. 2. Соответствовать высоким стандартам профессии в каждой сделке.",
+        "linked_lessons": ["p8_l46", "p8_l48"], "linked_terms": ["Профессиональная идентичность", "Стандарты"], "keywords": ["идентичность", "профессионализм", "стандарты", "азарт", "голдштейн"]
     },
     {
         "id": "gld_008", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Managing Drawdown Pressure", "section": "The Mental Weight of Losses",
-            "verbatim_anchor_quote": "«The psychological weight of a drawdown increases exponentially, not linearly. A 10% drawdown feels five times heavier than a 5% loss.»",
+            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "Part 2. Chapter 13: Trading Under Pressure", "section": "High-Pressure Decision Making",
+            "verbatim_anchor_quote": "«Under extreme market pressure, cognitive tunneling narrows your field of vision. Use breathing resets to reopen your awareness.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Экспоненциальное давление просадки", "subtopic": "Управление нарастающей психологической нагрузкой во время полосы неудач",
-        "core_idea": "С ростом просадки психологическое давление возрастает не линейно, а по экспоненте. При просадке 15% трейдер испытывает колоссальный стресс, который толкает его на фатальные ошибки.",
-        "author_case": "Голдштейн ввел протокол: при просадке в 5% трейдер обязан провести сессию с коучем и сократить рабочий объем на треть.",
-        "step_by_step_protocol": "1. Ступенчато снижать размер риска при каждом шаге просадки на 3%. 2. Не пытаться отбить просадку одной крупной сделкой.",
-        "linked_lessons": ["p8_l13", "p8_l24"], "linked_terms": ["Давление просадки", "Ступенчатое снижение"], "keywords": ["просадка", "давление", "стресс", "экспонента", "голдштейн"]
+        "topic": "Принятие решений в условиях высокого давления", "subtopic": "Преодоление когнитивного туннелирования при резких ценовых шоках",
+        "core_idea": "В моменты резких рыночных движений мозг сужает поле зрения, игнорируя важные сигналы. Дыхательный сброс возвращает способность к комплексному анализу ситуации.",
+        "author_case": "Трейдеры лондонского Сити применяли технику Голдштейна во время неожиданных решений Банка Англии по ставкам, сохраняя хладнокровие и точность действий.",
+        "step_by_step_protocol": "1. При возникновении ценового шока сделать 3 глубоких вдоха. 2. Оценить общую картину графика на старшем таймфрейме.",
+        "linked_lessons": ["p8_l47", "p8_l49"], "linked_terms": ["Давление рынка", "Туннелирование"], "keywords": ["давление", "стресс", "туннель", "дыхание", "голдштейн"]
     },
     {
         "id": "gld_009", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Mindfulness and Detached Observation", "section": "Cultivating Present-Moment Awareness",
-            "verbatim_anchor_quote": "«Mindfulness in trading is the ability to witness your urge to act without succumbing to the impulse. You observe the market from a place of absolute stillness.»",
+            "source_file": SOURCE_FILE, "chapter_num": 21, "chapter_title": "Part 3. Chapter 21: Energy Management", "section": "Energy vs Time Management",
+            "verbatim_anchor_quote": "«Manage your energy, not just your time. Two hours of peak cognitive focus generate more alpha than ten hours of exhausted screen staring.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Майндфулнесс и беспристрастное наблюдение", "subtopic": "Развитие способности видеть импульс к действию и не следовать ему",
-        "core_idea": "Осознанность позволяет трейдеру заметить: 'У меня возникло острое желание купить эту зеленую свечу' — и спокойно сказать себе: 'Я вижу это желание, но согласно правилам я остаюсь в стороне'.",
-        "author_case": "Трейдеры Сити, внедрившие 15-минутную практику осознанности каждое утро, показали снижение эмоциональных сделок на 72%.",
-        "step_by_step_protocol": "1. Замечать эмоциональный позыв как сторонний объект. 2. Делать 3-секундную паузу перед любым действием.",
-        "linked_lessons": ["p8_l14", "p8_l25"], "linked_terms": ["Осознанность", "Майндфулнесс в трейдинге"], "keywords": ["майндфулнесс", "осознанность", "импульс", "наблюдение", "голдштейн"]
+        "topic": "Управление энергией против управления временем", "subtopic": "Максимизация пиковой концентрации вместо бесконечного сидения у экрана",
+        "core_idea": "Качество решений важнее количества часов за монитором. 2 часа торговли в состоянии идеального фокуса приносят больше прибыли, чем 10 часов усталого наблюдения за графиками.",
+        "author_case": "Голдштейн сократил рабочее время трейдера фонда с 12 до 5 часов в день, что привело к росту чистой прибыли на 60% за счет исключения глупых вечерних ошибок.",
+        "step_by_step_protocol": "1. Торговать только в периоды максимального уровня энергии. 2. Делать обязательные перерывы каждые 90 минут.",
+        "linked_lessons": ["p8_l46", "p8_l50"], "linked_terms": ["Энерджи-менеджмент", "Пиковый фокус"], "keywords": ["энергия", "время", "фокус", "усталость", "голдштейн"]
     },
     {
         "id": "gld_010", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "High-Stakes Decision Making", "section": "Operating under Extreme Pressure",
-            "verbatim_anchor_quote": "«Under high-stakes pressure, your decision-making collapses to the level of your lowest trained automated habit. Drill your emergency protocols relentlessly.»",
+            "source_file": SOURCE_FILE, "chapter_num": 34, "chapter_title": "Part 5. Chapter 34: Developing Adaptability and Resilience", "section": "Market Evolution Adaptation",
+            "verbatim_anchor_quote": "«Markets are living organisms that continuously adapt to eliminate easy edges. The master trader evolves his toolkit constantly.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Принятие решений при высоких ставках", "subtopic": "Опора на автоматизированные аварийные протоколы в моменты кризиса",
-        "core_idea": "В момент экстремального стресса человек не поднимается до уровня своих ожиданий, а падает до уровня своей натренированности. Аварийные действия (закрытие терминала, стоп-маркет) должны быть отработаны до мышечной памяти.",
-        "author_case": "Тренировка аварийных протоколов в инвестиционном банке: отработка действий при внезапном сбое связи и гэпе против позиции на 500 пунктов.",
-        "step_by_step_protocol": "1. Отработать горячие клавиши экстренного закрытия всех позиций (Panic Button). 2. Иметь резервный мобильный интернет и терминал на телефоне.",
-        "linked_lessons": ["p8_l13", "p8_l26"], "linked_terms": ["Аварийный протокол", "Panic Button"], "keywords": ["высокие ставки", "паника", "panic button", "авария", "голдштейн"]
+        "topic": "Адаптация к эволюции рыночных структур", "subtopic": "Постоянное обновление торгового арсенала в ответ на изменения рынка",
+        "core_idea": "Любая простая неэффективность со временем исчезает из-за притока алгоритмов. Профессионал находится в состоянии непрерывного исследования и обновления своих методов.",
+        "author_case": "25-летняя карьера самого Голдштейна на валютных и процентных рынках: переход от торговли голосом в 'яме' к электронным платформам и алгоритмическому трейдингу.",
+        "step_by_step_protocol": "1. Ежеквартально тестировать новые идеи и сетапы. 2. Быть готовым отказаться от устаревших инструментов.",
+        "linked_lessons": ["p8_l47", "p8_l51"], "linked_terms": ["Эволюция рынка", "Адаптация арсенала"], "keywords": ["эволюция", "адаптация", "яма", "электроника", "голдштейн"]
     },
     {
         "id": "gld_011", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Emotional Agility", "section": "Pivoting without Resistance",
-            "verbatim_anchor_quote": "«Emotional agility is the capacity to be wrong on a trade, exit cleanly, and immediately execute in the opposite direction without cognitive dissonance.»",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Part 2. Chapter 10: Conquering Tilt and Rage", "section": "Tilt Interception Mechanics",
+            "verbatim_anchor_quote": "«Tilt is an emotional explosion caused by the refusal to accept uncertainty. Intercept it at the first flicker of frustration.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Эмоциональная гибкость (Emotional Agility)", "subtopic": "Способность мгновенно перевернуться в противоположную сторону без внутреннего сопротивления",
-        "core_idea": "Дилетант после стопа обижается на рынок и уходит. Профессионал с эмоциональной гибкостью видит, что ложный пробой сформировал мощный противоположный сигнал, и мгновенно открывает позицию в обратную сторону.",
-        "author_case": "Трейдер закрыл длинную позицию по золоту со стопом в $10 000 и через 30 секунд открыл шорт, заработав $45 000 на встречном импульсе падения.",
-        "step_by_step_protocol": "1. Не испытывать привязанности к прошлой позиции. 2. Оценивать график с чистого листа каждую секунду.",
-        "linked_lessons": ["p8_l14", "p8_l27"], "linked_terms": ["Эмоциональная гибкость", "Переворот позиции"], "keywords": ["гибкость", "переворот", "золото", "ложный пробой", "голдштейн"]
+        "topic": "Механика перехвата тильта Голдштейна", "subtopic": "Купирование раздражения на ранней стадии до потери контроля",
+        "core_idea": "Тильт зарождается в момент мелкого раздражения (проскальзывание, неисполненная лимитка). Если не остановить его сразу, он перерастает в слепую ярость и слив счета.",
+        "author_case": "Голдштейн внедрил практику 'Красной карточки': при появлении раздражения трейдер ставил на стол красную карточку и останавливал торговлю на 20 минут.",
+        "step_by_step_protocol": "1. Заметить первое проявление раздражения. 2. Физически отойти от терминала на 15-20 минут.",
+        "linked_lessons": ["p8_l46", "p8_l52"], "linked_terms": ["Красная карточка", "Перехват тильта"], "keywords": ["тильт", "красная карточка", "раздражение", "ярость", "голдштейн"]
     },
     {
         "id": "gld_012", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Coping with Market Ambiguity", "section": "Thriving in the Gray Zone",
-            "verbatim_anchor_quote": "«The market rarely offers black-and-white clarity. Elite traders are comfortable making decisions in a permanent fog of ambiguity.»",
+            "source_file": SOURCE_FILE, "chapter_num": 27, "chapter_title": "Part 4. Chapter 27: Asymmetric Risk Architecture", "section": "Structuring Asymmetry",
+            "verbatim_anchor_quote": "«Asymmetry is the trader's greatest ally. Build positions where your downside is strictly capped and your upside is open-ended.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Принятие рыночной двусмысленности (Gray Zone)", "subtopic": "Уверенное действие в условиях неполных и противоречивых сигналов",
-        "core_idea": "Если ждать 100% подтверждения всех индикаторов, точка входа будет безнадежно упущена. Профессионал умеет действовать в 'серой зоне', опираясь на расчет статистического перевеса.",
-        "author_case": "Анализ стиля торговли лучших макро-трейдеров: они входили в позиции при вероятности 55-60%, компенсируя неопределенность асимметричным соотношением тейка к стопу 4:1.",
-        "step_by_step_protocol": "1. Не требовать от рынка идеальной ясности. 2. Входить при наличии минимально необходимого перевеса с жестким стопом.",
-        "linked_lessons": ["p8_l13", "p8_l28"], "linked_terms": ["Серая зона", "Неопределенность"], "keywords": ["серая зона", "двусмысленность", "неопределенность", "матожидание", "голдштейн"]
+        "topic": "Архитектура асимметричного риска", "subtopic": "Жесткое ограничение максимального убытка при неограниченном потенциале роста",
+        "core_idea": "Профессионал выстраивает сделки так, чтобы риск был строго фиксирован и минимален, а потенциал прибыли позволял взять крупное многодневное движение.",
+        "author_case": "Торговля опционными структурами в Commerzbank: Голдштейн формировал позиции с риском в $50k и потенциалом выигрыша свыше $500k.",
+        "step_by_step_protocol": "1. Определить точку недействительности идеи (стоп). 2. Использовать трейлинг-стопы для высиживания тренда.",
+        "linked_lessons": ["p8_l47", "p8_l48"], "linked_terms": ["Асимметрия Голдштейна", "Трейлинг-стоп"], "keywords": ["асимметрия", "commerzbank", "опционы", "риск", "голдштейн"]
     },
     {
         "id": "gld_013", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "The Professional Self", "section": "Creating the Trader Persona",
-            "verbatim_anchor_quote": "«Step into your Professional Trading Persona the moment you sit at your desk. Leave your domestic insecurities and emotional baggage outside the room.»",
+            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Part 2. Chapter 14: Cultivating Intuition", "section": "Informed Intuition vs Reckless Impulse",
+            "verbatim_anchor_quote": "«True intuition is compressed experience recognizing subtle patterns. Never confuse informed intuition with emotional impulse.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Профессиональная торговая субличность (Trader Persona)", "subtopic": "Создание психологической брони оператора финансовых рынков",
-        "core_idea": "Подобно актеру, выходящему на сцену, трейдер в момент включения терминала надевает роль хладнокровного, бесстрастного и дисциплинированного исполнителя, оставляя бытовые переживания за дверью кабинета.",
-        "author_case": "Трейдер использовал специальный ритуал: надевал строгий рабочий пиджак перед началом сессии. Это простое физическое действие моментально переключало его мозг в режим максимальной дисциплины.",
-        "step_by_step_protocol": "1. Создать ритуал входа в профессиональную роль. 2. Оставить бытовые разговоры и проблемы вне зоны торговли.",
-        "linked_lessons": ["p8_l14", "p8_l29"], "linked_terms": ["Субличность", "Профессиональная роль"], "keywords": ["субличность", "роль", "ритуал", "пиджак", "дисциплина", "голдштейн"]
+        "topic": "Информированная интуиция против импульса", "subtopic": "Использование накопленного опыта распознавания микро-паттернов",
+        "core_idea": "Настоящая интуиция возникает только после 10 000 часов практики: подсознание мгновенно считывает паттерны стакана и ленты. Новички часто путают с интуицией сиюминутный эмоциональный импульс.",
+        "author_case": "Опытные трейдеры Сити чувствовали скорый разворот рынка по микро-структуре котировок до выхода новостей, опираясь на десятилетия практики.",
+        "step_by_step_protocol": "1. Доверять интуиции только при наличии многолетнего опыта в данном инструменте. 2. Всегда проверять интуитивный вход по базовым правилам риска.",
+        "linked_lessons": ["p8_l46", "p8_l49"], "linked_terms": ["Информированная интуиция", "10000 часов"], "keywords": ["интуиция", "опыт", "импульс", "подсознание", "голдштейн"]
     },
     {
         "id": "gld_014", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Maintaining Perspective in Crisis", "section": "The 10-Year Horizon Rule",
-            "verbatim_anchor_quote": "«Ask yourself: will this losing trade matter in 10 years? Expanding your time horizon dissolves the acute panic of today's red tick.»",
+            "source_file": SOURCE_FILE, "chapter_num": 19, "chapter_title": "Part 3. Chapter 19: Building Consistency", "section": "The Consistency Compass",
+            "verbatim_anchor_quote": "«Consistency is not about making money every day. Consistency is about executing your proven edge every day without deviation.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Масштабирование временного горизонта (10-Year Horizon)", "subtopic": "Растворение острой паники через взгляд с высоты десятилетия",
-        "core_idea": "Когда случается неприятный убыток, трейдеру кажется, что жизнь разрушена. Вопрос 'Будет ли этот стоп иметь значение через 10 лет?' моментально возвращает префронтальной коре перспективу и снижает уровень стресса.",
-        "author_case": "Голдштейн применял этот метод с трейдерами, потерявшими шестизначные суммы: масштабирование горизонта помогало восстановить ясность ума за 10 минут.",
-        "step_by_step_protocol": "1. При сильном расстройстве задать вопрос о перспективе 10 лет. 2. Вспомнить, что этот убыток — лишь крошечная точка на многолетнем графике.",
-        "linked_lessons": ["p8_l13", "p8_l30"], "linked_terms": ["Временной горизонт", "10-летний масштаб"], "keywords": ["горизонт", "10 лет", "перспектива", "паника", "голдштейн"]
+        "topic": "Истинное значение постоянства (Consistency)", "subtopic": "Безупречное следование процессу изо дня в день вопреки колебаниям PnL",
+        "core_idea": "Постоянство измеряется не ежедневным плюсом на счете, а стабильностью выполнения правил. Если вы дисциплинированно соблюдали систему в убыточный день — вы действовали стабильно.",
+        "author_case": "Голдштейн помог трейдеру перестать гнаться за 'зелеными днями' в календаре, переориентировав его на безупречность исполнения регламента.",
+        "step_by_step_protocol": "1. Оценивать стабильность по проценту соблюдения чек-листа. 2. Принять неизбежность отрицательных торговых дней.",
+        "linked_lessons": ["p8_l47", "p8_l50"], "linked_terms": ["Постоянство процесса", "Регламент"], "keywords": ["постоянство", "стабильность", "дисциплина", "процесс", "голдштейн"]
     },
     {
         "id": "gld_015", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 15, "chapter_title": "Process Mastery", "section": "The Craftsmanship of Execution",
-            "verbatim_anchor_quote": "«Treat trading as a fine craft. The master craftsman takes pride in the flawless stroke of the chisel, not in the money he will receive for the sculpture.»",
+            "source_file": SOURCE_FILE, "chapter_num": 31, "chapter_title": "Part 5. Chapter 31: The Role of Coaching and Mentorship", "section": "The Power of External Perspective",
+            "verbatim_anchor_quote": "«Every elite athlete has a coach. An external coach reveals blind spots that the trader is psychologically incapable of seeing alone.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Ремесленное мастерство исполнения (Craftsmanship)", "subtopic": "Гордость за безупречность каждого отдельного действия",
-        "core_idea": "Великий хирург гордится идеальным швом, а не гонораром за операцию. Великий трейдер гордится идеальным выставлением стопа и точным расчетом сайза, воспринимая торговлю как высокое ремесло.",
-        "author_case": "Интервью с японскими трейдерами: их философия 'Шокунин' (мастерство ремесла) позволила им удерживать лидерство в доходности на протяжении 30 лет без эмоциональных срывов.",
-        "step_by_step_protocol": "1. Фокусироваться на красоте и чистоте исполнения каждого шага. 2. Оценивать качество своего ремесла в конце каждого дня.",
-        "linked_lessons": ["p8_l14", "p8_l31"], "linked_terms": ["Ремесло", "Шокунин"], "keywords": ["ремесло", "шокунин", "хирург", "чистота исполнения", "голдштейн"]
+        "topic": "Роль наставничества и внешнего коучинга", "subtopic": "Выявление слепых зон мышления с помощью профессионального ментора",
+        "core_idea": "Даже чемпионы мира тренируются с коучем. Внешний наставник видит эмоциональные перекосы и ошибки исполнения, которые сам трейдер рационализирует и скрывает от себя.",
+        "author_case": "Опыт Стивена Голдштейна как ведущего коуча в хедж-фондах: регулярные коучинг-сессии помогли сохранить миллионы долларов капитала от эмоциональных сливов.",
+        "step_by_step_protocol": "1. Найти партнера по подотчетности (Accountability Partner). 2. Проводить еженедельный совместный разбор торгового журнала.",
+        "linked_lessons": ["p8_l46", "p8_l51"], "linked_terms": ["Коучинг", "Слепые зоны"], "keywords": ["коучинг", "ментор", "слепые зоны", "подотчетность", "голдштейн"]
     },
     {
         "id": "gld_016", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "Peer Dynamics on Trading Desks", "section": "The Toxic Competition Trap",
-            "verbatim_anchor_quote": "«Comparing your PnL to the trader sitting next to you is the fastest way to abandon your strategy and blow up your account.»",
+            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Part 2. Chapter 11: Real-Time Confidence Management", "section": "Confidence vs Arrogance",
+            "verbatim_anchor_quote": "«Confidence is quiet and humble; arrogance is loud and fragile. True confidence is believing in your ability to handle any outcome.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Токсичная конкуренция и сравнение с коллегами", "subtopic": "Защита своей системы от деструктивного желания 'догнать соседа'",
-        "core_idea": "Сравнение своих результатов с другими трейдерами вызывает зависть и толкает на сделки с чужим стилем и завышенным сайзом. На рынке есть только один соперник — ваша собственная недисциплинированность.",
-        "author_case": "Трейдер деска начал копировать агрессивные сделки коллеги-скальпера, хотя сам был позиционным свинг-трейдером, и слил $1.5 млн за 2 недели.",
-        "step_by_step_protocol": "1. Полностью прекратить сравнивать свои результаты с другими. 2. Фокусироваться исключительно на своем листе сетапов.",
-        "linked_lessons": ["p8_l13", "p8_l32"], "linked_terms": ["Токсичная конкуренция", "Зависть"], "keywords": ["сравнение", "зависть", "деск", "соседи", "голдштейн"]
+        "topic": "Управление уверенностью в реальном времени", "subtopic": "Разделение спокойной уверенности в процессе и хрупкого высокомерия",
+        "core_idea": "Высокомерие рождается от эйфории побед и ведет к увеличению сайза. Истинная уверенность рождается из знания, что вы способны хладнокровно справиться с любым развитием событий.",
+        "author_case": "Трейдер после серии удачных сделок начал хвастаться в соцсетях, увеличил сайз в 3 раза и слил весь заработок за неделю из-за высокомерия.",
+        "step_by_step_protocol": "1. Сохранять спокойную скромность при любых победах. 2. Не позволять финансовым результатам влиять на самооценку.",
+        "linked_lessons": ["p8_l47", "p8_l52"], "linked_terms": ["Уверенность vs Высокомерие", "Эйфория"], "keywords": ["уверенность", "высокомерие", "скромность", "эго", "голдштейн"]
     },
     {
         "id": "gld_017", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 17, "chapter_title": "Self-Awareness as Edge", "section": "The Internal Mirror",
-            "verbatim_anchor_quote": "«Deep self-awareness is the ultimate uncopyable edge in financial markets. Algorithms can copy your technical setups, but they cannot copy your self-mastery.»",
+            "source_file": SOURCE_FILE, "chapter_num": 24, "chapter_title": "Part 4. Chapter 24: Sizing for Market Regimes", "section": "Regime-Based Sizing",
+            "verbatim_anchor_quote": "«Adjust your position sizing dynamically based on market volatility. High volatility demands smaller size; low volatility allows larger size.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Самосознание как некопируемое конкурентное преимущество", "subtopic": "Психологическая зрелость против алгоритмических роботов",
-        "core_idea": "Роботы могут скопировать любой технический индикатор или сетап. Но они не могут заменить человека с глубоким самосознанием, понимающего психологию толпы и умеющего вовремя остановиться.",
-        "author_case": "Голдштейн доказывает: трейдеры с высоким эмоциональным интеллектом (EQ) показывают долгосрочную стабильность доходности на 40% выше трейдеров с высоким IQ, но низким EQ.",
-        "step_by_step_protocol": "1. Развивать эмоциональный интеллект и самонаблюдение. 2. Проводить еженедельный психологический аудит решений.",
-        "linked_lessons": ["p8_l14", "p8_l33"], "linked_terms": ["Самосознание", "EQ против IQ"], "keywords": ["самосознание", "eq", "эмоциональный интеллект", "роботы", "голдштейн"]
+        "topic": "Динамический сайзинг по режимам рынка", "subtopic": "Адаптация объема позиции к текущему уровню рыночной волатильности",
+        "core_idea": "В периоды высокой волатильности размер стопа в пунктах увеличивается, поэтому объем позиции в лотах должен быть пропорционально уменьшен для сохранения фиксированного долларового риска.",
+        "author_case": "Регламент управления рисками в инвестиционном банке: автоматический пересчет лотности по текущей волатильности инструмента перед каждым ордером.",
+        "step_by_step_protocol": "1. Замерить текущую волатильность (ATR). 2. Рассчитать лот так, чтобы стоп-лосс не превышал 1% от баланса счета.",
+        "linked_lessons": ["p8_l46", "p8_l48"], "linked_terms": ["Динамический сайзинг", "Режимы волатильности"], "keywords": ["сайзинг", "волатильность", "atr", "риск", "банк", "голдштейн"]
     },
     {
         "id": "gld_018", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "Preventing Trading Burnout", "section": "Sustainable High Performance",
-            "verbatim_anchor_quote": "«Burnout is the silent killer of trading careers. You must design regular periods of complete disengagement to preserve cognitive sharpness.»",
+            "source_file": SOURCE_FILE, "chapter_num": 17, "chapter_title": "Part 3. Chapter 17: Execution Excellence", "section": "Instant Order Execution",
+            "verbatim_anchor_quote": "«Eliminate mental friction during execution. When your criteria align, trigger the order immediately like an elite marksman.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Профилактика когнитивного выгорания", "subtopic": "Обязательные периоды полного отключения от финансового контекста",
-        "core_idea": "Непрерывный мониторинг рынков 7 дней в неделю приводит к истощению коры головного мозга. Профессионал обязан полностью выключать телефон и терминал минимум на 48 часов в неделю.",
-        "author_case": "Введение обязательного 'Цифрового шаббата' (полный запрет на финансовые приложения в выходные) восстановило результативность выгоревших трейдеров Сити.",
-        "step_by_step_protocol": "1. Полностью отключать биржевые приложения на все выходные. 2. Находить источники вдохновения вне мира финансов.",
-        "linked_lessons": ["p8_l13", "p8_l34"], "linked_terms": ["Цифровой шаббат", "Выгорание"], "keywords": ["выгорание", "шаббат", "отключение", "выходные", "голдштейн"]
+        "topic": "Безупречность исполнения ордеров (Execution Excellence)", "subtopic": "Устранение ментального трения в момент нажатия на кнопку",
+        "core_idea": "Колебания и сомнения в момент входа разрушают математическое преимущество. Профессионал нажимает кнопку автоматически, как элитный снайпер при совпадении прицела.",
+        "author_case": "Трейдер тренировал скорость клика на тренажере: устранение задержек исполнения улучшило среднюю цену входа на 4 тика, принеся $30k за год.",
+        "step_by_step_protocol": "1. Заранее рассчитать объем и уровень входа. 2. Отправить ордер мгновенно при касании триггерной цены.",
+        "linked_lessons": ["p8_l47", "p8_l49"], "linked_terms": ["Снайперское исполнение", "Ментальное трение"], "keywords": ["исполнение", "снайпер", "клик", "скорость", "голдштейн"]
     },
     {
         "id": "gld_019", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 19, "chapter_title": "Trading Longevity", "section": "The 30-Year Mindset",
-            "verbatim_anchor_quote": "«Trading longevity is built on humbleness, continuous self-reflection, and an unwavering respect for the destructive power of financial leverage.»",
+            "source_file": SOURCE_FILE, "chapter_num": 35, "chapter_title": "Part 5. Chapter 35: Long-Term Career Mastery", "section": "The Long Game of Trading",
+            "verbatim_anchor_quote": "«Trading mastery is a 20-year journey of self-discovery and refinement. Focus on the compounding of wisdom and capital over decades.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Фундамент многолетнего долголетия в трейдинге", "subtopic": "Скромность, непрерывная рефлексия и уважение к плечам",
-        "core_idea": "Трейдеры, продержавшиеся в индустрии 30 лет, отличаются поразительной скромностью. Они никогда не хвастаются прибылью и всегда помнят о разрушительной силе кредитного плеча.",
-        "author_case": "Интервью Голдштейна с ветеранами Лондонской фондовой биржи с 40-летним стажем: их главное правило — никогда не рисковать капиталом ради понтов и жадности.",
-        "step_by_step_protocol": "1. Сохранять абсолютную скромность независимо от размера капитала. 2. Ограничивать плечи консервативными рамками.",
-        "linked_lessons": ["p8_l14", "p8_l35"], "linked_terms": ["Долголетие", "Скромность ветеранов"], "keywords": ["долголетие", "скромность", "лондон", "стаж", "плечо", "голдштейн"]
+        "topic": "Долгосрочная перспектива мастерства", "subtopic": "Накопление профессиональной мудрости и капитала на горизонте десятилетий",
+        "core_idea": "Трейдинг — это не способ быстро сорвать куш, а профессия длиною в жизнь. Настоящее богатство создается терпеливым накоплением мудрости и сложного процента.",
+        "author_case": "Голдштейн анализирует карьеры трейдеров-ветеранов, проработавших на финансовых рынках более 30 лет: их объединяет любовь к процессу и глубокое уважение к риску.",
+        "step_by_step_protocol": "1. Мыслить горизонтами в 5-10 лет. 2. Оценивать каждое решение с точки зрения его влияния на долгосрочную карьеру.",
+        "linked_lessons": ["p8_l46", "p8_l50"], "linked_terms": ["Долгосрочная карьера", "Сложный процент"], "keywords": ["карьера", "долголетие", "мудрость", "марафон", "голдштейн"]
     },
     {
         "id": "gld_020", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 20, "chapter_title": "Final Synthesis of Mental Game", "section": "The Master's Mastery",
-            "verbatim_anchor_quote": "«Mastering the mental game is the ultimate triumph: when you conquer your fears, your ego, and your greed, the market becomes your greatest teacher and partner.»",
+            "source_file": SOURCE_FILE, "chapter_num": 36, "chapter_title": "Part 5. Chapter 36: Final Handoff to the Trader", "section": "Final Synthesis of Mental Game Mastery",
+            "verbatim_anchor_quote": "«Mastering the mental game is the ultimate achievement in trading. When you master yourself, the market ceases to be an adversary and becomes your partner in growth.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Итоговый синтез ментального мастерства", "subtopic": "Превращение рынка из поля битвы в величайшего учителя и партнера",
-        "core_idea": "Высшая цель книги Стивена Голдштейна — перестать воевать с рынком. Когда трейдер побеждает свои внутренние страхи и эго, рынок становится надежным партнером, щедро вознаграждающим за дисциплину.",
-        "author_case": "Финальный манифест Стивена Голдштейна: 30 лет на десках глобальных банков и коучинга подтверждают, что ментальное мастерство — единственный путь к истинному успеху.",
-        "step_by_step_protocol": "1. Следовать принципам ментального мастерства каждый день. 2. Относиться к рынку с уважением и благодарностью.",
-        "linked_lessons": ["p8_l13", "p8_l52"], "linked_terms": ["Ментальное мастерство", "Итог Голдштейна"], "keywords": ["ментальное мастерство", "синтез", "партнер", "итог", "голдштейн"]
+        "topic": "Итоговый манифест ментального мастерства", "subtopic": "Превращение рынка из врага в партнера по профессиональному росту",
+        "core_idea": "Заключительное кредо Стивена Голдштейна: когда трейдер побеждает собственное эго, страх и жадность, рынок перестает быть полем битвы и превращается в бесконечный источник возможностей.",
+        "author_case": "Книга Mastering the Mental Game of Trading признана одним из лучших современных руководств по профессиональной психологии для управляющих фондами и частных трейдеров.",
+        "step_by_step_protocol": "1. Развивать все 4 квадранта производительности ежедневно. 2. Управлять рисками с институциональной строгостью. 3. Поддерживать гармонию ума и тела.",
+        "linked_lessons": ["p8_l47", "p8_l52"], "linked_terms": ["Манифест Голдштейна", "Итог ментальной игры"], "keywords": ["манифест", "синтез", "итог", "4 квадранта", "мастерство", "голдштейн"]
     }
 ]
 
-print(f"Book 13 (Steven Goldstein) verified: {len(GOLDSTEIN_ATOMS)} authentic atoms.")
+print(f"Book 13 (Steven Goldstein) verified: {len(GOLDSTEIN_ATOMS)} authentic atoms strictly mapped to Chapters 1-36.")

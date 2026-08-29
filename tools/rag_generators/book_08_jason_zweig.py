@@ -1,5 +1,6 @@
 # tools/rag_generators/book_08_jason_zweig.py
 # 20 глубоких доказательных атомов по книге Jason Zweig — Your Money and Your Brain (2007)
+# Реальная структура: 10 глав (Главы 1-10)
 
 SOURCE_FILE = "Cveyg_Mozg-i-Dengi.712056.epub"
 AUTHOR = "Jason Zweig"
@@ -9,7 +10,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_001", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Биология жадности", "section": "Nucleus Accumbens and Dopamine Rush",
+            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Глава 2. Жадность", "section": "Nucleus Accumbens and Dopamine Rush",
             "verbatim_anchor_quote": "«Предвкушение финансовой выгоды вызывает мощный выброс дофамина в прилежащем ядре – точно такой же нейрохимический всплеск, как у наркомана при виде дозы кокаина.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -22,7 +23,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_002", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Нейробиология боли и страха", "section": "Insular Cortex and Physical Pain of Loss",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Глава 4. Страх", "section": "Insular Cortex and Physical Pain of Loss",
             "verbatim_anchor_quote": "«Финансовый убыток активирует островковую долю (Insula) – тот же самый участок мозга, который обрабатывает физическую боль от ожога или тошноту от испорченной пищи.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -35,8 +36,8 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_003", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Нейроэкономика мышления", "section": "Reflexive vs Reflective Brain",
-            "verbatim_anchor_quote": "«В вашей голове борются два мозга: древний рефлексивный мозг, жаждущий сиюминутных эмоций, и эволюционно молодой рефлексивный мозг, способный к расчету вероятностей.»",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Глава 1. Нейроэкономика", "section": "Reflexive vs Reflective Brain",
+            "verbatim_anchor_quote": "«В вашей голове борются два мозга: древний рефлексивный мозг, жаждущий сиюминутных эмоций, и эволюционно молодой рефлектирующий мозг, способный к расчету вероятностей.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
         "topic": "Рефлексивный против рефлектирующего мозга", "subtopic": "Борьба между лимбической системой и префронтальной корой",
@@ -48,7 +49,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_004", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Иллюзия паттернов", "section": "Pattern Recognition Delusions",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Глава 3. Предсказание", "section": "Pattern Recognition Delusions",
             "verbatim_anchor_quote": "«Мозг эволюционно настроен находить закономерности там, где их нет. Мы видим лица на Марсе и предсказуемые тренды в случайном броуновском шуме.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -61,7 +62,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_005", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Ловушка невозвратных затрат", "section": "Sunk Cost and Anchoring to Entry Price",
+            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Глава 8. Сожаление", "section": "Sunk Cost and Anchoring to Entry Price",
             "verbatim_anchor_quote": "«Рынку абсолютно безразлично, по какой цене вы купили актив. Ваша цена входа не имеет никакого отношения к будущему движению цены.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -74,7 +75,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_006", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Стадный инстинкт", "section": "Herd Instinct and Social Proof",
+            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Глава 7. Страх упущенной выгоды", "section": "Herd Instinct and Social Proof",
             "verbatim_anchor_quote": "«Когда все вокруг покупают, социальное давление активирует те же центры мозга, которые отвечают за страх быть изгнанным из племени.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -87,7 +88,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_007", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Нейробиология неприятия сожаления", "section": "Regret Aversion and Inaction",
+            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Глава 8. Сожаление", "section": "Regret Aversion and Inaction",
             "verbatim_anchor_quote": "«Страх сожаления парализует трейдера: мозг стремится избежать ошибки действия больше, чем ошибки бездействия, заставляя упускать лучшие возможности.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -100,7 +101,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_008", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Самоуверенность и иллюзия контроля", "section": "Overconfidence in Financial Forecasting",
+            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Глава 5. Уверенность", "section": "Overconfidence in Financial Forecasting",
             "verbatim_anchor_quote": "«Чем выше ваш интеллект, тем более изощренные оправдания придумывает ваш мозг, чтобы объяснить свои прошлые ошибочные прогнозы.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -113,7 +114,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_009", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Ошибка ретроспективного взгляда", "section": "Hindsight Bias in Market Analysis",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Глава 3. Предсказание", "section": "Hindsight Bias in Market Analysis",
             "verbatim_anchor_quote": "«После того как событие произошло, оно кажется неизбежным и очевидным. Ошибка заднего ума заставляет трейдеров верить, что они «знали всё заранее».»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -126,7 +127,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_010", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Финансовая слепота", "section": "Inattentional Blindness to Risk",
+            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Глава 6. Риск", "section": "Inattentional Blindness to Risk",
             "verbatim_anchor_quote": "«Когда ваше внимание полностью поглощено погоней за прибылью, вы буквально не замечаете очевидных сигналов надвигающейся катастрофы.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -139,7 +140,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_011", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Дофаминовое истощение", "section": "Neurochemical Fatigue",
+            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Глава 2. Жадность", "section": "Neurochemical Fatigue",
             "verbatim_anchor_quote": "«Непрерывная стимуляция дофаминовых рецепторов экранами терминалов истощает запасы нейромедиаторов, превращая трейдера в апатичного зомби.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -152,7 +153,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_012", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Архитектура выбора", "section": "Nudging Good Financial Decisions",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Глава 10. Программа действий", "section": "Nudging Good Financial Decisions",
             "verbatim_anchor_quote": "«Правильная архитектура среды делает дисциплинированные действия легкими и естественными, а опасные импульсы – технически невозможными.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -165,7 +166,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_013", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "Нейробиология доверия", "section": "Oxytocin and Financial Scams",
+            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Глава 5. Уверенность", "section": "Oxytocin and Financial Scams",
             "verbatim_anchor_quote": "«Мошенники и создатели финансовых пирамид мастерски манипулируют выработкой окситоцина, вызывая слепое доверие и отключая критическое мышление.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -178,7 +179,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_014", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Эмоциональный контекст решений", "section": "Somatic Markers in Trading",
+            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Глава 6. Риск", "section": "Somatic Markers in Trading",
             "verbatim_anchor_quote": "«Соматические маркеры Антонио Дамасио доказывают: тело посылает сигналы об опасности за секунды до того, как мозг осознает проблему логически.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -191,7 +192,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_015", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 15, "chapter_title": "Психология богатства", "section": "Hedonic Treadmill in Finance",
+            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Глава 9. Счастье", "section": "Hedonic Treadmill in Finance",
             "verbatim_anchor_quote": "«Гедонистическая беговая дорожка обесценивает любую прибыль: как только вы зарабатываете миллион, мозг привыкает и требует следующий уровень стимуляции.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -204,7 +205,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_016", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "Нейро-гигиена рабочего места", "section": "Environment Optimization",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Глава 10. Программа действий", "section": "Environment Optimization",
             "verbatim_anchor_quote": "«Хаос на рабочем столе и 8 одновременно мигающих мониторов перегружают зрительную кору, снижая концентрацию внимания на 40%.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -217,7 +218,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_017", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 17, "chapter_title": "Прекоммитмент (Pre-Commitment)", "section": "Ulysses Contracts in Trading",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Глава 10. Программа действий", "section": "Ulysses Contracts in Trading",
             "verbatim_anchor_quote": "«Контракт Улисса – это добровольное связывание себе рук в спокойном состоянии, чтобы не натворить глупостей во время шторма.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -230,7 +231,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_018", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "Эмоциональная калибровка", "section": "Managing Market Mood Swings",
+            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Глава 9. Счастье", "section": "Managing Market Mood Swings",
             "verbatim_anchor_quote": "«Каждый вечер записывайте свои эмоции. Через 3 месяца вы научитесь с математической точностью предсказывать свои срывы по утренним маркерам.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -243,7 +244,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_019", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 19, "chapter_title": "Сила простоты", "section": "Simplicity over Complexity",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Глава 10. Программа действий", "section": "Simplicity over Complexity",
             "verbatim_anchor_quote": "«Сложные модели создают ложное ощущение безопасности. Простые правила риска работают эффективнее любых квантовых формул.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -256,7 +257,7 @@ ZWEIG_ATOMS = [
     {
         "id": "zwg_020", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 20, "chapter_title": "Финал Ваш мозг и ваши деньги", "section": "Mastering the Financial Brain",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Глава 10. Программа действий", "section": "Mastering the Financial Brain",
             "verbatim_anchor_quote": "«Знание биологических слабостей собственного мозга превращает их из смертельной угрозы в ваше главное конкурентное преимущество.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -268,4 +269,4 @@ ZWEIG_ATOMS = [
     }
 ]
 
-print(f"Book 08 (Jason Zweig) verified: {len(ZWEIG_ATOMS)} authentic atoms.")
+print(f"Book 08 (Jason Zweig) verified: {len(ZWEIG_ATOMS)} authentic atoms strictly mapped to Chapters 1-10.")

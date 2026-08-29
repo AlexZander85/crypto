@@ -1,5 +1,6 @@
 # tools/rag_generators/book_09_david_spiegelhalter.py
 # 20 глубоких доказательных атомов по книге David Spiegelhalter — The Art of Uncertainty (2024)
+# Реальная структура: 16 глав (Chapters 1-16)
 
 SOURCE_FILE = "The Art of Uncertainty_ How to Navigate Chance, Ignorance, -- David Spiegelhalter -- PS, 2024 -- Random House -- isbn13 9780241658642 -- e38207079ddaf24ba8687ca80a24b706 -- Anna’s Archive.epub"
 AUTHOR = "David Spiegelhalter"
@@ -9,7 +10,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_001", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Probability Calibration", "section": "Cromwell's Rule and Brier Score",
+            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "CHAPTER 7: Being Bayesian", "section": "Cromwell's Rule and Brier Score",
             "verbatim_anchor_quote": "«Cromwell's Rule states: never assign a probability of 0 or 1 to any future event, except for logical tautologies. Calibrate your beliefs using Brier Score.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -22,7 +23,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_002", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Aleatory vs Epistemic Uncertainty", "section": "The Limits of Quantitative Models",
+            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "CHAPTER 13: Deep Uncertainty", "section": "Aleatory vs Epistemic Uncertainty",
             "verbatim_anchor_quote": "«Aleatory uncertainty is pure inherent randomness that cannot be reduced; epistemic uncertainty is lack of knowledge that can be narrowed with data.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -35,7 +36,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_003", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "The Nature of Chance", "section": "Subjective vs Objective Probability",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "CHAPTER 1: Uncertainty is Personal", "section": "Subjective vs Objective Probability",
             "verbatim_anchor_quote": "«Probability does not exist in the physical world; it is an expression of our incomplete state of knowledge about the future.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -48,7 +49,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_004", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Communicating Risk", "section": "Natural Frequencies vs Percentages",
+            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "CHAPTER 14: Communicating Uncertainty and Risk", "section": "Natural Frequencies vs Percentages",
             "verbatim_anchor_quote": "«The human brain struggles with percentages like 0.1%. Frame risks in natural frequencies, such as '1 in every 1,000 trades', to grasp real exposure.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -61,7 +62,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_005", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Bayesian Updating", "section": "Revising Beliefs with New Evidence",
+            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "CHAPTER 7: Being Bayesian", "section": "Revising Beliefs with New Evidence",
             "verbatim_anchor_quote": "«A Bayesian trader updates his probability estimate dynamically as each new piece of price action unfolds, never anchoring to his initial thesis.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -74,7 +75,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_006", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Regression to the Mean", "section": "The Inevitable Statistical Pull",
+            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "CHAPTER 6: It’s All a Bit Random", "section": "Regression to the Mean",
             "verbatim_anchor_quote": "«Exceptional performance, whether extraordinarily good or bad, is always followed by regression to the historical average.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -87,7 +88,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_007", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Clustering Illusion", "section": "The False Meaning of Streaks",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "CHAPTER 4: Surprises and Coincidences", "section": "Clustering Illusion",
             "verbatim_anchor_quote": "«Random sequences naturally produce long clusters of identical outcomes. A streak of 6 losses does not mean your edge is broken.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -100,7 +101,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_008", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Decision Trees and Expected Value", "section": "Mapping Multi-Stage Outcomes",
+            "source_file": SOURCE_FILE, "chapter_num": 15, "chapter_title": "CHAPTER 15: Making Decisions and Managing Risks", "section": "Decision Trees and Expected Value",
             "verbatim_anchor_quote": "«Map every complex trade as a branching decision tree with explicit probabilities and payoffs at every node to calculate true expected value.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -113,7 +114,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_009", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Extreme Value Theory", "section": "Modeling Tail Events",
+            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "CHAPTER 12: Risk, Failure and Disaster", "section": "Extreme Value Theory",
             "verbatim_anchor_quote": "«Extreme Value Theory focuses specifically on the tails of distributions where standard statistical metrics fail completely.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -126,7 +127,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_010", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Quantifying Unknowns", "section": "The Four Quadrants of Knowledge",
+            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "CHAPTER 13: Deep Uncertainty", "section": "Quantifying Unknowns",
             "verbatim_anchor_quote": "«The most dangerous risks live in the quadrant of 'unknown unknowns' – things we do not know that we do not know.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -139,7 +140,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_011", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Overconfidence Calibration", "section": "The Illusion of Certainty",
+            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "CHAPTER 9: How Much Confidence Do We Have in Our Analysis?", "section": "Overconfidence Calibration",
             "verbatim_anchor_quote": "«When people say they are 99% confident, they are typically right only about 80% of the time. Calibrate your confidence systematically.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -152,7 +153,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_012", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "The Psychology of Luck", "section": "Attributing Skill vs Chance",
+            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "CHAPTER 5: Luck", "section": "Attributing Skill vs Chance",
             "verbatim_anchor_quote": "«Distinguishing genuine skill from lucky variance requires sample sizes far larger than most investors are willing to observe.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -165,7 +166,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_013", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "Margin of Error", "section": "Confidence Intervals in Trading",
+            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "CHAPTER 2: Putting Uncertainty into Numbers", "section": "Margin of Error and Confidence Intervals",
             "verbatim_anchor_quote": "«Never quote a point estimate without its confidence interval. A profit target of $100 with an interval of ($50, $150) demands very different sizing than ($90, $110).»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -178,7 +179,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_014", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Risk Communication", "section": "Visualizing Probabilities",
+            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "CHAPTER 14: Communicating Uncertainty and Risk", "section": "Visualizing Probabilities",
             "verbatim_anchor_quote": "«Visualizing probabilities using icon arrays dramatically reduces cognitive distortion and prevents panic during market downturns.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -191,7 +192,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_015", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 15, "chapter_title": "The Fallacy of the Hot Hand", "section": "Random Walks in Sports and Finance",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "CHAPTER 4: Surprises and Coincidences", "section": "Hot Hand Fallacy",
             "verbatim_anchor_quote": "«The 'hot hand' phenomenon is largely an illusion of human pattern-seeking. Success on the last trade does not increase the probability of winning the next.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -204,7 +205,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_016", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "Expert Forecasting Limits", "section": "The Fox vs Hedgehog Approach",
+            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "CHAPTER 11: Predicting the Future", "section": "The Fox vs Hedgehog Approach",
             "verbatim_anchor_quote": "«Foxes (who know many small things and adapt) vastly outperform hedgehogs (who rely on one big theoretical dogma) in financial forecasting.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -217,7 +218,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_017", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 17, "chapter_title": "Loss Aversion Mathematics", "section": "The Asymmetry of Pain and Pleasure",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "CHAPTER 3: Taming Chance with Probability", "section": "Loss Aversion Mathematics",
             "verbatim_anchor_quote": "«Prospect Theory proves that the psychological pain of losing £1,000 is more than twice as intense as the pleasure of gaining £1,000.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -230,7 +231,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_018", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "Sensitivity Analysis", "section": "Stress-Testing Assumptions",
+            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "CHAPTER 8: Science and Uncertainty", "section": "Sensitivity Analysis",
             "verbatim_anchor_quote": "«Always perform sensitivity analysis: how much does your strategy's profitability decay if your win rate drops by 10% or slippage doubles?»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -243,7 +244,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_019", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 19, "chapter_title": "Statistical Humility", "section": "Living with Uncertainty",
+            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "CHAPTER 16: The Future of Uncertainty", "section": "Statistical Humility",
             "verbatim_anchor_quote": "«Statistical humility is the quiet confidence that comes from accepting that the future is intrinsically unknowable, yet preparing perfectly for all possibilities.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -256,7 +257,7 @@ SPIEGELHALTER_ATOMS = [
     {
         "id": "spg_020", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 20, "chapter_title": "The Art of Uncertainty", "section": "Final Synthesis",
+            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "CHAPTER 16: The Future of Uncertainty", "section": "Final Synthesis",
             "verbatim_anchor_quote": "«Mastery of uncertainty is the ultimate human art: transforming ignorance into quantifiable risk, and navigating chance with grace and mathematical precision.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -268,4 +269,4 @@ SPIEGELHALTER_ATOMS = [
     }
 ]
 
-print(f"Book 09 (David Spiegelhalter) verified: {len(SPIEGELHALTER_ATOMS)} authentic atoms.")
+print(f"Book 09 (David Spiegelhalter) verified: {len(SPIEGELHALTER_ATOMS)} authentic atoms strictly mapped to Chapters 1-16.")

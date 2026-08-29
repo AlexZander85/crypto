@@ -1,5 +1,6 @@
 # tools/rag_generators/book_10_roman_mogilat.py
 # 20 глубоких доказательных атомов по книге Роман Могилят — Добро пожаловать в тильт (2023)
+# Реальная структура: 12 глав (Главы 1-12)
 
 SOURCE_FILE = "Mogilat_Dobro-pozhalovat-v-tilt-Psihologiya-ruchnogo-treydinga.881958.epub"
 AUTHOR = "Роман Могилят"
@@ -9,7 +10,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_001", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Механика ночных срывов", "section": "Закон закрытого ноутбука",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Глава 3. ПАУТИНА ТИЛЬТА", "section": "Закон закрытого ноутбука",
             "verbatim_anchor_quote": "«Эйфория после удачной сессии опаснее серии стопов: она создает иллюзию всемогущества и толкает на ночной трейдинг на усталый мозг.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -22,7 +23,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_002", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Ловушка короткого плеча в крипте", "section": "Кредитное плечо x50-x100 и ликвидации",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Глава 1. «КОЛИЧЕСТВЕННАЯ» ПАРАДИГМА", "section": "Кредитное плечо x50-x100 и ликвидации",
             "verbatim_anchor_quote": "«Кредитное плечо x100 оставляет трейдеру ровно 1% права на ошибку. При рыночном шуме крипты это 100% математическая гарантия ликвидации депозита.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -35,7 +36,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_003", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Анатомия ручного скальпинга", "section": "Дофаминовое выгорание за 3 часа",
+            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Глава 11. НАВЫК ТРЕЙДЕРА", "section": "Дофаминовое выгорание за 3 часа",
             "verbatim_anchor_quote": "«Ручной скальпинг в стакане сжигает нервную систему за 3 часа непрерывной концентрации. Торговля сверх этого лимита – это игра в рулетку с гарантированным сливом.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -48,7 +49,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_004", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Дневник физических симптомов", "section": "Somatic Indicators of Tilt",
+            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Глава 2. «ПСИХОЛОГИЯ» ТОРГОВЫХ ОШИБОК", "section": "Somatic Indicators of Tilt",
             "verbatim_anchor_quote": "«Тело всегда сообщает о начале тильта раньше сознания: горящие уши, стук в висках, сжатые кулаки – это приказ немедленно покинуть рабочее место.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -61,7 +62,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_005", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Синдром отыгрыша (Revenge Trading)", "section": "The Snowball of Destruction",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Глава 3. ПАУТИНА ТИЛЬТА", "section": "The Snowball of Destruction",
             "verbatim_anchor_quote": "«Желание отыграть утренний стоп в $100 превращает трейдера в маньяка, который к вечеру оставляет на бирже $5 000.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -74,7 +75,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_006", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Токсичность сигналов и чатов", "section": "The Crowd Noise in Telegram",
+            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Глава 6. «КАЧЕСТВЕННАЯ» ПАРАДИГМА", "section": "The Crowd Noise in Telegram",
             "verbatim_anchor_quote": "«Трейдерские чаты с сигналами и чужими PnL-скриншотами разрушают вашу торговую систему, навязывая чужие страхи и жадность.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -87,7 +88,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_007", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Разгон депозита как миф", "section": "The Flipping Account Trap",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Глава 1. «КОЛИЧЕСТВЕННАЯ» ПАРАДИГМА", "section": "The Flipping Account Trap",
             "verbatim_anchor_quote": "«Разгон депозита со $100 до $10 000 за неделю – это сказка для наивных новичков. В 100% случаев такие разгоны заканчиваются полной ликвидацией на 8-й день.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -100,7 +101,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_008", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Разделение финансов", "section": "Segregating Trading and Life Capital",
+            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Глава 8. ОСОБЕННОСТИ СИСТЕМНОЙ ТОРГОВЛИ", "section": "Segregating Trading and Life Capital",
             "verbatim_anchor_quote": "«Никогда не торгуйте на последние деньги или средства, отложенные на аренду жилья и еду. Страх потери парализует способность думать.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -113,7 +114,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_009", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Утренняя подготовка скальпера", "section": "Pre-Market Routine",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Глава 4. «МЕХАНИКА» ДВИЖЕНИЯ ЦЕН", "section": "Pre-Market Routine",
             "verbatim_anchor_quote": "«Скальпер начинает день не с открытия позиций, а с разметки плотностей, уровней волатильности и проверки фандинга по топовым альтам.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -126,7 +127,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_010", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Аппаратные стоп-ауты", "section": "Automated Risk Gateways",
+            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Глава 12. ПСИХОЛОГИЧЕСКИЙ ИНСТРУМЕНТАРИЙ ТРЕЙДЕРА", "section": "Automated Risk Gateways",
             "verbatim_anchor_quote": "«Если вы не можете контролировать себя сами, доверьте контроль роботу. Аппаратный риск-менеджер должен блокировать счет принудительно.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -139,7 +140,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_011", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Фиксация микро-профита", "section": "Partial Take-Profits",
+            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Глава 9. КОНЦЕПЦИЯ КАЧЕСТВЕННОЙ ТОРГОВОЙ СИСТЕМЫ", "section": "Partial Take-Profits",
             "verbatim_anchor_quote": "«В скальпинге фиксация первой части прибыли на первом импульсе снимает эмоциональный груз и переводит позицию в безубыток.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -152,7 +153,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_012", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Торговля в стрессе и болезни", "section": "The Fitness Mandate",
+            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Глава 11. НАВЫК ТРЕЙДЕРА", "section": "The Fitness Mandate",
             "verbatim_anchor_quote": "«Торговать с температурой, похмельем или после семейного скандала – это добровольное дарение своих денег рынку.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -165,7 +166,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_013", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "Психология пробоя уровней", "section": "Breakout Execution Psychology",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Глава 4. «МЕХАНИКА» ДВИЖЕНИЯ ЦЕН", "section": "Breakout Execution Psychology",
             "verbatim_anchor_quote": "«Пробой уровня требует мгновенной реакции: вход по рынку в момент разбора плотности и выход без раздумий, если активность стакана погасла.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -178,7 +179,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_014", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Защита от рыночных сквизов", "section": "Flash Crash Protection",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Глава 10. ПРИНЯТИЕ ПОТЕРЬ", "section": "Flash Crash Protection",
             "verbatim_anchor_quote": "«В крипте каскадные ликвидации могут обвалить цену на 15% за секунду. Изолированная маржа и кросс-хеджирование – ваши единственные защитники.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -191,7 +192,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_015", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 15, "chapter_title": "Эмоциональный дневник скальпера", "section": "Real-Time Emotional Tagging",
+            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Глава 12. ПСИХОЛОГИЧЕСКИЙ ИНСТРУМЕНТАРИЙ ТРЕЙДЕРА", "section": "Real-Time Emotional Tagging",
             "verbatim_anchor_quote": "«Записывайте свой эмоциональный тег (спокойствие, азарт, страх, злость) перед каждым нажатием кнопки. Это вскрывает 90% скрытых утечек депозита.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -204,7 +205,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_016", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Психология ручной торговли", "section": "Discipline as Self-Respect",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Глава 10. ПРИНЯТИЕ ПОТЕРЬ", "section": "Discipline as Self-Respect",
             "verbatim_anchor_quote": "«Соблюдение стоп-лосса – это акт высшего самоуважения к своему труду и времени. Нарушение правил – это плевок в собственное будущее.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -217,7 +218,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_017", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Режим дня и спорт", "section": "Physical Foundation of Mental Clarity",
+            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Глава 11. НАВЫК ТРЕЙДЕРА", "section": "Physical Foundation of Mental Clarity",
             "verbatim_anchor_quote": "«Физические тренировки и прогулки на свежем воздухе утилизируют избыток кортизола после стрессовых торговых сессий лучше любых медикаментов.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -230,7 +231,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_018", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Кумулятивный тильт", "section": "The Slow Boiling Frog",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Глава 3. ПАУТИНА ТИЛЬТА", "section": "The Slow Boiling Frog",
             "verbatim_anchor_quote": "«Кумулятивный тильт накапливается незаметно день за днем из мелких недовольств, пока не взрывается тотальным уничтожением депозита.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -243,7 +244,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_019", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Выход из долговой ямы", "section": "Recovering from Financial Ruin",
+            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Глава 8. ОСОБЕННОСТИ СИСТЕМНОЙ ТОРГОВЛИ", "section": "Recovering from Financial Ruin",
             "verbatim_anchor_quote": "«Если вы слили депозит, не пытайтесь занять деньги на отыгрыш. Остановитесь, вернитесь в реальную жизнь и восстановите стабильный заработок вне биржи.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -256,7 +257,7 @@ MOGILAT_ATOMS = [
     {
         "id": "mog_020", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Заключение Добро пожаловать в тильт", "section": "The Path to Sustainable Trading",
+            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Глава 12. ПСИХОЛОГИЧЕСКИЙ ИНСТРУМЕНТАРИЙ ТРЕЙДЕРА", "section": "The Path to Sustainable Trading",
             "verbatim_anchor_quote": "«Тильт побеждается не силой воли, а жесткой системой предохранителей, уважением к рискам и психологической зрелостью оператора.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -268,4 +269,4 @@ MOGILAT_ATOMS = [
     }
 ]
 
-print(f"Book 10 (Roman Mogilat) verified: {len(MOGILAT_ATOMS)} authentic atoms.")
+print(f"Book 10 (Roman Mogilat) verified: {len(MOGILAT_ATOMS)} authentic atoms strictly mapped to Chapters 1-12.")

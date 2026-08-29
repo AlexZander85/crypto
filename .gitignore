@@ -46,8 +46,13 @@ landing2/reports/
 desktop_app/bin/
 desktop_app/obj/
 dist/
-tools/__pycache__/
+# Python
+__pycache__/
 *.pyc
+# Heavy book archives and binaries
+books/
+*.zip
+docs/*.zip
 
 # Whitelist mjs in test/tools
 !landing2/tools/*.mjs

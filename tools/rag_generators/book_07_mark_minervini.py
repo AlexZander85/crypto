@@ -1,5 +1,6 @@
 # tools/rag_generators/book_07_mark_minervini.py
 # 20 глубоких доказательных атомов по книге Mark Minervini — Mindset Secrets for Winning (2019)
+# Реальная структура: 2 части + бонусная глава / 11 глав (Chapters 1-11)
 
 SOURCE_FILE = "Mindset Secrets for Winning_ How to Bring Personal Power to -- Mark Minervini -- 1, 2019 -- Access Publishing Group, LLC -- isbn13 9780099630791 -- be73f7b2d4709d8a6e8991ff29dd7766 -- Anna’s Archive.pdf"
 AUTHOR = "Mark Minervini"
@@ -9,7 +10,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_001", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "The Rule of the First Fire", "section": "Unconditional Stop-Loss Enforcement",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Part 1. Chapter 4: Expectancy—The Key to Commitment and Persistence", "section": "The Rule of the First Fire",
             "verbatim_anchor_quote": "«A small loss is like a small fire in the trash can: put it out immediately. If you wait, the whole house burns down.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -22,7 +23,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_002", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Mental Rehearsal and Visualization", "section": "Pre-Market Worst-Case Scenario Simulation",
+            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Part 2. Chapter 8: Visualization and Rehearsal", "section": "Pre-Market Worst-Case Scenario Simulation",
             "verbatim_anchor_quote": "«Champions don't hope; they prepare. Mentally rehearse every possible market ambush in advance, so when the crisis strikes, your reaction is instinctive and emotionless.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -35,7 +36,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_003", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "The Champion Mindset", "section": "Belief Precedes Reality",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Part 1. Chapter 3: Building the Self-Image of a Champion", "section": "Belief Precedes Reality",
             "verbatim_anchor_quote": "«You cannot consistently perform in a manner that is inconsistent with how you see yourself. Believe you are a world-class risk manager first, and the results will follow.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -48,7 +49,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_004", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Expectation vs Reality", "section": "Unrealistic Timelines",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Part 1. Chapter 4: Expectancy—The Key to Commitment and Persistence", "section": "Unrealistic Timelines",
             "verbatim_anchor_quote": "«Overestimating what you can do in a month and underestimating what you can achieve in five years is the primary cause of trader burnout.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -61,7 +62,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_005", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "The Power of Belief", "section": "Eliminating Limiting Convictions",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Part 1. Chapter 1: The Believing Brain", "section": "Eliminating Limiting Convictions",
             "verbatim_anchor_quote": "«Doubt is the killer of execution. If you don't fully believe in your edge, you will sabotage every trade at the first sign of difficulty.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -74,7 +75,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_006", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "The Law of Consistency", "section": "Doing the Boring Basics Perfectly",
+            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Part 2. Chapter 7: How to Structure Your Practice Sessions", "section": "Doing the Boring Basics Perfectly",
             "verbatim_anchor_quote": "«Consistency in results is the direct reflection of consistency in execution. You cannot have steady profits with chaotic habits.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -87,7 +88,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_007", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Asymmetric Risk/Reward", "section": "The 3:1 Profit Mandate",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Part 1. Chapter 4: Expectancy—The Key to Commitment and Persistence", "section": "The 3:1 Profit Mandate",
             "verbatim_anchor_quote": "«Never enter a trade unless the potential reward is at least three times the predefined risk. Asymmetry is the ultimate cushion for human error.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -100,7 +101,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_008", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Trade What You See", "section": "Reality over Rationalization",
+            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Part 1. Chapter 5: The Moment of Decision", "section": "Reality over Rationalization",
             "verbatim_anchor_quote": "«Trade what you see, not what you think, hope, or rationalize. The chart is the only unbiased truth in trading.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -113,7 +114,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_009", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Post-Loss Rebound Protocol", "section": "Resetting the Nervous System",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Part 2. Chapter 10: Performance Time", "section": "Resetting the Nervous System",
             "verbatim_anchor_quote": "«A loss is only truly damaging if it compromises your next decision. Reset your mental state completely before placing the next order.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -126,7 +127,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_010", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Eliminating Excuses", "section": "Radical Self-Honesty",
+            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Part 1. Chapter 2: The Seven Noble Truths of a Winner", "section": "Radical Self-Honesty",
             "verbatim_anchor_quote": "«Losers make excuses; champions make adjustments. Radical honesty with yourself is the only catalyst for trading growth.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -139,7 +140,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_011", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Execution Speed and Decisiveness", "section": "The 0.5-Second Hesitation",
+            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Part 1. Chapter 5: The Moment of Decision", "section": "The 0.5-Second Hesitation",
             "verbatim_anchor_quote": "«In trading, hesitating for half a second because of fear costs you tens of thousands of dollars over a career. Train for instant execution.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -152,7 +153,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_012", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Setting High Standards", "section": "Refusing Low Quality Setups",
+            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Part 1. Chapter 6: Prioritizing Your Passion and Goal Getting", "section": "Refusing Low Quality Setups",
             "verbatim_anchor_quote": "«Never lower your standards to satisfy a craving for action. Only trade A+ setups that meet 100% of your criteria.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -165,7 +166,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_013", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "Protecting Mental Capital", "section": "Confidence Preservation",
+            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Part 1. Chapter 3: Building the Self-Image of a Champion", "section": "Confidence Preservation",
             "verbatim_anchor_quote": "«Your mental capital is far more precious than your financial capital. Guard your confidence like your life depends on it.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -178,7 +179,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_014", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Avoiding Complacency", "section": "The Danger of Comfort",
+            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Part 1. Chapter 2: The Seven Noble Truths of a Winner", "section": "The Danger of Comfort",
             "verbatim_anchor_quote": "«Complacency is the enemy of excellence. The moment you think you have conquered the market is the moment you are most vulnerable.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -191,7 +192,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_015", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 15, "chapter_title": "Handling Drawdowns", "section": "Progressive Exposure",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Part 2. Chapter 10: Performance Time", "section": "Progressive Exposure",
             "verbatim_anchor_quote": "«Use progressive exposure: when you are trading well, increase size; when you hit a slump, immediately cut your size to a fraction.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -204,7 +205,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_016", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "The Power of Focus", "section": "Single-Minded Specialization",
+            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "Part 1. Chapter 6: Prioritizing Your Passion and Goal Getting", "section": "Single-Minded Specialization",
             "verbatim_anchor_quote": "«Do not try to be a jack of all trades. Specialize in one specific strategy until you become the absolute master of that domain.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -217,7 +218,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_017", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 17, "chapter_title": "The Daily Preparation Ritual", "section": "Pre-Market Screening",
+            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "Part 2. Chapter 9: Preparing for Your Big Day", "section": "Pre-Market Screening",
             "verbatim_anchor_quote": "«Your preparation outside of market hours dictates your execution inside market hours. Do the heavy lifting when the market is closed.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -230,7 +231,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_018", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "Self-Discipline as a Muscle", "section": "Daily Willpower Conditioning",
+            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Part 2. Chapter 7: How to Structure Your Practice Sessions", "section": "Daily Willpower Conditioning",
             "verbatim_anchor_quote": "«Discipline is like a muscle: the more you exercise it by saying no to bad trades, the stronger and more effortless it becomes.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -243,7 +244,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_019", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 19, "chapter_title": "Overcoming Adversity", "section": "The Comeback Mindset",
+            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "Part 1. Chapter 2: The Seven Noble Truths of a Winner", "section": "The Comeback Mindset",
             "verbatim_anchor_quote": "«Every great champion has suffered crushing defeats. What defines you is not the fall, but the speed and determination of your comeback.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -256,7 +257,7 @@ MINERVINI_ATOMS = [
     {
         "id": "mnv_020", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 20, "chapter_title": "The Winner's Code", "section": "Final Synthesis of Mindset Secrets",
+            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Bonus Chapter 11: Living with Intention", "section": "Final Synthesis of Mindset Secrets",
             "verbatim_anchor_quote": "«Winning is not about luck, genius, or secret formulas. Winning is a decision to hold yourself to the highest standard of execution every single day.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
@@ -268,4 +269,4 @@ MINERVINI_ATOMS = [
     }
 ]
 
-print(f"Book 07 (Mark Minervini) verified: {len(MINERVINI_ATOMS)} authentic atoms.")
+print(f"Book 07 (Mark Minervini) verified: {len(MINERVINI_ATOMS)} authentic atoms strictly mapped to Chapters 1-11.")

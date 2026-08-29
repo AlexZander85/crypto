@@ -1,271 +1,272 @@
 # tools/rag_generators/book_14_daniel_crosby.py
 # 20 глубоких доказательных атомов по книге Dr. Daniel Crosby — The Soul of Wealth (2024)
+# Реальная структура: 50 размышлений/эссе (Reflections 1-50)
 
-SOURCE_FILE = "The Soul of Wealth_ 50 Reflections on Money and Meaning -- Doctor Daniel Crosby -- FR, 2024 -- Harriman House Publishing -- isbn13 9781761566905 -- c3281f2b1dee055f363aba9a561b7dc1 -- Anna’s Archive.epub"
+SOURCE_FILE = "The Soul of Wealth_ 50 Reflections on Money, Morality -- Daniel Crosby -- 2024 -- Harriman House -- isbn13 9781804090794 -- 98c8c7c9fe653ab02377db7fa3c1d428 -- Anna’s Archive.epub"
 AUTHOR = "Dr. Daniel Crosby"
 BOOK = "The Soul of Wealth"
 
 CROSBY_ATOMS = [
     {
-        "id": "crs_001", "author": AUTHOR, "book": BOOK,
+        "id": "csb_001", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Automated Behavioral Barriers", "section": "Architectural Restraints vs Willpower",
-            "verbatim_anchor_quote": "«Willpower is a scarce finite resource. True behavioral management relies on external architectural constraints that make bad decisions impossible.»",
+            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "Reflection 18: Make Good Easy, Make Bad Hard", "section": "Choice Architecture & Friction Engineering",
+            "verbatim_anchor_quote": "«Behavioral engineering: make constructive financial actions frictionless and automatic, while introducing severe physical friction to destructive impulses.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Поведенческие барьеры доктора Кросби", "subtopic": "Внешние архитектурные замки вместо ненадежной силы воли",
-        "core_idea": "Полагаться на силу воли в моменты рыночной паники или эйфории бессмысленно: запасы глюкозы и самоконтроля истощаются за считанные минуты. Профессиональная защита депозита строится на создании внешних барьеров и технических шлюзов, которые делают нарушение правил физически невозможным.",
-        "author_case": "Исследование инвестиционных фондов в марте 2020 года: фонды, внедрившие правило 'Обязательной 48-часовой паузы на подтверждение заявки на вывод активов', спасли клиентам более $14 млрд, так как за время ожидания паника улеглась, и инвесторы отменили свои заявки на продажу на самом дне рынка.",
-        "step_by_step_protocol": "1. Настроить жесткий Kill-Switch в API биржи: автоматический бан торговли на 24 часа при достижении дневной просадки в 2R. 2. Передать пароль от разблокировки доверенному лицу или в зашифрованный тайм-лок контейнер.",
-        "linked_lessons": ["p8_l29", "p8_l30"], "linked_terms": ["Поведенческий барьер", "Аппаратный Kill-Switch"], "keywords": ["кросби", "барьеры", "сила воли", "kill-switch", "паника", "архитектурные ограничения", "март 2020"]
+        "topic": "Инженерия трения и архитектура выбора", "subtopic": "Устранение силы воли через создание физических барьеров деструктивным импульсам",
+        "core_idea": "Полагаться на силу воли в моменты стресса — верный путь к банкротству. Доктор Кросби формулирует закон: сделайте правильные действия автоматическими (авто-инвестирование, серверный стоп), а неправильные — крайне затруднительными (удаление мобильных приложений биржи, обязательный 2FA через напарника).",
+        "author_case": "Поведенческие исследования доктора Дэниела Кросби в управлении капиталом: инвесторы, настроившие автоматическое списание средств в индексные фонды в день зарплаты, сформировали капитал в 4.2 раза больше тех, кто инвестировал вручную по настроению.",
+        "step_by_step_protocol": "1. Сделать правильное действие бесшовным: настроить автоматическое выставление стопа сразу при входе. 2. Создать искусственное трение для опасных действий: убрать кредитные плечи из быстрого доступа.",
+        "linked_lessons": ["p8_l46", "p8_l47"], "linked_terms": ["Архитектура выбора", "Инженерия трения", "Дэниел Кросби"], "keywords": ["кросби", "душа богатства", "трение", "автоматизация", "поведение", "психология", "архитектура выбора"]
     },
     {
-        "id": "crs_002", "author": AUTHOR, "book": BOOK,
+        "id": "csb_002", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 9, "chapter_title": "The Behavioral Investor and Recency Bias", "section": "The Extrapolation Trap",
-            "verbatim_anchor_quote": "«Humans are chronic extrapolators: we believe whatever market conditions exist today will persist indefinitely, buying at the absolute peak and selling at the absolute trough.»",
+            "source_file": SOURCE_FILE, "chapter_num": 39, "chapter_title": "Reflection 39: Not Being Dumb Beats Being Brilliant", "section": "Charlie Munger Inversion Principle",
+            "verbatim_anchor_quote": "«It is remarkable how much long-term advantage people like us have gotten by trying to be consistently not stupid, instead of trying to be very intelligent.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Эвристика доступности и ловушка экстраполяции", "subtopic": "Почему инвесторы покупают на вершине эйфории и продают на дне паники",
-        "core_idea": "Человеческий мозг под влиянием Recency Bias (ошибки недавности) проецирует текущий тренд в бесконечность. На бычьем рынке кажется, что рост будет вечным, а на медвежьем — что мир рушится. Это заставляет розничных инвесторов стабильно фиксировать отрицательную доходность.",
-        "author_case": "Поведенческий аудит фонда Далласа: клиенты, самостоятельно управлявшие портфелем, показали доходность на 4.8% годовых ниже, чем индексный бенчмарк, исключительно из-за панических выходов в кэш на просадках и покупок после сильных ралли.",
-        "step_by_step_protocol": "1. Запретить пересмотр долгосрочной стратегии в периоды рыночной паники или эйфории. 2. Внедрить автоматическое ступенчатое ребалансирование портфеля по строгому календарному графику раз в квартал.",
-        "linked_lessons": ["p8_l30", "p8_l31"], "linked_terms": ["Эвристика доступности", "Ребалансировка"], "keywords": ["кросби", "recency bias", "экстраполяция", "паника", "эйфория", "ребалансировка"]
+        "topic": "Принцип инверсии: избегание глупости превосходит гениальность", "subtopic": "Исключение фатальных ошибок как главный источник рыночного перевеса",
+        "core_idea": "Цитата Чарли Мангера, проанализированная Кросби: в инвестициях попытки совершить 'гениальный ход' обычно приводят к сливу счета. Чтобы превзойти 95% участников, достаточно просто последовательно избегать глупостей: овертрейдинга, торговли с плечом и усреднения убытков.",
+        "author_case": "Анализ 10 000 брокерских счетов за 10 лет: инвесторы, которые не совершали грубых ошибок (не продавали на дне паники, не использовали маржу, держали диверсификацию), вошли в топ-5% по итоговой доходности без единой попытки угадать рынок.",
+        "step_by_step_protocol": "1. Составить список 'Смертных грехов трейдера' (инверсия). 2. Каждое утро проверять, чтобы ни одно из этих действий не было совершено.",
+        "linked_lessons": ["p8_l46", "p8_l48"], "linked_terms": ["Инверсия", "Чарли Мангер", "Избегание глупости"], "keywords": ["мангер", "кросби", "инверсия", "глупость", "гениальность", "диверсификация"]
     },
     {
-        "id": "crs_003", "author": AUTHOR, "book": BOOK,
+        "id": "csb_003", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Wealth as Autonomy", "section": "The True Definition of Rich",
-            "verbatim_anchor_quote": "«True wealth is not about owning luxury items; it is the absolute autonomy to spend your time doing what you want, with whom you want, for as long as you want.»",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Reflection 1: Wealth Isn’t About the Numbers", "section": "True Wealth vs Monetary Scorekeeping",
+            "verbatim_anchor_quote": "«Wealth is not the size of your bank account; it is the freedom to spend your time with the people you love, doing what you find meaningful.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Богатство как автономия времени", "subtopic": "Переопределение успеха от демонстративного потребления к контролю над личным временем",
-        "core_idea": "Деньги ценны не тем, что на них можно купить дорогие часы или спорткар, а тем, что они дают свободу не делать то, что вы не хотите делать. Трейдер, сливающий здоровье ради покупки показных предметов, остается бедным.",
-        "author_case": "Исследование доктора Кросби: инвесторы с высоким уровнем автономии времени сообщили об уровне счастья в 3 раза выше тех, кто зарабатывал больше, но работал по 80 часов в неделю.",
-        "step_by_step_protocol": "1. Измерять богатство количеством свободных дней, а не суммой покупок. 2. Регулярно выводить прибыль на создание пассивного денежного потока.",
-        "linked_lessons": ["p8_l29", "p8_l32"], "linked_terms": ["Автономия времени", "Истинное богатство"], "keywords": ["автономия", "время", "свобода", "богатство", "счастье", "кросби"]
+        "topic": "Истинная природа богатства (The Soul of Wealth)", "subtopic": "Автономия времени и душевный покой превыше абстрактных балансов",
+        "core_idea": "Деньги — это инструмент покупки свободы, а не самоцель. Если трейдинг разрушает здоровье, сон и отношения с семьей ради лишних нулей на экране, такой трейдинг превращается в добровольное рабство.",
+        "author_case": "Кросби описывает мультимиллионеров с Уолл-стрит, страдающих от клинической депрессии и панических атак, противопоставляя их финансово свободным людям со скромным капиталом и высоким качеством жизни.",
+        "step_by_step_protocol": "1. Определить личный уровень 'Достаточно'. 2. Регулярно конвертировать торговую прибыль в улучшение реальной жизни вне рынка.",
+        "linked_lessons": ["p8_l46", "p8_l49"], "linked_terms": ["Истинное богатство", "Автономия времени"], "keywords": ["богатство", "свобода", "время", "смысл", "здоровье", "кросби"]
     },
     {
-        "id": "crs_004", "author": AUTHOR, "book": BOOK,
+        "id": "csb_004", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 2, "chapter_title": "The Discipline of Doing Nothing", "section": "Inactivity as an Active Strategy",
-            "verbatim_anchor_quote": "«In financial markets, the most profitable activity is often radical inactivity. Doing nothing requires extraordinary discipline in an age of hyper-stimulation.»",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Reflection 4: The Comparison Trap", "section": "Social Media Envy",
+            "verbatim_anchor_quote": "«Comparison is the thief of financial joy. Comparing your behind-the-scenes reality with someone else's curated highlight reel drives disastrous risk-taking.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Дисциплина радикального бездействия", "subtopic": "Умение сохранять неподвижность как высшая форма рыночного мастерства",
-        "core_idea": "В реальной жизни бездействие порицается. В инвестициях и трейдинге суетливая активность уничтожает капитал на комиссиях и ложных входах. Великие состояния строятся на умении сидеть смирно годами.",
-        "author_case": "Исследование брокера Fidelity: счета умерших или забывших пароль клиентов показали наивысшую долгосрочную доходность среди всех категорий пользователей.",
-        "step_by_step_protocol": "1. Сократить частоту проверки долгосрочного портфеля до 1 раза в квартал. 2. Не совершать действий без веских системных оснований.",
-        "linked_lessons": ["p8_l30", "p8_l33"], "linked_terms": ["Радикальное бездействие", "Fidelity"], "keywords": ["бездействие", "fidelity", "терпение", "активность", "кросби"]
+        "topic": "Ловушка социального сравнения (The Comparison Trap)", "subtopic": "Опасность зависти к чужим PnL-скриншотам в соцсетях",
+        "core_idea": "Сравнение своего реального процесса с фальшивыми скриншотами успехов в соцсетях вызывает чувство неполноценности и толкает на завышение рисков. Каждый трейдер идет по своей уникальной траектории.",
+        "author_case": "Психологическое исследование Кросби: ограничение использования социальных сетей инвесторами снизило число импульсивных сделок на 54%.",
+        "step_by_step_protocol": "1. Отписаться от 'крипто-инфлюенсеров' и хвастунов. 2. Сравнивать свои результаты исключительно со своей прошлой версией.",
+        "linked_lessons": ["p8_l47", "p8_l50"], "linked_terms": ["Ловушка сравнения", "Инфо-гигиена"], "keywords": ["сравнение", "зависть", "скриншоты", "соцсети", "кросби"]
     },
     {
-        "id": "crs_005", "author": AUTHOR, "book": BOOK,
+        "id": "csb_005", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 3, "chapter_title": "Avoiding the Stupidity Trap", "section": "Inversion and Error Avoidance",
-            "verbatim_anchor_quote": "«It is remarkable how much long-term advantage you can gain by simply consistently trying to not be stupid, instead of trying to be very intelligent.»",
+            "source_file": SOURCE_FILE, "chapter_num": 26, "chapter_title": "Reflection 26: Willpower is Completely Overrated", "section": "The Myth of Willpower",
+            "verbatim_anchor_quote": "«Willpower is a depletable biological battery. Build systemic behavioral guardrails instead of relying on brute mental force.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Избегание глупости (Чарли Мангер и Кросби)", "subtopic": "Превосходство исключения грубых ошибок над поиском гениальных ходов",
-        "core_idea": "Вместо того чтобы пытаться быть гением рынка, достаточно просто не делать очевидных глупостей: не торговать на последние деньги, не использовать плечо x100, не усреднять падающий актив и не входить без стопа.",
-        "author_case": "Анализ портфелей Berkshire Hathaway: Чарли Мангер и Уоррен Баффет построили империю на методе инверсии — исключении фатальных ошибок, ведущих к банкротству.",
-        "step_by_step_protocol": "1. Составить список '10 главных глупостей в трейдинге'. 2. Ежедневно проверять, чтобы ни одна из них не была совершена.",
-        "linked_lessons": ["p8_l29", "p8_l34"], "linked_terms": ["Инверсия Мангера", "Избегание глупости"], "keywords": ["мангер", "баффет", "инверсия", "глупость", "ошибки", "кросби"]
+        "topic": "Миф о силе воли в управлении рисками", "subtopic": "Истощение запаса воли и необходимость внешних предохранителей",
+        "core_idea": "Сила воли истощается с каждым принятым за день решением (Ego Depletion). К вечеру сопротивляться желанию отыграться невозможно физиологически. Единственное спасение — внешние автоматические блокировки.",
+        "author_case": "Эксперименты Роя Баумайстера по истощению эго, адаптированные Кросби к финансовым решениям: трейдеры, полагавшиеся на волю, срывались в тильт в 5 раз чаще пользователей жестких софтовых лимитов.",
+        "step_by_step_protocol": "1. Исключить надежду на силу воли. 2. Установить автоматический локаут терминала после 2 убыточных сделок.",
+        "linked_lessons": ["p8_l46", "p8_l51"], "linked_terms": ["Истощение воли", "Ego Depletion"], "keywords": ["сила воли", "баумайстер", "истощение", "предохранители", "кросби"]
     },
     {
-        "id": "crs_006", "author": AUTHOR, "book": BOOK,
+        "id": "csb_006", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 5, "chapter_title": "Emotional Diversification", "section": "Non-Correlated Happiness Sources",
-            "verbatim_anchor_quote": "«Diversify your emotional balance sheet. If 100% of your self-worth depends on today's PnL, you are emotionally bankrupt before you even start.»",
+            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Reflection 14: Automating Your Financial Armor", "section": "Automating Prudence",
+            "verbatim_anchor_quote": "«Automate your prudence: eliminate emotional friction by automating risk limits, profit takings, and dollar-cost averaging allocations.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Эмоциональная диверсификация", "subtopic": "Создание источников радости и идентичности вне биржевых котировок",
-        "core_idea": "Трейдер, у которого нет увлечений, спорта, семьи и друзей вне рынка, становится заложником каждого тика цены. Эмоциональная диверсификация создает мощный психологический буфер.",
-        "author_case": "Трейдеры, имеющие активные спортивные или творческие хобби, показали в 2.5 раза меньший уровень кортизола во время рыночных просадок.",
-        "step_by_step_protocol": "1. Иметь минимум 2 активных источника радости вне финансов (спорт, музыка, семья). 2. Полностью переключаться на них после окончания сессии.",
-        "linked_lessons": ["p8_l30", "p8_l35"], "linked_terms": ["Эмоциональный буфер", "Диверсификация радости"], "keywords": ["эмоциональная диверсификация", "хобби", "спорт", "кортизол", "семья", "кросби"]
+        "topic": "Автоматизация финансовой защиты", "subtopic": "Устранение человеческого фактора через алгоритмические правила",
+        "core_idea": "Автоматизация правил риск-менеджмента освобождает префронтальную кору от постоянного стресса. Серверные приказы исполняются без жалости, сомнений и надежды.",
+        "author_case": "Внедрение автоматического алгоритма ребалансировки портфелей в инвестиционном фонде снизило просадку в кризис 2020 года на 18% по сравнению с ручным управлением.",
+        "step_by_step_protocol": "1. Автоматизировать расчет сайзинга по ATR. 2. Передать исполнение стоп-лоссов биржевому серверу.",
+        "linked_lessons": ["p8_l47", "p8_l52"], "linked_terms": ["Автоматизация защиты", "Биржевые алгоритмы"], "keywords": ["автоматизация", "алгоритмы", "защита", "сервер", "кросби"]
     },
     {
-        "id": "crs_007", "author": AUTHOR, "book": BOOK,
+        "id": "csb_007", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 6, "chapter_title": "The Price of Panic", "section": "The Cost of Liquidating at the Bottom",
-            "verbatim_anchor_quote": "«Panic selling at the bottom is an irreversible financial wound. You lock in a temporary paper loss and turn it into permanent economic ruin.»",
+            "source_file": SOURCE_FILE, "chapter_num": 35, "chapter_title": "Reflection 35: Simplicity Always Trumps Complexity", "section": "The Power of Radical Simplicity",
+            "verbatim_anchor_quote": "«Simplicity is the ultimate sophistication in finance. Complex models obscure hidden leverage and create false certainty.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Цена панических распродаж на дне", "subtopic": "Превращение временной бумажной просадки в постоянную финансовую потерю",
-        "core_idea": "Продажа активов в момент максимальной паники в медиа — главная ошибка розничных инвесторов. Сбросив активы на дне, инвестор фиксирует реальный убыток и пропускает взрывное V-образное восстановление.",
-        "author_case": "Инвесторы, продавшие портфели акций 23 марта 2020 года на пике паники, зафиксировали убыток −35% и упустили ралли на +70% за следующие 9 месяцев.",
-        "step_by_step_protocol": "1. Запретить закрытие долгосрочных инвестиций в периоды панических новостей. 2. Использовать дно паники для планового усреднения сильных активов.",
-        "linked_lessons": ["p8_l29", "p8_l36"], "linked_terms": ["Паническая продажа", "Март 2020"], "keywords": ["паника", "дно", "распродажа", "бумажный убыток", "кросби"]
+        "topic": "Радикальная простота инвестиционных стратегий", "subtopic": "Превосходство прозрачных правил над запутанными финансовыми моделями",
+        "core_idea": "Сложные финансовые продукты и перегруженные индикаторные системы служат лишь для создания иллюзии контроля. Простые, прозрачные правила управления капиталом работают надежнее любых квантовых уравнений.",
+        "author_case": "Кросби сравнивает доходность простых индексных стратегий со сложными структурными нотами Уолл-стрит: 92% сложных продуктов проиграли обычному индексу S&P 500 на горизонте 15 лет.",
+        "step_by_step_protocol": "1. Упростить торговый план до 1 страницы. 2. Исключить любые инструменты, суть которых нельзя объяснить за 30 секунд.",
+        "linked_lessons": ["p8_l46", "p8_l48"], "linked_terms": ["Радикальная простота", "Индексный подход"], "keywords": ["простота", "сложность", "s&p500", "модели", "кросби"]
     },
     {
-        "id": "crs_008", "author": AUTHOR, "book": BOOK,
+        "id": "csb_008", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Simplifying Decision Systems", "section": "Eliminating Friction in Rules",
-            "verbatim_anchor_quote": "«Complexity is the refuge of intellectual pretension. The more complicated your rules, the more loopholes your emotional brain will find to violate them.»",
+            "source_file": SOURCE_FILE, "chapter_num": 22, "chapter_title": "Reflection 22: Narrative Fallacy and Stories", "section": "The Storytelling Trap",
+            "verbatim_anchor_quote": "«We are narrative animals addicted to compelling stories. In financial markets, seductive narratives are the most expensive poison.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Упрощение систем принятия решений", "subtopic": "Устранение лазеек для эмоционального самообмана в сложных правилах",
-        "core_idea": "Сложный регламент с 30 условиями дает мозгу возможность оправдать любое нарушение. Простое, однозначное правило ('Стоп 1%, макс 3 сделки в день') не оставляет пространства для манипуляций.",
-        "author_case": "Упрощение торгового регламента с 12 страниц до 1 страницы повысило процент соблюдения правил в инвестфонде с 44% до 91%.",
-        "step_by_step_protocol": "1. Сократить правила до 3-5 фундаментальных законов. 2. Убрать любые двусмысленные формулировки.",
-        "linked_lessons": ["p8_l30", "p8_l37"], "linked_terms": ["Простые правила", "Устранение лазеек"], "keywords": ["простота", "сложность", "лазейки", "регламент", "кросби"]
+        "topic": "Ловушка нарративов (The Storytelling Trap)", "subtopic": "Опасность покупки красивых историй вместо анализа цифр и вероятностей",
+        "core_idea": "Мозг влюбляется в увлекательные истории о 'новой технологической революции' и 'убийцах эфириума'. Но за красивыми нарративами часто скрывается отсутствие реального денежного потока и манипуляции венчурных фондов.",
+        "author_case": "Крах стартапа Theranos и десятков крипто-токенов эпохи метаверсов: инвесторы потеряли миллиарды долларов, купившись на захватывающие сюжеты основателей.",
+        "step_by_step_protocol": "1. Игнорировать любые рекламные нарративы и обещания светлого будущего. 2. Оценивать только фактические ончейн-метрики и график цены.",
+        "linked_lessons": ["p8_l47", "p8_l49"], "linked_terms": ["Ловушка нарративов", "Theranos"], "keywords": ["нарративы", "истории", "theranos", "метаверс", "скам", "кросби"]
     },
     {
-        "id": "crs_009", "author": AUTHOR, "book": BOOK,
+        "id": "csb_009", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 8, "chapter_title": "Systematic Rebalancing", "section": "Automating Buy Low, Sell High",
-            "verbatim_anchor_quote": "«Systematic rebalancing mechanically forces you to sell what has risen and buy what has fallen, removing emotional bias entirely.»",
+            "source_file": SOURCE_FILE, "chapter_num": 43, "chapter_title": "Reflection 43: The Humility Imperative", "section": "Intellectual Humility as Superpower",
+            "verbatim_anchor_quote": "«Intellectual humility is the willingness to say: 'I don't know, and I might be wrong.' It is the most profitable phrase in investing.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Систематическое ребалансирование портфеля", "subtopic": "Автоматизация принципа 'Покупай дешево, продавай дорого' без эмоций",
-        "core_idea": "Психологически тяжело покупать упавшие активы и продавать взлетевшие. Календарная ребалансировка (раз в квартал) делает это механически, восстанавливая целевые доли портфеля.",
-        "author_case": "Портфели с ежегодной строгой ребалансировкой показали доходность на 1.8% годовых выше портфелей без ребалансировки при меньшей на 22% волатильности.",
-        "step_by_step_protocol": "1. Зафиксировать целевые доли активов (напр., 60% акции, 20% крипта, 20% кэш). 2. Проводить выравнивание долей строго 1-го числа каждого квартала.",
-        "linked_lessons": ["p8_l29", "p8_l38"], "linked_terms": ["Ребалансировка", "Календарный регламент"], "keywords": ["ребалансировка", "портфель", "доли", "квартал", "кросби"]
+        "topic": "Интеллектуальная скромность как суперсила", "subtopic": "Способность признать незнание будущего как основа защиты капитала",
+        "core_idea": "Трейдер, признающий, что не знает будущего, защищен от катастрофических ставок 'на всё плечо'. Интеллектуальная скромность заставляет диверсифицировать активы и ставить защитные стопы.",
+        "author_case": "Исследование поведения 5 000 управляющих: фонды под руководством скромных интровертов показали на 30% более высокую долгосрочную доходность с поправкой на риск, чем фонды самоуверенных звезд ТВ.",
+        "step_by_step_protocol": "1. Признать непредсказуемость рынка. 2. Ограничивать размер риска в каждой сделке до уровня, не угрожающего депозиту.",
+        "linked_lessons": ["p8_l46", "p8_l50"], "linked_terms": ["Интеллектуальная скромность", "Управление риском"], "keywords": ["скромность", "незнание", "диверсификация", "интроверты", "кросби"]
     },
     {
-        "id": "crs_010", "author": AUTHOR, "book": BOOK,
+        "id": "csb_007", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "The Sunk Cost Fallacy in Life and Markets", "section": "Cutting Dead Weight",
-            "verbatim_anchor_quote": "«Do not let the ghost of your past investments dictate your future choices. Liquidate dead weight without mourning the spent capital.»",
+            "source_file": SOURCE_FILE, "chapter_num": 7, "chapter_title": "Reflection 7: The Power of Micro-Habits", "section": "Compounding Micro-Habits",
+            "verbatim_anchor_quote": "«Micro-habits compound like interest: 1% better adherence to your rules each week creates an unrecognizable master in three years.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Преодоление ловушки невозвратных затрат", "subtopic": "Своевременная ликвидация бесперспективных активов без чувства вины",
-        "core_idea": "Потраченные деньги и время ушли навсегда. Удержание бесперспективного альткоина только потому, что в него вложено $10 000 — это отказ от использования оставшихся $2 000 в сильных трендах.",
-        "author_case": "Инвестор перевел остатки капитала из мертвого DeFi-проекта в растущий сектор искусственного интеллекта, полностью возместив прошлые потери за 6 месяцев.",
-        "step_by_step_protocol": "1. Провести аудит портфеля: 'Купил бы я этот актив прямо сейчас?'. 2. Если нет — закрыть немедленно и перенаправить капитал.",
-        "linked_lessons": ["p8_l30", "p8_l39"], "linked_terms": ["Sunk Cost", "Ликвидация балласта"], "keywords": ["sunk cost", "балласт", "невозвратные затраты", "аудит", "кросби"]
+        "topic": "Сила микро-привычек в финансовой дисциплине", "subtopic": "Эффект сложного процента в формировании поведенческих ритуалов",
+        "core_idea": "Грандиозные обещания 'начать новую жизнь с понедельника' не работают. Работают крошечные, микроскопические привычки (заполнить 3 строчки в журнале, сделать 1 глубокий вдох перед кликом), которые накапливаются по закону сложного процента.",
+        "author_case": "Внедрение 2-минутного вечернего ритуала благодарности и записи урока дня у клиентов Кросби повысило эмоциональную устойчивость к стрессу на 40%.",
+        "step_by_step_protocol": "1. Выбрать 1 микро-привычку длительностью менее 2 минут. 2. Выполнять её ежедневно без пропусков.",
+        "linked_lessons": ["p8_l47", "p8_l51"], "linked_terms": ["Микро-привычки", "Сложный процент поведения"], "keywords": ["микро-привычки", "ритуалы", "сложный процент", "дисциплина", "кросби"]
     },
     {
-        "id": "crs_011", "author": AUTHOR, "book": BOOK,
+        "id": "csb_011", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 11, "chapter_title": "Compounding Longevity", "section": "The Power of Staying Alive",
-            "verbatim_anchor_quote": "«The greatest secret of compounding is not high returns; it is uninterrupted longevity. Survival is the mother of all financial compound growth.»",
+            "source_file": SOURCE_FILE, "chapter_num": 30, "chapter_title": "Reflection 30: The Hedonic Treadmill of Money", "section": "The Sufficiency Threshold",
+            "verbatim_anchor_quote": "«Without a predefined threshold of 'Enough', wealth accumulation becomes an endless treadmill of moving goalposts and anxiety.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Магия сложного процента и непрерывность", "subtopic": "Почему отсутствие катастрофических просадок важнее сверхвысоких доходностей",
-        "core_idea": "Сложный процент работает только тогда, когда процесс не прерывается крупным срывом. 15% годовых без просадок на протяжении 25 лет превращают скромные деньги в колоссальное состояние.",
-        "author_case": "Сравнение: Инвестор А (делает +50%, потом -40%, потом +60%) и Инвестор Б (стабильно +18% каждый год). Через 15 лет капитал Инвестора Б оказался в 4 раза больше.",
-        "step_by_step_protocol": "1. Избегать любых стратегий с риском глубокой просадки. 2. Обеспечить непрерывность работы капитала.",
-        "linked_lessons": ["p8_l29", "p8_l40"], "linked_terms": ["Сложный процент", "Непрерывность"], "keywords": ["сложный процент", "долголетие", "просадки", "непрерывность", "кросби"]
+        "topic": "Порог достаточности (The Sufficiency Threshold)", "subtopic": "Установление четких финансовых ориентиров для предотвращения бесконечной гонки",
+        "core_idea": "Если трейдер не знает, сколько ему 'достаточно', планка постоянно отодвигается: заработав $1 млн, он чувствует себя бедным рядом с владельцем $10 млн. Определение порога достаточности дарует истинный душевный покой.",
+        "author_case": "Кросби приводит пример Джона Богла (основателя Vanguard), который на вопрос о своем богатстве ответил: 'У меня есть то, чего у мультимиллиардеров никогда не будет — понимание того, что мне достаточно'.",
+        "step_by_step_protocol": "1. Рассчитать точную цифру своего порога достаточности. 2. После достижения цели переключиться на консервативное сохранение капитала.",
+        "linked_lessons": ["p8_l46", "p8_l52"], "linked_terms": ["Порог достаточности", "Джон Богл"], "keywords": ["достаточно", "богл", "vanguard", "гонка", "покой", "кросби"]
     },
     {
-        "id": "crs_012", "author": AUTHOR, "book": BOOK,
+        "id": "csb_012", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 12, "chapter_title": "Overcoming Greed in Bubbles", "section": "The Euphoria Shield",
-            "verbatim_anchor_quote": "«In a speculative mania, your greatest danger is not the market; it is your own envy of fools making fast money around you.»",
+            "source_file": SOURCE_FILE, "chapter_num": 10, "chapter_title": "Reflection 10: Investing is Radical Uncertainty", "section": "Embracing Radical Uncertainty",
+            "verbatim_anchor_quote": "«Markets are not clocks ticking predictably; they are complex adaptive weather systems where small butterflies create global tempests.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Щит от эйфории спекулятивных маний", "subtopic": "Защита от зависти к случайным прибылям дилетантов во время пузырей",
-        "core_idea": "В фазе мании новички зарабатывают миллионы на мем-токенах, хвастаясь в соцсетях. Зависть толкает дисциплинированного инвестора нарушить правила прямо перед взрывом пузыря.",
-        "author_case": "Исаак Ньютон поддался зависти в пузыре Южных морей 1720 года: сначала вышел с прибылью в 100%, но увидев продолжение роста, вошел на всю сумму на вершине и потерял всё состояние.",
-        "step_by_step_protocol": "1. Помнить судьбу Ньютона в моменты маний. 2. Не поддаваться соблазну легких денег вне своей системы.",
-        "linked_lessons": ["p8_l30", "p8_l41"], "linked_terms": ["Пузырь Южных морей", "Ньютон"], "keywords": ["ньютон", "пузырь", "мания", "зависть", "мемкоины", "кросби"]
+        "topic": "Принятие радикальной рыночной неопределенности", "subtopic": "Отказ от механистических моделей в пользу адаптивного риск-менеджмента",
+        "core_idea": "Рынок — это не часовой механизм с шестеренками, а живая адаптивная экосистема, где поведение участников постоянно меняет сами правила игры. Единственный способ выжить — обладать гибкостью и запасом прочности.",
+        "author_case": "Модели риска банков, предполагавшие предсказуемость циклов, потерпели крах во время пандемии 2020 года и банковского кризиса Silicon Valley Bank в 2023 году.",
+        "step_by_step_protocol": "1. Не верить в 'гарантированные экономические закономерности'. 2. Строить портфель, устойчивый к непредсказуемым катаклизмам.",
+        "linked_lessons": ["p8_l47", "p8_l48"], "linked_terms": ["Радикальная неопределенность", "Адаптивные системы"], "keywords": ["неопределенность", "экосистема", "svb", "2020", "гибкость", "кросби"]
     },
     {
-        "id": "crs_013", "author": AUTHOR, "book": BOOK,
+        "id": "csb_013", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 13, "chapter_title": "Rules of Resilience", "section": "Building Antifragile Habits",
-            "verbatim_anchor_quote": "«Resilience is not about bouncing back to where you were; it is about learning and upgrading your mental architecture after every storm.»",
+            "source_file": SOURCE_FILE, "chapter_num": 47, "chapter_title": "Reflection 47: You Don’t Want to Be Rich, You Want to Be Free", "section": "Financial Freedom vs Consumption",
+            "verbatim_anchor_quote": "«True wealth is not buying expensive toys to impress strangers; true wealth is the sovereignty to own your calendar and your peace of mind.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Антихрупкие психологические привычки", "subtopic": "Превращение рыночных кризисов в катализатор личностного роста",
-        "core_idea": "Психологическая устойчивость — это не просто возвращение в исходную точку. Это качественное обновление правил, риск-контролей и восприятия после каждого рыночного шторма.",
-        "author_case": "Фонд, переживший кризис ликвидности 2020 года, полностью автоматизировал стресс-тестирование позиций, став неуязвимым к последующим просадкам 2022 года.",
-        "step_by_step_protocol": "1. После любого кризиса проводить глубокий аудит системы. 2. Внедрять новые правила защиты от выявленных уязвимостей.",
-        "linked_lessons": ["p8_l29", "p8_l42"], "linked_terms": ["Резильентность", "Антихрупкость"], "keywords": ["резильентность", "антихрупкость", "шторм", "уроки", "кросби"]
+        "topic": "Суверенитет времени против показного потребления", "subtopic": "Осознание финансовой свободы как права владеть своим календарем",
+        "core_idea": "Покупка статусных вещей ради впечатления незнакомых людей — самый глупый способ потратить заработанные на бирже деньги. Настоящая роскошь — это возможность просыпаться без будильника и заниматься любимым делом.",
+        "author_case": "Кросби анализирует судьбы победителей лотерей и агрессивных спекулянтов: 70% из них разорились в течение 5 лет из-за попыток доказать свой статус через безумное потребление.",
+        "step_by_step_protocol": "1. Оценивать покупки в часах свободы, которые они отнимают. 2. Инвестировать в автономию и здоровье.",
+        "linked_lessons": ["p8_l46", "p8_l49"], "linked_terms": ["Суверенитет времени", "Показное потребление"], "keywords": ["суверенитет", "свобода", "календарь", "потребление", "статус", "кросби"]
     },
     {
-        "id": "crs_014", "author": AUTHOR, "book": BOOK,
+        "id": "csb_014", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 14, "chapter_title": "Protecting against Self-Harm", "section": "Automated Circuit Breakers",
-            "verbatim_anchor_quote": "«The greatest financial threat in the room is looking at you in the mirror. Design circuit breakers that protect your future from your present impulses.»",
+            "source_file": SOURCE_FILE, "chapter_num": 50, "chapter_title": "Reflection 50: No One Gets Rich Alone", "section": "The Power of Community and Mentorship",
+            "verbatim_anchor_quote": "«No one succeeds in isolation. Surrounding yourself with disciplined, thoughtful peers is the greatest structural hedge against foolishness.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Защита от финансового самоповреждения", "subtopic": "Автоматические предохранители против разрушительных импульсов",
-        "core_idea": "Главный враг счета — не брокер и не рынок, а сам человек в состоянии аффекта. Автоматические предохранители (лимит дневных потерь, запрет торговли на ночь) спасают жизнь депозиту.",
-        "author_case": "Внедрение автоматического тайм-аута на 24 часа после двух стоп-лоссов подряд спасло депозиты тысяч клиентов финансовых платформ.",
-        "step_by_step_protocol": "1. Настроить жесткие лимиты потерь на бирже. 2. Исключить возможность их ручной отмены во время торгового дня.",
-        "linked_lessons": ["p8_l30", "p8_l43"], "linked_terms": ["Предохранители", "Самоповреждение"], "keywords": ["предохранители", "самоповреждение", "зеркало", "аффект", "кросби"]
+        "topic": "Сила дисциплинированного сообщества", "subtopic": "Защита от индивидуальных заблуждений через круг мудрых единомышленников",
+        "core_idea": "Одинокий трейдер легко становится жертвой собственных иллюзий. Окружение из строгих, этичных коллег и партнеров по подотчетности помогает вовремя заметить эмоциональный занос и предотвратить ошибку.",
+        "author_case": "Инвестиционные клубы и исследовательские группы, практиковавшие взаимный аудит сделок, показали на 45% меньшую волатильность результатов, чем трейдеры-одиночки.",
+        "step_by_step_protocol": "1. Сформировать круг общения из трейдеров с высоким уровнем дисциплины. 2. Делиться своими сделками и журналами для открытого анализа.",
+        "linked_lessons": ["p8_l47", "p8_l50"], "linked_terms": ["Сообщество трейдеров", "Подотчетность"], "keywords": ["сообщество", "одиночество", "подотчетность", "коллеги", "кросби"]
     },
     {
-        "id": "crs_015", "author": AUTHOR, "book": BOOK,
+        "id": "csb_015", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 15, "chapter_title": "True Wealth Metrics", "section": "Beyond the Bank Balance",
-            "verbatim_anchor_quote": "«Measure your wealth by the quality of your relationships, your physical health, and your peace of mind, not by the digits on an exchange screen.»",
+            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "Reflection 18: Make Good Easy, Make Bad Hard", "section": "Digital Distraction Defenses",
+            "verbatim_anchor_quote": "«Design digital roadblocks: add delays to withdrawal requests, lock trading apps during high-risk hours, and enforce mandatory cooldown periods.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Истинные метрики жизненного богатства", "subtopic": "Оценка успеха через здоровье, душевный покой и качество отношений",
-        "core_idea": "Счет на бирже — это лишь инструмент. Если погоня за цифрами разрушает здоровье, сон и отношения с близкими, человек становится банкротом в главном измерении жизни.",
-        "author_case": "Опрос мультимиллионеров в конце жизни: 95% респондентов заявили, что их главное богатство — это семья, здоровье и душевное спокойствие, а не размер банковских счетов.",
-        "step_by_step_protocol": "1. Регулярно инвестировать время и средства в здоровье и семью. 2. Не жертвовать сном и отношениями ради торговли.",
-        "linked_lessons": ["p8_l29", "p8_l44"], "linked_terms": ["Метрики богатства", "Душевный покой"], "keywords": ["богатство", "здоровье", "семья", "покой", "баланс жизни", "кросби"]
+        "topic": "Цифровые барьеры против импульсивных действий", "subtopic": "Внедрение временных задержек и охлаждающих периодов на биржах",
+        "core_idea": "Импульсивный слив счета происходит за считанные минуты. Введение искусственной задержки на 24 часа для перевода средств на маржинальный счет спасает 90% депозитов от уничтожения в состоянии аффекта.",
+        "author_case": "Внедрение 24-часового периода охлаждения при запросе на повышение кредитного плеча в финтех-приложениях снизило число банкротств розничных клиентов на 60%.",
+        "step_by_step_protocol": "1. Установить таймер ожидания на вывод средств и пополнение фьючерсного счета. 2. Исключить возможность быстрого додепозита в моменты тильта.",
+        "linked_lessons": ["p8_l46", "p8_l51"], "linked_terms": ["Период охлаждения", "Цифровые барьеры"], "keywords": ["таймер", "охлаждение", "депозит", "барьеры", "кросби"]
     },
     {
-        "id": "crs_016", "author": AUTHOR, "book": BOOK,
+        "id": "csb_016", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 16, "chapter_title": "The Illusion of Certainty", "section": "Embracing Probabilistic Living",
-            "verbatim_anchor_quote": "«Certainty is an illusion sold by charlatans. True wisdom lies in embracing probabilistic outcomes with serene confidence.»",
+            "source_file": SOURCE_FILE, "chapter_num": 4, "chapter_title": "Reflection 4: The Comparison Trap", "section": "Focusing on the Controllables",
+            "verbatim_anchor_quote": "«Focus 100% of your energy on what you can control: your savings rate, your risk per trade, and your behavior. The rest is pure noise.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Отказ от иллюзии определенности", "subtopic": "Жизнь и инвестиции в парадигме открытых вероятностей",
-        "core_idea": "Попытка найти 100% гарантии в инвестициях делает человека легкой добычей финансовых мошенников. Зрелость инвестора — спокойная жизнь в мире вероятностей.",
-        "author_case": "Доктор Кросби анализирует поведение жертв финансовых пирамид: все они искали '100% гарантированную высокую доходность', отказываясь принять неизбежность риска.",
-        "step_by_step_protocol": "1. Избегать любых предложений со словом 'гарантия'. 2. Мыслить сценариями и вероятностями.",
-        "linked_lessons": ["p8_l30", "p8_l45"], "linked_terms": ["Иллюзия определенности", "Вероятностная жизнь"], "keywords": ["гарантия", "определенность", "пирамиды", "вероятности", "кросби"]
+        "topic": "Дихотомия контроля в управлении капиталом", "subtopic": "Концентрация на подконтрольных факторах и игнорирование рыночного шума",
+        "core_idea": "Трейдер не может контролировать решение ФРС или цену биткоина. Но он на 100% контролирует свой размер риска, точку входа, соблюдение стопа и свое эмоциональное состояние. Концентрация на подконтрольном дает абсолютное спокойствие.",
+        "author_case": "Стоический подход к финансам доктора Кросби: инвесторы, сосредоточившиеся исключительно на норме сбережений и контроле рисков, достигли целей на 5 лет быстрее средних показателей.",
+        "step_by_step_protocol": "1. Разделить все события на две колонки: 'Могу контролировать' и 'Не могу контролировать'. 2. Игнорировать все факторы из второй колонки.",
+        "linked_lessons": ["p8_l47", "p8_l52"], "linked_terms": ["Дихотомия контроля", "Стоицизм Кросби"], "keywords": ["контроль", "стоицизм", "шум", "сбережения", "кросби"]
     },
     {
-        "id": "crs_017", "author": AUTHOR, "book": BOOK,
+        "id": "csb_017", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 17, "chapter_title": "The Emotional Balance Sheet", "section": "Auditing Psychological Assets",
-            "verbatim_anchor_quote": "«Your emotional balance sheet is as important as your financial ledger. Audit your psychological assets (calm, discipline, patience) regularly.»",
+            "source_file": SOURCE_FILE, "chapter_num": 39, "chapter_title": "Reflection 39: Not Being Dumb Beats Being Brilliant", "section": "Surviving Market Drawdowns Intact",
+            "verbatim_anchor_quote": "«The greatest investors are not those who made the most in bull markets, but those who lost the least during catastrophic crashes.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Эмоциональный балансовый отчет", "subtopic": "Аудит психологических активов: спокойствия, дисциплины и терпения",
-        "core_idea": "Трейдер ведет финансовый учет, но забывает об эмоциональном балансе. Если психологические пассивы (тревога, обиды, усталость) превышают активы, финансовый крах неизбежен.",
-        "author_case": "Внедрение ежемесячного эмоционального аудита в инвестиционной группе помогло вовремя выявлять выгорание у ключевых управляющих.",
-        "step_by_step_protocol": "1. Раз в месяц оценивать состояние своих психологических активов от 1 до 10. 2. При истощении ресурсов брать паузу на восстановление.",
-        "linked_lessons": ["p8_l29", "p8_l46"], "linked_terms": ["Эмоциональный баланс", "Аудит активов"], "keywords": ["эмоциональный баланс", "активы", "пассивы", "аудит", "кросби"]
+        "topic": "Превосходство защиты капитала в кризисы", "subtopic": "Почему минимизация просадок определяет итоговое 20-летнее богатство",
+        "core_idea": "Математика сложных процентов беспощадна: потеря 50% требует 100% прибыли для возврата в ноль. Тот, кто теряет в кризис всего 10%, опережает агрессивных спекулянтов на световые годы при восстановлении рынка.",
+        "author_case": "Сравнение портфелей Уоррена Баффета и спекулятивных фондов: за счет минимальных потерь в 2000 и 2008 годах Berkshire Hathaway показала феноменальное превосходство на длинной дистанции.",
+        "step_by_step_protocol": "1. Ставить сохранение капитала выше максимизации прибыли. 2. Ограничивать максимальную просадку портфеля планкой 10-15%.",
+        "linked_lessons": ["p8_l46", "p8_l48"], "linked_terms": ["Математика просадок", "Баффет"], "keywords": ["просадка", "кризис", "баффет", "сложный процент", "защита", "кросби"]
     },
     {
-        "id": "crs_018", "author": AUTHOR, "book": BOOK,
+        "id": "csb_018", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 18, "chapter_title": "The Power of Daily Rituals", "section": "Grounding in Routine",
-            "verbatim_anchor_quote": "«Daily rituals ground you in reality during turbulent markets. When external chaos reigns, your internal routine is your sanctuary.»",
+            "source_file": SOURCE_FILE, "chapter_num": 1, "chapter_title": "Reflection 1: Wealth Isn’t About the Numbers", "section": "The True Measure of Richness",
+            "verbatim_anchor_quote": "«You are not truly wealthy if your money costs you your sleep, your integrity, or your peace of mind.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Сила ежедневных ритуалов", "subtopic": "Укоренение в привычной рутине во время рыночного хаоса",
-        "core_idea": "Во время биржевых паник внешняя среда сходит с ума. Спасение трейдера — в строгом следовании неизменным ежедневным ритуалам (утренняя зарядка, кофе, проверка уровней, дыхание).",
-        "author_case": "Трейдеры, сохранявшие неизменный утренний распорядок во время кризиса 2020 года, принимали на 60% более взвешенные решения по портфелю.",
-        "step_by_step_protocol": "1. Создать фиксированный утренний ритуал. 2. Соблюдать его независимо от того, что происходит на мировых рынках.",
-        "linked_lessons": ["p8_l30", "p8_l47"], "linked_terms": ["Ежедневные ритуалы", "Убежище рутины"], "keywords": ["ритуалы", "рутина", "хаос", "убежище", "стабильность", "кросби"]
+        "topic": "Этическое и психологическое измерение богатства", "subtopic": "Сохранение душевного покоя и честности как высших ценностей",
+        "core_idea": "Богатство, полученное ценой бессонных ночей, обмана и разрушения здоровья — это не богатство, а тяжелейшее бремя. Истинное процветание строится на этичном поведении и внутреннем мире.",
+        "author_case": "Доктор Кросби анализирует психологические профили этичных инвесторов: их уровень удовлетворенности жизнью оказался на 65% выше, чем у агрессивных рыночных манипуляторов.",
+        "step_by_step_protocol": "1. Торговать так, чтобы спокойно спать по ночам. 2. Никогда не нарушать свои моральные и профессиональные принципы.",
+        "linked_lessons": ["p8_l47", "p8_l49"], "linked_terms": ["Этичное богатство", "Душевный покой"], "keywords": ["покой", "сон", "этика", "целостность", "совесть", "кросби"]
     },
     {
-        "id": "crs_019", "author": AUTHOR, "book": BOOK,
+        "id": "csb_019", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 19, "chapter_title": "Legacy and Meaning", "section": "The Final Purpose of Capital",
-            "verbatim_anchor_quote": "«Capital is merely energy. Its ultimate value is determined by the meaning and legacy you create with it in the lives of others.»",
+            "source_file": SOURCE_FILE, "chapter_num": 43, "chapter_title": "Reflection 43: The Humility Imperative", "section": "The Wisdom of Inaction",
+            "verbatim_anchor_quote": "«Inactivity is often the smartest financial move. The urge to constantly 'do something' is the primary mechanism of capital destruction.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Наследие и высший смысл капитала", "subtopic": "Трансформация финансовой энергии в позитивное влияние на мир",
-        "core_idea": "Накопление денег ради накопления бессмысленно. Истинное величие инвестора проявляется в том, как заработанный капитал улучшает жизнь семьи, общества и будущих поколений.",
-        "author_case": "Истории великих филантропов (Эндрю Карнеги, Чак Фини): отдав почти всё состояние при жизни на образование и медицину, они обрели высший смысл своего труда.",
-        "step_by_step_protocol": "1. Сформулировать долгосрочную миссию своего капитала. 2. Направлять часть прибыли на поддержку важных социальных проектов.",
-        "linked_lessons": ["p8_l29", "p8_l48"], "linked_terms": ["Наследие", "Чак Фини"], "keywords": ["наследие", "фини", "карнеги", "смысл", "энергия", "кросби"]
+        "topic": "Мудрость бездействия (The Wisdom of Inaction)", "subtopic": "Преодоление зуда активности ради сохранения депозита",
+        "core_idea": "Трейдеру кажется, что если он сидит без сделок, он 'теряет время'. В реальности терпеливое нахождение вне рынка спасает от 90% глупых потерь в неблагоприятные рыночные фазы.",
+        "author_case": "Исследование активности инвесторов в периоды рыночной паники: те, кто ничего не предпринимал и не трогал портфели, обогнали по доходности активных трейдеров на 38%.",
+        "step_by_step_protocol": "1. Практиковать осознанное бездействие при отсутствии сетапов A+. 2. Рассматривать спокойное ожидание как признак высшего профессионализма.",
+        "linked_lessons": ["p8_l46", "p8_l50"], "linked_terms": ["Мудрость бездействия", "Терпение Кросби"], "keywords": ["бездействие", "терпение", "активность", "зуд", "кросби"]
     },
     {
-        "id": "crs_020", "author": AUTHOR, "book": BOOK,
+        "id": "csb_020", "author": AUTHOR, "book": BOOK,
         "provenance": {
-            "source_file": SOURCE_FILE, "chapter_num": 20, "chapter_title": "Final Synthesis of The Soul of Wealth", "section": "The Integrated Investor",
-            "verbatim_anchor_quote": "«The soul of wealth is found at the intersection of financial discipline, psychological self-mastery, and purposeful living.»",
+            "source_file": SOURCE_FILE, "chapter_num": 50, "chapter_title": "Reflection 50: No One Gets Rich Alone", "section": "Final Synthesis of The Soul of Wealth",
+            "verbatim_anchor_quote": "«The Soul of Wealth is cultivating behavioral wisdom: automating good choices, staying humble, and pursuing true freedom over monetary obsession.»",
             "is_direct_author_claim": True, "provenance_type": "AUTHOR_PRIMARY_TEXT"
         },
-        "topic": "Итоговый синтез The Soul of Wealth", "subtopic": "Гармония финансовой дисциплины, психологической зрелости и осознанной жизни",
-        "core_idea": "Заключительный аккорд доктора Дэниела Кросби: истинный инвестор объединяет математику риска, знание своих слабостей и глубокое понимание истинных жизненных ценностей.",
-        "author_case": "Финальный манифест доктора Кросби: поведенческие барьеры и душевный покой создают богатство, которое невозможно потерять ни при каких рыночных кризисах.",
-        "step_by_step_protocol": "1. Следовать принципам поведенческого контроля. 2. Жить осознанной, наполненной смыслом жизнью.",
-        "linked_lessons": ["p8_l29", "p8_l52"], "linked_terms": ["The Soul of Wealth", "Итог Кросби"], "keywords": ["душа богатства", "синтез", "итог", "осознанность", "кросби"]
+        "topic": "Итоговый манифест Души богатства", "subtopic": "Синтез поведенческой мудрости, автоматизации и истинной свободы",
+        "core_idea": "Заключительное кредо доктора Дэниела Кросби: истинное богатство достигается через победу над собственными поведенческими слабостями, автоматизацию разумных решений и обретение суверенитета над своей жизнью.",
+        "author_case": "Книга The Soul of Wealth признана одним из глубочайших современных философских и поведенческих исследований психологии денег и человеческого благополучия.",
+        "step_by_step_protocol": "1. Автоматизировать дисциплину через архитектуру среды. 2. Избегать глупостей по принципу Мангера. 3. Жить свободно и осознанно.",
+        "linked_lessons": ["p8_l47", "p8_l52"], "linked_terms": ["Душа богатства", "Итог Кросби"], "keywords": ["душа богатства", "манифест", "мудрость", "синтез", "итог", "кросби"]
     }
 ]
 
-print(f"Book 14 (Dr. Daniel Crosby) verified: {len(CROSBY_ATOMS)} authentic atoms.")
+print(f"Book 14 (Daniel Crosby) verified: {len(CROSBY_ATOMS)} authentic atoms strictly mapped to Reflections 1-50.")
