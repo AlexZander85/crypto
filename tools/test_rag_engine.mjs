@@ -9,39 +9,48 @@ const kbData = JSON.parse(fs.readFileSync(kbPath, 'utf8'));
 // 2. Load engine
 import '../saas/public/js/rag_mentor_engine.js';
 
-console.log('--- ТЕСТИРОВАНИЕ ДВИЖКА RAG AI-МЕНТОРА ---');
+console.log('=== ТЕСТИРОВАНИЕ МАТЕМАТИЧЕСКИ СТРОГОГО OKAPI BM25 И СОКРАТОВСКИХ ПОДСКАЗОК ===');
 globalThis.CryptoMentorRAG.load(kbData.atoms);
 
-// Test Query 1: Усреднение убытка
-console.log('\n[Тест 1] Запрос ученика: "Хочу усреднить убыточную сделку, чтобы быстрее выйти в ноль"');
-const res1 = globalThis.CryptoMentorRAG.buildMentorContext({
-  userMessage: "усреднение убытка",
-  currentLessonId: "p8_l15"
+// Test 1: Полнотекстовый поиск по BM25 (проверка IDF и ранжирования)
+console.log('\n[Тест 1] Запрос: "усреднение убыточной позиции DAX"');
+const res1 = globalThis.CryptoMentorRAG.search({
+  query: "усреднение убыточной позиции DAX",
+  limit: 3
 });
 
-console.log(`Найдено атомов: ${res1.atoms.length}`);
-res1.atoms.forEach((a, i) => {
-  console.log(`  ${i+1}. [${a.author} / Гл. ${a.provenance.chapter_num}] ${a.topic}: ${a.subtopic}`);
-  console.log(`     Цитата: ${a.provenance.verbatim_anchor_quote.slice(0, 70)}...`);
+console.log(`Найдено результатов: ${res1.length}`);
+res1.forEach((a, i) => {
+  console.log(`  ${i+1}. [${a.author} / Гл. ${a.provenance.chapter_num}] ${a.topic} -> ${a.subtopic}`);
+  console.log(`     Цитата: ${a.provenance.verbatim_anchor_quote.slice(0, 80)}...`);
 });
 
-if (res1.atoms.length === 0 || !res1.atoms.some(a => a.author.includes('Hougaard') || a.author.includes('Tendler'))) {
-  console.error('❌ ОШИБКА: Не найден автор Tom Hougaard для запроса об усреднении!');
+const foundHougaard = res1.some(a => a.author.includes('Hougaard'));
+if (!foundHougaard) {
+  console.error('❌ ОШИБКА: Okapi BM25 не поднял Тома Хоугаарда в топ по запросу DAX/усреднение!');
   process.exit(1);
 } else {
-  console.log('✅ Тест 1 пройден успешно!');
+  console.log('✅ Тест 1 (Okapi BM25): УСПЕШНО!');
 }
 
-// Test Query 2: Сократовская подсказка
-console.log('\n[Тест 2] Генерация Сократовской подсказки для урока p8_l1');
-const hint = globalThis.CryptoMentorRAG.getSocraticHint('p8_l1');
-console.log('Подсказка:', hint);
+// Test 2: Сократовская подсказка с передачей контекста вопроса и ошибки ученика
+console.log('\n[Тест 2] Сократовская подсказка с контекстом вопроса и ошибкой:');
+const socraticContext = {
+  lessonId: "p8_l15",
+  questionContext: "Почему нельзя добавлять объем к позиции, когда она идет против нас в минус?",
+  studentAnswer: "Чтобы усреднить цену входа и быстрее выйти в безубыток при отскоке"
+};
 
-if (!hint.includes('💡')) {
-  console.error('❌ ОШИБКА генерации подсказки!');
+const hint = globalThis.CryptoMentorRAG.getSocraticHint(socraticContext);
+console.log('--- РЕЗУЛЬТАТ ПОДСКАЗКИ ---');
+console.log(hint);
+console.log('---------------------------');
+
+if (!hint.includes('💡') || !hint.includes('Чтобы усреднить цену входа') || !hint.includes('Вопрос для размышления')) {
+  console.error('❌ ОШИБКА: Сократовская подсказка не включила контекст вопроса или ошибку ученика!');
   process.exit(1);
 } else {
-  console.log('✅ Тест 2 пройден успешно!');
+  console.log('✅ Тест 2 (Socratic Hint с контекстом вопроса и ошибкой): УСПЕШНО!');
 }
 
-console.log('\n🎉 ВСЕ ТЕСТЫ ДОКАЗАТЕЛЬНОГО RAG ДВИЖКА УСПЕШНО ПРОЙДЕНЫ!');
+console.log('\n🎉 ВСЕ ТЕСТЫ СТРОГОГО OKAPI BM25 И СОКРАТОВСКОЙ ПЕДАГОГИКИ УСПЕШНО ПРОЙДЕНЫ!');
