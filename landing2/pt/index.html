@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CryptoNavigator — aprenda a não perder antes de arriscar</title>
+<meta name="description" content="Simulador de criptotrading com dados reais de mercado: 134 lições, 145 widgets, 21 minijogo. Da primeira vela ao seu próprio bot de trading. Começo gratuito, sem cartão.">
+<link rel="canonical" href="https://cryptonavigator.app/pt/">
+<link rel="alternate" hreflang="ru" href="https://cryptonavigator.app/">
+<link rel="alternate" hreflang="en" href="https://cryptonavigator.app/en/">
+<link rel="alternate" hreflang="es" href="https://cryptonavigator.app/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://cryptonavigator.app/pt/">
+<link rel="alternate" hreflang="x-default" href="https://cryptonavigator.app/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1220'/%3E%3Crect x='13' y='9' width='6' height='14' rx='1.5' fill='%2322C55E'/%3E%3Crect x='15' y='4' width='2' height='6' rx='1' fill='%2322C55E'/%3E%3Crect x='15' y='22' width='2' height='6' rx='1' fill='%2322C55E'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CryptoNavigator — o simulador que ensina a não perder">
+<meta property="og:description" content="134 lições, 145 widgets interativos, 21 minijogo, módulo de psicologia do operador do bot. Todas as operações com dinheiro virtual. A Fase 0 é grátis para sempre.">
+<meta property="og:image" content="https://cryptonavigator.app/assets/01-home.png">
+<meta property="og:url" content="https://cryptonavigator.app/pt/">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+ --paper:#F5F1E6;--paper2:#EDE7D6;--paper3:#E5DECB;
+ --ink:#1F2933;--ink2:#4A5560;--mut:#57616C;
+ --red:#A93226;--green:#1B6B44;--amber:#8C5E14;--blue:#1D4F8A;
+ --line:#D8D0BC;--line2:#C4BBA2;
+ --r-s:10px;--r-m:14px;
+ --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+ --serif:Georgia,'Times New Roman',serif;
+ --mono:ui-monospace,'Cascadia Code',Consolas,'Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ background-image:linear-gradient(rgba(43,108,176,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(43,108,176,.05) 1px,transparent 1px);
+ background-size:44px 44px}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section{padding:96px 0}
+.mono{font-family:var(--mono)}
+.eyebrow{display:block;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+h1{font-family:var(--serif);font-size:clamp(32px,4.6vw,52px);font-weight:700;line-height:1.12;letter-spacing:-.01em}
+h2{font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:700;line-height:1.15;letter-spacing:-.005em;margin-bottom:16px}
+h3{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.3}
+.lead{font-size:18px;color:var(--ink2);max-width:640px}
+.small{font-size:13px;color:var(--mut)}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:4px}
+.letter a,.f-grid a:hover,a[href^="#"]:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* header */
+header{position:sticky;top:0;z-index:40;background:rgba(245,241,230,.92);backdrop-filter:blur(8px);border-bottom:2px solid var(--ink)}
+.nav{display:flex;align-items:center;gap:24px;height:60px}
+.logo{font-family:var(--serif);font-weight:700;letter-spacing:-.01em;font-size:18px;white-space:nowrap}
+.nav-links{display:flex;gap:20px;margin-left:auto}
+.nav-links a{color:var(--ink2);font-size:14px;transition:color .15s}
+.nav-links a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.langs{display:flex;gap:10px;font-family:var(--mono);font-size:12px}
+.langs a{color:var(--mut);padding:2px 4px;border-radius:4px}
+.langs a[aria-current]{color:var(--red);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:var(--font);font-weight:700;font-size:15px;border-radius:var(--r-s);padding:12px 24px;transition:transform .15s ease-out,box-shadow .15s ease-out;background:var(--ink);color:var(--paper);box-shadow:3px 3px 0 var(--line2)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--line2)}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--line2)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn-ghost:hover{box-shadow:3px 3px 0 var(--line2)}
+.btn-sm{padding:8px 16px;font-size:14px}
+
+/* hero */
+.hero{padding:72px 0 96px;position:relative;overflow:hidden}
+.hero-depth{position:absolute;inset:0;pointer-events:none}
+.hero-depth svg{width:100%;height:100%}
+.hero .wrap{position:relative;z-index:1}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.hero .sub{margin:24px 0 32px;font-size:18px;color:var(--ink2);max-width:520px}
+.accent-line{color:var(--ink);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 12' preserveAspectRatio='none'%3E%3Cpath d='M4 8 C 60 2, 140 11, 296 5' fill='none' stroke='%23C0392B' stroke-width='4' stroke-linecap='round' opacity='.85'/%3E%3C/svg%3E") no-repeat bottom/100% .16em;padding-bottom:.14em}
+.cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.cta-note{margin-top:12px}
+.trust{margin-top:16px;font-family:var(--mono);font-size:13px;color:var(--ink2)}
+.shot{background:#fff;border:1.5px solid var(--ink);border-radius:var(--r-m);overflow:hidden;box-shadow:5px 5px 0 rgba(31,41,51,.12)}
+.shot img{width:100%}
+.numbers{display:flex;flex-wrap:wrap;gap:12px 40px;margin-top:56px;padding-top:24px;border-top:2px solid var(--ink)}
+.numbers b{display:block;font-family:var(--mono);font-size:31px;font-weight:700;color:var(--ink);line-height:1.2}
+.numbers span{font-size:13px;color:var(--ink2)}
+
+/* карточки: бумажные карточки */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.card{background:#FDFBF4;border:1.5px solid var(--ink);border-radius:var(--r-m);padding:24px;box-shadow:4px 4px 0 rgba(31,41,51,.08)}
+.card p{color:var(--ink2);font-size:15px;margin-top:8px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.split .lead{margin-bottom:24px}
+
+/* problem */
+.problem-closing{margin-top:32px;padding-left:16px;border-left:4px solid var(--red);color:var(--ink);font-size:18px;max-width:640px;font-family:var(--serif);font-style:italic}
+
+/* До→После: красный карандаш → зелёная ручка */
+.tf-row{display:grid;grid-template-columns:1fr 32px 1fr;gap:12px;align-items:center;padding:16px 0;border-bottom:1px dashed var(--line2)}
+.tf-row:last-of-type{border-bottom:none}
+.tf-before{color:var(--ink2);padding-left:16px;border-left:3px solid var(--red)}
+.tf-after{padding-left:16px;border-left:3px solid var(--green);font-weight:600}
+.tf-arrow{color:var(--red);text-align:center;font-weight:700}
+.tf-labels{display:grid;grid-template-columns:1fr 32px 1fr;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:8px}
+
+/* программа */
+.ph-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ph-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;display:block}
+.ph-tag{font-family:var(--mono);font-size:12px;color:var(--ink2);display:block;margin-bottom:8px}
+.ph-free{color:var(--green)}
+.ph-grid .card p{font-size:14px}
+.attest{margin-top:24px;font-size:14px;color:var(--ink2);display:flex;gap:8px;align-items:baseline}
+.ladder{margin-top:40px;padding-top:24px;border-top:2px solid var(--ink)}
+.ladder-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-family:var(--mono);font-size:13px;color:var(--ink2);border:1.5px solid var(--ink);border-radius:999px;padding:6px 14px;background:#FDFBF4}
+.chip:last-child{color:var(--paper);background:var(--ink);border-color:var(--ink);font-weight:700}
+
+/* тренажёры */
+.tr-list{list-style:none;margin-top:8px}
+.tr-list li{padding:12px 0;border-bottom:1px dashed var(--line2);font-size:15px;color:var(--ink2)}
+.tr-list li:last-child{border-bottom:none}
+.tr-list b{color:var(--ink);font-weight:700}
+
+/* демо-стакан: тёмный экспонат на бумаге */
+.ob-wrap{background:#141B26;border:1.5px solid var(--ink);border-radius:var(--r-m);padding:20px;box-shadow:5px 5px 0 rgba(31,41,51,.15)}
+.ob-label{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;color:#9AA7B8;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.ob-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22C55E;margin-right:6px}
+.ob-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:var(--mono);font-size:13px}
+.ob-h{color:#8A97A8;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.ob-row{display:flex;justify-content:space-between;padding:2px 6px;border-radius:4px;margin-bottom:2px;position:relative}
+.ob-row i{position:absolute;inset:0;border-radius:4px;opacity:.12;font-style:normal}
+.ob-bid i{background:#22C55E}.ob-ask i{background:#F43F5E}
+.ob-row span{position:relative}
+.ob-bid span:nth-child(2){color:#4ADE80}.ob-ask span:nth-child(2){color:#FB7185}
+.ob-row span:last-child{color:#9AA7B8}
+.detector{margin-top:16px;border-left:3px solid #F59E0B;background:rgba(245,158,11,.08);padding:10px 14px;font-size:14px;color:#E7EDF5;border-radius:0 8px 8px 0;min-height:44px;transition:border-color .3s}
+.detector.calm{border-left-color:#4A5568;color:#9AA7B8;background:rgba(154,167,184,.06)}
+
+/* Криптик: заметки на полях */
+.kq{background:#FDFBF4;border:1.5px solid var(--ink);border-left:5px solid var(--red);border-radius:var(--r-s);padding:24px;font-family:var(--serif);font-style:italic;font-size:17px;line-height:2;color:var(--ink)}
+.kq b{color:var(--red)}
+
+/* breath-абзацы: рукописный ритм */
+.breath{font-family:var(--serif);font-style:italic;font-size:clamp(17px,2.4vw,22px);line-height:1.9;color:var(--ink);max-width:880px}
+.breath b{color:var(--red);font-weight:700}
+
+/* цена: тарифный лист с печатями */
+.price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,420px));gap:24px;justify-content:start;margin-top:48px}
+.price-card{background:#FDFBF4;border:1.5px solid var(--ink);border-radius:var(--r-m);padding:32px;position:relative}
+.price-card.hl{border-width:2.5px;box-shadow:6px 6px 0 rgba(192,57,43,.18)}
+.badge{position:absolute;top:-14px;left:32px;background:var(--red);color:#FDFBF4;font-size:12px;font-weight:700;padding:4px 12px;border-radius:4px;transform:rotate(-2deg);box-shadow:2px 2px 0 rgba(31,41,51,.2)}
+.price-name{font-size:15px;color:var(--ink2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}
+.price-val{font-family:var(--mono);font-size:39px;font-weight:700;margin:8px 0 2px}
+.price-period{font-size:13px;color:var(--ink2);margin-bottom:24px;display:block}
+.plist{list-style:none;margin-bottom:28px}
+.plist li{padding:8px 0 8px 28px;position:relative;color:var(--ink2);font-size:15px}
+.plist li::before{content:'';position:absolute;left:2px;top:11px;width:15px;height:8px;border-left:2.5px solid var(--green);border-bottom:2.5px solid var(--green);transform:rotate(-45deg)}
+.stamp{position:absolute;top:18px;right:18px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--red);border:2.5px double var(--red);border-radius:6px;padding:6px 10px;transform:rotate(6deg);text-transform:uppercase;background:rgba(169,50,38,.05)}
+.stamp.blue{color:var(--blue);border-color:var(--blue);background:rgba(29,79,138,.05);transform:rotate(-4deg)}
+.price-note{margin-top:24px;font-size:14px;color:var(--ink2)}
+
+/* письмо */
+.letter{background:#FDFBF4;border:1.5px solid var(--ink);border-radius:var(--r-m);padding:32px;max-width:720px;box-shadow:4px 4px 0 rgba(31,41,51,.08);position:relative}
+.letter::before{content:'';position:absolute;top:-10px;left:40px;right:40px;height:22px;background:repeating-linear-gradient(90deg,transparent 0 10px,var(--line2) 10px 14px);opacity:.5;border-radius:4px}
+.letter p{margin-bottom:16px;color:var(--ink)}
+.letter .sign{color:var(--ink2);margin-top:24px;margin-bottom:0;font-family:var(--serif);font-style:italic}
+
+/* changelog: журнал */
+.cl-row{display:grid;grid-template-columns:140px 1fr;gap:24px;padding:20px 0;border-bottom:1px dashed var(--line2);max-width:720px}
+.cl-date{font-family:var(--mono);font-size:13px;color:var(--red);font-weight:700}
+
+/* faq */
+details{border:1.5px solid var(--ink);border-radius:var(--r-s);background:#FDFBF4;margin-bottom:8px}
+summary{cursor:pointer;list-style:none;padding:18px 20px;font-weight:700;font-size:16px;display:flex;justify-content:space-between;gap:16px;font-family:var(--serif)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-family:var(--mono);color:var(--red);transition:transform .15s;font-weight:700}
+details[open] summary::after{transform:rotate(45deg)}
+details .a{padding:0 20px 18px;color:var(--ink2);font-size:15px;max-width:70ch}
+
+/* мобильная версия */
+.mobile-shot{width:min(300px,80%);margin:0 auto}
+
+/* footer */
+footer{border-top:2px solid var(--ink);padding:48px 0 40px;background:var(--paper2)}
+.f-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:24px}
+.f-grid h3{font-size:13px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:12px;font-weight:700}
+.f-grid a{display:block;color:var(--ink2);font-size:14px;padding:3px 0}
+.f-grid a:hover{color:var(--ink)}
+.f-status{font-family:var(--mono);font-size:12px;color:var(--ink2);display:flex;gap:8px;align-items:center;margin-top:24px}
+.f-status .ok-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.disclaimer{margin-top:40px;padding-top:24px;border-top:1.5px solid var(--line2);font-size:13px;color:var(--ink2);max-width:820px}
+
+/* модалка: бумажная карточка */
+dialog{border:1.5px solid var(--ink);border-radius:var(--r-m);background:var(--paper);color:var(--ink);padding:0;width:min(420px,calc(100vw - 32px));box-shadow:8px 8px 0 rgba(31,41,51,.2)}
+dialog::backdrop{background:rgba(31,41,51,.45)}
+.m-head{padding:24px 24px 0}
+.m-body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:14px}
+label{font-size:13px;color:var(--ink2);display:block;margin-bottom:6px}
+input[type=email],input[type=password]{width:100%;background:#FDFBF4;border:1.5px solid var(--line2);border-radius:var(--r-s);color:var(--ink);font-size:15px;padding:12px 14px;font-family:var(--font)}
+input:focus{border-color:var(--ink);outline:none}
+.err{color:var(--red);font-size:13px;min-height:18px;display:block;font-weight:600}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink)}
+.consent input{margin-top:3px;accent-color:var(--red)}
+.consent details{margin:0;background:none;border:none;margin-top:6px}
+.consent summary{padding:0;font-size:13px;font-weight:400;color:var(--ink2);display:inline;font-family:var(--font)}
+.consent summary::after{content:''}
+.consent .a{padding:8px 0 0;font-size:13px}
+.m-msg{font-size:14px;border-radius:8px;padding:10px 12px;display:none}
+.m-msg.ok{display:block;background:rgba(31,122,77,.1);color:var(--green)}
+.m-msg.warn{display:block;background:rgba(183,121,31,.12);color:var(--amber)}
+.m-close{background:none;border:none;color:var(--ink2);font-size:14px;cursor:pointer;padding:8px 0;text-decoration:underline;text-underline-offset:3px}
+/* тикерная лента: бумажная телеграфная лента */
+.tape{overflow:hidden;border-top:1.5px dashed var(--line2);border-bottom:1.5px dashed var(--line2);background:var(--paper2);user-select:none;
+ background-image:radial-gradient(circle at 8px 0,transparent 4px,var(--paper2) 4px);padding:2px 0}
+.tape-track{display:inline-flex;gap:36px;white-space:nowrap;padding:7px 0;width:max-content;animation:tape 48s linear infinite;font-family:var(--mono);font-size:12px;color:var(--ink)}
+@keyframes tape{to{transform:translateX(-50%)}}
+.tape b{font-weight:700;color:var(--ink)}
+.tape .up{color:var(--green);font-weight:700}
+.tape .dn{color:var(--red);font-weight:700}
+.tape .syn{color:var(--mut);letter-spacing:.08em}
+@media(prefers-reduced-motion:reduce){.tape-track{animation:none}}
+
+/* свечные разделители: чернильный набросок */
+.candles{display:flex;justify-content:center;overflow:hidden;padding:8px 0;opacity:.7;user-select:none}
+.candles svg{min-width:1152px}
+
+/* подпись скриншота: подпись экспоната */
+.shot-cap{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink2);padding:8px 14px;border-bottom:1.5px solid var(--ink);display:flex;justify-content:space-between;text-transform:uppercase;background:var(--paper)}
+.shot-cap::after{content:'●';color:var(--red)}
+
+/* responsive */
+@media(max-width:960px){
+ .hero-grid,.split{grid-template-columns:1fr;gap:32px}
+ .grid3,.ph-grid{grid-template-columns:1fr 1fr}
+ .nav-links a:not(.keep){display:none}
+ .price-grid{grid-template-columns:1fr}
+ .f-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+ .nav{gap:12px}
+ .logo{font-size:15px}
+ .langs{gap:6px;font-size:11px}
+ .nav .btn{display:none}
+ section{padding:64px 0}
+ .hero{padding:48px 0 64px}
+ .grid3,.ph-grid,.grid2{grid-template-columns:1fr}
+ .tf-row{grid-template-columns:1fr;gap:8px}
+ .tf-arrow{display:none}
+ .tf-labels{display:none}
+ .cl-row{grid-template-columns:1fr;gap:4px}
+ .numbers{gap:16px 24px}
+ .numbers b{font-size:25px}
+ .cta-row .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ *{animation:none!important;transition:none!important}
+ .ob-live{animation:none}
+}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Preciso de experiência?","acceptedAnswer":{"@type":"Answer","text":"Não. A Fase 0 começa com a pergunta “o que é blockchain” e não exige nem programação, nem experiência em trading."}},{"@type":"Question","name":"Vocês dão sinais de trading ou recomendam onde investir?","acceptedAnswer":{"@type":"Answer","text":"Não. E não vamos dar. O curso ensina método: estatística, gestão de risco, execução. As decisões seguem suas."}},{"@type":"Question","name":"O que exatamente é grátis?","acceptedAnswer":{"@type":"Answer","text":"A Fase 0 completa (20 lições) e o módulo “Psicologia” (8 lições com simuladores). Sem cartão vinculado. Sem prazo."}},{"@type":"Question","name":"Atualizações futuras serão pagas?","acceptedAnswer":{"@type":"Answer","text":"Não. Um pagamento inclui todas as versões futuras: novas lições, widgets e camadas chegam para quem já comprou."}},{"@type":"Question","name":"Como pagar?","acceptedAnswer":{"@type":"Answer","text":"Cartões da Rússia e internacionais. O acesso abre logo após o pagamento."}},{"@type":"Question","name":"Onde ficam meus dados?","acceptedAnswer":{"@type":"Answer","text":"O progresso fica no seu navegador e sincroniza com a nuvem apenas na sua conta. O site não tem rastreadores de publicidade."}}]},{"@type":"SoftwareApplication","name":"CryptoNavigator","applicationCategory":"EducationalApplication","operatingSystem":"Any (web browser)","inLanguage":"pt","description":"Simulador de criptotrading com dados reais de mercado: 134 lições, 145 widgets, 21 minijogo. Da primeira vela ao seu próprio bot de trading. Começo gratuito, sem cartão.","offers":{"@type":"AggregateOffer","lowPrice":"0","highPrice":"990","priceCurrency":"RUB","offerCount":"2"}}]}</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="../">◆ CryptoNavigator</a>
+    <nav class="nav-links" aria-label="CryptoNavigator">
+      <a href="#program">Programa</a>
+      <a href="#psychology">Psicologia</a>
+      <a href="#price">Preço</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="langs" aria-label="Idioma"><a href="../" data-lang="ru">RU</a><a href="../en/" data-lang="en">EN</a><a href="../es/" data-lang="es">ES</a><a href="../pt/" data-lang="pt" aria-current="true">PT</a></div>
+    <button class="btn btn-sm js-signup keep">Criar conta</button>
+  </div>
+</header>
+<div class="tape" aria-hidden="true"><div class="tape-track"><span class="syn">SYNTHETIC FEED</span><span><b>BTC/USDT</b> 64 231 <span class="up">+1.2%</span></span><span><b>ETH/USDT</b> 3 148 <span class="up">+0.8%</span></span><span><b>SOL/USDT</b> 146.2 <span class="dn">-2.1%</span></span><span><b>BNB/USDT</b> 587.4 <span class="up">+0.3%</span></span><span><b>XRP/USDT</b> 0.524 <span class="dn">-0.6%</span></span><span><b>DOGE/USDT</b> 0.158 <span class="up">+3.4%</span></span><span><b>ADA/USDT</b> 0.462 <span class="dn">-1.1%</span></span><span><b>AVAX/USDT</b> 36.90 <span class="up">+0.9%</span></span><span><b>LINK/USDT</b> 14.85 <span class="up">+2.2%</span></span><span><b>TON/USDT</b> 5.410 <span class="dn">-0.4%</span></span><span class="syn">SYNTHETIC FEED</span><span><b>BTC/USDT</b> 64 231 <span class="up">+1.2%</span></span><span><b>ETH/USDT</b> 3 148 <span class="up">+0.8%</span></span><span><b>SOL/USDT</b> 146.2 <span class="dn">-2.1%</span></span><span><b>BNB/USDT</b> 587.4 <span class="up">+0.3%</span></span><span><b>XRP/USDT</b> 0.524 <span class="dn">-0.6%</span></span><span><b>DOGE/USDT</b> 0.158 <span class="up">+3.4%</span></span><span><b>ADA/USDT</b> 0.462 <span class="dn">-1.1%</span></span><span><b>AVAX/USDT</b> 36.90 <span class="up">+0.9%</span></span><span><b>LINK/USDT</b> 14.85 <span class="up">+2.2%</span></span><span><b>TON/USDT</b> 5.410 <span class="dn">-0.4%</span></span></div></div>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-depth"><svg viewBox="0 0 1200 520" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M0 520 L0 300 L47 266 L47 266 L75 238 L75 238 L120 229 L120 229 L151 244 L151 244 L195 262 L195 262 L243 285 L243 285 L269 297 L269 297 L311 325 L311 325 L352 295 L352 295 L409 310 L409 310 L468 282 L468 282 L503 249 L503 249 L554 253 L554 253 L599 268 L599 268 L620 269 L620 269 L641 252 L641 252 L688 248 L688 248 L711 216 L711 216 L758 206 L758 206 L805 200 L805 200 L841 230 L841 230 L887 203 L887 203 L937 235 L937 235 L992 265 L992 265 L1017 299 L1017 299 L1062 278 L1062 278 L1200 278 L1200 520 Z" fill="none" stroke="#1F2933" stroke-width="1.5" opacity=".12"/><path d="M0 520 L0 300 L47 266 L47 266 L75 238 L75 238 L120 229 L120 229 L151 244 L151 244 L195 262 L195 262 L243 285 L243 285 L269 297 L269 297 L311 325 L311 325 L352 295 L352 295 L409 310 L409 310 L468 282 L468 282 L503 249 L503 249 L554 253 L554 253 L599 268 L599 268 L620 269 L620 269 L641 252 L641 252 L688 248 L688 248 L711 216 L711 216 L758 206 L758 206 L805 200 L805 200 L841 230 L841 230 L887 203 L887 203 L937 235 L937 235 L992 265 L992 265 L1017 299 L1017 299 L1062 278 L1062 278 L1200 278 L1200 520 Z" fill="url(#dg)" opacity=".5"/><defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F2933" stop-opacity=".05"/><stop offset="1" stop-color="#F5F1E6" stop-opacity="0"/></linearGradient></defs></svg></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Simulador educacional · um arquivo HTML · funciona offline</span>
+        <h1>95% dos iniciantes perdem o depósito nos primeiros meses.<br><span class="accent-line">Os outros estudam primeiro.</span></h1>
+        <p class="sub">CryptoNavigator é um simulador de criptotrading com dinheiro virtual e dados reais de mercado. 134 lições levam da primeira vela ao seu próprio bot de trading.</p>
+        <div class="cta-row">
+          <button class="btn js-signup">Criar conta</button>
+          <a class="btn btn-ghost" href="#demo">Veja como funciona ↓</a>
+        </div>
+        <p class="small cta-note">Sem cartão. A Fase 0 e a psicologia são grátis para sempre.</p>
+        <p class="trust">Comece sem cartão · Acesso demo para sempre · Funciona offline</p>
+      </div>
+      <div><div class="shot"><div class="shot-cap" aria-hidden="true">Fig. 1 · 01-home.png<span>1280×800</span></div><img src="../assets/01-home.png" alt="CryptoNavigator — o simulador que ensina a não perder" width="1280" height="800" fetchpriority="high" decoding="async"></div></div>
+    </div>
+    <div class="numbers">
+      <div><b>134</b><span>lições</span></div>
+      <div><b>145</b><span>widgets</span></div>
+      <div><b>21</b><span>minijogo</span></div>
+      <div><b>205</b><span>termos</span></div>
+    </div>
+    <p class="small" style="margin-top:12px">Números da versão atual do produto — v7, agosto de 2026.</p>
+  </div>
+</section>
+
+<!-- ПРОБЛЕМА -->
+<section id="problem">
+  <div class="wrap">
+    <span class="eyebrow">Problema</span>
+    <h2>Por que os iniciantes perdem o depósito.</h2>
+    <p class="lead">Não é falta de sorte. São três erros que se repetem — em todos.</p>
+    <div class="grid3" style="margin-top:40px">
+      <div class="card"><h3>🎲 Apostar na sorte</h3><p>Comprou no hype de um grupo. Antes da entrada não há nada para verificar — você não sabe o que verificar.</p></div>
+      <div class="card"><h3>⚡ Alavancagem até a liquidação</h3><p>A alavancagem x10 transforma uma queda de preço de 10% em −100% do depósito. O preço de liquidação costuma ser descoberto depois.</p></div>
+      <div class="card"><h3>😱 Emoções no lugar de sistema</h3><p>O medo vende no fundo. A ganância compra no topo. Sem sistema, você fornece liquidez para quem tem sistema.</p></div>
+    </div>
+    <p class="problem-closing">O mercado toma o dinheiro dos despreparados. A Fase 0 aqui é gratuita — custa menos que a primeira zerada.</p>
+  </div>
+</section>
+<div class="candles" aria-hidden="true"><svg viewBox="0 0 1152 64" width="1152" height="64" aria-hidden="true"><rect x="12" y="26.9" width="2" height="11.0" fill="#1F7A4D" opacity=".45"/><rect x="6" y="29.0" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="36" y="25.8" width="2" height="7.9" fill="#1F7A4D" opacity=".45"/><rect x="30" y="27.0" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="60" y="22.7" width="2" height="13.7" fill="#C0392B" opacity=".45"/><rect x="54" y="27.0" width="13" height="3.3" fill="#C0392B" opacity=".8"/><rect x="84" y="28.6" width="2" height="8.0" fill="#C0392B" opacity=".45"/><rect x="78" y="27.5" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="108" y="24.1" width="2" height="7.8" fill="#1F7A4D" opacity=".45"/><rect x="102" y="26.2" width="13" height="4.3" fill="#1F7A4D" opacity=".8"/><rect x="132" y="21.1" width="2" height="9.4" fill="#1F7A4D" opacity=".45"/><rect x="126" y="23.2" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="156" y="22.6" width="2" height="16.8" fill="#C0392B" opacity=".45"/><rect x="150" y="25.9" width="13" height="7.6" fill="#C0392B" opacity=".8"/><rect x="180" y="29.3" width="2" height="11.2" fill="#C0392B" opacity=".45"/><rect x="174" y="33.5" width="13" height="6.9" fill="#C0392B" opacity=".8"/><rect x="204" y="39.9" width="2" height="5.1" fill="#C0392B" opacity=".45"/><rect x="198" y="40.4" width="13" height="3.4" fill="#C0392B" opacity=".8"/><rect x="228" y="35.2" width="2" height="8.8" fill="#1F7A4D" opacity=".45"/><rect x="222" y="38.9" width="13" height="4.9" fill="#1F7A4D" opacity=".8"/><rect x="252" y="33.0" width="2" height="14.2" fill="#C0392B" opacity=".45"/><rect x="246" y="38.9" width="13" height="4.9" fill="#C0392B" opacity=".8"/><rect x="276" y="36.3" width="2" height="10.6" fill="#1F7A4D" opacity=".45"/><rect x="270" y="38.6" width="13" height="5.3" fill="#1F7A4D" opacity=".8"/><rect x="300" y="38.2" width="2" height="11.3" fill="#C0392B" opacity=".45"/><rect x="294" y="38.6" width="13" height="7.1" fill="#C0392B" opacity=".8"/><rect x="324" y="42.1" width="2" height="8.1" fill="#1F7A4D" opacity=".45"/><rect x="318" y="42.6" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="348" y="41.6" width="2" height="11.6" fill="#C0392B" opacity=".45"/><rect x="342" y="43.8" width="13" height="4.3" fill="#C0392B" opacity=".8"/><rect x="372" y="38.5" width="2" height="11.0" fill="#1F7A4D" opacity=".45"/><rect x="366" y="42.0" width="13" height="6.1" fill="#1F7A4D" opacity=".8"/><rect x="396" y="40.0" width="2" height="5.7" fill="#C0392B" opacity=".45"/><rect x="390" y="42.0" width="13" height="3.1" fill="#C0392B" opacity=".8"/><rect x="420" y="37.5" width="2" height="12.5" fill="#1F7A4D" opacity=".45"/><rect x="414" y="42.2" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="444" y="34.5" width="2" height="14.4" fill="#1F7A4D" opacity=".45"/><rect x="438" y="35.1" width="13" height="7.2" fill="#1F7A4D" opacity=".8"/><rect x="468" y="28.5" width="2" height="8.3" fill="#C0392B" opacity=".45"/><rect x="462" y="32.9" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="492" y="35.8" width="2" height="8.5" fill="#C0392B" opacity=".45"/><rect x="486" y="35.9" width="13" height="5.9" fill="#C0392B" opacity=".8"/><rect x="516" y="37.5" width="2" height="10.6" fill="#1F7A4D" opacity=".45"/><rect x="510" y="38.8" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="540" y="36.7" width="2" height="18.0" fill="#C0392B" opacity=".45"/><rect x="534" y="41.8" width="13" height="6.4" fill="#C0392B" opacity=".8"/><rect x="564" y="43.3" width="2" height="9.4" fill="#C0392B" opacity=".45"/><rect x="558" y="48.2" width="13" height="3.2" fill="#C0392B" opacity=".8"/><rect x="588" y="45.1" width="2" height="7.2" fill="#1F7A4D" opacity=".45"/><rect x="582" y="48.5" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="612" y="38.6" width="2" height="18.6" fill="#1F7A4D" opacity=".45"/><rect x="606" y="42.6" width="13" height="8.3" fill="#1F7A4D" opacity=".8"/><rect x="636" y="38.5" width="2" height="7.1" fill="#C0392B" opacity=".45"/><rect x="630" y="40.3" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="660" y="39.2" width="2" height="9.2" fill="#1F7A4D" opacity=".45"/><rect x="654" y="40.3" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="684" y="38.3" width="2" height="12.0" fill="#C0392B" opacity=".45"/><rect x="678" y="41.4" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="708" y="34.0" width="2" height="16.6" fill="#1F7A4D" opacity=".45"/><rect x="702" y="40.9" width="13" height="3.4" fill="#1F7A4D" opacity=".8"/><rect x="732" y="37.1" width="2" height="6.7" fill="#C0392B" opacity=".45"/><rect x="726" y="38.7" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="756" y="36.8" width="2" height="13.1" fill="#C0392B" opacity=".45"/><rect x="750" y="41.7" width="13" height="6.1" fill="#C0392B" opacity=".8"/><rect x="780" y="36.6" width="2" height="11.9" fill="#1F7A4D" opacity=".45"/><rect x="774" y="42.9" width="13" height="4.9" fill="#1F7A4D" opacity=".8"/><rect x="804" y="37.1" width="2" height="6.7" fill="#C0392B" opacity=".45"/><rect x="798" y="40.0" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="828" y="33.8" width="2" height="14.1" fill="#1F7A4D" opacity=".45"/><rect x="822" y="35.1" width="13" height="7.9" fill="#1F7A4D" opacity=".8"/><rect x="852" y="30.0" width="2" height="8.0" fill="#1F7A4D" opacity=".45"/><rect x="846" y="31.6" width="13" height="3.5" fill="#1F7A4D" opacity=".8"/><rect x="876" y="27.0" width="2" height="12.0" fill="#C0392B" opacity=".45"/><rect x="870" y="31.6" width="13" height="5.1" fill="#C0392B" opacity=".8"/><rect x="900" y="32.2" width="2" height="15.0" fill="#C0392B" opacity=".45"/><rect x="894" y="36.6" width="13" height="4.4" fill="#C0392B" opacity=".8"/><rect x="924" y="35.4" width="2" height="10.8" fill="#C0392B" opacity=".45"/><rect x="918" y="40.5" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="948" y="37.4" width="2" height="14.2" fill="#C0392B" opacity=".45"/><rect x="942" y="43.5" width="13" height="5.6" fill="#C0392B" opacity=".8"/><rect x="972" y="43.9" width="2" height="16.1" fill="#C0392B" opacity=".45"/><rect x="966" y="49.0" width="13" height="7.0" fill="#C0392B" opacity=".8"/><rect x="996" y="43.3" width="2" height="14.2" fill="#1F7A4D" opacity=".45"/><rect x="990" y="49.7" width="13" height="6.3" fill="#1F7A4D" opacity=".8"/><rect x="1020" y="44.3" width="2" height="6.7" fill="#1F7A4D" opacity=".45"/><rect x="1014" y="46.7" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="1044" y="42.7" width="2" height="16.8" fill="#C0392B" opacity=".45"/><rect x="1038" y="47.7" width="13" height="6.9" fill="#C0392B" opacity=".8"/><rect x="1068" y="52.7" width="2" height="5.7" fill="#C0392B" opacity=".45"/><rect x="1062" y="53.0" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="1092" y="54.5" width="2" height="5.5" fill="#1F7A4D" opacity=".45"/><rect x="1086" y="53.0" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="1116" y="47.6" width="2" height="9.5" fill="#1F7A4D" opacity=".45"/><rect x="1110" y="53.0" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="1140" y="50.6" width="2" height="7.5" fill="#C0392B" opacity=".45"/><rect x="1134" y="53.0" width="13" height="3.0" fill="#C0392B" opacity=".8"/></svg></div>
+
+<!-- ДО → ПОСЛЕ -->
+<section id="transform">
+  <div class="wrap">
+    <span class="eyebrow">Solução</span>
+    <h2>O que muda durante o curso.</h2>
+    <div class="tf-labels"><span>Antes</span><span></span><span>Depois</span></div>
+    <div class="tf-row"><p class="tf-before">Comprou no hype de um grupo do Telegram</p><div class="tf-arrow">→</div><p class="tf-after">Lê o book de ofertas e calcula o spread antes de entrar</p></div><div class="tf-row"><p class="tf-before">Colocava o depósito inteiro em uma moeda só</p><div class="tf-arrow">→</div><p class="tf-after">Calcula o tamanho da posição pelo critério de Kelly</p></div><div class="tf-row"><p class="tf-before">Tinha medo da palavra “bot”</p><div class="tf-arrow">→</div><p class="tf-after">Dorme enquanto o bot trabalha. De manhã lê o registro dele</p></div><div class="tf-row"><p class="tf-before">Descobria o preço de liquidação depois</p><div class="tf-arrow">→</div><p class="tf-after">Vê antes de abrir a operação — no simulador, com dinheiro virtual</p></div><div class="tf-row"><p class="tf-before">Acreditava nas previsões de blogueiros</p><div class="tf-arrow">→</div><p class="tf-after">Distingue “sei” de “parece”: sua própria nota Brier de acerto nas previsões</p></div>
+  </div>
+</section>
+
+<!-- ПРОГРАММА -->
+<section id="program">
+  <div class="wrap">
+    <span class="eyebrow">Programa</span>
+    <h2>Nove fases: do zero a operador de bot.</h2>
+    <div class="ph-grid">
+    <div class="card">
+      <span class="ph-num">00</span>
+      <span class="ph-tag">Fase 0 · semanas 1–2 · grátis</span>
+      <h3>Crypto Zero</h3>
+      <p>Blockchain, carteira, velas, book de ofertas, probabilidades. 20 lições do zero.</p>
+    </div>
+    <div class="card">
+      <span class="ph-num">01</span>
+      <span class="ph-tag">Fase 1 · semanas 3–5</span>
+      <h3>Fundamento quantitativo</h3>
+      <p>Python, API de exchange via CCXT, estrutura jurídica na Rússia.</p>
+    </div>
+    <div class="card">
+      <span class="ph-num">02</span>
+      <span class="ph-tag">Fase 2 · semanas 6–8</span>
+      <h3>Busca de alfa</h3>
+      <p>Estatística de séries temporais, microestrutura, arbitragem de funding.</p>
+    </div>
+    <div class="card">
+      <span class="ph-num">03</span>
+      <span class="ph-tag">Fase 3 · semanas 9–11</span>
+      <h3>Risco e portfólio</h3>
+      <p>Critério de Kelly, VaR/CVaR, dimensionamento dinâmico de posições.</p>
+    </div>
+    <div class="card">
+      <span class="ph-num">04</span>
+      <span class="ph-tag">Fase 4 · semanas 12–14</span>
+      <h3>Execução</h3>
+      <p>Ordens, TWAP/VWAP, análise on-chain dos grandes players.</p>
+    </div>
+    <div class="card">
+      <span class="ph-num">05</span>
+      <span class="ph-tag">Fase 5 · semanas 15–18</span>
+      <h3>Produção</h3>
+      <p>Docker, monitoramento, Chaos Lab, exame final.</p>
+    </div></div>
+    <p class="attest">✓ Certificação após cada fase. Limite de 80%. As respostas são embaralhadas — decorar não adianta.</p>
+    <div class="ladder">
+      <span class="eyebrow">Carreira dentro do curso:</span>
+      <div class="ladder-chips"><span class="chip">Estagiário do fundo</span><span class="chip">Analista júnior</span><span class="chip">Trader algorítmico</span><span class="chip">Oficial de risco</span><span class="chip">Gestor de portfólio</span><span class="chip">Arquiteto quant-chefe</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ПСИХОЛОГИЯ -->
+<section id="psychology">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Módulo · Psicologia do operador</span>
+      <h2>O elo fraco do sistema de trading é a pessoa atrás da tela.</h2>
+      <p class="lead">Um curso com módulo inteiro não sobre o mercado, mas sobre você. 8 lições de psicologia do operador do bot e 8 simuladores. Grátis junto com a Fase 0.</p>
+      <ul class="tr-list"><li><b>“Ansiedade às 3 da manhã”</b> — o bot abriu uma operação de madrugada. Você treina para não interferir sem motivo.</li><li><b>“Carta do futuro”</b> — você, daqui a um mês, escreve para o seu eu de hoje. Lê depois.</li><li><b>“Tonteira do sucesso”</b> — uma sequência de ganhos é mais perigosa que uma sequência de perdas. Teste em você.</li><li><b>“Empatar a qualquer custo”</b> — como uma posição no vermelho vira vitalícia — e como sair.</li></ul>
+    </div>
+    <figure>
+      <div class="shot"><div class="shot-cap" aria-hidden="true">Fig. 2 · 05-psychology.png<span>1280×800</span></div><img src="../assets/05-psychology.png" alt="CryptoNavigator — o simulador que ensina a não perder" width="1280" height="800" loading="lazy" decoding="async"></div>
+      <figcaption class="small" style="margin-top:8px">Simulador psicológico “Ansiedade às 3 da manhã” — tela real do aplicativo.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ЖИВОЙ РЫНОК + ДЕМО-СТАКАН -->
+<section id="demo">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Camada V7 · Mercado vivo</span>
+      <h2>Mercado real dentro das lições.</h2>
+      <p class="lead">Book de ofertas, velas, taxas de funding, índice de medo e ganância — direto no aplicativo. Os detectores indicam o que está acontecendo. Não são sinais. É a habilidade de ler o mercado com seus próprios olhos.</p>
+      <div style="margin-top:24px"><div class="shot"><div class="shot-cap" aria-hidden="true">Fig. 3 · 04-simulator.png<span>1280×800</span></div><img src="../assets/04-simulator.png" alt="CryptoNavigator — o simulador que ensina a não perder" width="1280" height="800" loading="lazy" decoding="async"></div></div>
+    </div>
+    <div class="ob-wrap" id="ob" data-detector="💡 O spread dobrou. O mercado está nervoso — normalmente se reduz o tamanho das posições." data-detector-off="O book está tranquilo. O spread está normal.">
+      <div class="ob-label">
+        <span><span class="ob-live"></span>Book de demonstração · dados sintéticos · no aplicativo — reais</span>
+        <span class="mono" id="ob-spread">—</span>
+      </div>
+      <div class="ob-cols">
+        <div><div class="ob-h"><span>BID · compra</span></div><div id="ob-bids"></div></div>
+        <div><div class="ob-h"><span>ASK · venda</span></div><div id="ob-asks"></div></div>
+      </div>
+      <div class="detector" id="ob-detector"></div>
+    </div>
+  </div>
+</section>
+
+<!-- НОВОСТИ -->
+<section id="news">
+  <div class="wrap">
+    <span class="eyebrow">Camada V7 · Notícias</span>
+    <div class="split">
+      <div>
+        <h2>Notícias como material de estudo.</h2>
+        <p class="lead">Feed de notícias cripto com classificador de sete tipos. O mentor analisa cada uma: o que aconteceu → onde pressiona → o que a notícia não diz → uma pergunta para você.</p>
+        <p class="trust" style="margin-top:16px">Exercícios: “Adivinhe o tipo” · “A história sabe a resposta” · “Anti-FUD”</p>
+      </div>
+      <div class="card" style="padding:28px">
+        <ol style="list-style:none;counter-reset:ns;display:flex;flex-direction:column;gap:14px;margin:0;padding:0">
+          <li style="counter-increment:ns;display:flex;gap:14px;align-items:baseline"><span style="font-family:var(--mono);font-weight:700;color:var(--red)">01</span><span style="font-family:var(--serif);font-size:17px">O que aconteceu</span></li>
+          <li style="counter-increment:ns;display:flex;gap:14px;align-items:baseline"><span style="font-family:var(--mono);font-weight:700;color:var(--red)">02</span><span style="font-family:var(--serif);font-size:17px">Onde pressiona</span></li>
+          <li style="counter-increment:ns;display:flex;gap:14px;align-items:baseline"><span style="font-family:var(--mono);font-weight:700;color:var(--red)">03</span><span style="font-family:var(--serif);font-size:17px">O que não diz</span></li>
+          <li style="counter-increment:ns;display:flex;gap:14px;align-items:baseline"><span style="font-family:var(--mono);font-weight:700;color:var(--red)">04</span><span style="font-family:var(--serif);font-size:17px">Pergunta para você</span></li>
+        </ol>
+        <p class="small" style="margin-top:18px;border-top:1px dashed var(--line2);padding-top:12px">Exercícios: “Adivinhe o tipo” · “A história sabe a resposta” · “Anti-FUD”</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI МАКС -->
+<section id="aimax">
+  <div class="wrap">
+    <span class="eyebrow">Camada V7 · Mentor com IA</span>
+    <h2>Um mentor que não dá respostas prontas.</h2>
+    <p class="breath">Teste de Feynman com veredito. “Explique de outro jeito” — três paráfrases. Modo socrático. Gerador de tarefas. Dicas em três níveis. Crítica da hipótese em cinco dimensões. Auditor de regras procura brechas. Diagnóstico do erro por cinco tipos de armadilhas. Sparring de argumentos: steelman → ataque → verificação.</p>
+    <p class="small" style="margin-top:24px">Limite de solicitações adaptativo: passou na lição sozinho — mais solicitações. Descuidou da disciplina — menos.</p>
+  </div>
+</section>
+
+<!-- КОНСТРУКТОРЫ -->
+<section id="builders">
+  <div class="wrap">
+    <span class="eyebrow">Camada V7 · Artefatos de mercado</span>
+    <h2>Construa um artefato de mercado com as próprias mãos.</h2>
+    <p class="breath">Token em cinco passos · memecoin em três cliques · stablecoin sob corrida dos detentores · NFT: emitir e tentar vender · votação em DAO · verificação de oracle · bot de trading — exame final · um ano de gestão de um fundo tokenizado.</p>
+  </div>
+</section>
+
+<!-- КРИПТИК -->
+<section id="kryptik">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Personagem do curso</span>
+      <h2>Todo curso tem um herói. Este tem Kryptik.</h2>
+      <p class="lead">Colega sênior sarcástico que já passou pelas 134 lições e agora conduz o seu aprendizado. Aponta erros e nomeia o tipo de armadilha. Comenta o mercado vivo. Em vez de respostas prontas, faz perguntas.</p>
+    </div>
+    <div>
+      <div class="kq">
+        <div>— Spread de quatro pontos. Calma.</div>
+        <div>— Faz sentido. Errado, mas faz sentido.</div>
+        <div>— Por hoje é só. Amanhã continuamos.</div>
+      </div>
+      <p class="small" style="margin-top:16px">Ele não consola com mentira e não promete lucro. Sabe mais — e ensina o que sabe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- КВЕСТЫ -->
+<section id="quests">
+  <div class="wrap">
+    <span class="eyebrow">Três quests virtuais</span>
+    <h2>Viva a crise antes que ela aconteça com o seu dinheiro.</h2>
+    <div class="grid3">
+    <div class="card">
+      <h3>🕵️ “Kryptik contra o Golpista”</h3>
+      <p>7 episódios: phishing, contrato malicioso, deepfake, SIM swap. O golpista “Skat” caça seus ativos virtuais.</p>
+      <p style="margin-top:12px;color:var(--ink);font-weight:600">Treina: reconhecer engenharia social antes do dinheiro real.</p>
+    </div>
+    <div class="card">
+      <h3>🧠 “Sete dias: você contra você”</h3>
+      <p>Uma semana na vida do operador do bot. Cada dia uma nova armadilha psicológica sussurra um pensamento tentador. Você escolhe a ação.</p>
+      <p style="margin-top:12px;color:var(--ink);font-weight:600">Treina: resistência à euforia, à ansiedade noturna e aos prints de lucro dos outros.</p>
+    </div>
+    <div class="card">
+      <h3>🚨 “Pânico”</h3>
+      <p>6 cenários de crise: flash crash de −17%, cascata de liquidações, exchange congela saques, choque regulatório.</p>
+      <p style="margin-top:12px;color:var(--ink);font-weight:600">Treina: distinguir “o mercado está caindo” (não fazer nada) de “a infraestrutura quebrou” (agir imediatamente).</p>
+    </div></div>
+    <p class="small" style="margin-top:24px">Em cada quest: portfólio virtual, escolhas com consequências, análise após cada passo, relatório final com perfil de vulnerabilidades. A conclusão conta no progresso e libera medalhas.</p>
+  </div>
+</section>
+<div class="candles" aria-hidden="true"><svg viewBox="0 0 1152 64" width="1152" height="64" aria-hidden="true"><rect x="12" y="30.7" width="2" height="11.7" fill="#C0392B" opacity=".45"/><rect x="6" y="32.0" width="13" height="4.7" fill="#C0392B" opacity=".8"/><rect x="36" y="31.1" width="2" height="8.3" fill="#1F7A4D" opacity=".45"/><rect x="30" y="33.7" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="60" y="29.5" width="2" height="8.4" fill="#1F7A4D" opacity=".45"/><rect x="54" y="31.1" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="84" y="27.7" width="2" height="7.0" fill="#1F7A4D" opacity=".45"/><rect x="78" y="30.4" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="108" y="29.6" width="2" height="4.6" fill="#C0392B" opacity=".45"/><rect x="102" y="29.7" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="132" y="23.7" width="2" height="15.5" fill="#1F7A4D" opacity=".45"/><rect x="126" y="27.7" width="13" height="5.1" fill="#1F7A4D" opacity=".8"/><rect x="156" y="24.6" width="2" height="4.4" fill="#1F7A4D" opacity=".45"/><rect x="150" y="24.7" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="180" y="22.1" width="2" height="9.5" fill="#C0392B" opacity=".45"/><rect x="174" y="25.2" width="13" height="4.3" fill="#C0392B" opacity=".8"/><rect x="204" y="24.5" width="2" height="11.3" fill="#C0392B" opacity=".45"/><rect x="198" y="27.7" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="228" y="29.8" width="2" height="10.2" fill="#C0392B" opacity=".45"/><rect x="222" y="30.7" width="13" height="4.6" fill="#C0392B" opacity=".8"/><rect x="252" y="30.1" width="2" height="11.4" fill="#C0392B" opacity=".45"/><rect x="246" y="35.3" width="13" height="4.8" fill="#C0392B" opacity=".8"/><rect x="276" y="34.6" width="2" height="9.4" fill="#1F7A4D" opacity=".45"/><rect x="270" y="34.9" width="13" height="5.2" fill="#1F7A4D" opacity=".8"/><rect x="300" y="32.2" width="2" height="5.3" fill="#C0392B" opacity=".45"/><rect x="294" y="32.6" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="324" y="34.6" width="2" height="10.3" fill="#C0392B" opacity=".45"/><rect x="318" y="35.6" width="13" height="7.5" fill="#C0392B" opacity=".8"/><rect x="348" y="39.1" width="2" height="8.5" fill="#C0392B" opacity=".45"/><rect x="342" y="42.6" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="372" y="41.0" width="2" height="7.9" fill="#1F7A4D" opacity=".45"/><rect x="366" y="42.6" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="396" y="31.4" width="2" height="17.6" fill="#1F7A4D" opacity=".45"/><rect x="390" y="38.1" width="13" height="6.1" fill="#1F7A4D" opacity=".8"/><rect x="420" y="36.9" width="2" height="9.9" fill="#C0392B" opacity=".45"/><rect x="414" y="38.1" width="13" height="7.0" fill="#C0392B" opacity=".8"/><rect x="444" y="44.1" width="2" height="8.4" fill="#C0392B" opacity=".45"/><rect x="438" y="45.0" width="13" height="5.7" fill="#C0392B" opacity=".8"/><rect x="468" y="49.1" width="2" height="5.1" fill="#C0392B" opacity=".45"/><rect x="462" y="50.1" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="492" y="48.0" width="2" height="11.8" fill="#C0392B" opacity=".45"/><rect x="486" y="53.0" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="516" y="51.1" width="2" height="8.9" fill="#1F7A4D" opacity=".45"/><rect x="510" y="53.0" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="540" y="54.1" width="2" height="3.8" fill="#C0392B" opacity=".45"/><rect x="534" y="53.0" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="564" y="48.8" width="2" height="9.2" fill="#1F7A4D" opacity=".45"/><rect x="558" y="50.3" width="13" height="5.7" fill="#1F7A4D" opacity=".8"/><rect x="588" y="45.4" width="2" height="9.2" fill="#1F7A4D" opacity=".45"/><rect x="582" y="47.3" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="612" y="39.3" width="2" height="11.3" fill="#1F7A4D" opacity=".45"/><rect x="606" y="45.3" width="13" height="4.3" fill="#1F7A4D" opacity=".8"/><rect x="636" y="34.6" width="2" height="12.9" fill="#1F7A4D" opacity=".45"/><rect x="630" y="39.1" width="13" height="6.2" fill="#1F7A4D" opacity=".8"/><rect x="660" y="33.7" width="2" height="12.6" fill="#C0392B" opacity=".45"/><rect x="654" y="37.5" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="684" y="28.2" width="2" height="16.4" fill="#1F7A4D" opacity=".45"/><rect x="678" y="32.7" width="13" height="7.8" fill="#1F7A4D" opacity=".8"/><rect x="708" y="30.2" width="2" height="2.6" fill="#1F7A4D" opacity=".45"/><rect x="702" y="29.7" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="732" y="28.1" width="2" height="12.4" fill="#C0392B" opacity=".45"/><rect x="726" y="31.2" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="756" y="29.9" width="2" height="7.9" fill="#C0392B" opacity=".45"/><rect x="750" y="33.5" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="780" y="33.1" width="2" height="13.9" fill="#C0392B" opacity=".45"/><rect x="774" y="36.5" width="13" height="4.8" fill="#C0392B" opacity=".8"/><rect x="804" y="33.8" width="2" height="7.7" fill="#1F7A4D" opacity=".45"/><rect x="798" y="34.2" width="13" height="7.0" fill="#1F7A4D" opacity=".8"/><rect x="828" y="29.5" width="2" height="8.5" fill="#1F7A4D" opacity=".45"/><rect x="822" y="31.2" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="852" y="28.3" width="2" height="10.8" fill="#1F7A4D" opacity=".45"/><rect x="846" y="30.9" width="13" height="3.3" fill="#1F7A4D" opacity=".8"/><rect x="876" y="28.0" width="2" height="7.9" fill="#C0392B" opacity=".45"/><rect x="870" y="28.1" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="900" y="26.0" width="2" height="11.5" fill="#C0392B" opacity=".45"/><rect x="894" y="31.1" width="13" height="6.0" fill="#C0392B" opacity=".8"/><rect x="924" y="34.2" width="2" height="13.5" fill="#C0392B" opacity=".45"/><rect x="918" y="37.1" width="13" height="5.7" fill="#C0392B" opacity=".8"/><rect x="948" y="36.8" width="2" height="7.2" fill="#1F7A4D" opacity=".45"/><rect x="942" y="39.8" width="13" height="3.0" fill="#1F7A4D" opacity=".8"/><rect x="972" y="34.2" width="2" height="12.1" fill="#1F7A4D" opacity=".45"/><rect x="966" y="37.5" width="13" height="3.4" fill="#1F7A4D" opacity=".8"/><rect x="996" y="34.6" width="2" height="9.4" fill="#C0392B" opacity=".45"/><rect x="990" y="37.5" width="13" height="3.6" fill="#C0392B" opacity=".8"/><rect x="1020" y="33.8" width="2" height="8.7" fill="#1F7A4D" opacity=".45"/><rect x="1014" y="34.6" width="13" height="6.4" fill="#1F7A4D" opacity=".8"/><rect x="1044" y="29.7" width="2" height="11.7" fill="#C0392B" opacity=".45"/><rect x="1038" y="32.2" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="1068" y="29.3" width="2" height="9.8" fill="#C0392B" opacity=".45"/><rect x="1062" y="33.6" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="1092" y="30.3" width="2" height="13.6" fill="#C0392B" opacity=".45"/><rect x="1086" y="35.2" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="1116" y="37.6" width="2" height="5.9" fill="#C0392B" opacity=".45"/><rect x="1110" y="36.9" width="13" height="3.0" fill="#C0392B" opacity=".8"/><rect x="1140" y="37.9" width="2" height="12.8" fill="#C0392B" opacity=".45"/><rect x="1134" y="39.9" width="13" height="5.9" fill="#C0392B" opacity=".8"/></svg></div>
+
+<!-- СОСТАВ -->
+<section id="features">
+  <div class="wrap">
+    <span class="eyebrow">Composição</span>
+    <h2>Tudo que está dentro.</h2>
+    <div class="grid3" style="margin-top:40px">
+    <div class="card"><h3 style="font-size:16px">🧩 145 widgets embutidos nas lições</h3><p style="font-size:14px">Book, liquidações com gauge, funding, yield DeFi, curvas de capital, mapa de correlações, sanduíche MEV — cada lição é prática com as mãos.</p></div>
+    <div class="card"><h3 style="font-size:16px">🎮 21 minijogo</h3><p style="font-size:14px">Corrida de blocos, corredor de liquidação, leque de Kelly, tempestade de correlações, defesa da seed phrase, salve o depósito.</p></div>
+    <div class="card"><h3 style="font-size:16px">🔬 Simuladores de processos reais</h3><p style="font-size:14px">Book de ofertas, alavancagem e liquidação, taxas de funding, análise walk-forward, overfitting lab, kill-switch.</p></div>
+    <div class="card"><h3 style="font-size:16px">🏗️ 8 construtores de artefatos</h3><p style="font-size:14px">Do token em cinco passos ao bot de trading — o exame final do curso.</p></div>
+    <div class="card"><h3 style="font-size:16px">📖 Glossário com 205 termos</h3><p style="font-size:14px">Cada termo com definição em quatro níveis de profundidade, analogia do cotidiano e equivalente em inglês.</p></div>
+    <div class="card"><h3 style="font-size:16px">✅ Certificações após cada fase</h3><p style="font-size:14px">Limite de 80%. Análise detalhada de cada questão. Respostas embaralhadas.</p></div>
+    <div class="card"><h3 style="font-size:16px">🏆 Escada de carreira</h3><p style="font-size:14px">De estagiário do fundo a arquiteto quant-chefe: ranks, medalhas, streaks, duelos de chefe.</p></div>
+    <div class="card"><h3 style="font-size:16px">⏱️ Temporizador Pomodoro de 25 minutos</h3><p style="font-size:14px">Embutido. Para não grudar na tela.</p></div>
+    <div class="card"><h3 style="font-size:16px">🔄 Interleaving e repetições SM-2</h3><p style="font-size:14px">Perguntas de fases diferentes misturadas + repetição espaçada a cada 5 lições.</p></div>
+    <div class="card"><h3 style="font-size:16px">🧘 Consolidação NSDR</h3><p style="font-size:14px">Tela de silêncio com respiração 4-4-6 após a lição: o cérebro consolida o que foi estudado.</p></div>
+    <div class="card"><h3 style="font-size:16px">🔀 Embaralhamento de respostas em todos os quizzes</h3><p style="font-size:14px">RNG determinístico — impossível aprender que “a resposta certa é sempre a segunda”.</p></div>
+    <div class="card"><h3 style="font-size:16px">📊 Calibração de previsões por Brier</h3><p style="font-size:14px">Preveja eventos de mercado e receba a nota da sua taxa de acerto.</p></div>
+    <div class="card"><h3 style="font-size:16px">📓 Registro de erros cognitivos</h3><p style="font-size:14px">Suas armadilhas recorrentes num só lugar, classificadas por tipo.</p></div>
+    <div class="card"><h3 style="font-size:16px">💾 Um arquivo, funciona offline</h3><p style="font-size:14px">~2,8 MB, sem instalação nem servidor. Baixou, usa.</p></div></div>
+    <p class="breath" style="margin-top:40px">Quais são os 145 widgets? Book. Liquidações. Funding. Yield DeFi. Curvas de capital. Correlações. Delta neutro. MEV. Overfitting lab. Alpha/beta. Kill-switch. Execução. Caos. Kelly. Cointegração…</p>
+    <p class="small">…e mais de uma centena — um em cada lição.</p>
+    <div style="margin-top:40px"><div class="shot"><div class="shot-cap" aria-hidden="true">Fig. 4 · 03-lesson.png<span>1280×800</span></div><img src="../assets/03-lesson.png" alt="CryptoNavigator — o simulador que ensina a não perder" width="1280" height="800" loading="lazy" decoding="async"></div></div>
+  </div>
+</section>
+
+<!-- АДАПТАЦИЯ -->
+<section id="adaptation">
+  <div class="wrap">
+    <span class="eyebrow">Adaptação</span>
+    <h2>O curso se adapta aos seus erros.</h2>
+    <div class="grid3" style="margin-top:40px">
+    <div class="card"><h3 style="font-size:16px">🔍 Diagnóstico de cada erro</h3><p style="font-size:14px">Depois de uma resposta errada, o mentor identifica o tipo de armadilha e anota no registro com recomendação do que reler.</p></div>
+    <div class="card"><h3 style="font-size:16px">📓 Registro de erros cognitivos</h3><p style="font-size:14px">Depois de um mês aparecem padrões: “quinta à noite”, “depois de ler notícias”, “quando estou com pressa”.</p></div>
+    <div class="card"><h3 style="font-size:16px">🔄 Interleaving dos pontos fracos</h3><p style="font-size:14px">Perguntas dos temas em que você erra mais voltam com mais frequência — até você fixar.</p></div>
+    <div class="card"><h3 style="font-size:16px">🧩 SM-2 a cada 5 lições</h3><p style="font-size:14px">Repetição espaçada daquilo que começa a ser esquecido. Algoritmo SuperMemo-2.</p></div>
+    <div class="card"><h3 style="font-size:16px">🤔 Primeiro pense</h3><p style="font-size:14px">Em dados vivos e notícias, primeiro pedem sua opinião, depois mostram o gabarito.</p></div>
+    <div class="card"><h3 style="font-size:16px">🎯 Calibração de confiança</h3><p style="font-size:14px">Com o tempo fica visível onde você é forte de verdade e onde é “acho que sei”.</p></div>
+    <div class="card"><h3 style="font-size:16px">⚙️ Limite adaptativo do mentor</h3><p style="font-size:14px">Autonomia é recompensada com solicitações extras à IA.</p></div>
+    <div class="card"><h3 style="font-size:16px">🧬 Dificuldade por nível</h3><p style="font-size:14px">Detectores do mercado vivo abrem só depois das lições correspondentes. O iniciante não se afoga.</p></div>
+    <div class="card"><h3 style="font-size:16px">📊 Pré-teste antes de cada lição</h3><p style="font-size:14px">Medição antes e depois: aparece o ganho real de compreensão, não um visto de “li”.</p></div>
+    <div class="card"><h3 style="font-size:16px">🤖 Kryptik — mentor com personalidade</h3><p style="font-size:14px">Colega sênior sarcástico. Elogia raramente, mas merecidamente.</p></div></div>
+  </div>
+</section>
+
+<!-- МОБИЛЬНАЯ ВЕРСИЯ -->
+<section id="mobile">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Versão mobile</span>
+      <h2>Funciona no seu celular.</h2>
+      <p class="lead">O mesmo arquivo e o mesmo progresso: a interface se adapta a telas a partir de 360 pixels.</p>
+    </div>
+    <div class="mobile-shot"><div class="shot"><div class="shot-cap" aria-hidden="true">Fig. 5 · 08-mobile.png<span>780×1688</span></div><img src="../assets/08-mobile.png" alt="CryptoNavigator — o simulador que ensina a não perder" width="780" height="1688" loading="lazy" decoding="async"></div></div>
+  </div>
+</section>
+
+<!-- ЦЕНА -->
+<section id="price">
+  <div class="wrap">
+    <span class="eyebrow">Preço</span>
+    <h2>Preço sem asteriscos.</h2>
+    <div class="price-grid">
+      <div class="price-card">
+        <span class="stamp blue">0 ₽ · para sempre</span>
+        <div class="price-name">Início</div>
+        <div class="price-val">0 ₽</div>
+        <span class="price-period">para sempre</span>
+        <ul class="plist">
+          <li>Fase 0 completa — 20 lições</li>
+          <li>Módulo “Psicologia” — 8 lições e 8 simuladores</li>
+          <li>Progresso salvo no navegador</li>
+          <li>Funciona offline</li>
+        </ul>
+        <button class="btn js-signup" style="width:100%">Criar conta</button>
+      </div>
+      <div class="price-card hl">
+        <span class="badge">Escolha da maioria</span>
+        <span class="stamp">uma vez. para sempre</span>
+        <div class="price-name">Acesso completo</div>
+        <div class="price-val">990 ₽ ≈ US$ 12</div>
+        <span class="price-period">uma vez. para sempre</span>
+        <ul class="plist">
+          <li>Todas as 9 fases e todas as 134 lições</li>
+          <li>Todos os simuladores e minijogos</li>
+          <li>Mercado vivo e notícias</li>
+          <li>Mentor com IA Max</li>
+          <li>Todas as atualizações futuras inclusas</li>
+        </ul>
+        <button class="btn js-signup" style="width:100%">Criar conta</button>
+      </div>
+    </div>
+    <p class="price-note">Sem assinatura. Não há nada para cancelar. Pagamento com cartões da Rússia e internacionais.</p>
+  </div>
+</section>
+
+<!-- ПИСЬМО -->
+<section id="letter">
+  <div class="wrap">
+    <h2>Uma carta no lugar do departamento de marketing.</h2>
+    <div class="letter">
+      <p>Se você procura um sinal de “compre — vai subir”, feche a página: não trabalhamos com isso.</p>
+      <p>Fazemos um simulador onde dá para errar à vontade — enquanto o erro custa zero rublo. Não prometemos lucro. Prometemos método: 134 lições, certificações com limite de 80% e análise de cada erro seu.</p>
+      <p>O histórico de desenvolvimento está aberto: da v1 à v7, cada commit visível no GitHub. <a href="https://github.com/AlexZander85/crypto" style="color:var(--blue)" rel="noopener">GitHub do projeto ↗</a></p>
+      <p class="sign">— Equipe CryptoNavigator</p>
+    </div>
+  </div>
+</section>
+
+<!-- ЧТО НОВОГО -->
+<section id="changelog">
+  <div class="wrap">
+    <h2>Novidades.</h2>
+    <div class="cl-row"><span class="cl-date">Agosto de 2026</span><div><strong>v7.</strong> Mercado vivo, feed de notícias, mentor com IA com nove ações.</div></div>
+    <div class="cl-row"><span class="cl-date">Agosto de 2026</span><div><strong>v6.</strong> Módulo de psicologia do operador: 8 lições, 8 simuladores, três quests.</div></div>
+    <div class="cl-row"><span class="cl-date">Agosto de 2026</span><div><strong>v5.</strong> Núcleo do curso: 9 fases, simuladores, construtores, gamificação.</div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap" style="max-width:800px">
+    <h2>Perguntas frequentes.</h2>
+    
+    <details class="faq-item"><summary>Preciso de experiência?</summary><div class="a">Não. A Fase 0 começa com a pergunta “o que é blockchain” e não exige nem programação, nem experiência em trading.</div></details>
+    <details class="faq-item"><summary>Vocês dão sinais de trading ou recomendam onde investir?</summary><div class="a">Não. E não vamos dar. O curso ensina método: estatística, gestão de risco, execução. As decisões seguem suas.</div></details>
+    <details class="faq-item"><summary>O que exatamente é grátis?</summary><div class="a">A Fase 0 completa (20 lições) e o módulo “Psicologia” (8 lições com simuladores). Sem cartão vinculado. Sem prazo.</div></details>
+    <details class="faq-item"><summary>Atualizações futuras serão pagas?</summary><div class="a">Não. Um pagamento inclui todas as versões futuras: novas lições, widgets e camadas chegam para quem já comprou.</div></details>
+    <details class="faq-item"><summary>Como pagar?</summary><div class="a">Cartões da Rússia e internacionais. O acesso abre logo após o pagamento.</div></details>
+    <details class="faq-item"><summary>Onde ficam meus dados?</summary><div class="a">O progresso fica no seu navegador e sincroniza com a nuvem apenas na sua conta. O site não tem rastreadores de publicidade.</div></details>
+  </div>
+</section>
+
+<!-- ФИНАЛЬНЫЙ CTA -->
+<section id="start">
+  <div class="wrap" style="text-align:center">
+    <h2>Comece pelo grátis.</h2>
+    <p class="lead" style="margin:0 auto 32px">As vinte lições da Fase 0 e todo o módulo de psicologia — sem cartão e para sempre. Se não funcionar para você, não deve nada a ninguém.</p>
+    <button class="btn js-signup">Criar conta</button>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div>
+        <span class="logo">◆ CryptoNavigator</span>
+        <p class="small" style="margin-top:12px">Funciona offline. Os dados ficam no seu navegador.</p>
+      </div>
+      <div>
+        <h3>Produto</h3>
+        <a href="#program">Programa</a>
+        <a href="#price">Preço</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <h3>Projeto</h3>
+        <a href="https://github.com/AlexZander85/crypto" rel="noopener">GitHub ↗</a>
+        <a href="#changelog">Novidades.</a>
+      </div>
+      <div>
+        <h3>Idioma</h3>
+        <a href="../" data-lang-x="ru">RU</a><a href="../en/" data-lang-x="en">EN</a><a href="../es/" data-lang-x="es">ES</a><a href="../pt/" data-lang-x="pt">PT</a>
+      </div>
+    </div>
+    <div class="f-status"><span class="ok-dot"></span>v7.0 · 2026-08 · 134/145/21/205</div>
+    <p class="disclaimer">CryptoNavigator é um simulador educacional. Todas as operações usam dinheiro virtual. O material do curso não constitui recomendação financeira ou de investimento. Não prometemos lucro. Negociar criptoativos pode levar à perda de capital.<br>© 2026 CryptoNavigator</p>
+  </div>
+</footer>
+
+<dialog id="signup" aria-labelledby="m-t">
+  <div class="m-head">
+    <h3 id="m-t" data-err-email="Parece que há um erro de digitação no e-mail." data-err-pass="Senha com menos de 8 caracteres." data-err-consent="Sem aceitar os termos, não dá." data-err-exists="Esse e-mail já está em uso. Quer entrar?" data-waitlist="O cadastro abre junto com a nuvem. Anotamos você na fila.">Criar conta</h3>
+    <p class="small" style="margin-top:4px">A Fase 0 e o módulo de psicologia abrem na hora.</p>
+  </div>
+  <form class="m-body" id="f-form" novalidate>
+    <div>
+      <label for="f-email">E-mail</label>
+      <input type="email" id="f-email" name="email" autocomplete="email" placeholder="you@example.com" required>
+      <span class="err" id="e-email" role="alert"></span>
+    </div>
+    <div>
+      <label for="f-pass">Senha</label>
+      <input type="password" id="f-pass" name="password" autocomplete="new-password" minlength="8" required>
+      <span class="small">mínimo de 8 caracteres</span>
+      <span class="err" id="e-pass" role="alert"></span>
+    </div>
+    <div class="consent">
+      <input type="checkbox" id="f-consent" required>
+      <div>
+        <label for="f-consent" style="margin:0">Aceito os termos</label>
+        <details><summary>Aceito os termos</summary><div class="a">A conta serve apenas para sincronizar o progresso. O progresso fica no seu navegador. Não prometemos lucro e não damos conselhos de investimento.</div></details>
+      </div>
+    </div>
+    <span class="err" id="e-consent" role="alert"></span>
+    <div class="m-msg" id="f-msg" role="status"></div>
+    <button type="submit" class="btn" id="f-submit" style="width:100%">Criar conta</button>
+    <button type="button" class="m-close" id="m-x">Mais tarde</button>
+  </form>
+</dialog>
+
+<script>(function(){
+"use strict";
+var LANG="pt", ROOT="../", APP="../index.html?welcome=phase0", IS_ROOT=false;
+function $(s,c){return (c||document).querySelector(s)}
+function $$(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))}
+function track(n,o){try{if(window.plausible)window.plausible(n,{props:o||{}})}catch(e){}}
+
+/* язык браузера один раз при первом визите (только корневая страница) */
+try{
+ var saved=localStorage.getItem('cn_lang');
+ if(IS_ROOT&&saved&&saved!=='ru'&&saved!==''){location.replace(ROOT+saved+'/');return}
+ if(IS_ROOT&&!saved&&!sessionStorage.getItem('cn_redir')){
+   var nav=(navigator.language||'').slice(0,2).toLowerCase();
+   if(nav!=='ru'&&['en','es','pt'].indexOf(nav)>-1){sessionStorage.setItem('cn_redir','1');location.replace(ROOT+nav+'/');return}
+ }
+}catch(e){}
+$$('.langs a').forEach(function(a){a.addEventListener('click',function(){try{localStorage.setItem('cn_lang',a.getAttribute('data-lang'))}catch(e){}})});
+
+track('view_hero');
+
+/* глубина скролла */
+var s50=false,s90=false;
+window.addEventListener('scroll',function(){
+ var h=document.documentElement,p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+ if(!s50&&p>=.5){s50=true;track('scroll_50')}
+ if(!s90&&p>=.9){s90=true;track('scroll_90')}
+},{passive:true});
+
+/* price_view */
+var price=$('#price');
+if(price&&'IntersectionObserver' in window){
+ new IntersectionObserver(function(en,obs){if(en[0].isIntersecting){track('price_view');obs.disconnect()}},{threshold:.3}).observe(price);
+}
+
+/* FAQ */
+$$('details .faq-item').forEach(function(d){
+ d.addEventListener('toggle',function(){if(d.open)track('faq_open')});
+});
+
+/* модалка регистрации */
+var dlg=$('#signup'),firstField=null,lastFocus=null;
+function openModal(){lastFocus=document.activeElement;dlg.showModal();$('#f-email').focus();track('signup_open')}
+function closeModal(){dlg.close();if(lastFocus)lastFocus.focus()}
+$$('.js-signup').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();openModal()})});
+$('#m-x').addEventListener('click',closeModal);
+dlg.addEventListener('click',function(e){if(e.target===dlg)closeModal()});
+dlg.addEventListener('keydown',function(e){
+ if(e.key!=='Tab')return;
+ var f=$$('button,input,a[href]',dlg).filter(function(el){return !el.disabled&&el.offsetParent!==null});
+ if(!f.length)return;
+ var first=f[0],last=f[f.length-1];
+ if(e.shiftKey&&document.activeElement===first){last.focus();e.preventDefault()}
+ else if(!e.shiftKey&&document.activeElement===last){first.focus();e.preventDefault()}
+});
+
+/* демо-стакан: синтетические данные */
+var ob=$('#ob');
+if(ob){
+ var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ var bids=$('#ob-bids'),asks=$('#ob-asks'),det=$('#ob-detector');
+ var DET_ON=ob.getAttribute('data-detector')||'',DET_OFF=ob.getAttribute('data-detector-off')||'';
+ var fmt=new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+ var mid=64231.4,timer=null,running=false;
+ function levels(side){
+  var out='',step=.5;
+  for(var i=0;i<7;i++){
+   var px=mid+(side==='bid'?-(i+1):i+1)*step*8;
+   var sz=(Math.random()*1.8+.15);
+   var w=Math.min(100,Math.round(sz/2*100));
+   out+='<div class="ob-row ob-'+side+'"><i style="width:'+w+'%"></i><span>'+fmt.format(px)+'</span><span>'+sz.toFixed(3)+'</span></div>';
+  }
+  return out;
+ }
+ function tick(){
+  mid+=(Math.random()-.5)*14;
+  $('#ob-spread').textContent=fmt.format(mid)+' ±';
+  bids.innerHTML=levels('bid');asks.innerHTML=levels('ask');
+  var nervous=Math.random()<.22;
+  det.textContent=nervous?DET_ON:DET_OFF;
+  det.classList.toggle('calm',!nervous);
+ }
+ function start(){if(running)return;running=true;tick();timer=setInterval(tick,900)}
+ function stop(){running=false;if(timer){clearInterval(timer);timer=null}}
+ if(reduce){tick();det.classList.add('calm')}
+ else if('IntersectionObserver' in window){
+  new IntersectionObserver(function(en){en[0].isIntersecting?start():stop()},{threshold:.2}).observe(ob);
+ } else start();
+ document.addEventListener('visibilitychange',function(){document.hidden?stop():(!reduce&&start())});
+}
+
+/* форма регистрации */
+var form=$('#f-form'),msg=$('#f-msg');
+function setErr(id,text){$(id).textContent=text||''}
+form.addEventListener('submit',function(e){
+ e.preventDefault();
+ var email=$('#f-email').value.trim(),pass=$('#f-pass').value,consent=$('#f-consent').checked,ok=true;
+ setErr('#e-email');setErr('#e-pass');setErr('#e-consent');
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setErr('#e-email',$('#m-t').getAttribute('data-err-email'));ok=false}
+ if(pass.length<8){setErr('#e-pass',$('#m-t').getAttribute('data-err-pass'));ok=false}
+ if(!consent){setErr('#e-consent',$('#m-t').getAttribute('data-err-consent'));ok=false}
+ if(!ok)return;
+ var btn=$('#f-submit');btn.disabled=true;
+ fetch('/api/auth/register',{
+  method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({email:email,password:pass}),
+  signal:AbortSignal.timeout?AbortSignal.timeout(5000):undefined
+ }).then(function(r){
+  if(r.ok){track('signup_success');location.href=APP;return}
+  if(r.status===409){setErr('#e-email',$('#m-t').getAttribute('data-err-exists'));btn.disabled=false;return}
+  throw new Error('unavailable');
+ }).catch(function(){
+  /* API нет — честный лист ожидания, никакой имитации успеха */
+  var n=1;try{n=parseInt(localStorage.getItem('cn_waitlist_n')||'0',10)+1;localStorage.setItem('cn_waitlist_n',String(n))}catch(err){}
+  msg.className='m-msg warn';msg.textContent=$('#m-t').getAttribute('data-waitlist')+' №'+n;
+  btn.disabled=false;btn.style.display='none';
+ });
+});
+})();
+</script>
+</body>
+</html>

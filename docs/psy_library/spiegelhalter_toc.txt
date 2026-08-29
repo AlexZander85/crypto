@@ -1,0 +1,110 @@
+EPUB/xhtml/chapter001_01.xhtml (921 chars): Chapter 1: Uncertainty is Personal Summary Uncertainty is a relationship – with a subject who observes, an object that they are uncertain about, a source, a mode of expression, and sometimes an emotio
+
+EPUB/xhtml/chapter001_split_000.xhtml (11499 chars): Chapter 1: Uncertainty is Personal CHAPTER 1 Uncertainty is Personal ‘There is no such thing as absolute certainty, but there is assurance sufficient for the purposes of human life.’ — John Stuart Mil
+
+EPUB/xhtml/chapter001_split_001.xhtml (5717 chars): Chapter 1: Uncertainty is Personal Numerous scales have been developed to measure an individual’s intolerance of uncertainty, eliciting responses to statements ranging from ‘Unforeseen events upset me
+
+EPUB/xhtml/chapter001_tab1.xhtml (373 chars): Chapter 1: Uncertainty is Personal Negative Positive Cognitive aspects Threat Opportunity Denial Acknowledgement Vulnerability Confidence Doubt Faith Emotional aspects Worry Calm Fear Courage Disinter
+
+EPUB/xhtml/chapter002.xhtml (29804 chars): Chapter 2: Putting Uncertainty into Numbers CHAPTER 2 Putting Uncertainty into Numbers ‘We demand rigidly defined areas of doubt and uncertainty!’ — Douglas Adams, Hitchhiker’s Guide to the Galaxy We 
+
+EPUB/xhtml/chapter002_01_split_000.xhtml (747 chars): Chapter 2: Putting Uncertainty into Numbers Summary Words alone are poor at communicating degrees of uncertainty, since their interpretation can vary hugely between people, languages and co ntexts. Th
+
+EPUB/xhtml/chapter002_01_split_001.xhtml (1791 chars): Chapter 2: Putting Uncertainty into Numbers Answers to quiz (given in bold) 1. (A) 300m (330m to tip) vs (B) 381m (443m to tip) 2. (A) Born 21/6/82 vs (B) Born 9/1/82 3. (A) 56,000km 2 vs (B) 79,000km
+
+EPUB/xhtml/chapter003_01.xhtml (1273 chars): Chapter 3: Taming Chance with Probability Summary People have been gambling for millennia, but rather remarkably the idea of probability was not properly developed until the 1600s. The rules of probab
+
+EPUB/xhtml/chapter003_split_000.xhtml (12309 chars): Chapter 3: Taming Chance with Probability CHAPTER 3 Taming Chance with Probability The previous chapter focused on putting numbers on our personal uncertainty about specific events, based on our judge
+
+EPUB/xhtml/chapter003_split_001.xhtml (17766 chars): Chapter 3: Taming Chance with Probability We would expect Juliet to win on the next flip in 50 of the continued games, and in 25 after two more flips, one head and one tail. We don’t know which of the
+
+EPUB/xhtml/chapter003_split_002.xhtml (16754 chars): Chapter 3: Taming Chance with Probability Incidentally, from the formula for the normal distribution we find that the probability of getting exactly the same number of heads and tails is approximately
+
+EPUB/xhtml/chapter003_tab1.xhtml (172 chars): Chapter 3: Taming Chance with Probability Second sock P1 P2 G1 G2 G3 G4 First sock P1 Pair P2 Pair G1 Pair Pair Pair G2 Pair Pair Pair G3 Pair Pair Pair G4 Pair Pair Pair ↩
+
+EPUB/xhtml/chapter003_tab2.xhtml (419 chars): Chapter 3: Taming Chance with Probability Type of bet placed: r Number of possible tickets: 90 C r Number of winning tickets: 5 C r Chance of chosen numbers being in the 5 selected Payout for a winnin
+
+EPUB/xhtml/chapter004.xhtml (32439 chars): Chapter 4: Surprises and Coincidences CHAPTER 4 Surprises and Coincidences In Chapter 1 , I defined uncertainty as the ‘conscious awareness of ignorance’, and the quiz in Chapter 2 and the probability
+
+EPUB/xhtml/chapter004_01.xhtml (845 chars): Chapter 4: Surprises and Coincidences Summary People are fascinated by coincidences – surprising concurrences of events that stay in our memory. Sometimes we can assess probabilities for coincidences 
+
+EPUB/xhtml/chapter005_01.xhtml (791 chars): Chapter 5: Luck Summary We can label the operation of chance as ‘luck’, and such chance events can have major conseq uences. Philosophers have identified ‘resultant’, ‘circumstantial’ and ‘constitutiv
+
+EPUB/xhtml/chapter005_split_000.xhtml (19798 chars): Chapter 5: Luck CHAPTER 5 Luck ‘Whether an exposed subject does or does not develop a cancer is largely a matter of luck; bad luck if the several necessary changes all occur in the same stem cell when
+
+EPUB/xhtml/chapter005_split_001.xhtml (445 chars): Chapter 5: Luck VIEW FULL DESCRIPTION Table 5.1 Analysis of major European football leagues for the 2022–3 season, showing the % of home wins, draws and away wins, the bottom and top teams and their p
+
+EPUB/xhtml/chapter005_split_002.xhtml (8716 chars): Chapter 5: Luck How can we assess the ‘quality’ of each team? The end-of-season point total describes how well each team has performed; for example, in the English Premier League 2022–3 season, Manche
+
+EPUB/xhtml/chapter005_tab1.xhtml (1887 chars): Chapter 5: Luck League No. teams % home wins / draws / away wins Bottom team (points) Top team (points) Observed spread Expected spread if just chance/luck Proportion observed spread explained by chan
+
+EPUB/xhtml/chapter006_01.xhtml (1172 chars): Chapter 6: It’s All a Bit Random Summary ‘Pure’ randomness can be said to occur when events follow a known probability distribution, unchanged by any external knowledge we ma y have. These ‘objective’
+
+EPUB/xhtml/chapter006_split_000.xhtml (3471 chars): Chapter 6: It’s All a Bit Random CHAPTER 6 It’s All a Bit Random In 2016, I was diagnosed with prostate cancer, adding to an extensive history of cancer among my close family members. As a father of t
+
+EPUB/xhtml/chapter006_split_001.xhtml (20029 chars): Chapter 6: It’s All a Bit Random So much of what happens in the natural world is uncertain. The way molecules of water create currents and waves in the sea, the ice crystals that form an uncountable v
+
+EPUB/xhtml/chapter006_split_002.xhtml (10162 chars): Chapter 6: It’s All a Bit Random While individual draws are effectively random, the pattern of counts is to a large extent predictable. Each number has a probability 6 ⁄ 49 of being chosen at each dra
+
+EPUB/xhtml/chapter007_01.xhtml (801 chars): Chapter 7: Being Bayesian Summary Bayes’ theorem comes from the basic rules of probability and shows how our beliefs should change in response to new ev idence. It can illuminate some unintuitive phen
+
+EPUB/xhtml/chapter007_split_000.xhtml (26446 chars): Chapter 7: Being Bayesian CHAPTER 7 Being Bayesian In the UK in June 2021, it was noticed that the majority of people dying from Covid-19 had been fully vaccinated. Should this have been a cause for c
+
+EPUB/xhtml/chapter007_split_001.xhtml (665 chars): Chapter 7: Being Bayesian Figure 7.5 We are told that Bag 1 contains 1 dotted ball and 2 striped balls, Bag 2 has 2 dotted and 1 striped ball. We pick a bag at random, pick a ball, put it back, and as
+
+EPUB/xhtml/chapter007_split_002.xhtml (6603 chars): Chapter 7: Being Bayesian We can, however, easily avoid this behaviour if we are prepared to follow Cromwell’s Rule . This refers to a principle, popularized by prominent Bayesian statistician Dennis 
+
+EPUB/xhtml/chapter008_01.xhtml (1080 chars): Chapter 8: Science and Uncertainty Summary Epistemic uncertainty about states of the world is based on evidence from data. We need assumptions about how what we observe relates to true underlying stat
+
+EPUB/xhtml/chapter008_split_000.xhtml (25212 chars): Chapter 8: Science and Uncertainty CHAPTER 8 Science and Uncertainty ‘Dans les champs de l’observation le hazard ne favorise que les esprits préparés.’ (‘In the field of observation, chance favours on
+
+EPUB/xhtml/chapter008_split_001.xhtml (18141 chars): Chapter 8: Science and Uncertainty Both traditional and Bayesian approaches come up with similar conclusions, although I personally prefer the Bayesian analysis since The posterior distributions provi
+
+EPUB/xhtml/chapter009_01.xhtml (828 chars): Chapter 9: How Much Confidence Do We Have in Our Analysis? Summary Even after making every effort with quantitative modelling and judgement, many researchers and organizations feel the need for additi
+
+EPUB/xhtml/chapter009_split_000.xhtml (18896 chars): Chapter 9: How Much Confidence Do We Have in Our Analysis? CHAPTER 9 How Much Confidence Do We Have in Our Analysis? I let you examine a coin, it looks fair, and then you flip it repeatedly and it com
+
+EPUB/xhtml/chapter009_split_001.xhtml (440 chars): Chapter 9: How Much Confidence Do We Have in Our Analysis? Yet sometimes we cannot conceptualize all the possibilities. As we shall see in Chapter 13 , such ‘deep uncertainty’ may be faced when trying
+
+EPUB/xhtml/chapter010.xhtml (41226 chars): Chapter 10: What, or Who, is to Blame? Causality, Climate and Crime CHAPTER 10 What, or Who, is to Blame? Causality, Climate and Crime You walk into a room, flip the only light-switch, and the light c
+
+EPUB/xhtml/chapter010_01.xhtml (1085 chars): Chapter 10: What, or Who, is to Blame? Causality, Climate and Crime Summary Uncertainty about general causality – the effects of causes – is usually expressed as a qualitative jud gement. In this cont
+
+EPUB/xhtml/chapter011_01.xhtml (699 chars): Chapter 11: Predicting the Future Summary In well - controlled circumstances, simple statistical models can provide reliable probabilities for future events. As we look further into the future, assump
+
+EPUB/xhtml/chapter011_split_000.xhtml (7543 chars): Chapter 11: Predicting the Future CHAPTER 11 Predicting the Future We don’t know what is going to happen in the future and, unless we are blessed with some magical skills, we cannot know. Uncertainty 
+
+EPUB/xhtml/chapter011_split_001.xhtml (245 chars): Chapter 11: Predicting the Future VIEW FULL DESCRIPTION Table 11.2 Assessed probabilities of home win/draw/away win for all Premier League matches played on Sunday, 24 May 2009. Actual result shown in
+
+EPUB/xhtml/chapter011_split_002.xhtml (12333 chars): Chapter 11: Predicting the Future The ‘most likely’ goal combinations were announced by James Alexander Gordon (who used to read the actual results out on the BBC) on the More or Less broadcast on 22 
+
+EPUB/xhtml/chapter011_split_003.xhtml (5218 chars): Chapter 11: Predicting the Future The MPC does not give a central estimate for the future, presumably to avoid undue focus by commentators. The tails of its probability distribution are not modelled, 
+
+EPUB/xhtml/chapter011_split_004.xhtml (15818 chars): Chapter 11: Predicting the Future Figure 11.2(c) shows the probability distribution of age at death expected for someone living with the current average hazards. The mean average of these distribution
+
+EPUB/xhtml/chapter011_tab1.xhtml (409 chars): Chapter 11: Predicting the Future Points Goals for f Strength in attack f /46 Goals against a Weakness in defence a /46 Baseline expectation (home or away) Expected number of goals Wigan 42 33 0.72 45
+
+EPUB/xhtml/chapter011_tab2.xhtml (488 chars): Chapter 11: Predicting the Future Home team Away team Probability of home win (%) Probability of draw (%) Probability of away win (%) Brier penalty score Arsenal Stoke 72 19 10 0.12 Aston Villa Newcas
+
+EPUB/xhtml/chapter012_01.xhtml (872 chars): Chapter 12: Risk, Failure and Disaster Summary Risk is a complex area, with many different professional perspe ctives. Quantitative risk analysis attempts to place probabilities on extreme events and 
+
+EPUB/xhtml/chapter012_split_000.xhtml (21378 chars): Chapter 12: Risk, Failure and Disaster CHAPTER 12 Risk, Failure and Disaster We start with a chilling example of what can happen in, literally, a ‘perfect storm’. Why did the MV Derbyshire sink? MV De
+
+EPUB/xhtml/chapter012_split_001.xhtml (8634 chars): Chapter 12: Risk, Failure and Disaster Risks are placed in fairly broad bands, but there are two reasons why even this may be too precise. First, assessing the impact and likelihood of a reasonable wo
+
+EPUB/xhtml/chapter013.xhtml (16580 chars): Chapter 13: Deep Uncertainty CHAPTER 13 Deep Uncertainty ‘There are more things in heaven and earth, Horatio, than are dreamt of in our philosophy.’ — William Shakespeare, Hamlet (First Folio) History
+
+EPUB/xhtml/chapter013_01.xhtml (752 chars): Chapter 13: Deep Uncertainty Summary In order to avoid being taken by surprise, we have to admit deeper uncer tainty. We may have problems specifying possible outcomes, as well as assigning probabilit
+
+EPUB/xhtml/chapter014_01.xhtml (1070 chars): Chapter 14: Communicating Uncertainty and Risk Summary It is vital to communicate uncertainty clearly, but this is not straightf orward. Rather than aiming to be trusted, try to demonstrate trustwort 
+
+EPUB/xhtml/chapter014_split_000.xhtml (23207 chars): Chapter 14: Communicating Uncertainty and Risk CHAPTER 14 Communicating Uncertainty and Risk In the aftermath of the tragic events of 11 September 2001, there was increasing rhetoric about the dangers
+
+EPUB/xhtml/chapter014_split_001.xhtml (9106 chars): Chapter 14: Communicating Uncertainty and Risk Figure 14.1 includes what Padilla and colleagues call a ‘contour boxplot’, representing, say, the possible path of a hurricane across some territory. Thi
+
+EPUB/xhtml/chapter015.xhtml (36286 chars): Chapter 15: Making Decisions and Managing Risks CHAPTER 15 Making Decisions and Managing Risks Life is one long series of decisions made under uncertainty. Most of these we make without much thought –
+
+EPUB/xhtml/chapter015_01.xhtml (1012 chars): Chapter 15: Making Decisions and Managing Risks Summary The theoretical basis for rational decision - making in the face of uncertainty requires full specification of options, outcomes, values and pro
+
+EPUB/xhtml/chapter016.xhtml (12047 chars): Chapter 16: The Future of Uncertainty CHAPTER 16 The Future of Uncertainty So far we’ve dealt with some utterly trivial issues, such as the probability of pulling matching socks out of a drawer or of 
+

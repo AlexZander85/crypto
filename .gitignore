@@ -34,3 +34,28 @@ home-view.png
 # OS junk
 Thumbs.db
 .DS_Store
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
+
+# отчёты приёмки лендинга (воспроизводятся: node landing2/tools/verify.mjs)
+landing2/reports/
+
+# .NET Desktop App & Dist
+desktop_app/bin/
+desktop_app/obj/
+dist/
+# Python
+__pycache__/
+*.pyc
+# Heavy book archives and binaries
+books/
+*.zip
+docs/*.zip
+
+# Whitelist mjs in test/tools
+!landing2/tools/*.mjs
+!saas/tools/*.mjs
+!saas/test/*.mjs
+!tools/*.mjs

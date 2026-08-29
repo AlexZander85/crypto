@@ -1,0 +1,99 @@
+{
+  "version": "ru.259ab47f",
+  "locale": "ru",
+  "generated": "2026-08-28T13:46:48.510Z",
+  "source": "index.html",
+  "packs": [
+    {
+      "name": "core_demo",
+      "demo": true,
+      "version": "c9c287507058",
+      "bytes": 434546,
+      "brotli_bytes": 87308
+    },
+    {
+      "name": "core_p0",
+      "demo": false,
+      "version": "72adc8901c68",
+      "bytes": 99345,
+      "brotli_bytes": 23860
+    },
+    {
+      "name": "core_p1",
+      "demo": false,
+      "version": "6de786f44e5c",
+      "bytes": 131154,
+      "brotli_bytes": 31969
+    },
+    {
+      "name": "core_p2",
+      "demo": false,
+      "version": "4fa02e2ac390",
+      "bytes": 57331,
+      "brotli_bytes": 15491
+    },
+    {
+      "name": "core_p3",
+      "demo": false,
+      "version": "a6530f3532ce",
+      "bytes": 58441,
+      "brotli_bytes": 15087
+    },
+    {
+      "name": "core_p4",
+      "demo": false,
+      "version": "f45607f5c050",
+      "bytes": 71885,
+      "brotli_bytes": 18908
+    },
+    {
+      "name": "core_p5",
+      "demo": false,
+      "version": "ce75dc0a2963",
+      "bytes": 74155,
+      "brotli_bytes": 18415
+    },
+    {
+      "name": "core_p6",
+      "demo": false,
+      "version": "1b46da444fd9",
+      "bytes": 143175,
+      "brotli_bytes": 33778
+    },
+    {
+      "name": "core_p7",
+      "demo": false,
+      "version": "798eae06fae9",
+      "bytes": 74782,
+      "brotli_bytes": 13019
+    },
+    {
+      "name": "core_p8",
+      "demo": false,
+      "version": "3d939c557c8d",
+      "bytes": 335271,
+      "brotli_bytes": 66276
+    },
+    {
+      "name": "terms",
+      "demo": false,
+      "version": "17160f5f3e96",
+      "bytes": 98162,
+      "brotli_bytes": 24742
+    },
+    {
+      "name": "tests",
+      "demo": false,
+      "version": "72cc1473e7fc",
+      "bytes": 93592,
+      "brotli_bytes": 21986
+    },
+    {
+      "name": "earning",
+      "demo": false,
+      "version": "fe48a07fd2e4",
+      "bytes": 38505,
+      "brotli_bytes": 10611
+    }
+  ]
+}

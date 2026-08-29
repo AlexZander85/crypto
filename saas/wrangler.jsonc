@@ -1,0 +1,51 @@
+// Конфигурация Cloudflare Worker «КриптоНавигатор SaaS»
+// Деплой: npx wrangler deploy   (секреты: npx wrangler secret put JWT_SECRET и т.д.)
+// Локально: npx wrangler dev    (D1/KV/R2 симулируются локально)
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cryptonavigator-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-01",
+  "account_id": "",
+
+  "d1_databases": [
+    { "binding": "DB", "database_name": "cn", "database_id": "local-dev" }
+  ],
+  "kv_namespaces": [
+    { "binding": "KV", "id": "local-dev-kv" }
+  ],
+  "r2_buckets": [
+    { "binding": "PACKS", "bucket_name": "cn-packs" }
+  ],
+
+  // Статика SaaS-версии приложения (public/index.html = сборка из index_v9.html + integration.js).
+  // Assets отдаются напрямую; /api/* уходит в воркер.
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+
+  // НЕ секретные настройки. Секреты — через `wrangler secret put`:
+  //   JWT_SECRET, RESEND_API_KEY, LS_SIGNING_SECRET, YOOKASSA_WEBHOOK_SECRET,
+  //   TURNSTILE_SECRET, ADMIN_SECRET, OAUTH_GOOGLE_SECRET, OAUTH_GITHUB_SECRET
+  "vars": {
+    "ENV": "dev",
+    "ALLOWED_ORIGIN": "*",
+    "APP_ORIGIN": "https://cryptonavigator.app",
+    "JWT_TTL_SECONDS": "2592000",
+    // ВНИМАНИЕ: значения ниже — ТОЛЬКО для локальной разработки.
+    // На проде: npx wrangler secret put JWT_SECRET / ADMIN_SECRET / LS_SIGNING_SECRET /
+    //   YOOKASSA_WEBHOOK_SECRET / RESEND_API_KEY / TURNSTILE_SECRET
+    "JWT_SECRET": "dev-only-secret-change-me",
+    "ADMIN_SECRET": "dev-only-admin",
+    "LS_SIGNING_SECRET": "dev-only-ls",
+    "YOOKASSA_WEBHOOK_SECRET": "dev-only-yk",
+    // Cryptomus: ключ задан (для проверки подписи вебхука локально),
+    // MERCHANT_ID пуст → создание инвойса честно отвечает 501 в тестах.
+    "CRYPTOMUS_API_KEY": "dev-only-crypto",
+    "CRYPTO_PRICE_JSON": "{\"lite\":{\"amount\":\"12.00\",\"currency\":\"USD\"},\"pro\":{\"amount\":\"24.00\",\"currency\":\"USD\"},\"max\":{\"amount\":\"3.99\",\"currency\":\"USD\"}}",
+    "LS_TIER_MAP": "{}",
+    "YK_TIER_MAP": "{}"
+  },
+
+  "triggers": { "crons": [] },
+
+  "observability": { "enabled": true }
+}

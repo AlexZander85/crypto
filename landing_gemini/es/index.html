@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoNavigator — Simulador Educativo de Criptotrading y Bots</title>
+  <meta name="description" content="Simulador práctico de criptotrading desde los fundamentos de blockchain hasta la gestión de bots algorítmicos. 134 lecciones, 145 widgets, 21 minijuegos. Fase 0 gratuita.">
+  
+  <!-- Hreflang Tags -->
+  <link rel="canonical" href="https://cryptonavigator.app/es/">
+  <link rel="alternate" hreflang="ru" href="https://cryptonavigator.app/">
+  <link rel="alternate" hreflang="en" href="https://cryptonavigator.app/en/">
+  <link rel="alternate" hreflang="es" href="https://cryptonavigator.app/es/">
+  <link rel="alternate" hreflang="pt" href="https://cryptonavigator.app/pt/">
+  <link rel="alternate" hreflang="x-default" href="https://cryptonavigator.app/">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../styles.css">
+
+  <!-- Schema.org JSON-LD FAQ -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Necesito experiencia previa en programación o trading?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. El curso comienza desde cero absoluto, con analogías claras, diagramas visuales y simulaciones prácticas sin código complejo."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿El simulador ofrece asesoramiento de inversión o señales?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. La plataforma enseña matemáticas, control de riesgos y disciplina psicológica. No ofrecemos señales de trading ni asesoramiento financiero."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué incluye la versión gratuita?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Las 20 lecciones completas de la Fase 0 y el módulo completo de psicología (P1–P8) con acceso permanente sin tarjeta de crédito."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Habrá que pagar por futuras actualizaciones?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. El pago único de $12 (990 ₽) otorga acceso vitalicio a todo el contenido actual y futuras ampliaciones sin suscripciones recurrentes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué métodos de pago se aceptan internacionalmente?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Aceptamos tarjetas de crédito/débito internacionales y métodos locales mediante pasarelas de pago seguras."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Dónde se guardan mis datos y mi progreso?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tu progreso se guarda localmente en el navegador y se sincroniza en la nube de forma segura al crear tu cuenta."
+      }
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+  <!-- Top HUD Ticker -->
+  <div class="hud-ticker">
+    <div class="container hud-ticker-inner">
+      <div class="hud-pulse">NÚCLEO DE SIMULACIÓN: ACTIVO</div>
+      <div class="hud-item">BTC/USDT $64,280</div>
+      <div class="hud-item">FUNDING: +0.0100%</div>
+      <div class="hud-item"><span>NÚCLEO AUTÓNOMO 2.8 MB</span></div>
+    </div>
+  </div>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="../index.html" class="brand-logo" aria-label="CryptoNavigator">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        </svg>
+        <span>CryptoNavigator</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#showcase" class="nav-link">Herramientas</a></li>
+        <li><a href="#curriculum" class="nav-link">Programa</a></li>
+        <li><a href="#psychology" class="nav-link">Psicología</a></li>
+        <li><a href="#kryptik" class="nav-link">Kryptik</a></li>
+        <li><a href="#quests" class="nav-link">Misiones</a></li>
+        <li><a href="#pricing" class="nav-link">Precios</a></li>
+        <li><a href="#faq" class="nav-link">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="lang-switch" role="navigation" aria-label="Language selection">
+          <a href="../" class="lang-btn ">RU</a>
+          <a href="../en/" class="lang-btn ">EN</a>
+          <a href="../es/" class="lang-btn active">ES</a>
+          <a href="../pt/" class="lang-btn ">PT</a>
+        </div>
+        <button class="btn btn-primary js-open-reg">Empezar Gratis</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="badge-tag">
+          <span>●</span> Simulador Educativo de Criptotrading
+        </div>
+        <h1 class="hero-title">El 95% de los principiantes pierde su depósito en los primeros meses. El resto aprende primero.</h1>
+        <p class="hero-subtitle">Simulador interactivo desde los fundamentos de blockchain hasta la gestión de bots de trading. Sin riesgo de dinero real, sin señales de pago, sin ilusiones de dinero fácil.</p>
+        
+        <div class="hero-cta-group">
+          <button class="btn btn-primary btn-cta-large js-open-reg">Crear Cuenta</button>
+          <a href="#showcase" class="btn btn-secondary btn-cta-large">Ver Cómo Funciona ↓</a>
+        </div>
+        
+        <div class="hero-trust">Sin tarjeta de crédito · Fase 0 gratuita para siempre · Funciona sin conexión</div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-bar">
+          <div class="metric-item">
+            <div class="metric-value">134</div>
+            <div class="metric-label">lecciones del curso</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">145</div>
+            <div class="metric-label">widgets interactivos</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">21</div>
+            <div class="metric-label">minijuegos y simuladores</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">205</div>
+            <div class="metric-label">términos en el glosario</div>
+          </div>
+        </div>
+
+        <!-- Interactive Product Showcase -->
+        <div class="showcase-container" id="showcase">
+          <div class="showcase-tabs" role="tablist">
+            <button class="showcase-tab-btn active" data-target="panel-home">🖥️ Panel de Control</button>
+            <button class="showcase-tab-btn" data-target="panel-sim">📊 Libro de Órdenes</button>
+            <button class="showcase-tab-btn" data-target="panel-psy">🧠 Laboratorio Psicológico</button>
+            <button class="showcase-tab-btn" data-target="panel-road">🗺️ Mapa de 9 Fases</button>
+            <button class="showcase-tab-btn" data-target="panel-mobile">📱 Versión Móvil</button>
+          </div>
+
+          <div class="showcase-viewport">
+            <div class="showcase-panel active" id="panel-home">
+              <img src="../assets/screenshots/01-home.png" width="1080" height="600" alt="CryptoNavigator Home Cockpit" loading="eager">
+            </div>
+            <div class="showcase-panel" id="panel-sim">
+              <img src="../assets/screenshots/04-simulator.png" width="1080" height="600" alt="Order Book Depth Simulator" loading="lazy">
+            </div>
+            <div class="showcase-panel" id="panel-psy">
+              <img src="../assets/screenshots/05-psychology.png" width="1080" height="600" alt="Psychology Trainer 03:00 Alarm" loading="lazy">
+            </div>
+            <div class="showcase-panel" id="panel-road">
+              <img src="../assets/screenshots/02-roadmap.png" width="1080" height="600" alt="Curriculum Roadmap" loading="lazy">
+            </div>
+            <div class="showcase-panel" id="panel-mobile">
+              <img src="../assets/screenshots/08-mobile.png" width="1080" height="600" alt="Mobile Responsive Simulation" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Career Progression Track -->
+    <section class="section" id="career">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Plan de Carrera</span>
+          <h2 class="section-title">De Pasante a Gestor de Fondos</h2>
+        </div>
+
+        <div class="career-grid">
+          <div class="career-card">
+            <div class="career-rank-num">LEVEL 01</div>
+            <h3 class="career-title">🌱 Pasante</h3>
+            <p class="career-desc">Fundamentos de blockchain, libro de órdenes, billeteras frías y seguridad.</p>
+          </div>
+          <div class="career-card">
+            <div class="career-rank-num">LEVEL 02</div>
+            <h3 class="career-title">⚡ Operador Junior</h3>
+            <p class="career-desc">Teoría de probabilidades, colas pesadas, criterio de Kelly y asimetría de pérdidas.</p>
+          </div>
+          <div class="career-card">
+            <div class="career-rank-num">LEVEL 03</div>
+            <h3 class="career-title">🤖 Ingeniero de Estrategias</h3>
+            <p class="career-desc">Backtesting walk-forward, máquinas de estado, arbitraje de funding y kill-switches.</p>
+          </div>
+          <div class="career-card" style="border-color: var(--accent-sky);">
+            <div class="career-rank-num" style="color: var(--accent-green);">LEVEL 04 (MASTER)</div>
+            <h3 class="career-title">👑 Gestor de Fondos</h3>
+            <p class="career-desc">Protocolos DeFi AMM, mecánicas MEV, pruebas de estrés y gestión de riesgo institucional.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="section" id="problem">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Realidad del Mercado</span>
+          <h2 class="section-title">Por qué 9 de cada 10 principiantes pierden su primer depósito</h2>
+        </div>
+
+        <div class="problem-grid">
+          <div class="problem-card">
+            <div class="problem-icon">🎰</div>
+            <h3 class="problem-card-title">Operar por modas en redes sociales</h3>
+            <p class="problem-card-desc">Entrar en posiciones en el pico de euforia sin comprender el libro de órdenes, la liquidez y la distribución de volumen.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">📉</div>
+            <h3 class="problem-card-title">Usar el apalancamiento como ruleta</h3>
+            <p class="problem-card-desc">Utilizar apalancamiento x20 sin calcular el precio de liquidación ni las tasas de financiación.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">🧠</div>
+            <h3 class="problem-card-title">Tilt nocturno y operaciones por pánico</h3>
+            <p class="problem-card-desc">Intentar recuperar pérdidas, promediar a la baja en caídas libres y romper las propias reglas a las 3 de la madrugada.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transformation Section (Before -> After) -->
+    <section class="section" id="transformation">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Método de Entrenamiento</span>
+          <h2 class="section-title">Cómo cambia tu mentalidad a lo largo de 9 fases prácticas</h2>
+        </div>
+
+        <div class="transformation-list">
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Compra tokens porque todos dicen que van a subir.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Abre el libro de órdenes, evalúa profundidad, diferencial y volumen antes de entrar.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Usa apalancamiento x50 y es liquidado con un movimiento normal del 2%.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Calcula el tamaño de posición con el Criterio de Kelly controlando la volatilidad y el riesgo máximo.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>No duerme por las noches revisando gráficos cada 5 minutos.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Configura bots de trading con protocolos kill-switch claros y duerme tranquilo.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Pierde fondos por phishing, permisos dudosos y contratos fraudulentos.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Audita contratos inteligentes, límites de autorización y usa almacenamiento frío.</div>
+            </div>
+          </div>
+
+          <div class="transform-item">
+            <div class="transform-before">
+              <span class="transform-icon-before">✕</span>
+              <div>Culpa a los manipuladores y ve el trading como un casino.</div>
+            </div>
+            <div class="transform-after">
+              <span class="transform-icon-after">✓</span>
+              <div>Comprende comisiones, funding rates, MEV y la naturaleza probabilística de los resultados.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Simulator Section -->
+    <section class="section" id="simulator">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Práctica Sin Riesgo</span>
+          <h2 class="section-title">Simulador de Libro de Órdenes en tu Navegador</h2>
+          <p class="section-desc">Aprende el emparejamiento de órdenes, diferenciales bid/ask y densidad de liquidez en tiempo real con guía del mentor.</p>
+        </div>
+
+        <div class="sim-container">
+          <div class="sim-header">
+            <div class="sim-title">⚡ Simulador de Libro de Órdenes (Order Book)</div>
+            <div class="sim-spread">Diferencial actual: <span id="sim-spread-val">0.02%</span></div>
+          </div>
+
+          <div class="sim-book-grid">
+            <div class="order-col">
+              <div class="col-header bids">
+                <span>Compras (Bid)</span>
+                <span>Volume</span>
+              </div>
+              <div class="order-row"><span class="price bid">64,195.00</span><span class="size">4.21 BTC</span></div>
+              <div class="order-row"><span class="price bid">64,190.50</span><span class="size">8.50 BTC</span></div>
+              <div class="order-row"><span class="price bid">64,185.00</span><span class="size">12.10 BTC</span></div>
+            </div>
+
+            <div class="order-col">
+              <div class="col-header asks">
+                <span>Ventas (Ask)</span>
+                <span>Volume</span>
+              </div>
+              <div class="order-row"><span class="price ask">64,200.00</span><span class="size">3.80 BTC</span></div>
+              <div class="order-row"><span class="price ask">64,205.50</span><span class="size">6.15 BTC</span></div>
+              <div class="order-row"><span class="price ask">64,210.00</span><span class="size">15.40 BTC</span></div>
+            </div>
+          </div>
+
+          <div class="sim-detector">
+            <span class="detector-badge">Detector del Mentor</span>
+            <span class="detector-text" id="sim-detector-text">Diferencial estrecho (0.02%). Liquidez densa y deslizamiento mínimo esperado.</span>
+          </div>
+
+          <div class="sim-controls">
+            <button class="btn btn-primary" id="btn-sim-buy">Simular Orden de Compra</button>
+            <button class="btn btn-secondary" id="btn-sim-sell">Simular Orden de Venta</button>
+            <span class="sim-status" id="sim-status-msg">Orden ejecutada a mercado sin deslizamiento.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Infographics Models -->
+    <section class="section" id="infographics">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Modelos Visuales</span>
+          <h2 class="section-title">Teoría Cuantitativa en Esquemas Visuales Claros</h2>
+          <p class="section-desc">17 infografías exclusivas integradas en las lecciones: desde la anatomía de velas hasta distribuciones estadísticas de colas pesadas.</p>
+        </div>
+
+        <div class="infographics-grid">
+          <div class="info-card">
+            <img src="../assets/infographics/img-01.jpg" alt="Blockchain Architecture" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Blockchain: Libro Mayor Sin Jefe</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="../assets/infographics/img-02.jpg" alt="Public vs Private Key" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Dirección Pública vs Clave Privada</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="../assets/infographics/img-03.jpg" alt="Bid/Ask Depth" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Profundidad Bid/Ask y Spread</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="../assets/infographics/img-04.jpg" alt="OHLC Candlestick Anatomy" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Anatomía de la Vela OHLC</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="../assets/infographics/img-05.jpg" alt="Leverage Liquidation Gauge" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Lupa de Apalancamiento: Liquidación 10x</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <img src="../assets/infographics/img-07.jpg" alt="Fat Tails Distribution" loading="lazy">
+            <div class="info-card-content">
+              <div class="info-card-title">Fat Tails: Вероятностные хвосты</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section (14 elements) -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Herramientas</span>
+          <h2 class="section-title">14 Pilares de Preparación Profesional</h2>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-card-title">🧩 145 Widgets Interactivos</div>
+            <p class="feature-card-desc">Libro de órdenes, medidores de liquidación, funding rates, curvas de rendimiento DeFi y mapas de correlación.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🎮 21 Minijuegos</div>
+            <p class="feature-card-desc">Carrera de bloques, pasillo de liquidación, colas pesadas, abanico de Kelly y rescate de depósitos.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🔬 Simuladores de Procesos Reales</div>
+            <p class="feature-card-desc">Validación walk-forward, laboratorio de sobreajuste, descomposición alfa/beta y mecanismos kill-switch.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🏗️ 8 Constructores de Mercado</div>
+            <p class="feature-card-desc">Crea tokens en 5 pasos, lanza memecoins, defiende stablecoins, acuña NFTs y programa bots de trading.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">📖 Glosario de 205 Términos</div>
+            <p class="feature-card-desc">4 niveles de profundidad por definición, analogías prácticas y términos exactos en inglés.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">✅ Evaluaciones al Final de Cada Fase</div>
+            <p class="feature-card-desc">Umbral del 80% con explicaciones completas y preguntas aleatorias para evitar la memorización mecánica.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🏆 Carrera de Progresión</div>
+            <p class="feature-card-desc">Rangos de Pasante a Gestor de Fondo, rachas de estudio, insignias y duelos de estrategia.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">⏱️ Temporizador Pomodoro de 25 min</div>
+            <p class="feature-card-desc">Control integrado de sesiones para mantener alta concentración y evitar fatiga mental.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🔄 Intercalado y Repetición SM-2</div>
+            <p class="feature-card-desc">El algoritmo SuperMemo-2 refuerza temas débiles cada 5 lecciones para fijar conocimientos.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🧘 Consolidación NSDR</div>
+            <p class="feature-card-desc">Pantallas de respiración 4-4-6 tras lecciones complejas para consolidar la memoria.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">🔀 Respuestas Aleatorias Deterministas</div>
+            <p class="feature-card-desc">Generador pseudoaleatorio que elimina patrones de acierto por posición de respuesta.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">📊 Calibración de Brier</div>
+            <p class="feature-card-desc">Mide la precisión de tus pronósticos para diferenciar conocimientos de meras conjeturas.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">📓 Diario de Sesgos Cognitivos</div>
+            <p class="feature-card-desc">Registro de trampas mentales recurrentes con recomendaciones personalizadas del mentor.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title">💾 Un Solo Archivo, Modo Offline</div>
+            <p class="feature-card-desc">Paquete ligero de 2,8 MB que funciona de forma autónoma en el navegador sin servidores externos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Psychology & Kryptik Section -->
+    <section class="section" id="psychology">
+      <div class="container">
+        <div class="two-column-block">
+          <div>
+            <span class="section-tag">Factor Humano</span>
+            <h2 class="section-title">La mayor vulnerabilidad de un sistema de trading es la persona frente a la pantalla</h2>
+            <p class="section-desc" style="margin-bottom: 24px;">El único programa con una fase completa dedicada a la psicología del operador algorítmico.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="feature-card">
+                <div class="feature-card-title">🌙 Ansiedad a las 03:00</div>
+                <p class="feature-card-desc">Simulación de alertas nocturnas para entrenar la disciplina de no interferir en algoritmos activos.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-card-title">📈 Euforia del Ganador</div>
+                <p class="feature-card-desc">Prevención del exceso de confianza y descontrol de riesgo tras una racha de operaciones ganadoras.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-card-title">⚖️ Trampa del Punto de Equilibrio</div>
+                <p class="feature-card-desc">Superación del miedo a asumir pérdidas controladas y rechazo a promediar posiciones perdedoras.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-card-title">✉️ Carta desde el Futuro</div>
+                <p class="feature-card-desc">Registro obligatorio del plan de trading y del peor escenario posible antes de entrar al mercado.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="kryptik">
+            <div class="kryptik-card">
+              <span class="section-tag" style="color: var(--accent-purple); border-color: var(--accent-purple); background: var(--accent-purple-bg);">Mentor IA</span>
+              <h3 class="section-title" style="font-size: 24px; margin-bottom: 12px;">Kryptik — Tu Mentor Exigente</h3>
+              <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">Un compañero senior y pragmático que conoce las 134 lecciones:</p>
+              
+              <!-- Kryptik Terminal Sandbox -->
+              <div class="kryptik-terminal">
+                <div class="terminal-header">
+                  <div class="terminal-dot"></div>
+                  <span>KRYPTIK AI CONSOLE v7.4</span>
+                </div>
+                <div class="kryptik-dialog-box">Kryptik: «Tu bot abrió posición, el mercado cayó un 3% activando tu límite de riesgo. ¿Cuál es tu decisión?»</div>
+                <div class="kryptik-choice-btns">
+                  <button class="kryptik-choice-btn" id="kryptik-btn-1">▶ Desactivar stop-loss y promediar</button>
+                  <button class="kryptik-choice-btn" id="kryptik-btn-2">▶ Ejecutar kill-switch según el protocolo</button>
+                </div>
+                <div class="kryptik-reply" id="kryptik-reply-1">«Clásica trampa de aversión a la pérdida. Violaste el estatuto del bot y duplicaste tu riesgo. Registrado en tu diario.»</div>
+                <div class="kryptik-reply" id="kryptik-reply-2" style="border-left-color: var(--accent-green); color: #86EFAC;">«Correcto. La disciplina del proceso está por encima de un resultado aislado. Los jueces evalúan la técnica, no la suerte.»</div>
+              </div>
+
+              <ul class="kryptik-list">
+                <li>Diagnostica el tipo exacto de error: conceptual, de cálculo o trampa emocional.</li>
+                <li>Comenta el flujo del mercado: «Diferencial de 4 puntos. Calma, nada de impulsos».</li>
+                <li>Formula preguntas socráticas en lugar de dar respuestas masticadas.</li>
+                <li>Sin falsos elogios ni promesas vacías, enfocado en construir disciplina rigurosa.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quests Section -->
+    <section class="section" id="quests">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Escenarios Prácticos</span>
+          <h2 class="section-title">Tres Misiones Virtuales con Consecuencias Reales</h2>
+        </div>
+
+        <div class="quests-grid">
+          <div class="quest-card">
+            <span class="quest-tag">Seguridad</span>
+            <h3 class="quest-title">🕵️ Kryptik vs Estafador</h3>
+            <p class="quest-desc">7 episodios de defensa: detecta phishing, contratos maliciosos, deepfakes y SIM-swapping antes de arriesgar fondos.</p>
+          </div>
+          <div class="quest-card">
+            <span class="quest-tag">Psicología</span>
+            <h3 class="quest-title">🧠 Siete Días: Tú contra Ti Mismo</h3>
+            <p class="quest-desc">Una semana operando bots: vence el FOMO, el aburrimiento y la tentación de capturas de ganancias ajenas.</p>
+          </div>
+          <div class="quest-card">
+            <span class="quest-tag">Prueba de Estrés</span>
+            <h3 class="quest-title">🚨 Pánico en el Mercado</h3>
+            <p class="quest-desc">6 simulacros de crisis: caídas repentinas del 17%, cascadas de liquidaciones y bloqueos de retiros en exchanges.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Curriculum (9 phases) -->
+    <section class="section" id="curriculum">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Programa</span>
+          <h2 class="section-title">9 Fases desde Fundamentos hasta Gestión de Fondos</h2>
+        </div>
+
+        <div class="curriculum-grid">
+          <div class="phase-card featured">
+            <span class="phase-badge">Gratis</span>
+            <h3 class="phase-title">Fase 0: Horizonte Cero</h3>
+            <p class="phase-desc">20 lecciones: blockchain, billeteras, seguridad, libros de órdenes, velas japonesas y derivados.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 1: Matemáticas del Mercado</h3>
+            <p class="phase-desc">14 lecciones: probabilidades, rendimientos, estacionariedad y colas pesadas.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 2: Gestión de Capital</h3>
+            <p class="phase-desc">12 lecciones: criterio de Kelly, asimetría de drawdowns y riesgo de quiebra.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 3: Desarrollo de Estrategias</h3>
+            <p class="phase-desc">16 lecciones: backtesting riguroso, análisis walk-forward y prevención de sobreajuste.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 4: Infraestructura y Datos</h3>
+            <p class="phase-desc">14 lecciones: APIs de exchanges, WebSockets, colas de órdenes y latencia de red.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 5: Arquitectura de Bots</h3>
+            <p class="phase-desc">18 lecciones: máquinas de estado, kill-switches, arbitraje de funding y bots grid.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 6: DeFi y Mecánica On-Chain</h3>
+            <p class="phase-desc">16 lecciones: pools AMM, extracción MEV y liquidaciones en protocolos.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 7: Pruebas de Estrés</h3>
+            <p class="phase-desc">16 lecciones: ingeniería del caos, flash crashes y fallos de liquidez.</p>
+          </div>
+          <div class="phase-card">
+            <h3 class="phase-title">Fase 8: Gestión de Fondos</h3>
+            <p class="phase-desc">8 lecciones: presupuesto de riesgo, auditoría de algoritmos y simulación final.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Precios Transparentes</span>
+          <h2 class="section-title">Elige tu Modalidad de Aprendizaje</h2>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Free Start Card -->
+          <div class="pricing-card">
+            <div class="pricing-name">Inicio Gratuito</div>
+            <div class="pricing-price-box">
+              <span class="pricing-price">0 € / $0</span>
+              <span class="pricing-period"> / para siempre</span>
+            </div>
+            <ul class="pricing-features-list">
+              <li>Fase 0 completa (20 lecciones)</li>
+              <li>Módulo de psicología P1–P8 con entrenadores</li>
+              <li>Glosario básico y simuladores interactivos</li>
+              <li>Progreso guardado en el navegador</li>
+              <li>Sin ingresar tarjeta bancaria</li>
+            </ul>
+            <button class="btn btn-secondary btn-block btn-cta-large js-open-reg">Empezar Gratis</button>
+          </div>
+
+          <!-- Pro Lifetime Card -->
+          <div class="pricing-card featured">
+            <span class="pricing-featured-badge">Opción Más Popular</span>
+            <div class="pricing-name">Acceso Completo Vitalicio</div>
+            <div class="pricing-price-box">
+              <span class="pricing-price">12 $</span>
+              <span class="pricing-period"> / pago único · 990 ₽</span>
+            </div>
+            <ul class="pricing-features-list">
+              <li>Las 9 fases completas (134 lecciones)</li>
+              <li>145 widgets interactivos y simuladores</li>
+              <li>21 minijuegos y 3 misiones virtuales</li>
+              <li>Constructor de bots y examen de graduación</li>
+              <li>Todas las actualizaciones futuras incluidas</li>
+              <li>Tarjetas internacionales y pago seguro</li>
+            </ul>
+            <button class="btn btn-primary btn-block btn-cta-large js-open-reg">Obtener Acceso Completo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Preguntas y Respuestas</span>
+          <h2 class="section-title">Preguntas Frecuentes</h2>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Necesito experiencia previa en programación o trading?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">No. El curso comienza desde cero absoluto, con analogías claras, diagramas visuales y simulaciones prácticas sin código complejo.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿El simulador ofrece asesoramiento de inversión o señales?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">No. La plataforma enseña matemáticas, control de riesgos y disciplina psicológica. No ofrecemos señales de trading ni asesoramiento financiero.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Qué incluye la versión gratuita?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Las 20 lecciones completas de la Fase 0 y el módulo completo de psicología (P1–P8) con acceso permanente sin tarjeta de crédito.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Habrá que pagar por futuras actualizaciones?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">No. El pago único de $12 (990 ₽) otorga acceso vitalicio a todo el contenido actual y futuras ampliaciones sin suscripciones recurrentes.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Qué métodos de pago se aceptan internacionalmente?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Aceptamos tarjetas de crédito/débito internacionales y métodos locales mediante pasarelas de pago seguras.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>¿Dónde se guardan mis datos y mi progreso?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Tu progreso se guarda localmente en el navegador y se sincroniza en la nube de forma segura al crear tu cuenta.</div>
+          </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="bottom-cta">
+          <h2 class="bottom-cta-title">¿Listo para validar tus habilidades en el simulador antes de operar en el mercado real?</h2>
+          <p class="bottom-cta-subtitle">Empieza con la Fase 0 gratuita ahora mismo. Sin tarjeta bancaria.</p>
+          <button class="btn btn-primary btn-cta-large js-open-reg">Crear Cuenta Gratis</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="disclaimer-box">
+        <p>CryptoNavigator es un simulador educativo de trading. No presta servicios de corretaje, no capta inversiones ni ofrece recomendaciones de inversión personalizadas. El trading con criptoactivos conlleva un alto riesgo de pérdida de capital.</p>
+      </div>
+      <p style="text-align: center;">© 2026 CryptoNavigator. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Registration / Early Access Modal -->
+  <div class="modal-overlay" id="reg-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h3 class="modal-title" id="modal-title">Crear Cuenta</h3>
+      <p class="modal-subtitle">Acceso gratuito a la Fase 0 y simuladores de psicología</p>
+
+      <form id="reg-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Correo electrónico</label>
+          <input type="email" id="reg-email" class="form-input" placeholder="nombre@ejemplo.com" required>
+          <div class="form-error" id="err-email">Por favor, introduce un correo electrónico válido.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-pass">Contraseña</label>
+          <input type="password" id="reg-pass" class="form-input" placeholder="Mínimo 8 caracteres" required minlength="8">
+          <div class="form-error" id="err-pass">La contraseña debe tener al menos 8 caracteres.</div>
+        </div>
+
+        <label class="form-checkbox-label">
+          <input type="checkbox" id="reg-terms" required>
+          <span>Acepto los Términos de Servicio y la Política de Privacidad</span>
+        </label>
+        <div class="form-error" id="err-terms" style="margin-top: -12px; margin-bottom: 12px;">Debes aceptar los términos para continuar.</div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-cta-large" id="reg-submit-btn">Registrarse</button>
+        <div class="form-alert-waitlist" id="waitlist-alert">El registro en la nube se habilita de forma escalonada. Tu solicitud ha quedado guardada en la lista de acceso temprano.</div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../app.js"></script>
+</body>
+</html>

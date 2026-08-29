@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КриптоНавигатор — тренажёр, который учит не терять деньги в крипте</title>
+<meta name="description" content="134 урока, 145 виджетов и 21 мини-игра: пройди путь от нуля до оператора торгового бота в безопасной песочнице. Стартуй бесплатно — без карты и регистрации.">
+<link rel="canonical" href="https://cryptonavigator.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="КриптоНавигатор — научись не терять, прежде чем зарабатывать">
+<meta property="og:description" content="Интерактивная песочница: 9 фаз, боссы-дуэли, психология оператора бота и выпускной конструктор. Бесплатный старт.">
+<meta property="og:image" content="../docs/screenshots/01-home.png">
+<style>
+:root{--bg:#0B1220;--card:#0F172A;--line:#1E293B;--txt:#E2E8F0;--mut:#94A3B8;
+--ok:#22C55E;--bad:#F43F5E;--blue:#38BDF8;--amber:#F59E0B;--vio:#7C3AED;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+a{color:var(--blue);text-decoration:none}
+.btn{display:inline-block;padding:14px 32px;border-radius:12px;font-weight:700;font-size:16px;transition:.2s;border:none;cursor:pointer}
+.btn-p{background:var(--vio);color:#fff}.btn-p:hover{background:#6D28D9;transform:translateY(-1px)}
+.btn-g{border:1px solid var(--line);color:var(--txt);background:transparent}.btn-g:hover{border-color:var(--mut)}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;border:1px solid rgba(124,58,237,.4);background:rgba(124,58,237,.12);color:#C4B5FD;font-size:13px;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+h1{font-size:clamp(34px,6vw,62px);font-weight:800;letter-spacing:-.02em;line-height:1.08}
+h2{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-.01em;margin-bottom:14px}
+h3{font-size:19px;margin-bottom:8px}
+.grad{background:linear-gradient(90deg,#A78BFA,#38BDF8);-webkit-background-clip:text;background-clip:text;color:transparent}
+section{padding:72px 0}
+.mut{color:var(--mut)}.sm{font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.num{font-size:34px;font-weight:800;color:var(--blue)}
+.ico{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:22px;margin-bottom:14px}
+details{border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:10px}
+summary{cursor:pointer;padding:16px 20px;font-weight:600;list-style:none}
+summary::before{content:'▸ ';color:var(--vio)}
+details[open] summary::before{content:'▾ '}
+details>div{padding:0 20px 16px;color:var(--mut)}
+header{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.logo{font-weight:800;font-size:17px}
+.hero{padding:84px 0 64px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(closest-side,rgba(124,58,237,.25),transparent);pointer-events:none}
+.shots img{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
+.price-hl{border:2px solid var(--vio)!important;box-shadow:0 0 40px rgba(124,58,237,.15);position:relative}
+.tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--vio);color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:999px;white-space:nowrap}
+ul.feats{list-style:none}ul.feats li{padding-left:26px;position:relative;margin-bottom:9px}
+ul.feats li::before{content:'✓';position:absolute;left:0;color:var(--ok);font-weight:800}
+.warn{border:1px dashed rgba(244,63,94,.45);background:rgba(244,63,94,.06);border-radius:12px;padding:16px 20px;color:var(--mut);font-size:14px}
+footer{border-top:1px solid var(--line);padding:36px 0;color:var(--mut);font-size:13.5px}
+.fbar{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center;margin-bottom:18px}
+@media(max-width:640px){.btn{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap nav">
+<div class="logo">🧭 Крипто<span style="color:var(--vio)">Навигатор</span></div>
+<nav class="sm mut" style="display:flex;gap:22px;align-items:center">
+<a href="#program">Программа</a><a href="#psy">Психология</a><a href="#price">Цена</a><a href="#faq">FAQ</a>
+<a class="btn btn-p sm" style="padding:9px 20px" href="#cta">Регистрация</a>
+</nav></div></header>
+
+<!-- HERO -->
+<section class="hero"><div class="wrap" style="position:relative;z-index:1">
+<div class="badge"><span class="dot"></span>Регистрация за 30 секунд · Фаза 0 и блок «Психология» — бесплатно, без карты</div>
+<h1 style="margin:22px 0 18px">95% новичков теряют деньги.<br><span class="grad">Ты научишься быть остальными.</span></h1>
+<p class="mut" style="max-width:680px;margin:0 auto 34px;font-size:clamp(16px,2vw,20px)">
+Не курс «посмотрел и забыл», а симулятор, где ты <b style="color:var(--txt)">действуешь</b>: открываешь сделки в живом стакане,
+ловишь ликвидацию, управляешь ботом ночью и пишешь письмо своему будущему провалу — до того, как он случится по-настоящему.
+</p>
+<div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+<a class="btn btn-p" href="#cta">Создать бесплатный аккаунт</a>
+<a class="btn btn-g" href="#program">Смотреть программу ↓</a>
+</div>
+<p class="sm mut" style="margin-top:16px">Регистрация за 30 секунд · Без карты · Прогресс в облаке на всех устройствах</p>
+</div></section>
+
+<!-- ЦИФРЫ -->
+<section style="padding:8px 0 56px"><div class="wrap">
+<div class="card" style="display:flex;flex-wrap:wrap;justify-content:space-around;text-align:center;gap:18px;padding:28px">
+<div><div class="num">134</div><div class="sm mut">урока</div></div>
+<div><div class="num">145</div><div class="sm mut">виджетов в уроках</div></div>
+<div><div class="num">21</div><div class="sm mut">мини-игра</div></div>
+<div><div class="num">205</div><div class="sm mut">терминов</div></div>
+<div><div class="num">9</div><div class="sm mut">фаз обучения</div></div>
+<div><div class="num">0 ₽</div><div class="sm mut">чтобы начать</div></div>
+</div>
+</div></section>
+
+<!-- ПРОБЛЕМА (PAS: Agitate) -->
+<section id="why"><div class="wrap">
+<h2>Почему новички теряют депозит<br>в первые месяцы</h2>
+<p class="mut" style="max-width:720px;margin-bottom:30px">Не потому что «крипта — казино». А потому что рынок принимает деньги у тех, кто не прошёл базовые уроки — буквально.</p>
+<div class="grid3">
+<div class="card"><div class="ico" style="background:rgba(244,63,94,.12)">🎲</div><h3>Ставка на удачу</h3><p class="mut sm">Купил по хайпе из телеграма — продал в панике. Без понимания вероятности и матожидания каждый ход выглядит логично и ведёт в минус.</p></div>
+<div class="card"><div class="ico" style="background:rgba(244,63,94,.12)">⚡</div><h3>Плечо до ликвидации</h3><p class="mut sm">x20 кажется «ускорением». Через одну красную свечу — минус залог. Никто не показал заранее, где проходит черта.</p></div>
+<div class="card"><div class="ico" style="background:rgba(244,63,94,.12)">🫠</div><h3>Эмоции вместо системы</h3><p class="mut sm">Отыграться, усреднить «в последний раз», выключить бота в худший день. Это не характер — это непройденные уроки психологии.</p></div>
+</div>
+<div style="text-align:center;margin-top:34px">
+<p style="font-size:clamp(18px,2.4vw,24px);font-weight:700">Рынок берёт плату за знания — <span class="grad">здесь она стоит 0 ₽</span></p>
+</div>
+</div></section>
+
+<!-- РЕШЕНИЕ / КАК ЭТО РАБОТАЕТ -->
+<section style="background:linear-gradient(180deg,#0D1426,var(--bg))"><div class="wrap">
+<h2>Как это работает</h2>
+<p class="mut" style="margin-bottom:34px">Три шага — и ты уже внутри, а не читаешь чужие успехи.</p>
+<div class="grid3">
+<div class="card"><div class="badge" style="margin-bottom:14px">Шаг 1</div><h3>Создай аккаунт за 30 секунд</h3><p class="mut sm">Почта и пароль — всё. Сразу открывается Фаза 0 целиком: кошелёк, стакан, свечи, вероятность, риски — теория на четырёх уровнях глубины, аналогия из жизни и тренажёр руками.</p></div>
+<div class="card"><div class="badge" style="margin-bottom:14px">Шаг 2</div><h3>Ошибайся в песочнице</h3><p class="mut sm">Слил виртуальный депозит на плече x50 — отлично: этот урок теперь оплачен не деньгами. Боссы-дуэли, хаос-инженерия и психологические ловушки ждут именно тебя.</p></div>
+<div class="card"><div class="badge" style="margin-bottom:14px">Шаг 3</div><h3>Собери систему и сдай экзамен</h3><p class="mut sm">Конструктор торгового бота — выпускной тест курса: семь решений, от гипотезы до предохранителей. Сдал — ты готов к микро-лаиву, а не «кажется готов».</p></div>
+</div>
+</div></section>
+
+<!-- ПРОГРАММА -->
+<section id="program"><div class="wrap">
+<h2>Программа: от «что такое деньги»<br>до «я управляю системой»</h2>
+<p class="mut" style="margin-bottom:30px">9 фаз. Каждая закрывается аттестацией с порогом 80% — без этого дальше нельзя, как и в жизни.</p>
+<div class="grid3">
+<div class="card"><h3>🟣 Фаза 0 · Фундамент <span class="sm mut">· 20 уроков</span></h3><p class="mut sm">Деньги, риск, вероятность, свечи, стакан, психология первых ошибок. <b style="color:var(--ok)">Бесплатно целиком.</b></p></div>
+<div class="card"><h3>🔵 Фазы 1–4 · Ядро</h3><p class="mut sm">Графики и стакан на живых данных, издержки и проскальзывание, деривативы, квант-исследования, продакшн бота.</p></div>
+<div class="card"><h3>🧠 П · Психология оператора</h3><p class="mut sm">8 уроков + 8 тренажёров про главное слабое звено системы — тебя за экраном.</p></div>
+<div class="card"><h3>🟢 Фаза 5 · Живые деньги</h3><p class="mut sm">Микро-лайв, ёмкость стратегии, архитектура капитала 40/40/20, устав против эмоций.</p></div>
+<div class="card"><h3>🏗️ Фаза 6 · Артефакты рынка</h3><p class="mut sm">Создай токен, удержи стейблкоин под набегом, выпусти NFT, проголосуй в DAO, проверь оракула.</p></div>
+<div class="card"><h3>🧮 Математика · 44 урока</h3><p class="mut sm">Вероятность, матожидание, переобучение — на ползунках и монетках, а не страшных формулах.</p></div>
+</div>
+</div></section>
+
+<!-- ПСИХОЛОГИЯ -->
+<section id="psy" style="background:linear-gradient(180deg,var(--bg),#0D1426)"><div class="wrap">
+<h2>🧠 Блок, которого нет<br>ни в одном курсе</h2>
+<p class="mut" style="max-width:760px;margin-bottom:30px">Бот не выходит из себя. Бот не «отыгрывается». Ломается человек за экраном — поэтому психология оператора выделена в отдельную фазу с собственными тренажёрами:</p>
+<div class="grid2">
+<div><ul class="feats sm" style="color:var(--txt)">
+<li>🌙 <b>«Тревога в 03:00»</b> — сломан бот или просто страшно? Протокол двух вопросов</li>
+<li>💚 <b>«Зелёная полоса»</b> — головокружение от успехов опаснее просадки</li>
+<li>👶 <b>«Радионяня трейдера»</b> — ночные алерты ≠ приказ действовать</li>
+<li>🍬 <b>«Магия нуля»</b> — ловушка «выйду, когда вернусь в ноль»</li>
+<li>🎢 <b>«Детектор тяги»</b> — качели как сахар: тяга к движению</li>
+<li>✉️ <b>«Письмо из будущего»</b> — разбор своей катастрофы до её начала</li>
+</ul></div>
+<div class="card price-hl" style="padding:28px">
+<h3 style="color:#C4B5FD">Кульминация блока</h3>
+<p class="sm" style="margin-bottom:14px">Ты пишешь письмо себе через год: <i>«Капитал потерян. Вот почему это произошло…»</i> — и к каждой причине подбираешь предохранитель: правило, которое разрывает цепочку провала.</p>
+<p class="sm mut">Письмо сохраняется и перечитывается каждый квартал. Это документ №2 по важности после торгового устава.</p>
+</div>
+</div>
+</div></section>
+
+<!-- МЕТОДИКИ -->
+<section><div class="wrap">
+<h2>Почему это запоминается</h2>
+<p class="mut" style="max-width:720px;margin-bottom:30px">Внутри — доказательные техники обучения, встроенные в механику, а не приклеенные лозунгами.</p>
+<div class="grid3">
+<div class="card"><h3>🔄 Интерливинг</h3><p class="mut sm">Смешанные вопросы из разных фаз — мозг учится различать, а не зубрить подряд.</p></div>
+<div class="card"><h3>🧘 NSDR-консолидация</h3><p class="mut sm">Экран тишины с дыханием 4-4-6 после урока: знания закрепляются офлайн.</p></div>
+<div class="card"><h3>🎯 Active Recall 2.0</h3><p class="mut sm">Числовые задачи с открытым вводом вместо «угадай из четырёх». Ответы шаффлятся — зубрёжка бесполезна.</p></div>
+<div class="card"><h3>📈 Brier-калибровка</h3><p class="mut sm">Прогнозируй → узнай исход → увидь, насколько ты реально точен. Отделяет «знаю» от «кажется».</p></div>
+<div class="card"><h3>🗣️ Метод Фейнмана</h3><p class="mut sm">Объясни своими словами — фильтр слов-паразитов скажет, где ты сам себя обманываешь.</p></div>
+<div class="card"><h3>📓 SM-2 повторы</h3><p class="mut sm">«Сборочный пункт» каждые 5 уроков: интервальные повторения держат материал живым.</p></div>
+</div>
+</div></section>
+
+<!-- СКРИНШОТЫ -->
+<section style="background:#0D1426"><div class="wrap shots">
+<h2 style="margin-bottom:26px">Загляни внутрь</h2>
+<div class="grid3">
+<figure><img src="../docs/screenshots/01-home.png" alt="Главный экран КриптоНавигатор" loading="lazy"></figure>
+<figure><img src="../docs/screenshots/04-simulator.png" alt="Симулятор биржевого стакана" loading="lazy"></figure>
+<figure><img src="../docs/screenshots/05-psychology.png" alt="Психотренажёр Тревога в 03:00" loading="lazy"></figure>
+</div>
+<p class="sm mut" style="text-align:center;margin-top:16px">Демо прохождения «Тревоги в 03:00»: <a href="../docs/screenshots/09-trainer-demo.gif">смотреть GIF</a></p>
+</div></section>
+
+<!-- ЦЕНА -->
+<section id="price"><div class="wrap">
+<h2>Одна цена. Навсегда.</h2>
+<p class="mut" style="margin-bottom:36px">Без подписки, без «премиум-тарифов», без таймеров обратного отсчёта. Купил один раз — весь курс и все будущие обновления твои.</p>
+<div class="grid2" style="max-width:860px;margin:0 auto;align-items:stretch">
+<div class="card">
+<h3>🌱 Старт</h3><div style="font-size:40px;font-weight:800;margin:6px 0">0 ₽</div>
+<p class="sm mut" style="margin-bottom:18px">Чтобы понять, твоё ли это — без карты и регистрации.</p>
+<ul class="feats sm">
+<li>Фаза 0 целиком (20 уроков)</li>
+<li>Блок «Психология» П1–П8 с тренажёрами</li>
+<li>Глоссарий, викторины, ежедневные квесты</li>
+<li>Профессии и ранги — карьерная лестница</li>
+</ul>
+<a class="btn btn-g" href="#cta" style="width:100%;text-align:center;margin-top:18px">Начать бесплатно</a>
+</div>
+<div class="card price-hl"><div class="tag">ЛУЧШИЙ ВЫБОР</div>
+<h3>🚀 Полный доступ</h3><div style="font-size:40px;font-weight:800;margin:6px 0">990 ₽ <span class="sm mut" style="font-weight:400">(≈ $12)</span><span class="sm mut"> / навсегда</span></div>
+<p class="sm mut" style="margin-bottom:18px">Разовый платёж. Все будущие уроки и языки — включены.</p>
+<ul class="feats sm">
+<li><b>Всё из «Старта»</b></li>
+<li>Фазы 1–5: ядро трейдинга и система</li>
+<li>44 урока математики для кванта</li>
+<li>8 конструкторов артефактов: токен, стейблкоин, NFT, DAO, оракул…</li>
+<li>Выпускной экзамен — конструктор торгового бота</li>
+<li>Облачный синхронизация прогресса между устройствами</li>
+<li><b>Все будущие обновления и новые языки</b></li>
+</ul>
+<a class="btn btn-p" href="#cta" style="width:100%;text-align:center;margin-top:18px">Открыть полный доступ</a>
+<p class="sm mut" style="text-align:center;margin-top:10px">Оплата картами РФ и мира · возврат 14 дней</p>
+</div>
+</div>
+</div></section>
+
+<!-- FAQ -->
+<section id="faq" style="background:#0D1426"><div class="wrap" style="max-width:760px">
+<h2>Частые вопросы</h2>
+<details open><summary>Нужен ли опыт торговли или программирования?</summary><div>Нет. Фаза 0 начинается с «что вообще такое криптовалюта» и доходит до всего остального шаг за шагом. Код писать не нужно — ты учишься управлять готовыми системами и понимать их.</div></details>
+<details><summary>Это финансовый совет?</summary><div>Нет. Это симулятор на виртуальных данных. Мы учим процессу, дисциплине и риску — и честно предупреждаем, что реальная торговля может привести к потере капитала.</div></details>
+<details><summary>Что входит в бесплатную часть?</summary><div>Фаза 0 полностью (20 уроков со всеми тренажёрами) и блок «Психология» (8 уроков + 8 тренажёров). Это несколько часов практики — достаточно, чтобы принять осознанное решение о полном доступе.</div></details>
+<details><summary>А если завтра выйдет новая версия?</summary><div>Войдёшь под своим аккаунтом — все обновления уже там. Полный доступ означает навсегда: новые уроки, языки и тренажёры включены.</div></details>
+<details><summary>Как оплачивать из России / из другой страны?</summary><div>Из РФ — картами МИР и СБП. Из других стран — международные карты. Чек приходит автоматически.</div></details>
+<details><summary>Мой прогресс сохранится?</summary><div>Да. Прогресс хранится локально в браузере и синхронизируется с аккаунтом — продолжай с любого устройства. Даже если начать без регистрации, при входе прогресс переносится в профиль.</div></details>
+</div></section>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Нужен ли опыт?","acceptedAnswer":{"@type":"Answer","text":"Нет. Курс стартует с абсолютного нуля и ведёт шаг за шагом."}},
+{"@type":"Question","name":"Это финансовый совет?","acceptedAnswer":{"@type":"Answer","text":"Нет, это учебный симулятор на виртуальных данных."}},
+{"@type":"Question","name":"Что бесплатно?","acceptedAnswer":{"@type":"Answer","text":"Фаза 0 (20 уроков) и блок Психология (8 уроков с тренажёрами)."}}]}
+</script>
+
+<!-- CTA -->
+<section id="cta"><div class="wrap">
+<div class="card price-hl" style="padding:52px 32px;text-align:center">
+<h2 style="margin-bottom:12px">Рынок уже выставил счёт за незнание.<br><span class="grad">Здесь он оплачен вниманием.</span></h2>
+<p class="mut" style="max-width:560px;margin:0 auto 28px">Начни с бесплатной Фазы 0 прямо сейчас. Если почувствуешь, что стал видеть рынок иначе — полный доступ ждёт за 990 ₽ один раз.</p>
+<a class="btn btn-p" style="font-size:18px;padding:16px 42px" href="/index.html">▶ Открыть тренажёр бесплатно</a>
+<p class="sm mut" style="margin-top:14px">Без карты · Без регистрации · Первая аттестация через ~2 часа практики</p>
+</div>
+</div></section>
+
+<footer><div class="wrap">
+<div class="fbar">
+<div>🧭 КриптоНавигатор · интерактивный симулятор криптотрейдинга</div>
+<div style="display:flex;gap:18px"><a href="#program">Программа</a><a href="#price">Цена</a><a href="#faq">FAQ</a></div>
+</div>
+<p>© 2026 КриптоНавигатор. Учебный продукт. Все данные виртуальные; материалы не являются инвестиционной рекомендацией. Торговля цифровыми активами связана с риском потери капитала. Доступ предоставляется навсегда для приобретённой версии курса.</p>
+</div></footer>
+
+</body>
+</html>
