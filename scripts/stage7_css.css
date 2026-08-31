@@ -1,0 +1,16 @@
+/* ============================================================
+   ЭТАП 7 — мелкие правки финальной полировки (P1×2 + P2×2).
+   Панельные карточки контекста наставника — визуал в духе
+   карточки шага Этапа 4; поля ввода — фокус-обводка (a11y).
+   ============================================================ */
+#lp7_mentor_test, #lp7_mentor_feynman {
+  font-family: inherit;
+}
+#lp7_mentor_feynman textarea:focus {
+  outline: 2px solid rgba(124, 58, 237, .45);
+  outline-offset: 1px;
+}
+button[aria-disabled="true"][id^="lesson_complete_btn_"],
+button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
+  cursor: not-allowed;
+}
