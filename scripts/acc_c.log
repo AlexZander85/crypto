@@ -1,0 +1,61 @@
+{
+ "p0_finale": {
+  "testCta": true,
+  "fcButton": true,
+  "phaseNav": [
+   "Фаза 1 ▸"
+  ],
+  "completeCalled": false
+ },
+ "fc": {
+  "started": true,
+  "deckSize": null,
+  "summary": "Знал 0 из 6",
+  "fcLS": "\"{\\\"p0_l1\\\":{\\\"ts\\\":1788186297210,\\\"cards\\\":{\\\"rp_0\\\":-1,\\\"rp_1\\\":-1,\\\"rp_2\\\":-1,\\\"tm_Криптовалюта\\\":-1,\\\"tm_Биткоин\\\":-",
+  "backToLesson": true
+ },
+ "p0_navButtons": [
+  "Фаза 1 ▸"
+ ],
+ "navToPhase1": "Урок 1.1 · Лог-доходности vs абсолютные цены: поче",
+ "phase0": {
+  "hasLeft": false,
+  "hasRight": true
+ },
+ "phase9": {
+  "hasRight": false,
+  "hasLeft": true,
+  "noTestCta": true
+ },
+ "phase7": {
+  "lesson": "m_chto_voobsche_takoe_veroyatnost",
+  "mathCtas": [
+   "math_core",
+   "math_stats",
+   "math_final_map"
+  ]
+ },
+ "lessonHeader": {
+  "fcVisible": true,
+  "pickerVisible": true
+ },
+ "testHeader": {
+  "fcHidden": true,
+  "bmHidden": true,
+  "mentorHidden": true,
+  "pickerVisible": true
+ },
+ "kb9opts": 4,
+ "kbAnswered": {
+  "0": 3
+ },
+ "testHotkeys": true,
+ "p8_cumDivider": 1,
+ "p8_steps": 42,
+ "psy_cum": {
+  "title": "Диагностика: накопительная психология",
+  "steps": 6
+ }
+}
+PAGE_ERRORS: 0 []
+CONSOLE_ERRORS: 1 [ 'Failed to load resource: net::ERR_FILE_NOT_FOUND' ]

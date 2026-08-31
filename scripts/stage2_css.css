@@ -1,0 +1,64 @@
+/* =========================================================================
+   КРИПТОНАВИГАТОР v12.4 · ЭТАП 2 · Тесты, экзамены и карточки в плеере
+   Продолжение блока learn_player_css (новые блоки не заводятся — ТЗ §11).
+   ========================================================================= */
+
+/* ---------- P1.4/A20: консолидация — над плеером (экран паузы после сдачи).
+   Выше плеера 1000001, ниже тостов 2000000; termModal 1000500 и explain
+   1000600 оказываются под консолидацией — допустимо (экран паузы). ---------- */
+#consolidation_overlay{ z-index:1001500 !important; }
+
+/* ---------- Вопрос теста: кегли плеера (вопрос ~20px, опции 17px на базе 19) ---------- */
+.learn-step .lp2-qn{
+  font-size:calc(var(--lp-fs) - 7px); font-weight:800; text-transform:uppercase;
+  letter-spacing:.05em; color:var(--acc2); margin-bottom:6px;
+}
+.learn-step .lp2-qt{
+  font-size:calc(var(--lp-fs) + 1px); font-weight:700; line-height:1.5;
+  color:var(--txt); margin-bottom:12px;
+}
+.learn-step .lp2-tol{ font-size:calc(var(--lp-fs) - 6px); color:var(--acc2); margin-bottom:10px; }
+.learn-step .lp2-opts{ display:flex; flex-direction:column; gap:8px; }
+.learn-step .lp2-opts .ans,
+.learn-step div[id^="ptest_"] > button.ans{
+  font-size:calc(var(--lp-fs) - 2px); padding:12px 15px; border-radius:11px;
+  line-height:1.45; text-align:left;
+}
+.learn-step .lp2-num-in{
+  width:170px; background:var(--card); border:1px solid var(--acc2); border-radius:8px;
+  padding:10px 12px; color:var(--txt); font-size:calc(var(--lp-fs) - 2px); font-weight:700;
+}
+.learn-step .lp2-num-in:disabled{ opacity:.75; }
+.learn-step .lp2-exp{ margin-top:10px; font-size:calc(var(--lp-fs) - 4px); color:var(--txt); line-height:1.55; }
+.learn-step .lp2-exp b{ color:var(--acc2); }
+
+/* Сводка шага-врат и экран результата */
+.lp2-miss-list{ font-size:calc(var(--lp-fs) - 5px); color:var(--mut); margin-top:8px; line-height:1.5; }
+.lp2-result-score{ font-size:calc(var(--lp-fs) + 4px); font-weight:900; margin-bottom:6px; }
+.lp2-result-note{ text-align:center; color:var(--mut); margin-top:10px; font-size:calc(var(--lp-fs) - 6px); }
+
+/* Пикер банков 🏁 */
+.lp2-picker-list{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+.lp2-bank-btn{
+  width:100%; display:flex; justify-content:space-between; align-items:center; gap:10px;
+  text-align:left; padding:11px 14px; border-radius:11px;
+}
+.lp2-bank-btn .t{
+  font-weight:700; font-size:calc(var(--lp-fs) - 3px); color:var(--txt);
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.lp2-bank-btn .m{ flex:0 0 auto; font-size:calc(var(--lp-fs) - 7px); color:var(--mut); text-align:right; line-height:1.4; }
+
+/* Карточки для повторения 🗂 */
+.lp2-fc-card{ min-height:190px; cursor:pointer; display:flex; flex-direction:column; justify-content:center; }
+.lp2-fc-card.flipped{ border-color:var(--acc2); }
+.lp2-fc-label{
+  color:var(--mut); font-size:calc(var(--lp-fs) - 7px); font-weight:800;
+  text-transform:uppercase; margin-bottom:8px; letter-spacing:.05em;
+}
+
+/* Часть-баннер попытки на главной */
+.lp2-home-row{
+  display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+  background:var(--card); border:1.5px dashed var(--acc1); border-radius:12px; padding:13px 16px;
+}

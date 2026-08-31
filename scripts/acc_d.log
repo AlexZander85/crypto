@@ -1,0 +1,279 @@
+{
+ "banks": [
+  {
+   "id": "p0",
+   "steps": 6,
+   "label1": "Шаг 1 из 6 · отвечено 0 из 25",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 6 · отвечено 3 из 25",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 6 · отвечено 3 из 25",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "p1",
+   "steps": 4,
+   "label1": "Шаг 1 из 4 · отвечено 0 из 12",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 4 · отвечено 3 из 12",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 4 · отвечено 3 из 12",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "p2",
+   "steps": 3,
+   "label1": "Шаг 1 из 3 · отвечено 0 из 10",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 3 · отвечено 3 из 10",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 3 · отвечено 3 из 10",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "p3",
+   "steps": 4,
+   "label1": "Шаг 1 из 4 · отвечено 0 из 12",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 4 · отвечено 3 из 12",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 4 · отвечено 3 из 12",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "p4",
+   "steps": 4,
+   "label1": "Шаг 1 из 4 · отвечено 0 из 12",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 4 · отвечено 3 из 12",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 4 · отвечено 3 из 12",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "p5",
+   "steps": 4,
+   "label1": "Шаг 1 из 4 · отвечено 0 из 12",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 4 · отвечено 3 из 12",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 4 · отвечено 3 из 12",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "p8",
+   "steps": 42,
+   "label1": "Шаг 1 из 42 · отвечено 0 из 202",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 42 · отвечено 3 из 202",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 42 · отвечено 3 из 202",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "capstone",
+   "steps": 9,
+   "label1": "Шаг 1 из 9 · отвечено 0 из 38",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 9 · отвечено 3 из 38",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 9 · отвечено 3 из 38",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 1
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "math_core",
+   "steps": 3,
+   "label1": "Шаг 1 из 3 · отвечено 0 из 10",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 3 · отвечено 3 из 10",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 3 · отвечено 3 из 10",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 0
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "math_stats",
+   "steps": 3,
+   "label1": "Шаг 1 из 3 · отвечено 0 из 10",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 3 · отвечено 3 из 10",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 3 · отвечено 3 из 10",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 0
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "math_final_map",
+   "steps": 3,
+   "label1": "Шаг 1 из 3 · отвечено 0 из 10",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 3 · отвечено 3 из 10",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 3 · отвечено 3 из 10",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 0
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "literacy",
+   "steps": 6,
+   "label1": "Шаг 1 из 6 · отвечено 0 из 25",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 6 · отвечено 3 из 25",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 6 · отвечено 3 из 25",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 0
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  },
+  {
+   "id": "psy_cum",
+   "steps": 6,
+   "label1": "Шаг 1 из 6 · отвечено 0 из 21",
+   "answered3": 3,
+   "counterAfter": "Шаг 1 из 6 · отвечено 3 из 21",
+   "draftAfterClose": true,
+   "resumeDialog": true,
+   "counterResumed": "Шаг 1 из 6 · отвечено 3 из 21",
+   "resultShown": true,
+   "stateAfter": {
+    "ptdKey": 0
+   },
+   "draftClearedAfterSubmit": true,
+   "reviewNavigable": true
+  }
+ ],
+ "finalState": {
+  "ptd": {
+   "p0": 8,
+   "p1": 17,
+   "p2": 20,
+   "p3": 33,
+   "p4": 25,
+   "p5": 33,
+   "p8": 31,
+   "exam_capstone": 29
+  },
+  "mts": {
+   "0": {
+    "answers": {
+     "0": 3,
+     "1": 3,
+     "2": 3,
+     "3": 3,
+     "4": 3,
+     "5": 3,
+     "6": 3,
+     "7": 3,
+     "8": 3,
+     "9": 3
+    },
+    "correct": 2,
+    "passed": false
+   },
+   "1": {
+    "answers": {
+     "0": 3,
+     "1": 3,
+     "2": 3,
+     "3": 3,
+     "4": 3,
+     "5": 3,
+     "6": 3,
+     "7": 3,
+     "8": 3,
+     "9": 3
+    },
+    "correct": 3,
+    "passed": false
+   },
+   "2": {
+    "answers": {
+     "0": 3,
+     "1": 3,
+     "2": 3,
+     "3": 3,
+     "4": 3,
+     "5": 3,
+     "6": 3,
+     "7": 3,
+     "8": 3,
+     "9": 3
+    },
+    "correct": 3,
+    "passed": false
+   }
+  }
+ }
+}
+PAGE_ERRORS: 0 []
+CONSOLE_ERRORS: 0 []
+DIALOGS_IN_PLAYER: 0
+MOBILE360: {"mapToggleVisible":true,"mapOffscreen":true,"noHScroll":true,"label":"Шаг 1 из 4 · отвечено 0 из 12"}
+SCREENSHOTS saved: shot_player_p1.png, shot_picker.png, shot_result.png, shot_mob360_test.png

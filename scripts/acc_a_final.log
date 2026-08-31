@@ -1,0 +1,69 @@
+{
+ "p3a": {
+  "locked": true,
+  "okOnCorrect": true,
+  "badOnWrong": true,
+  "explainShown": true,
+  "explainText": "Разбор варианта: Верно! Рыночный сентимент работает по принц",
+  "counter": "Шаг 1 из 3 · отвечено 1 из 10",
+  "draft": {
+   "testId": "p2",
+   "pos": 0,
+   "ph": 2,
+   "salt": 1,
+   "answers": {
+    "0": 3
+   },
+   "numeric": {},
+   "updatedTs": 1788186546686
+  },
+  "draftAnswer": 3,
+  "journal": true
+ },
+ "p3b": {
+  "badAfterFirst": true,
+  "explain1": "Вероятность — свойство распределения на ",
+  "stateAfterFirst": {
+   "0": 1
+  },
+  "okAfterChange": true,
+  "stateAfterChange": {
+   "0": 0
+  },
+  "answersKept": true,
+  "counter": "Шаг 1 из 3 · отвечено 1 из 10",
+  "backgroundAlive": true
+ },
+ "p3c": {
+  "numericIdx": [
+   10,
+   11
+  ],
+  "markerOk": true,
+  "inputDisabled": true,
+  "expShown": true,
+  "markerHidden": true,
+  "draftNumeric": {
+   "10": 0.08
+  },
+  "markerBad": true
+ },
+ "p4": {
+  "draftPersisted": true,
+  "viewSameAsBeforeClose": true,
+  "resumeBanner": "Продолжить попытку?«🧠 Аттестация: Академия психологии и риск-инженерии (181 ситуация + на",
+  "portion1LockedSame": true,
+  "label": "Шаг 1 из 42 · отвечено 7 из 202",
+  "noDoubleMarkers": true
+ },
+ "freeze": {
+  "phaseTestsDone": {},
+  "mathTestState": {},
+  "lessonsDone": {},
+  "lessonCheckState": {},
+  "cn_speedrun": null
+ }
+}
+STATE_FREEZE_OK: true
+PAGE_ERRORS: 0 []
+CONSOLE_ERRORS: 0 []
