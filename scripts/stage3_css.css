@@ -1,0 +1,204 @@
+/* =========================================================================
+   КРИПТОНАВИГАТОР v12.5 · ЭТАП 3 · Платформенный слой (Learn Home,
+   программа курса, поиск, конспект). Продолжение блока learn_player_css
+   (новые блоки не заводятся — патч-план Этапа 3 §0). Ноль правок
+   существующих функций; контент заморожен (ТЗ §0.1).
+   ========================================================================= */
+
+/* ---------- P1. Хаб «Моё обучение» (.learn-home-root, z 1000001) ----------
+   Тема/шрифт — те же переменные --lp-*; селекторы продублированы со скоупом
+   .learn-home-root (правка существующих правил CSS запрещена). */
+.learn-home-root{
+  position:fixed; inset:0; z-index:1000001;
+  background:var(--bg); color:var(--txt);
+  display:flex; flex-direction:column;
+  font-family:inherit;
+  --lp-fs:19px;
+  --lp-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.learn-home-root[data-font="17"]{ --lp-fs:17px; }
+.learn-home-root[data-font="19"]{ --lp-fs:19px; }
+.learn-home-root[data-font="22"]{ --lp-fs:22px; }
+.learn-home-root[data-font="24"]{ --lp-fs:24px; }
+.learn-home-root[data-lp-theme="dark"]{
+  --bg:#0d1022; --card:rgba(255,255,255,.06); --card-hover:rgba(255,255,255,.1);
+  --line:rgba(255,255,255,.12); --txt:#eef1ff; --mut:#9aa3c7;
+  --acc1:#7c3aed; --acc2:#06b6d4; --ok:#22c55e; --bad:#ef4444; --warn:#f59e0b;
+  --grad:linear-gradient(135deg,#7c3aed,#06b6d4);
+  background:#0d1022;
+}
+.learn-home-root[data-lp-theme="light"]{
+  --bg:#f8fafc; --card:#ffffff; --card-hover:#f1f5f9;
+  --line:#cbd5e1; --txt:#0f172a; --mut:#475569;
+  --acc1:#6d28d9; --acc2:#0284c7; --ok:#15803d; --bad:#b91c1c; --warn:#b45309;
+  --grad:linear-gradient(135deg,#6d28d9,#0284c7);
+  --lp-shadow:0 16px 40px rgba(15,23,42,.18);
+  background:#f8fafc;
+}
+@media (prefers-reduced-motion: reduce){
+  .learn-home-root *, .learn-home-root *::before, .learn-home-root *::after{
+    transition:none !important; animation:none !important; scroll-behavior:auto !important;
+  }
+}
+
+.learn-home-root .lp3-top{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px 18px; border-bottom:1px solid var(--line); background:var(--card);
+  flex:0 0 auto; min-height:56px;
+}
+.lp3-brand{ font-size:calc(var(--lp-fs) + 3px); font-weight:900; color:var(--txt); }
+.learn-home-root .lp3-body{ flex:1 1 auto; overflow-y:auto; padding:22px 18px 60px; }
+.lp3-col{ max-width:980px; margin:0 auto; }
+
+/* Поиск (P5) */
+.lp3-search{
+  display:flex; align-items:center; gap:10px;
+  background:var(--card); border:1.5px solid var(--line); border-radius:14px;
+  padding:12px 16px; margin-bottom:14px;
+}
+.lp3-search:focus-within{ border-color:var(--acc2); }
+.lp3-search .lp3-search-in{
+  flex:1 1 auto; background:transparent; border:none; outline:none;
+  color:var(--txt); font-size:calc(var(--lp-fs) - 2px); font-family:inherit;
+}
+.lp3-search .lp3-search-in::placeholder{ color:var(--mut); }
+.lp3-search-out{ margin:-4px 0 14px; }
+.lp3-sr{
+  display:block; width:100%; text-align:left; background:var(--card);
+  border:1px solid var(--line); border-radius:12px; padding:11px 14px;
+  margin-bottom:8px; cursor:pointer; font-family:inherit; color:var(--txt);
+}
+.lp3-sr:hover{ border-color:var(--acc2); background:var(--card-hover); }
+.lp3-sr .h{ display:block; font-size:calc(var(--lp-fs) - 6px); font-weight:800; color:var(--acc2); margin-bottom:3px; }
+.lp3-sr .f{ display:block; font-size:calc(var(--lp-fs) - 4px); line-height:1.5; color:var(--txt); }
+.lp3-sr .f mark{ background:rgba(245,158,11,.35); color:inherit; border-radius:3px; padding:0 2px; }
+.lp3-sr .lp3-sub{ font-size:calc(var(--lp-fs) - 7px); color:var(--mut); margin-top:3px; }
+.lp3-sr-none{ color:var(--mut); font-size:calc(var(--lp-fs) - 4px); padding:6px 2px 0; }
+
+/* Секции хаба */
+.lp3-sec{ margin-bottom:26px; }
+.lp3-sec-h{
+  font-size:calc(var(--lp-fs) - 5px); font-weight:800; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--mut); margin-bottom:10px;
+}
+.lp3-card{
+  display:flex; flex-direction:column; gap:3px; width:100%; text-align:left;
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; cursor:pointer; font-family:inherit; color:var(--txt);
+}
+.lp3-card:hover{ border-color:var(--acc2); background:var(--card-hover); }
+.lp3-card.lp3-big{ padding:18px 20px; }
+.lp3-card.main{ border-color:var(--acc1); box-shadow:0 10px 30px rgba(124,58,237,.14); }
+.lp3-card .k{ font-size:calc(var(--lp-fs) - 7px); font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--acc2); }
+.lp3-card .t{ font-size:calc(var(--lp-fs) - 1px); font-weight:700; line-height:1.4; }
+.lp3-card .m{ font-size:calc(var(--lp-fs) - 6px); color:var(--mut); line-height:1.45; }
+.lp3-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:760px){ .lp3-grid2{ grid-template-columns:1fr; } }
+.lp3-empty{ color:var(--mut); font-size:calc(var(--lp-fs) - 5px); line-height:1.55; }
+.lp3-alt-row{ margin-top:8px; }
+
+/* Программа курса: аккордеон фаз */
+.lp3-ph{ background:var(--card); border:1px solid var(--line); border-radius:14px; margin-bottom:9px; overflow:hidden; }
+.lp3-ph-h{
+  display:flex; justify-content:space-between; align-items:center; gap:10px; width:100%;
+  background:transparent; border:none; padding:12px 15px; cursor:pointer;
+  font-family:inherit; color:var(--txt); text-align:left;
+}
+.lp3-ph-h:hover{ background:var(--card-hover); }
+.lp3-ph-h .t{ font-size:calc(var(--lp-fs) - 3px); font-weight:700; line-height:1.35; }
+.lp3-ph-h .m{ flex:0 0 auto; font-size:calc(var(--lp-fs) - 6px); font-weight:800; color:var(--mut); }
+.lp3-ph-bar{ height:6px; background:rgba(127,127,127,.16); border-radius:99px; margin:0 15px 11px; overflow:hidden; }
+.lp3-ph-bar i{ display:block; height:100%; width:0; background:var(--grad); border-radius:99px; }
+.lp3-ph-list{ padding:2px 8px 10px; }
+.lp3-les{
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+  background:transparent; border:none; border-radius:10px; padding:9px 10px;
+  cursor:pointer; font-family:inherit; color:var(--txt);
+}
+.lp3-les:hover{ background:var(--card-hover); }
+.lp3-les .ck{
+  flex:0 0 22px; height:22px; border-radius:99px; border:1.5px solid var(--line);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:12px; color:var(--ok); font-weight:900;
+}
+.lp3-les.done .ck{ background:rgba(34,197,94,.15); border-color:var(--ok); }
+.lp3-les.current{ background:rgba(124,58,237,.16); outline:1px solid var(--acc1); }
+.lp3-les .t{ flex:1 1 auto; font-size:calc(var(--lp-fs) - 4px); line-height:1.4; }
+.lp3-les.done .t{ color:var(--mut); }
+.lp3-les .m{ flex:0 0 auto; font-size:calc(var(--lp-fs) - 7px); color:var(--mut); }
+
+/* Прогресс (P1: две разные метрики — подписи различают) */
+.lp3-pct{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:6px; }
+.lp3-pct b{ font-size:calc(var(--lp-fs) + 12px); font-weight:900; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.lp3-pct span{ font-size:calc(var(--lp-fs) - 6px); color:var(--mut); max-width:560px; line-height:1.5; }
+.lp3-total{ font-size:calc(var(--lp-fs) - 2px); color:var(--txt); margin:4px 0 14px; }
+.lp3-total b{ font-weight:900; }
+.lp3-total span{ color:var(--mut); font-size:calc(var(--lp-fs) - 6px); }
+.lp3-prow{ display:flex; align-items:center; gap:10px; padding:4px 0; }
+.lp3-prow .t{ flex:0 0 300px; max-width:300px; font-size:calc(var(--lp-fs) - 6px); color:var(--txt); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lp3-prow .bar{ flex:1 1 auto; height:6px; background:rgba(127,127,127,.16); border-radius:99px; overflow:hidden; }
+.lp3-prow .bar i{ display:block; height:100%; background:var(--grad); border-radius:99px; }
+.lp3-prow .m{ flex:0 0 52px; text-align:right; font-size:calc(var(--lp-fs) - 7px); color:var(--mut); font-weight:700; }
+.lp3-pmini{ margin-top:12px; font-size:calc(var(--lp-fs) - 6px); color:var(--mut); line-height:1.6; }
+@media (max-width:640px){ .lp3-prow .t{ flex-basis:170px; } }
+
+/* Тесты и экзамены */
+.lp3-tests{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+@media (max-width:760px){ .lp3-tests{ grid-template-columns:1fr; } }
+.lp3-test{
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+  text-align:left; background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:11px 14px; cursor:pointer; font-family:inherit; color:var(--txt);
+}
+.lp3-test:hover{ border-color:var(--acc2); background:var(--card-hover); }
+.lp3-test .t{ font-size:calc(var(--lp-fs) - 4px); font-weight:700; line-height:1.4; min-width:0; }
+.lp3-test .m{ flex:0 0 auto; font-size:calc(var(--lp-fs) - 8px); color:var(--mut); text-align:right; line-height:1.45; }
+.lp3-fc-sum{ font-size:calc(var(--lp-fs) - 4px); color:var(--txt); margin-bottom:10px; }
+
+/* ---------- P3. Вкладки левой панели плеера (Шаги | Программа | Конспект) ---------- */
+.lp3-tabs{ display:flex; gap:6px; padding:0 8px 10px; }
+.lp3-tabs .lp-btn{ flex:1 1 auto; justify-content:center; padding:6px 4px; font-size:12px; }
+.lp3-tabs .lp-btn.on{ background:var(--grad); color:#fff; border-color:transparent; }
+.lp3-map-back{ margin:0 8px 8px; }
+
+/* ---------- P4. Якорь «Фаза N: X/Y» в шапке плеера ---------- */
+.lp3-anchor{
+  flex:0 0 auto; border:1px dashed var(--line); background:rgba(127,127,127,.08);
+  color:var(--mut); border-radius:99px; padding:3px 11px; font-size:12px; font-weight:800;
+  cursor:pointer; font-family:inherit; white-space:nowrap;
+}
+.lp3-anchor:hover{ color:var(--txt); border-color:var(--acc2); }
+
+/* ---------- P6. Конспект: плавающая кнопка, список, undo ---------- */
+#lp3_note_fab{
+  position:fixed; z-index:1000002; left:0; top:0;
+  background:var(--grad, linear-gradient(135deg,#7c3aed,#06b6d4)); color:#fff;
+  border:none; border-radius:99px; padding:9px 16px; font-size:13.5px; font-weight:800;
+  cursor:pointer; box-shadow:0 10px 26px rgba(0,0,0,.4); font-family:inherit;
+}
+#lp3_note_fab:hover{ filter:brightness(1.1); }
+.lp3-ng{ margin-bottom:14px; }
+.lp3-ng-h{ font-size:calc(var(--lp-fs) - 5px); font-weight:800; color:var(--acc2); margin-bottom:6px; line-height:1.4; }
+.lp3-note{ background:var(--card); border:1px solid var(--line); border-radius:11px; padding:10px 12px; margin-bottom:8px; }
+.lp3-note-q{
+  display:block; width:100%; text-align:left; background:transparent; border:none;
+  color:var(--txt); font-size:calc(var(--lp-fs) - 4px); line-height:1.5; cursor:pointer;
+  font-family:inherit; padding:0;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.lp3-note-q:hover{ color:var(--acc2); }
+.lp3-note-c{ font-size:calc(var(--lp-fs) - 5px); color:var(--acc1); margin-top:6px; line-height:1.5; white-space:pre-wrap; }
+.lp3-note-meta{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:7px; font-size:calc(var(--lp-fs) - 8px); color:var(--mut); flex-wrap:wrap; }
+.lp3-note-meta textarea{
+  width:100%; min-height:54px; background:var(--bg); color:var(--txt);
+  border:1px solid var(--acc2); border-radius:8px; padding:7px 9px;
+  font-size:calc(var(--lp-fs) - 5px); font-family:inherit; resize:vertical;
+}
+.lp3-undo{
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+  background:rgba(239,68,68,.1); border:1px dashed var(--bad); border-radius:10px;
+  padding:8px 12px; margin-bottom:10px; font-size:calc(var(--lp-fs) - 6px); color:var(--txt);
+}
+
+/* ---------- Общие мелочи ---------- */
+.lp3-note-count{ display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; border-radius:99px; background:var(--grad); color:#fff; font-size:10.5px; font-weight:900; margin-left:5px; }
