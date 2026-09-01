@@ -260,10 +260,10 @@ try {
   check('admin ai_model требует секрет', amNo.status === 401);
   const amBad = await api('/admin/api/ai_model', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ sku: 'nope' }) });
   check('admin ai_model bad sku → 400', amBad.status === 400);
-  const amOk = await api('/admin/api/ai_model', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ sku: 'cf-llama-3.3-70b-instruct-fp8-fast' }) });
+  const amOk = await api('/admin/api/ai_model', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ sku: 'cf-glm-4.7-flash' }) });
   check('admin ai_model смена ок', amOk.status === 200 && amOk.body?.ok === true);
   const amGet = await api('/admin/api/ai_model', { headers: { authorization: 'Bearer dev-only-admin' } });
-  check('admin ai_model GET отражает смену', amGet.status === 200 && amGet.body?.sku === 'cf-llama-3.3-70b-instruct-fp8-fast');
+  check('admin ai_model GET отражает смену', amGet.status === 200 && amGet.body?.sku === 'cf-glm-4.7-flash');
   // смена модели в admin_actions
   const admAudit = await api('/admin/api/overview?days=30', { headers: { authorization: 'Bearer dev-only-admin' } });
   check('telemetry/audit живы после mentor', admAudit.status === 200);

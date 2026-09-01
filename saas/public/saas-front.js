@@ -724,18 +724,30 @@
   // для авторизованных добавляем Authorization в запрос наставника, не трогая
   // существующие обёртки приложения (санитизация Т6, память AI5). Гость идёт
   // прежним путём — сервер авторизует его по deviceId (витрина 3/день).
+  // Стадия 11: проброс выбранной пользователем модели (панель настроек, §10.2)
+  // в body.model — сервер валидирует по белому списку и использует её для запроса.
   function wrapMentor() {
     if (!window.MENTOR || typeof window.MENTOR.ask !== 'function' || window.MENTOR.__saas_jwt_wrapped) return;
     const M = window.MENTOR;
     const orig = M.ask.bind(M);
     M.ask = async function (action, lessonId, payload) {
-      if (M.mock || !JWT) return orig(action, lessonId, payload); // мок не считается (§10.2)
+      if (M.mock) return orig(action, lessonId, payload); // мок не считается (§10.2)
       const realFetch = window.fetch;
       window.fetch = function (input, init) {
         try {
           if (typeof input === 'string' && input.indexOf('/api/mentor/ask') >= 0) {
             init = init || {};
-            init.headers = Object.assign({}, init.headers || {}, { authorization: 'Bearer ' + JWT });
+            if (JWT) init.headers = Object.assign({}, init.headers || {}, { authorization: 'Bearer ' + JWT });
+            // модель из панели настроек (window.mentorModelGet — публичный хук v12.9)
+            if (typeof window.mentorModelGet === 'function') {
+              const model = window.mentorModelGet();
+              if (model && init.body && typeof init.body === 'string') {
+                try {
+                  const parsed = JSON.parse(init.body);
+                  if (parsed && !parsed.model) { parsed.model = model; init.body = JSON.stringify(parsed); }
+                } catch (e) {}
+              }
+            }
           }
         } catch (e) {}
         return realFetch.call(this, input, init);

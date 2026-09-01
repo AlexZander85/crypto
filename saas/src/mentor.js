@@ -10,17 +10,20 @@ import { json, readJson, bearer, rateLimit } from './util.js';
 import { verifyJWT } from './util.js';
 import { ragSearch } from './rag.js';
 
-// §10.2 — белый список SKU Workers AI (проверены в v12.9, MENTOR_MODELS)
+// §10.2 — белый список SKU Workers AI. Стадия 11 (09.2026): каталог обновлён —
+// только современные модели поколения 2026 по выбору владельца; старое поколение
+// (llama-3.x, mistral-7b, qwen2.5, gemma-7b) снято с листинга.
+// Значения в localStorage клиента с устаревшими id мигрируют на дефолт
+// (mentorModelGet на фронте, getActiveSku на сервере — оба валидируют по белому списку).
 export const MODEL_WHITELIST = {
-  'cf-llama-3.1-8b-instruct': '@cf/meta/llama-3.1-8b-instruct',
-  'cf-llama-3.3-70b-instruct-fp8-fast': '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
-  'cf-qwen2.5-coder-32b-instruct': '@cf/qwen/qwen2.5-coder-32b-instruct',
-  'cf-mistral-7b-instruct-v0.1': '@cf/mistral/mistral-7b-instruct-v0.1',
-  'cf-gemma-7b-it': '@cf/google/gemma-7b-it',
-  'cf-llama-3.1-70b-instruct': '@cf/meta/llama-3.1-70b-instruct'
+  'cf-glm-5.3-flash': '@cf/zai-org/glm-5.3-flash',
+  'cf-glm-4.7-flash': '@cf/zai-org/glm-4.7-flash',
+  'cf-deepseek-v4-flash': '@cf/deepseek-ai/deepseek-v4-flash-0731',
+  'cf-qwen3.8-27b': '@cf/qwen/qwen3.8-27b',
+  'cf-gemma-4-26b-a4b-it': '@cf/google/gemma-4-26b-a4b-it'
 };
-export const DEFAULT_SKU = 'cf-llama-3.1-8b-instruct';
-const FALLBACK_SKU = 'cf-mistral-7b-instruct-v0.1'; // ретрай другой моделью (§10.1)
+export const DEFAULT_SKU = 'cf-glm-5.3-flash';       // новейшая генерация, дефолт для всех
+const FALLBACK_SKU = 'cf-deepseek-v4-flash';          // ретрай другой моделью (§10.1), другое семейство
 
 const TIER_LIMITS = { free: 3, lite: 5, pro: 10, max: 100 };
 
@@ -177,7 +180,10 @@ export async function ask(ctx, req) {
     ragSources = rag.sources;
   }
 
-  const sku = await getActiveSku(env);
+  // Приоритет модели: выбор пользователя (кнопки в панели настроек, body.model,
+  // валидируется по белому списку) → активная модель из админки (settings.ai_model) → DEFAULT_SKU.
+  const clientSku = String(body?.model || '').slice(0, 48);
+  const sku = MODEL_WHITELIST[clientSku] ? clientSku : await getActiveSku(env);
   const messages = buildMessages(action, lessonText, payload);
   if (ragContext) {
     messages[1].content += '\n\nРелевантные фрагменты доказательной базы книг (ссылайся честно: если этого нет в фрагментах — так и скажи):\n' + ragContext;

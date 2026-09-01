@@ -72,6 +72,34 @@ markup = markup.replace(/<!--[\s\S]*?-->/g, (m) => m.length > 300 ? '' : m);
 // ------------------------------------------------------------------
 let appJs = blocks.join('\n;\n');
 
+// ------------------------------------------------------------------
+// 3.1 Стадия 11: современный каталог Workers AI (09.2026).
+//     v10-список наставника (llama-3.x, mistral-7b, qwen2.5, gemma-7b) устарел —
+//     заменяем на актуальные модели по выбору владельца. index_v12.9.html не
+//     редактируется: замена выполняется ТОЛЬКО здесь, сборочной трансформацией.
+//     Список синхронизирован с MODEL_WHITELIST в src/mentor.js (источник истины).
+//     Старые id в localStorage клиента мигрируют на дефолт силами mentorModelGet
+//     (значение не из списка → дефолт) — отдельная миграция не нужна.
+// ------------------------------------------------------------------
+const MODERN_MODELS_JS = `[
+  { id: 'cf-glm-5.3-flash', label: '🧠 GLM 5.3 Flash', desc: '@cf/zai-org/glm-5.3-flash — новейшая генерация, по умолчанию. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-glm-4.7-flash', label: '💡 GLM 4.7 Flash', desc: '@cf/zai-org/glm-4.7-flash — быстрая и лёгкая. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-deepseek-v4-flash', label: '⚡ DeepSeek V4 Flash', desc: '@cf/deepseek-ai/deepseek-v4-flash-0731 — логика и рассуждения. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-qwen3.8-27b', label: '🐉 Qwen 3.8 27B', desc: '@cf/qwen/qwen3.8-27b — мультиязычная, сильна в JSON-структурах. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-gemma-4-26b-a4b-it', label: '💎 Gemma 4 26B A4B', desc: '@cf/google/gemma-4-26b-a4b-it — компактная MoE от Google. ✓ каталог 09.2026', ok: true }
+]`;
+const modelsRe = /const MENTOR_MODELS = \[[\s\S]*?\n\]/;
+if (!modelsRe.test(appJs)) {
+  console.error('FAIL: MENTOR_MODELS не найден в исходнике — структура v12.9 изменилась, проверь трансформацию Стадии 11');
+  process.exit(1);
+}
+appJs = appJs.replace(modelsRe, 'const MENTOR_MODELS = ' + MODERN_MODELS_JS);
+// дефолтный SKU в mentorModelGet (2 вхождения после замены массива) → новый дефолт
+const legacyDefaultRe = /'cf-llama-3.1-8b-instruct'/g;
+const legacyDefaults = (appJs.match(legacyDefaultRe) || []).length;
+appJs = appJs.replace(legacyDefaultRe, "'cf-glm-5.3-flash'");
+console.log(`Стадия 11: MENTOR_MODELS → 5 современных моделей; дефолтных SKU заменено: ${legacyDefaults}`);
+
 // Стадия A: инлайн-фолбэк всего контента (§5.3) — движок работает без сети/паков
 if (!noInline) {
   const fallback = {};

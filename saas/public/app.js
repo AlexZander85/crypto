@@ -24407,13 +24407,11 @@ window.mentorCacheSet = mentorCacheSet;
 
 /* ---------- модель: список доступных + выбор ---------- */
 const MENTOR_MODELS = [
-  /* v10/ДЕФ-20-Т8: только проверенные SKU каталога Workers AI; несуществующие модели (deepseek-v4-flash, glm-4.7-flash, gemma-4-26b) удалены — они давали 400 без внятной ошибки */
-  { id: 'cf-llama-3.1-8b-instruct', label: '🦙 Llama 3.1 8B Instruct', desc: '@cf/meta/llama-3.1-8b-instruct — быстрая базовая. ✓ проверена', ok: true },
-  { id: 'cf-llama-3.3-70b-instruct-fp8-fast', label: '🦙 Llama 3.3 70B FP8 fast', desc: '@cf/meta/llama-3.3-70b-instruct-fp8-fast — качественнее. ✓ проверена', ok: true },
-  { id: 'cf-qwen2.5-coder-32b-instruct', label: '🐉 Qwen 2.5 Coder 32B', desc: '@cf/qwen/qwen2.5-coder-32b-instruct — сильна в JSON-структуре. ✓ проверена', ok: true },
-  { id: 'cf-mistral-7b-instruct-v0.1', label: '💨 Mistral 7B Instruct v0.1', desc: '@cf/mistral/mistral-7b-instruct-v0.1 — лёгкая. ✓ проверена', ok: true },
-  { id: 'cf-gemma-7b-it', label: '💎 Gemma 7B IT', desc: '@cf/google/gemma-7b-it — компактная. ✓ проверена', ok: true },
-  { id: 'cf-llama-3.1-70b-instruct', label: '🦙 Llama 3.1 70B Instruct', desc: '@cf/meta/llama-3.1-70b-instruct — тяжёлая, точная. ✓ проверена', ok: true }
+  { id: 'cf-glm-5.3-flash', label: '🧠 GLM 5.3 Flash', desc: '@cf/zai-org/glm-5.3-flash — новейшая генерация, по умолчанию. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-glm-4.7-flash', label: '💡 GLM 4.7 Flash', desc: '@cf/zai-org/glm-4.7-flash — быстрая и лёгкая. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-deepseek-v4-flash', label: '⚡ DeepSeek V4 Flash', desc: '@cf/deepseek-ai/deepseek-v4-flash-0731 — логика и рассуждения. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-qwen3.8-27b', label: '🐉 Qwen 3.8 27B', desc: '@cf/qwen/qwen3.8-27b — мультиязычная, сильна в JSON-структурах. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-gemma-4-26b-a4b-it', label: '💎 Gemma 4 26B A4B', desc: '@cf/google/gemma-4-26b-a4b-it — компактная MoE от Google. ✓ каталог 09.2026', ok: true }
 ]
 window.MENTOR_MODELS = MENTOR_MODELS;
 
@@ -24421,9 +24419,9 @@ function mentorModelGet(){
   try{
     const cur = localStorage.getItem('cn_mentor_model');
     /* v10/ДЕФ-20: старое значение 'reserve' и снятые с листинга SKU мигрируют на проверенную модель */
-    if(!cur || cur === 'reserve' || !MENTOR_MODELS.some(m => m.id === cur)) return 'cf-llama-3.1-8b-instruct';
+    if(!cur || cur === 'reserve' || !MENTOR_MODELS.some(m => m.id === cur)) return 'cf-glm-5.3-flash';
     return cur;
-  }catch(e){ return 'cf-llama-3.1-8b-instruct'; }
+  }catch(e){ return 'cf-glm-5.3-flash'; }
 }
 function mentorModelSet(id){
   try{ localStorage.setItem('cn_mentor_model', id); }catch(e){}

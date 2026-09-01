@@ -172,6 +172,24 @@ npx wrangler secret put CRYPTOMUS_MERCHANT_ID
 тарифов), `LS_TIER_MAP`/`YK_TIER_MAP` (маппинг продуктов → тарифы), `TIER_DOWNGRADE`
 (даунгрейд после истечения «Макс»). `MENTOR_MOCK_MODEL` на проде НЕ выставлять.
 
+### S3.1. Модели AI-наставника (Стадия 11, каталог 09.2026)
+Белый список — `MODEL_WHITELIST` в `saas/src/mentor.js` (источник истины) + та же пятёрка
+в трансформации Стадии 11 в `saas/tools/build-app.mjs` (фронтенд). Только современные SKU Workers AI:
+
+| SKU | Модель Workers AI | Роль |
+|---|---|---|
+| `cf-glm-5.3-flash` | `@cf/zai-org/glm-5.3-flash` | дефолт (новейшая генерация) |
+| `cf-glm-4.7-flash` | `@cf/zai-org/glm-4.7-flash` | быстрая альтернатива |
+| `cf-deepseek-v4-flash` | `@cf/deepseek-ai/deepseek-v4-flash-0731` | ретрай при сбое дефолта (§10.1) |
+| `cf-qwen3.8-27b` | `@cf/qwen/qwen3.8-27b` | мультиязычность, JSON-структуры |
+| `cf-gemma-4-26b-a4b-it` | `@cf/google/gemma-4-26b-a4b-it` | компактная MoE |
+
+- Смена активной модели — без передеплоя: `POST /admin/api/ai_model {"sku":"…"}` (или селектор в `/admin`).
+- Пользователь может выбрать модель сам (⚙️ в панели наставника) — выбор едет в `body.model`,
+  сервер валидирует по белому списку; приоритет: выбор клиента → админская `settings.ai_model` → дефолт.
+- Старые id (`cf-llama-*`, `cf-mistral-*`, `cf-qwen2.5-*`, `cf-gemma-7b-it`) сняты с листинга:
+  сохранённые у клиентов значения мигрируют на дефолт автоматически (клиент и сервер валидируют по списку).
+
 ## S4. Вебхуки провайдеров
 - Lemon Squeezy: `https://<домен>/api/pay/lemonsqueezy/webhook` (подпись X-Signature);
 - ЮKassa: `https://<домен>/api/pay/yookassa/webhook` (+ заголовок `x-webhook-secret`);

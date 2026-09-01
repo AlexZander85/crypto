@@ -18,7 +18,10 @@ const check = (name, cond, extra = '') => {
 // сборка SaaS-приложения из актуального исходника
 execSync('node tools/build-app.mjs', { cwd: SAAS, stdio: 'pipe', shell: true });
 
-const child = spawn('npx', ['wrangler', 'dev', '--port', String(PORT)], {
+// Стадия 11: dev с ОСНОВНЫМ конфигом тянет remote-сессию AI-биндинга и требует
+// CLOUDFLARE_API_TOKEN (см. комментарий в wrangler.test.jsonc). E2E синка AI не
+// трогает — гоняем через тестовый конфиг, как api.test.mjs.
+const child = spawn('npx', ['wrangler', 'dev', '--port', String(PORT), '--config', 'wrangler.test.jsonc'], {
   cwd: SAAS, shell: true, stdio: 'pipe', detached: true, windowsHide: true
 });
 
