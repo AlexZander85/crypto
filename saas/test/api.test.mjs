@@ -20,9 +20,12 @@ const hmac = (secret, msg) => crypto.createHmac('sha256', secret).update(msg).di
 
 // ---- запуск wrangler dev ----
 console.log('booting wrangler dev (local D1/KV/R2)…');
-execSync('npx wrangler d1 migrations apply DB --local', { cwd: new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'), stdio: 'pipe', shell: true });
+const SAAS_DIR = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+// Стадия 1: свежие паки → локальные R2/KV перед прогоном (воспроизводимость в чистом клоне)
+execSync('node tools/upload-packs.mjs --local', { cwd: SAAS_DIR, stdio: 'pipe', shell: true });
+execSync('npx wrangler d1 migrations apply DB --local', { cwd: SAAS_DIR, stdio: 'pipe', shell: true });
 const child = spawn('npx', ['wrangler', 'dev', '--port', String(PORT)], {
-  cwd: new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'),
+  cwd: SAAS_DIR,
   shell: true, stdio: 'pipe', detached: true, windowsHide: true
 });
 
@@ -93,20 +96,23 @@ try {
   });
   check('stale progress skipped', stale.body?.skipped === 'stale');
 
-  // 8. content: манифест гостя и free-юзера — только demo; версия из content/manifest.json
+  // 8. content: манифест гостя и free-юзера — только демо-паки (core_demo + books, §4.2)
   const mfGuest = await api('/api/content/manifest?locale=ru');
-  check('guest manifest = demo only', mfGuest.body?.packs?.length === 1 && mfGuest.body?.packs?.[0]?.demo === true);
+  check('guest manifest = demo packs only', mfGuest.body?.packs?.length === 2 && mfGuest.body?.packs?.every(p => p.demo === true),
+    `packs=${mfGuest.body?.packs?.length}`);
   const mfFree = await api('/api/content/manifest?locale=ru', { headers: { authorization: `Bearer ${jwt}` } });
-  check('free manifest = demo only', mfFree.body?.packs?.length === 1);
+  check('free manifest = demo packs only', mfFree.body?.packs?.length === 2);
   const manifestFile = JSON.parse(fs.readFileSync(new URL('../content/manifest.json', import.meta.url), 'utf8'));
   check('manifest version from generated manifest.json', mfGuest.body?.version === manifestFile.version,
     `api=${mfGuest.body?.version} file=${manifestFile.version}`);
   check('pack versions present (per-pack cache keys)', typeof mfGuest.body?.packs?.[0]?.version === 'string' && mfGuest.body?.packs?.[0]?.version.length === 12);
 
-  // 9. демо-пак отдаётся, платный закрыт
+  // 9. демо-пак отдаётся с реальным контентом v12.9 (Ф0 = 20 + П1–П8 = 8), платный закрыт
   const demoPack = await api('/api/content/pack/ru/core_demo');
-  check('demo pack public with real lessons', demoPack.status === 200 && demoPack.body?.meta?.demo === true && demoPack.body?.lessons?.length === 72,
-    `status=${demoPack.status} lessons=${demoPack.body?.lessons?.length}`);
+  check('demo pack public with real v12.9 lessons', demoPack.status === 200 && demoPack.body?.meta?.demo === true && demoPack.body?.registers?.LESSONS?.length === 20 && demoPack.body?.registers?.PSY_LESSONS?.length === 8,
+    `status=${demoPack.status} lessons=${demoPack.body?.registers?.LESSONS?.length} psy=${demoPack.body?.registers?.PSY_LESSONS?.length}`);
+  const booksPack = await api('/api/content/pack/ru/books');
+  check('books pack free (витрина RAG)', booksPack.status === 200 && booksPack.body?.registers?.BOOKS?.length === 10);
   const paidNoAuth = await api('/api/content/pack/ru/core_p1');
   check('paid pack 401 without JWT', paidNoAuth.status === 401);
   const paidFree = await api('/api/content/pack/ru/core_p1', { headers: { authorization: `Bearer ${jwt}` } });
@@ -133,8 +139,17 @@ try {
 
   // 11b. платный пак после гранта: фаза 1 (12 уроков) + пер-пользовательский водяной знак (§22.1.3)
   const paidLite = await api('/api/content/pack/ru/core_p1', { headers: { authorization: `Bearer ${jwt}` } });
-  check('paid phase pack with watermark after grant', paidLite.status === 200 && paidLite.body?.lessons?.length === 12 && paidLite.body?.meta?.wm === userId,
-    `status=${paidLite.status} lessons=${paidLite.body?.lessons?.length}`);
+  check('paid phase pack with watermark after grant', paidLite.status === 200 && paidLite.body?.registers?.LESSONS?.length === 12 && paidLite.body?.meta?.wm === userId,
+    `status=${paidLite.status} lessons=${paidLite.body?.registers?.LESSONS?.length}`);
+  // 11c. полный платный манифест = все паки v12.9 (15)
+  const mfPaidAll = await api('/api/content/manifest?locale=ru', { headers: { authorization: `Bearer ${jwt}` } });
+  check('paid manifest = all 15 packs', mfPaidAll.body?.packs?.length === 15, `packs=${mfPaidAll.body?.packs?.length}`);
+  const p9 = await api('/api/content/pack/ru/core_p9', { headers: { authorization: `Bearer ${jwt}` } });
+  check('FT pack: 27 lessons + 27 labs', p9.status === 200 && p9.body?.registers?.FT?.length === 27 && Object.keys(p9.body?.registers?.V11_FT_LABS || {}).length === 27);
+  const p8 = await api('/api/content/pack/ru/core_p8', { headers: { authorization: `Bearer ${jwt}` } });
+  check('psy pack: П9–П26 + П27–П56', p8.status === 200 && p8.body?.registers?.PSY_LESSONS?.length === 18 && p8.body?.registers?.PSY_LESSONS_2?.length === 30);
+  const testsPack = await api('/api/content/pack/ru/tests', { headers: { authorization: `Bearer ${jwt}` } });
+  check('tests pack: 6 фаз + 3 мат + capstone 30 + psy_cum 21', testsPack.status === 200 && testsPack.body?.registers?.PHASE_TESTS?.length === 6 && testsPack.body?.registers?.MATH_TESTS?.length === 3 && testsPack.body?.registers?.CAPSTONE_EXAM?.questions?.length === 30 && testsPack.body?.registers?.PSY_CUMULATIVE_QUESTIONS?.length === 21);
 
   // 12. вебхук Lemon Squeezy: подпись обязательна
   const lsBody = JSON.stringify({

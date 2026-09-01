@@ -1,99 +1,254 @@
 {
-  "version": "ru.259ab47f",
+  "version": "ru.28a25f1d",
   "locale": "ru",
-  "generated": "2026-08-28T13:46:48.510Z",
-  "source": "index.html",
+  "generated": "2026-09-01T08:19:54.795Z",
+  "source": "index_v12.9.html",
+  "registers": {
+    "LESSONS": {
+      "packs": [
+        "core_demo",
+        "core_p1",
+        "core_p2",
+        "core_p3",
+        "core_p4",
+        "core_p5",
+        "core_p6"
+      ],
+      "kind": "array"
+    },
+    "PSY_LESSONS": {
+      "packs": [
+        "core_demo",
+        "core_p8"
+      ],
+      "kind": "array"
+    },
+    "PSY_LESSONS_2": {
+      "packs": [
+        "core_p8"
+      ],
+      "kind": "array"
+    },
+    "MATH_LESSONS_SOURCE": {
+      "packs": [
+        "core_p7"
+      ],
+      "kind": "array"
+    },
+    "VIBECODING_LESSONS": {
+      "packs": [
+        "core_p6"
+      ],
+      "kind": "array"
+    },
+    "V4_CONTENT_LESSONS": {
+      "packs": [
+        "core_p6"
+      ],
+      "kind": "array"
+    },
+    "FT": {
+      "packs": [
+        "core_p9"
+      ],
+      "kind": "array"
+    },
+    "V11_FT_LABS": {
+      "packs": [
+        "core_p9"
+      ],
+      "kind": "object"
+    },
+    "TERMS_RAW": {
+      "packs": [
+        "terms"
+      ],
+      "kind": "array"
+    },
+    "PHASE_TESTS": {
+      "packs": [
+        "tests"
+      ],
+      "kind": "array"
+    },
+    "MATH_TESTS": {
+      "packs": [
+        "tests"
+      ],
+      "kind": "array"
+    },
+    "CAPSTONE_EXAM": {
+      "packs": [
+        "tests"
+      ],
+      "kind": "object"
+    },
+    "PSY_CUMULATIVE_QUESTIONS": {
+      "packs": [
+        "tests"
+      ],
+      "kind": "array"
+    },
+    "QUIZ_PSY": {
+      "packs": [
+        "quizbanks"
+      ],
+      "kind": "array"
+    },
+    "QUIZ_DATA": {
+      "packs": [
+        "quizbanks"
+      ],
+      "kind": "array"
+    },
+    "QUIZ_LEGAL": {
+      "packs": [
+        "quizbanks"
+      ],
+      "kind": "array"
+    },
+    "QUIZ_CALC": {
+      "packs": [
+        "quizbanks"
+      ],
+      "kind": "array"
+    },
+    "QUIZ_CASES": {
+      "packs": [
+        "quizbanks"
+      ],
+      "kind": "array"
+    },
+    "PSY_SITUATIONAL_DRILL": {
+      "packs": [
+        "quizbanks"
+      ],
+      "kind": "array"
+    },
+    "EARNING_METHODS": {
+      "packs": [
+        "earning"
+      ],
+      "kind": "array"
+    },
+    "CRYPTO_LITERACY_EXAM": {
+      "packs": [
+        "core_demo"
+      ],
+      "kind": "object"
+    },
+    "BOOKS": {
+      "packs": [
+        "books"
+      ],
+      "kind": "array"
+    }
+  },
   "packs": [
     {
       "name": "core_demo",
       "demo": true,
-      "version": "c9c287507058",
-      "bytes": 434546,
-      "brotli_bytes": 87308
-    },
-    {
-      "name": "core_p0",
-      "demo": false,
-      "version": "72adc8901c68",
-      "bytes": 99345,
-      "brotli_bytes": 23860
+      "version": "c9ad8d6c684e",
+      "bytes": 222243,
+      "brotli_bytes": 45400
     },
     {
       "name": "core_p1",
       "demo": false,
-      "version": "6de786f44e5c",
-      "bytes": 131154,
-      "brotli_bytes": 31969
+      "version": "9a1012b56671",
+      "bytes": 141700,
+      "brotli_bytes": 33274
     },
     {
       "name": "core_p2",
       "demo": false,
-      "version": "4fa02e2ac390",
-      "bytes": 57331,
-      "brotli_bytes": 15491
+      "version": "4d8e02ad8c16",
+      "bytes": 70442,
+      "brotli_bytes": 18214
     },
     {
       "name": "core_p3",
       "demo": false,
-      "version": "a6530f3532ce",
-      "bytes": 58441,
-      "brotli_bytes": 15087
+      "version": "f7e12fb536f7",
+      "bytes": 61606,
+      "brotli_bytes": 15392
     },
     {
       "name": "core_p4",
       "demo": false,
-      "version": "f45607f5c050",
-      "bytes": 71885,
-      "brotli_bytes": 18908
+      "version": "518e38897f18",
+      "bytes": 80703,
+      "brotli_bytes": 20298
     },
     {
       "name": "core_p5",
       "demo": false,
-      "version": "ce75dc0a2963",
-      "bytes": 74155,
-      "brotli_bytes": 18415
+      "version": "b2efa976fa93",
+      "bytes": 81522,
+      "brotli_bytes": 19492
     },
     {
       "name": "core_p6",
       "demo": false,
-      "version": "1b46da444fd9",
-      "bytes": 143175,
-      "brotli_bytes": 33778
+      "version": "a4430f08b1ba",
+      "bytes": 157626,
+      "brotli_bytes": 36288
     },
     {
       "name": "core_p7",
       "demo": false,
-      "version": "798eae06fae9",
-      "bytes": 74782,
-      "brotli_bytes": 13019
+      "version": "b92e4bd2cbcb",
+      "bytes": 218194,
+      "brotli_bytes": 43986
     },
     {
       "name": "core_p8",
       "demo": false,
-      "version": "3d939c557c8d",
-      "bytes": 335271,
-      "brotli_bytes": 66276
+      "version": "2f9abbe0ff9e",
+      "bytes": 507650,
+      "brotli_bytes": 82325
+    },
+    {
+      "name": "core_p9",
+      "demo": false,
+      "version": "a88c59377d26",
+      "bytes": 132321,
+      "brotli_bytes": 15899
     },
     {
       "name": "terms",
       "demo": false,
-      "version": "17160f5f3e96",
-      "bytes": 98162,
-      "brotli_bytes": 24742
+      "version": "1835a555f06d",
+      "bytes": 157639,
+      "brotli_bytes": 38653
     },
     {
       "name": "tests",
       "demo": false,
-      "version": "72cc1473e7fc",
-      "bytes": 93592,
-      "brotli_bytes": 21986
+      "version": "6d70e5a8e1df",
+      "bytes": 210890,
+      "brotli_bytes": 45439
+    },
+    {
+      "name": "quizbanks",
+      "demo": false,
+      "version": "9b9126722c0e",
+      "bytes": 235971,
+      "brotli_bytes": 42311
     },
     {
       "name": "earning",
       "demo": false,
-      "version": "fe48a07fd2e4",
-      "bytes": 38505,
-      "brotli_bytes": 10611
+      "version": "785202219e3d",
+      "bytes": 39264,
+      "brotli_bytes": 10845
+    },
+    {
+      "name": "books",
+      "demo": true,
+      "version": "0b9fd6c85147",
+      "bytes": 29380,
+      "brotli_bytes": 7636
     }
   ]
 }
