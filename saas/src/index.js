@@ -8,6 +8,7 @@ import * as paymentsCrypto from './payments-crypto.js';
 import { adminOverview, adminGrantTier } from './admin.js';
 import { ask as mentorAsk } from './mentor.js';
 import { adminGetAiModel, adminSetAiModel } from './admin-ai.js';
+import { live } from './live.js';
 const { prices, yookassaCreate } = payments;
 
 export default {
@@ -69,6 +70,11 @@ export default {
 
       // ---- mentor (§10: контракт v12.9) ----
       if (path === '/api/mentor/ask' && req.method === 'POST') return mentorAsk({ env, ctx }, req);
+
+      // ---- живой рынок (§11: влитой live-proxy + гейтинг) ----
+      if ((m = path.match(/^\/api\/live\/([a-z-]+)$/)) && req.method === 'GET') {
+        return live({ env, ctx }, req, m[1]);
+      }
 
       // ---- feedback ----
       if (path === '/api/feedback' && req.method === 'POST') {

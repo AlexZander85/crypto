@@ -243,6 +243,7 @@ try {
   const mr2 = await api('/api/auth/magic-request', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: emailM }) });
   const mcM = await api(new URL(mr2.body.dev_link).pathname + new URL(mr2.body.dev_link).search, { headers: { accept: 'application/json' } });
   const jwt2 = mcM.body.token;
+  const uid2 = mcM.body.user?.id;
   const fj = await mentorReq({ action: 'feynman', lessonId: 'p0_l1', lessonText: 'урок', payload: { explanation: 'объяснение' } }, jwt2);
   check('feynman: verdict json (partial/advice/gaps)', fj.status === 200 && fj.body?.json?.verdict === 'partial' && typeof fj.body?.json?.advice === 'string' && Array.isArray(fj.body?.json?.gaps),
     JSON.stringify(fj.body?.json || {}));
@@ -266,6 +267,25 @@ try {
   // смена модели в admin_actions
   const admAudit = await api('/admin/api/overview?days=30', { headers: { authorization: 'Bearer dev-only-admin' } });
   check('telemetry/audit живы после mentor', admAudit.status === 200);
+
+  // 16. живой рынок §11: гейтинг ДО обращения к внешним источникам
+  const lvPaid = await api('/api/live/orderbook');
+  check('live: гость orderbook → 402 (гейтинг)', lvPaid.status === 402 && lvPaid.body?.error === 'payment_required');
+  const lvLite = await api('/api/live/klines', { headers: { authorization: `Bearer ${jwt}` } });
+  check('live: lite klines → 402 (upsell pro)', lvLite.status === 402 && lvLite.body?.upsell === 'pro');
+  const lvFree = await api('/api/live/fng');
+  check('live: гость fng (витрина) — не 402/403', lvFree.status === 200 || lvFree.status === 502, `status=${lvFree.status} (upstream: ${lvFree.status === 502 ? 'недоступен' : 'ok'})`);
+  // pro-пользователь: грант + полный доступ (если upstream доступен из песочницы — 200)
+  await api('/admin/api/grant_tier', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ user_id: userId, tier: 'pro', reason: 'test-live' }) });
+  const lvPro = await api('/api/live/btc-fees', { headers: { authorization: `Bearer ${jwt}` } });
+  check('live: pro btc-fees — не 402', lvPro.status !== 402, `status=${lvPro.status}`);
+
+  // 17. серверный RAG §10.3: BM25 по 302 атомам, provenance в ответе
+  // (у jwt2 квота free исчерпана шагом ранее — поднимаем до pro, лимит 10/день)
+  await api('/admin/api/grant_tier', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ user_id: uid2, tier: 'pro', reason: 'test-rag' }) });
+  const rg = await mentorReq({ action: 'rag', lessonId: 'ps_l1', lessonText: '', payload: { __rag: 1, query: 'страх сделки и вероятностное мышление' } }, jwt2);
+  check('RAG: ответ с provenance-источниками', rg.status === 200 && Array.isArray(rg.body?.rag?.sources) && rg.body.rag.sources.length > 0,
+    `sources=${JSON.stringify((rg.body?.rag?.sources || []).slice(0, 1))}`);
 
 } catch (e) {
   check('suite completed', false, String(e?.message || e).slice(0, 200));

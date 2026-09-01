@@ -8,6 +8,7 @@
 // Авторизация: JWT пользователя; гость — по deviceId (витрина 3/день, §1).
 import { json, readJson, bearer, rateLimit } from './util.js';
 import { verifyJWT } from './util.js';
+import { ragSearch } from './rag.js';
 
 // §10.2 — белый список SKU Workers AI (проверены в v12.9, MENTOR_MODELS)
 export const MODEL_WHITELIST = {
@@ -164,8 +165,23 @@ export async function ask(ctx, req) {
   // RAG-режим (payload.__rag) — серверный контур Стадии 7; здесь честный флаг в телеметрии
   const isRag = !!(payload && payload.__rag);
 
+  // RAG-режим (§10.3): BM25-поиск по 302 атомам → контекст с provenance в промпт.
+  // Доступен любому авторизованному запросу наставника (витрина книги и так бесплатна);
+  // полный контур «Макс» ограничен квотой 100/день тем же счётчиком.
+  let ragSources = [];
+  let ragContext = '';
+  if (isRag) {
+    const q = (payload && (payload.query || payload.question || payload.explanation)) || '';
+    const rag = ragSearch(String(q).slice(0, 500), lessonId, 3);
+    ragContext = rag.context;
+    ragSources = rag.sources;
+  }
+
   const sku = await getActiveSku(env);
   const messages = buildMessages(action, lessonText, payload);
+  if (ragContext) {
+    messages[1].content += '\n\nРелевантные фрагменты доказательной базы книг (ссылайся честно: если этого нет в фрагментах — так и скажи):\n' + ragContext;
+  }
   let text = null, usedSku = sku, retried = false;
   try {
     text = await runModel(env, sku, messages);
@@ -220,5 +236,5 @@ export async function ask(ctx, req) {
     });
   } catch { /* телеметрия не ломает ответ */ }
 
-  return json({ text: respText, ...(respJson ? { json: respJson } : {}) });
+  return json({ text: respText, ...(respJson ? { json: respJson } : {}), ...(isRag ? { rag: { sources: ragSources } } : {}) });
 }
