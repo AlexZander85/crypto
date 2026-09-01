@@ -9,6 +9,7 @@
 import { json, readJson, bearer, rateLimit } from './util.js';
 import { verifyJWT } from './util.js';
 import { ragSearch } from './rag.js';
+import { extractUsage, estimateTokens, recordUsage, calcNeurons } from './neurons.js';
 
 // §10.2 — белый список SKU Workers AI. Стадия 11 (09.2026): каталог обновлён —
 // только современные модели поколения 2026 по выбору владельца; старое поколение
@@ -75,11 +76,11 @@ function isMockModel(env) {
 async function runModel(env, sku, messages) {
   if (isMockModel(env)) {
     const user = messages[messages.length - 1].content;
-    if (user.includes('__TEST_FILTER__')) return 'Отличный вопрос! Сигнал к покупке — покупай прямо сейчас.';
+    if (user.includes('__TEST_FILTER__')) return { text: 'Отличный вопрос! Сигнал к покупке — покупай прямо сейчас.', usage: null };
     if (user.includes('Задача: feynman') || user.includes('Проверь объяснение ученика методом Фейнмана')) {
-      return JSON.stringify({ verdict: 'partial', advice: 'Ты верно ухватил идею, но добавь пример из практики.', gaps: ['нет примера', 'не названа цель'] });
+      return { text: JSON.stringify({ verdict: 'partial', advice: 'Ты верно ухватил идею, но добавь пример из практики.', gaps: ['нет примера', 'не названа цель'] }), usage: null };
     }
-    return 'По материалу урока: разбери определение и закрепи его на маленьком примере. Это учебный ответ тестового режима.';
+    return { text: 'По материалу урока: разбери определение и закрепи его на маленьком примере. Это учебный ответ тестового режима.', usage: null };
   }
   if (!env.AI) throw Object.assign(new Error('ai_not_configured'), { code: 'ai_not_configured' });
   const ctrl = new AbortController();
@@ -91,7 +92,9 @@ async function runModel(env, sku, messages) {
     ]);
     const text = typeof out === 'string' ? out : (out && (out.response || out.text || out.result)) || '';
     if (!text) throw new Error('empty_model_output');
-    return String(text);
+    // usage (токены) из ответа модели — источник истины для учёта нейронов;
+    // некоторые модели не отдают usage → вернём null, звонящий оценит по эвристике
+    return { text: String(text), usage: extractUsage(out) };
   } finally { clearTimeout(t); }
 }
 
@@ -188,20 +191,20 @@ export async function ask(ctx, req) {
   if (ragContext) {
     messages[1].content += '\n\nРелевантные фрагменты доказательной базы книг (ссылайся честно: если этого нет в фрагментах — так и скажи):\n' + ragContext;
   }
-  let text = null, usedSku = sku, retried = false;
+  let text = null, modelUsage = null, usedSku = sku, retried = false;
   try {
-    text = await runModel(env, sku, messages);
+    ({ text, usage: modelUsage } = await runModel(env, sku, messages));
   } catch (e) {
     if (e && e.code === 'ai_not_configured') return json({ error: 'ai_not_configured' }, 501);
     // один ретрай другой моделью из белого списка (§10.1), потом честный 502
     try {
       retried = true;
       usedSku = FALLBACK_SKU;
-      text = await runModel(env, FALLBACK_SKU, messages);
+      ({ text, usage: modelUsage } = await runModel(env, FALLBACK_SKU, messages));
     } catch (e2) {
       try {
         const { track } = await import('./telemetry.js');
-        track({ env, ctx }, 'mentor_call', claims ? claims.sub : null, { feature: action, ok: 0, model: usedSku, rag: isRag ? 1 : 0, err: 1 });
+        track({ env, ctx: ctx.ctx || ctx }, 'mentor_call', claims ? claims.sub : null, { feature: action, ok: 0, model: usedSku, rag: isRag ? 1 : 0, err: 1 });
       } catch (e3) {}
       return json({ error: 'model_failed' }, 502);
     }
@@ -235,12 +238,33 @@ export async function ask(ctx, req) {
 
   try {
     const { track } = await import('./telemetry.js');
-    track({ env, ctx }, 'mentor_call', claims ? claims.sub : null, {
+    track({ env, ctx: ctx.ctx || ctx }, 'mentor_call', claims ? claims.sub : null, {
       feature: action, ok: 1, filtered: filteredRes.filtered,
       chars_in: lessonText.length, chars_out: respText.length,
       model: usedSku, rag: isRag ? 1 : 0
     });
   } catch { /* телеметрия не ломает ответ */ }
 
-  return json({ text: respText, ...(respJson ? { json: respJson } : {}), ...(isRag ? { rag: { sources: ragSources } } : {}) });
+  // ---- учёт нейронов (дашборд «Нейроны» в админке) ----
+  // usage из ответа модели точен; если модели не отдала usage — оценка по эвристике
+  // (кириллица ~2 симв./токен, латиница ~4), помечается estimated=1.
+  let neuronInfo = null;
+  try {
+    const inTok = modelUsage ? modelUsage.in : estimateTokens(JSON.stringify(messages));
+    const cachedTok = modelUsage ? modelUsage.cached : 0;
+    const outTok = modelUsage ? modelUsage.out : estimateTokens(text);
+    const usage = { in: inTok, cached: cachedTok, out: outTok, estimated: modelUsage ? 0 : 1 };
+    const neurons = calcNeurons(usedSku, inTok, cachedTok, outTok);
+    neuronInfo = { model: usedSku, in: inTok, cached: cachedTok, out: outTok, neurons, estimated: usage.estimated };
+    const exec = (ctx && typeof ctx.waitUntil === 'function') ? ctx : (ctx && ctx.ctx);
+    const write = recordUsage(env, usedSku, usage);
+    if (exec && typeof exec.waitUntil === 'function') exec.waitUntil(write); else await write;
+  } catch { /* учёт нейронов не ломает ответ наставника */ }
+
+  return json({
+    text: respText,
+    ...(respJson ? { json: respJson } : {}),
+    ...(isRag ? { rag: { sources: ragSources } } : {}),
+    ...(neuronInfo ? { _neurons: neuronInfo } : {})
+  });
 }

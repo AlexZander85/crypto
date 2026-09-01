@@ -51,6 +51,8 @@
     "PRICES_JSON": "{\"lite\":{\"title\":\"🔑 Лайт\",\"price\":\"990 ₽ · $12 навсегда\",\"note\":\"все 213 уроков\",\"amount_rub\":\"990\",\"pay\":{\"yookassa\":true,\"lemonsqueezy\":true,\"crypto\":true}},\"pro\":{\"title\":\"📊 Про\",\"price\":\"1 990 ₽ · $24 навсегда\",\"note\":\"+ 🌍 живой рынок\",\"amount_rub\":\"1990\",\"pay\":{\"yookassa\":true,\"lemonsqueezy\":true,\"crypto\":true}},\"max\":{\"title\":\"🤖 Макс\",\"price\":\"399 ₽/мес · $24/год\",\"note\":\"+ 🤖 наставник 100/день и RAG\",\"amount_rub\":\"399\",\"pay\":{\"yookassa\":true,\"crypto\":true}}}",
     // Даунгрейд после истечения подписки «Макс» (§9): free | lite | pro
     "TIER_DOWNGRADE": "free",
+    // Дневной лимит нейронов Workers AI (дашборд «Нейроны» в админке).
+    "NEURON_DAILY_LIMIT": "10000",
     // dev-фикстура приёмки наставника (§19.4): детерминированные ответы модели.
     // Только для локальной разработки/тестов; на проде не выставлять.
     "MENTOR_MOCK_MODEL": "1"

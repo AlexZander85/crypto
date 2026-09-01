@@ -7,7 +7,7 @@ import * as payments from './payments.js';
 import * as paymentsCrypto from './payments-crypto.js';
 import { adminOverview, adminGrantTier, adminAiUsage, adminUsers, adminUser, adminErrors, adminContentFunnel, adminContentPacks, adminDeleteUser, adminSubscriptionAction, adminActions } from './admin.js';
 import { ask as mentorAsk } from './mentor.js';
-import { adminGetAiModel, adminSetAiModel } from './admin-ai.js';
+import { adminGetAiModel, adminSetAiModel, adminNeurons } from './admin-ai.js';
 import { live } from './live.js';
 import { scheduled } from './cron.js';
 const { prices, yookassaCreate } = payments;
@@ -125,6 +125,7 @@ export default {
       }
       if (path === '/admin/api/ai_model' && req.method === 'GET') return adminGetAiModel({ env, ctx }, req);
       if (path === '/admin/api/ai_model' && req.method === 'POST') return adminSetAiModel({ env, ctx }, req);
+      if (path === '/admin/api/neurons' && req.method === 'GET') return adminNeurons({ env, ctx }, req);
 
       return json({ error: 'not_found' }, 404, H);
     } catch (err) {

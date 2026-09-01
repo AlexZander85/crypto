@@ -1,6 +1,9 @@
 // Админ: активная модель ИИ (§10.2). Смена без передеплоя, только SKU из белого списка.
+// + дашборд «Нейроны»: расход по моделям, дневной лимит 10 000, остаток,
+//   средняя цена задачи, «на сколько задач хватит».
 import { json, readJson } from './util.js';
 import { MODEL_WHITELIST, setActiveSku, DEFAULT_SKU } from './mentor.js';
+import { snapshot } from './neurons.js';
 
 function requireAdmin(ctx, req) {
   const { env } = ctx;
@@ -30,4 +33,19 @@ export async function adminSetAiModel(ctx, req) {
   await env.DB.prepare('INSERT INTO admin_actions (ts, action, target_user, detail) VALUES (?, ?, ?, ?)')
     .bind(Date.now(), 'ai_model', null, JSON.stringify({ from: prev?.value || DEFAULT_SKU, to: sku })).run();
   return json({ ok: true, sku, model: MODEL_WHITELIST[sku] });
+}
+
+// GET /admin/api/neurons?days=14 — дашборд «Нейроны»:
+// дневной лимит (Workers Free 10 000), расход сегодня по каждой модели,
+// остаток, средняя цена задачи, «на сколько задач хватит», история по дням.
+export async function adminNeurons(ctx, req) {
+  const { env } = ctx;
+  if (!requireAdmin(ctx, req)) return json({ error: 'unauthorized' }, 401);
+  try {
+    const days = Math.min(365, Math.max(1, parseInt(new URL(req.url).searchParams.get('days') || '14', 10)));
+    const snap = await snapshot(env, days);
+    return json(snap);
+  } catch (e) {
+    return json({ error: 'admin_error', detail: String(e && e.message || e).slice(0, 120) }, 500);
+  }
 }

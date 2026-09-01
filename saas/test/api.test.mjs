@@ -268,6 +268,28 @@ try {
   const admAudit = await api('/admin/api/overview?days=30', { headers: { authorization: 'Bearer dev-only-admin' } });
   check('telemetry/audit живы после mentor', admAudit.status === 200);
 
+  // 15b. дашборд «Нейроны»: usage ловится из ответов наставника и пишется в D1
+  const nrNo = await api('/admin/api/neurons');
+  check('admin neurons требует секрет', nrNo.status === 401);
+  await new Promise(r => setTimeout(r, 2000)); // запись через waitUntil — даём догореть
+  const nr = await api('/admin/api/neurons?days=7', { headers: { authorization: 'Bearer dev-only-admin' } });
+  check('admin neurons: лимит 10000 и остаток', nr.status === 200 && nr.body?.limit === 10000 && typeof nr.body?.remaining === 'number',
+    `limit=${nr.body?.limit} remaining=${nr.body?.remaining}`);
+  check('admin neurons: расход после mentor-вызовов > 0', (nr.body?.today?.neurons || 0) > 0 && (nr.body?.today?.requests || 0) >= 6,
+    `neurons=${nr.body?.today?.neurons} requests=${nr.body?.today?.requests}`);
+  check('admin neurons: by_model с тарифами и средней ценой', Array.isArray(nr.body?.by_model) && nr.body.by_model.length >= 1
+    && typeof nr.body.by_model[0].avg_neurons === 'number' && nr.body.by_model[0].avg_neurons > 0
+    && nr.body.by_model[0].neurons > 0 && typeof nr.body.by_model[0].tasks_left === 'number',
+    JSON.stringify(nr.body?.by_model?.[0] || {}));
+  check('admin neurons: avg_per_task и tasks_left согласованы', typeof nr.body?.avg_per_task === 'number' && nr.body.avg_per_task > 0
+    && nr.body?.tasks_left > 0 && nr.body.tasks_left <= 10000,
+    `avg=${nr.body?.avg_per_task} tasks_left=${nr.body?.tasks_left}`);
+  check('admin neurons: тарифы всех 5 моделей в ответе', nr.body?.pricing && Object.keys(nr.body.pricing).length === 5
+    && nr.body.pricing['cf-glm-5.3-flash'].in === 13636 && nr.body.pricing['cf-deepseek-v4-flash'].out === 120000);
+  check('mentor: _neurons в ответе наставника', typeof g1.body?._neurons === 'object' && g1.body._neurons.neurons >= 0
+    && ['cf-glm-5.3-flash', 'cf-glm-4.7-flash', 'cf-deepseek-v4-flash'].includes(g1.body._neurons.model),
+    JSON.stringify(g1.body?._neurons || {}));
+
   // 16. живой рынок §11: гейтинг ДО обращения к внешним источникам
   const lvPaid = await api('/api/live/orderbook');
   check('live: гость orderbook → 402 (гейтинг)', lvPaid.status === 402 && lvPaid.body?.error === 'payment_required');

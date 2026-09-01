@@ -94,6 +94,7 @@ function svgLine(values, color){
 
 const SCREENS = {
   overview: 'Обзор',
+  neurons: '🧮 Нейроны',
   ai: 'AI-расход',
   users: 'Пользователи',
   content: 'Контент',
@@ -105,7 +106,7 @@ async function load(){
   $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{ screen=b.dataset.s; load(); });
   const main = $('main');
   main.innerHTML = '<p class="mut">Загрузка…</p>';
-  try { await ({overview, ai, users, content, actions})[screen](); }
+  try { await ({overview, neurons, ai, users, content, actions})[screen](); }
   catch(e){ if (String(e.message)!=='401') main.innerHTML = '<p class="mut">Ошибка загрузки: '+esc(e.message)+'</p>'; }
 }
 
@@ -158,6 +159,37 @@ async function ai(){
     toast(r.ok ? 'Модель сменена: ' + sku : 'Ошибка смены');
     load();
   };
+}
+
+/* --- дашборд «Нейроны»: расход Workers AI по тарифам владельца --- */
+async function neurons(){
+  const d = await api('/admin/api/neurons?days=14');
+  const pct = d.usage_pct || 0;
+  const barColor = pct > 80 ? 'linear-gradient(90deg,#ff7a8a,#e05c6e)' : pct > 50 ? 'linear-gradient(90deg,#f6c86a,#e0a83e)' : 'linear-gradient(90deg,#5fd4a2,#4bb886)';
+  const bar = `<div style="background:#0f1328;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--line)">
+    <div style="width:${Math.min(100,pct)}%;height:100%;background:${barColor}"></div></div>`;
+  $('main').innerHTML = `
+    <div class="grid">
+      <div class="card"><div class="k">Дневной лимит</div><div class="v">${fmt(d.limit)}</div><div class="s">нейронов/день · Workers Free</div></div>
+      <div class="card"><div class="k">Израсходовано сегодня</div><div class="v" style="color:${pct>80?'var(--err)':pct>50?'var(--warn)':'var(--ok)'}">${fmt(d.today?.neurons)}</div><div class="s">${pct}% лимита</div></div>
+      <div class="card"><div class="k">Остаток на сегодня</div><div class="v">${fmt(d.remaining)}</div><div class="s">нейронов</div></div>
+      <div class="card"><div class="k">Средняя цена задачи</div><div class="v">${d.avg_per_task||0}</div><div class="s">нейронов/запрос · запросов: ${fmt(d.today?.requests)}</div></div>
+      <div class="card"><div class="k">Задач осталось</div><div class="v">${d.tasks_left==null?'—':fmt(d.tasks_left)}</div><div class="s">по средней цене, до конца дня</div></div>
+    </div>
+    <div class="card" style="margin-bottom:14px"><div class="k">Расход лимита: ${fmt(d.today?.neurons)} / ${fmt(d.limit)}</div><div style="margin-top:8px">${bar}</div></div>
+    <div class="two" style="margin-bottom:14px">
+      <div class="card"><div class="k">Нейроны по дням</div>${svgLine((d.by_day||[]).map(r=>[r.day,r.neurons]),'#5cb8f7')}</div>
+      <div class="card"><div class="k">Запросы по дням</div>${svgLine((d.by_day||[]).map(r=>[r.day,r.requests]),'#5fd4a2')}</div>
+    </div>
+    <div class="card"><div class="k">Расход по моделям (сегодня)</div>
+      <table style="margin-top:8px"><tr><th>Модель</th><th>Запросов</th><th>In токены</th><th>Кэш</th><th>Out токены</th><th>Нейроны</th><th>Доля</th><th>Ср. на задачу</th><th>Задач хватит</th></tr>
+      ${(d.by_model||[]).map(m=>`<tr>
+        <td><b>${esc(m.label)}</b><div class="mut" style="font-family:monospace;font-size:10.5px">${esc(m.sku)}</div></td>
+        <td>${fmt(m.requests)}</td><td class="mut">${fmt(m.in_tokens)}</td><td class="mut">${fmt(m.cached_tokens)}</td><td class="mut">${fmt(m.out_tokens)}</td>
+        <td><b>${fmt(m.neurons)}</b></td><td>${m.share_pct}%</td><td>${m.avg_neurons}</td><td>${m.tasks_left==null?'—':fmt(m.tasks_left)}</td></tr>`).join('')||'<tr><td colspan="9" class="mut">сегодня расходов ещё не было</td></tr>'}
+      </table>
+      <p class="mut" style="margin-bottom:0">Тарифы, нейронов за 1M токенов (in/cached/out): ${(Object.values(d.pricing||{})).map(p=>`${esc(p.label)} — ${fmt(p.in)}/${fmt(p.cached)}/${fmt(p.out)}`).join(' · ')}. Если модель не отдаёт usage, токены оцениваются (помечается в ответе как estimated).</p>
+    </div>`;
 }
 
 async function users(){
