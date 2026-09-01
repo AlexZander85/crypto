@@ -1,6 +1,7 @@
-// Платежи §4.4: Lemon Squeezy (мир, HMAC-подпись) + ЮKassa (РФ, общий секрет).
+// Платежи §4.4/§9: Lemon Squeezy (мир, HMAC-подпись) + ЮKassa (РФ) + витрина цен.
 // Идемпотентность по external_id (§5). Вебхук ставит tier и пишет телеметрию.
 import { json, readJson } from './util.js';
+import { requireAuth } from './auth.js';
 
 const enc = new TextEncoder();
 
@@ -30,6 +31,62 @@ async function recordPurchase(ctx, { userId, provider, externalId, amountMinor, 
   const { track } = await import('./telemetry.js');
   track(ctx, 'pay_webhook', userId, { status, amount_minor: amountMinor, currency, external_id: externalId });
   return { duplicate: false };
+}
+
+// GET /api/pay/prices — витрина тарифов из env-конфига (§9: цены только в конфиге, не в коде).
+// PRICES_JSON: { lite: { title, price, note, pay: { lemonsqueezy?: url, yookassa?: true, crypto?: true } }, pro: …, max: … }
+export async function prices(ctx) {
+  const { env } = ctx;
+  let prices = null;
+  try { prices = JSON.parse(env.PRICES_JSON || 'null'); } catch { prices = null; }
+  if (!prices) return json({ error: 'not_configured' }, 501);
+  return json({ tiers: prices });
+}
+
+// POST /api/pay/yookassa/create { tier } — создание платежа ЮKassa (§9).
+// Требует YOOKASSA_SHOP_ID + YOOKASSA_SECRET; сумма/валюта — из PRICES_JSON[tier].amount_rub.
+export async function yookassaCreate(ctx, req) {
+  const { env } = ctx;
+  const claims = await requireAuth(env, req);
+  if (!claims) return json({ error: 'unauthorized' }, 401);
+  if (!env.YOOKASSA_SHOP_ID || !env.YOOKASSA_SECRET) return json({ error: 'not_configured' }, 501);
+  const body = await readJson(req);
+  const tier = String(body?.tier || '');
+  if (!['lite', 'pro', 'max'].includes(tier)) return json({ error: 'bad_tier' }, 400);
+
+  let prices = null;
+  try { prices = JSON.parse(env.PRICES_JSON || 'null'); } catch { prices = null; }
+  const cfg = prices && prices[tier];
+  const amountRub = cfg && cfg.amount_rub;
+  if (!amountRub) return json({ error: 'price_not_configured' }, 501);
+
+  const origin = new URL(req.url).origin;
+  const idempKey = crypto.randomUUID();
+  const r = await fetch('https://api.yookassa.ru/v3/payments', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'Idempotence-Key': idempKey,
+      authorization: 'Basic ' + btoa(`${env.YOOKASSA_SHOP_ID}:${env.YOOKASSA_SECRET}`)
+    },
+    body: JSON.stringify({
+      amount: { value: String(amountRub), currency: 'RUB' },
+      capture: true,
+      confirmation: { type: 'redirect', return_url: `${origin}/?paid=1` },
+      description: `КриптоНавигатор — тариф ${tier}`,
+      metadata: { user_id: claims.sub, tier }
+    })
+  });
+  if (!r.ok) return json({ error: 'provider_error' }, 502);
+  const data = await r.json();
+  // pending-покупка: вебхук по payment id поднимет tier (идемпотентно по external_id)
+  try {
+    await env.DB.prepare(
+      `INSERT INTO purchases (id, user_id, provider, external_id, amount_minor, currency, status, tier, created_at)
+       VALUES (?, ?, 'yookassa', ?, ?, 'RUB', 'pending', ?, ?)`
+    ).bind(crypto.randomUUID(), claims.sub, String(data.id), Math.round(Number(amountRub) * 100), tier, Date.now()).run();
+  } catch { /* повторный клик по кнопке: external_id UNIQUE — ок */ }
+  return json({ ok: true, confirmation_url: data.confirmation?.confirmation_url || null });
 }
 
 // POST /api/pay/lemonsqueezy/webhook

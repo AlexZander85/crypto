@@ -1,7 +1,7 @@
 // build-app.mjs v2 — сборка SaaS-фронта из index_v12.9.html (§5 промта v2.0).
 //
-//   node tools/build-app.mjs                        # Стадия A: контент вшит фолбэком (эквивалентность)
-//   node tools/build-app.mjs --no-inline-content    # Стадия B: контент ТОЛЬКО из паков (гейтинг)
+//   node tools/build-app.mjs                        # Стадия B: контент ТОЛЬКО из паков (гейтинг) — ПРОД
+//   node tools/build-app.mjs --inline-content       # Стадия A: инлайн-фолбэк (эквивалентность, до продаж)
 //   node tools/build-app.mjs --src index_v13.html   # будущий источник
 //
 // Выход в saas/public/:
@@ -25,7 +25,9 @@ const PUBLIC = path.join(SAAS, 'public');
 fs.mkdirSync(PUBLIC, { recursive: true });
 
 const args = process.argv.slice(2);
-const noInline = args.includes('--no-inline-content');
+// По умолчанию — Стадия B (платный контент никогда не отдаётся статикой, §22.1).
+// Стадия A (--inline-content) — только для приёмки эквивалентности, до включения платежей.
+const noInline = !args.includes('--inline-content');
 const srcArgIdx = args.indexOf('--src');
 const srcPath = srcArgIdx > -1
   ? (path.isAbsolute(args[srcArgIdx + 1]) ? args[srcArgIdx + 1] : path.join(ROOT, args[srcArgIdx + 1]))
@@ -205,6 +207,13 @@ const bootScript = `
       return loadPack(p).then(function (j) {
         data[p.name] = j; loaded++;
         progress('Паков ' + loaded + '/' + packs.length, 0.05 + 0.9 * loaded / Math.max(packs.length, 1));
+        try {
+          var jt = ls('cn_jwt');
+          if (jt && j && j.meta && j.meta.name) {
+            fetch('/api/telemetry', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json', authorization: 'Bearer ' + jt },
+              body: JSON.stringify({ type: 'pack_download', meta: { name: j.meta.name, version: p.version } }) }).catch(function () {});
+          }
+        } catch (e) {}
       }).catch(function () { loaded++; });
     }));
 
@@ -232,10 +241,10 @@ const bootScript = `
       });
     }
 
-    // 4) Стадия B без сети и без кэша → честный экран повтора
+    // 4) Стадия B без сети и без кэша (или паки недоступны) → честный экран повтора
     var anyData = Object.keys(window.CN_CONTENT.data).length > 0;
     var hasFallback = !window.CN_BUILD.stageB;
-    if (!anyData && !hasFallback && !packs.length) { showRetry(); return; }
+    if (!anyData && !hasFallback) { showRetry(); return; }
     progress('Запускаем…', 0.97);
     boot();
   })().catch(function () { showRetry(); });

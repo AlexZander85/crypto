@@ -3004,7 +3004,7 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
 (function () {
   'use strict';
   window.CN_REGISTERS = {"LESSONS":{"packs":["core_demo","core_p1","core_p2","core_p3","core_p4","core_p5","core_p6"],"kind":"array"},"PSY_LESSONS":{"packs":["core_demo","core_p8"],"kind":"array"},"PSY_LESSONS_2":{"packs":["core_p8"],"kind":"array"},"MATH_LESSONS_SOURCE":{"packs":["core_p7"],"kind":"array"},"VIBECODING_LESSONS":{"packs":["core_p6"],"kind":"array"},"V4_CONTENT_LESSONS":{"packs":["core_p6"],"kind":"array"},"FT":{"packs":["core_p9"],"kind":"array"},"V11_FT_LABS":{"packs":["core_p9"],"kind":"object"},"TERMS_RAW":{"packs":["terms"],"kind":"array"},"PHASE_TESTS":{"packs":["tests"],"kind":"array"},"MATH_TESTS":{"packs":["tests"],"kind":"array"},"CAPSTONE_EXAM":{"packs":["tests"],"kind":"object"},"PSY_CUMULATIVE_QUESTIONS":{"packs":["tests"],"kind":"array"},"QUIZ_PSY":{"packs":["quizbanks"],"kind":"array"},"QUIZ_DATA":{"packs":["quizbanks"],"kind":"array"},"QUIZ_LEGAL":{"packs":["quizbanks"],"kind":"array"},"QUIZ_CALC":{"packs":["quizbanks"],"kind":"array"},"QUIZ_CASES":{"packs":["quizbanks"],"kind":"array"},"PSY_SITUATIONAL_DRILL":{"packs":["quizbanks"],"kind":"array"},"EARNING_METHODS":{"packs":["earning"],"kind":"array"},"CRYPTO_LITERACY_EXAM":{"packs":["core_demo"],"kind":"object"},"BOOKS":{"packs":["books"],"kind":"array"}};
-  window.CN_BUILD = { app: '007b70af5ea3', source: 'index_v12.9.html', stageB: false };
+  window.CN_BUILD = { app: '92dc275343b1', source: 'index_v12.9.html', stageB: true };
   window.CN_CONTENT = {
     data: {},
     ensure: function (k) {
@@ -3090,8 +3090,8 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
   var booted = false;
   function boot() {
     if (booted) return; booted = true;
-    inject('/app.js?v=007b70af5ea3').then(function () {
-      return inject('/saas-front.js?v=007b70af5ea3');
+    inject('/app.js?v=92dc275343b1').then(function () {
+      return inject('/saas-front.js?v=92dc275343b1');
     }).then(function () {
       // Движок вставлен после парсинга DOM: переотправим DOMContentLoaded,
       // чтобы сработали неподстрахованные подписчики v12.9 (§5.2).
@@ -3117,6 +3117,13 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
       return loadPack(p).then(function (j) {
         data[p.name] = j; loaded++;
         progress('Паков ' + loaded + '/' + packs.length, 0.05 + 0.9 * loaded / Math.max(packs.length, 1));
+        try {
+          var jt = ls('cn_jwt');
+          if (jt && j && j.meta && j.meta.name) {
+            fetch('/api/telemetry', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json', authorization: 'Bearer ' + jt },
+              body: JSON.stringify({ type: 'pack_download', meta: { name: j.meta.name, version: p.version } }) }).catch(function () {});
+          }
+        } catch (e) {}
       }).catch(function () { loaded++; });
     }));
 
@@ -3144,10 +3151,10 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
       });
     }
 
-    // 4) Стадия B без сети и без кэша → честный экран повтора
+    // 4) Стадия B без сети и без кэша (или паки недоступны) → честный экран повтора
     var anyData = Object.keys(window.CN_CONTENT.data).length > 0;
     var hasFallback = !window.CN_BUILD.stageB;
-    if (!anyData && !hasFallback && !packs.length) { showRetry(); return; }
+    if (!anyData && !hasFallback) { showRetry(); return; }
     progress('Запускаем…', 0.97);
     boot();
   })().catch(function () { showRetry(); });

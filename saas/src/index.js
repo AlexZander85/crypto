@@ -6,6 +6,7 @@ import * as content from './content.js';
 import * as payments from './payments.js';
 import * as paymentsCrypto from './payments-crypto.js';
 import { adminOverview, adminGrantTier } from './admin.js';
+const { prices, yookassaCreate } = payments;
 
 export default {
   async fetch(req, env, ctx) {
@@ -43,6 +44,8 @@ export default {
       }
 
       // ---- payments ----
+      if (path === '/api/pay/prices' && req.method === 'GET') return prices({ env, ctx });
+      if (path === '/api/pay/yookassa/create' && req.method === 'POST') return yookassaCreate({ env, ctx }, req);
       if (path === '/api/pay/yookassa/webhook' && req.method === 'POST') return payments.yookassaWebhook({ env, ctx }, req);
       if (path === '/api/pay/lemonsqueezy/webhook' && req.method === 'POST') return payments.lemonsqueezyWebhook({ env, ctx }, req);
       if (path === '/api/pay/crypto/invoice' && req.method === 'POST') return paymentsCrypto.createInvoice({ env, ctx }, req);

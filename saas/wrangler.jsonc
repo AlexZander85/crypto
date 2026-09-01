@@ -42,7 +42,12 @@
     "CRYPTOMUS_API_KEY": "dev-only-crypto",
     "CRYPTO_PRICE_JSON": "{\"lite\":{\"amount\":\"12.00\",\"currency\":\"USD\"},\"pro\":{\"amount\":\"24.00\",\"currency\":\"USD\"},\"max\":{\"amount\":\"3.99\",\"currency\":\"USD\"}}",
     "LS_TIER_MAP": "{}",
-    "YK_TIER_MAP": "{}"
+    "YK_TIER_MAP": "{}",
+    // Витрина тарифов для /api/pay/prices (§9: цены только в конфиге). На проде —
+    // через `npx wrangler secret put PRICES_JSON` или vars в дашборде.
+    "PRICES_JSON": "{\"lite\":{\"title\":\"🔑 Лайт\",\"price\":\"990 ₽ · $12 навсегда\",\"note\":\"все 213 уроков\",\"amount_rub\":\"990\",\"pay\":{\"yookassa\":true,\"lemonsqueezy\":true,\"crypto\":true}},\"pro\":{\"title\":\"📊 Про\",\"price\":\"1 990 ₽ · $24 навсегда\",\"note\":\"+ 🌍 живой рынок\",\"amount_rub\":\"1990\",\"pay\":{\"yookassa\":true,\"lemonsqueezy\":true,\"crypto\":true}},\"max\":{\"title\":\"🤖 Макс\",\"price\":\"399 ₽/мес · $24/год\",\"note\":\"+ 🤖 наставник 100/день и RAG\",\"amount_rub\":\"399\",\"pay\":{\"yookassa\":true,\"crypto\":true}}}",
+    // Даунгрейд после истечения подписки «Макс» (§9): free | lite | pro
+    "TIER_DOWNGRADE": "free"
   },
 
   "triggers": { "crons": [] },

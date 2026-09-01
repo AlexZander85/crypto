@@ -13,7 +13,8 @@
     "test": "node test/api.test.mjs",
     "build": "node tools/build-app.mjs",
     "build:stage-b": "node tools/build-app.mjs --no-inline-content",
-    "build:all": "node tools/extract-content.mjs && node tools/build-app.mjs"
+    "build:all": "node tools/extract-content.mjs && node tools/build-app.mjs",
+    "build:stage-a": "node tools/build-app.mjs --inline-content"
   },
   "devDependencies": {
     "wrangler": "^4.125.0"

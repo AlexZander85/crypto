@@ -178,6 +178,17 @@ try {
   check('feedback accepted', fb.status === 200 && fb.body?.ok === true);
 
   // 14. крипто-оплата: инвойс без MERCHANT_ID → 501; вебхук — подпись обязательна
+  const prices = await api('/api/pay/prices');
+  check('pay/prices отдаёт витрину тарифов', prices.status === 200 && prices.body?.tiers?.lite && prices.body?.tiers?.pro && prices.body?.tiers?.max
+    && prices.body?.tiers?.lite?.pay?.yookassa === true);
+  const ykCreateNoAuth = await api('/api/pay/yookassa/create', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ tier: 'lite' })
+  });
+  check('yookassa/create требует JWT', ykCreateNoAuth.status === 401);
+  const ykCreate = await api('/api/pay/yookassa/create', {
+    method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${jwt}` }, body: JSON.stringify({ tier: 'lite' })
+  });
+  check('yookassa/create без SHOP_ID честно 501', ykCreate.status === 501 && ykCreate.body?.error === 'not_configured');
   const inv = await api('/api/pay/crypto/invoice', {
     method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${jwt}` },
     body: JSON.stringify({ tier: 'lite' })

@@ -518,11 +518,196 @@
     } catch (e) {}
   }
 
+  // ============================ тарифный экран (§6.3) ============================
+  let pricesCache = null;
+
+  async function fetchPrices() {
+    if (pricesCache) return pricesCache;
+    try {
+      const r = await api('/pay/prices');
+      if (r.status === 200 && r.body && r.body.tiers) { pricesCache = r.body.tiers; return pricesCache; }
+    } catch (e) {}
+    return null;
+  }
+
+  async function startPayment(provider, tier) {
+    if (!authed()) { showLoginModal(); return; }
+    try {
+      if (provider === 'lemonsqueezy') {
+        const cfg = pricesCache && pricesCache[tier];
+        const url = cfg && cfg.pay && cfg.pay.lemonsqueezy;
+        if (typeof url === 'string' && url.startsWith('http')) { window.open(url, '_blank'); showWaitingScreen(tier); return; }
+        toast('Оплата картой (глобально) скоро будет доступна');
+        return;
+      }
+      if (provider === 'yookassa') {
+        const r = await api('/pay/yookassa/create', { method: 'POST', body: JSON.stringify({ tier }) });
+        if (r.status === 200 && r.body && r.body.confirmation_url) { location.href = r.body.confirmation_url; return; }
+        if (r.status === 501) { toast('Оплата картой (мир) скоро будет доступна'); return; }
+        toast('Не удалось создать платёж — попробуй позже');
+        return;
+      }
+      if (provider === 'crypto') {
+        const r = await api('/pay/crypto/invoice', { method: 'POST', body: JSON.stringify({ tier }) });
+        if (r.status === 200 && r.body && (r.body.url || r.body.invoice_url)) {
+          window.open(r.body.url || r.body.invoice_url, '_blank');
+          showWaitingScreen(tier);
+          return;
+        }
+        toast(r.status === 501 ? 'Крипто-оплата скоро будет доступна' : 'Не удалось создать инвойс');
+        return;
+      }
+    } catch (e) { toast('Сеть недоступна — попробуй позже'); }
+  }
+
+  // Экран «Ждём подтверждения оплаты» (§6.3): poll /api/me раз в 30 с, максимум 5 мин
+  function showWaitingScreen(tier) {
+    if ($id('cn_wait_back')) return;
+    const back = document.createElement('div');
+    back.className = 'cn-modal-back';
+    back.id = 'cn_wait_back';
+    back.innerHTML = `<div class="cn-modal" style="text-align:center">
+      <div style="font-size:40px">⏳</div>
+      <h3>Ждём подтверждение оплаты…</h3>
+      <div class="sub">Обычно это занимает меньше минуты. Не закрывай страницу — доступ откроется автоматически.</div>
+      <div class="cn-muted" id="cn_wait_status">Проверяем статус…</div>
+      <button class="btn ghost" id="cn_wait_close">Закрыть</button>
+    </div>`;
+    document.body.appendChild(back);
+    $id('cn_wait_close').addEventListener('click', () => back.remove());
+    const t0 = Date.now();
+    const timer = setInterval(async () => {
+      if (!$id('cn_wait_back')) { clearInterval(timer); return; }
+      if (Date.now() - t0 > 5 * 60 * 1000) {
+        $id('cn_wait_status').textContent = 'Время ожидания вышло. Если оплата прошла — доступ откроется при следующем входе.';
+        clearInterval(timer);
+        return;
+      }
+      await refreshMe();
+      if (me && me.tier && me.tier !== 'free' && me.tier !== 'pending') {
+        clearInterval(timer);
+        back.remove();
+        await onTierUnlocked();
+      } else {
+        $id('cn_wait_status').textContent = 'Проверяем статус… (' + Math.round((Date.now() - t0) / 1000) + ' с)';
+      }
+    }, 30000);
+  }
+
+  // tier_change → перезагрузка манифеста → докачка платных паков (§6.3)
+  async function onTierUnlocked() {
+    try {
+      lsDel('cn_manifest_cache');
+      try { const c = await caches.open('cn-content-v1'); const keys = await c.keys(); for (const k of keys) await c.delete(k); } catch (e) {}
+      toast('Доступ открыт: весь курс из 213 уроков! Загружаем…');
+      setTimeout(() => { try { location.reload(); } catch (e) {} }, 900);
+    } catch (e) {}
+  }
+
+  window.CN_SAAS_onTierChange = function (prev, next) {
+    // вызывается из refreshMe при смене тарифа (покупка на другом устройстве)
+    if (next && next !== 'free' && prev === 'free') onTierUnlocked();
+  };
+
+  async function showTariffs() {
+    if ($id('cn_tariffs_back')) return;
+    const back = document.createElement('div');
+    back.className = 'cn-modal-back';
+    back.id = 'cn_tariffs_back';
+    back.innerHTML = `<div class="cn-modal" style="max-width:640px">
+      <button class="cn-x" id="cn_tariffs_x">✕</button>
+      <h3>Тарифы КриптоНавигатора</h3>
+      <div class="sub">Разовый доступ или подписка — весь курс из 213 уроков, живой рынок и AI-наставник.</div>
+      <div id="cn_tariffs_grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px">
+        <div class="cn-loader" style="grid-column:1/-1;text-align:center;color:#8b93b5;padding:24px 0">Загружаем тарифы…</div>
+      </div>
+    </div>`;
+    document.body.appendChild(back);
+    back.addEventListener('click', e => { if (e.target === back) back.remove(); });
+    $id('cn_tariffs_x').addEventListener('click', () => back.remove());
+
+    const tiers = await fetchPrices();
+    const grid = $id('cn_tariffs_grid');
+    if (!grid) return;
+    const cards = [];
+    cards.push(`<div style="background:#0d1022;border:1px solid #2c3350;border-radius:12px;padding:14px">
+      <div style="font-weight:700;font-size:14px">🌱 Демо</div>
+      <div style="color:#8b93b5;font-size:12px;margin:4px 0">бесплатно</div>
+      <div style="font-size:12.5px;line-height:1.5">Фаза 0 + психология П1–П8<br>витрина живого рынка<br>наставник: 3 вопроса/день</div>
+      <div class="cn-muted" style="margin-top:8px">${me ? 'Твой текущий тариф' : 'Доступен сразу'}</div>
+    </div>`);
+    const order = ['lite', 'pro', 'max'];
+    if (!tiers) {
+      cards.push('<div style="grid-column:1/-1;color:#8b93b5;font-size:13px;text-align:center;padding:8px 0">Тарифы временно недоступны — попробуй позже.</div>');
+    } else {
+      for (const t of order) {
+        const cfg = tiers[t];
+        if (!cfg) continue;
+        const isCurrent = me && me.tier === t;
+        const payBtns = [];
+        const pay = cfg.pay || {};
+        if (pay.yookassa) payBtns.push(`<button class="btn" style="margin-top:6px;padding:8px" data-cn-pay="yookassa:${t}">Карта (мир)</button>`);
+        if (pay.lemonsqueezy) payBtns.push(`<button class="btn ghost" style="margin-top:6px;padding:8px" data-cn-pay="lemonsqueezy:${t}">Карта (глобально)</button>`);
+        if (pay.crypto) payBtns.push(`<button class="btn ghost" style="margin-top:6px;padding:8px" data-cn-pay="crypto:${t}">Крипто</button>`);
+        cards.push(`<div style="background:${isCurrent ? '#1a2450' : '#0d1022'};border:1px solid ${isCurrent ? '#4a5ad0' : '#2c3350'};border-radius:12px;padding:14px;display:flex;flex-direction:column">
+          <div style="font-weight:700;font-size:14px">${escapeHtml(cfg.title || t)}</div>
+          <div style="color:#c7cde8;font-size:15px;font-weight:700;margin:4px 0">${escapeHtml(cfg.price || '')}</div>
+          <div style="color:#8b93b5;font-size:12px;flex:1">${escapeHtml(cfg.note || '')}</div>
+          ${isCurrent ? '<div class="cn-muted" style="margin-top:8px">✓ Активен</div>' : payBtns.join('')}
+        </div>`);
+      }
+    }
+    grid.innerHTML = cards.join('');
+    grid.querySelectorAll('[data-cn-pay]').forEach(b => {
+      b.addEventListener('click', () => {
+        const [provider, tier] = b.getAttribute('data-cn-pay').split(':');
+        startPayment(provider, tier);
+      });
+    });
+  }
+  window.CN_SAAS_showTariffs = showTariffs;
+
+  // ============================ замки платных модулей (§6.2/§6.4) ============================
+  // Движок не трогаем: платные модули у гостя просто отсутствуют в регистрах —
+  // карточка объясняет, где они и как открыть.
+  function mountLockCards() {
+    try {
+      const sec = document.getElementById('lp3_program_sec');
+      if (!sec || document.getElementById('cn_lock_card')) return;
+      const tier = (me && me.tier) || 'free';
+      if (tier !== 'free') return; // lite+: весь контент уже в манифесте
+      const card = document.createElement('div');
+      card.id = 'cn_lock_card';
+      card.style.cssText = 'margin:10px 0 4px;padding:14px;border:1px solid #2c3350;border-radius:12px;background:#12162b;font:13.5px/1.5 system-ui,-apple-system,sans-serif;color:#e8eaf2';
+      card.innerHTML =
+        '<div style="font-weight:700;font-size:14px">🔒 Дальше — 205 уроков полной программы</div>' +
+        '<div style="color:#8b93b5;font-size:12.5px;margin:4px 0 10px">Фазы 1–6, матфакультатив (48), психология до П56 (48) и Академия Freqtrade (27).</div>' +
+        '<button id="cn_lock_open" style="padding:8px 16px;border-radius:10px;border:0;background:linear-gradient(90deg,#6c5ce7,#5b4bd6);color:#fff;font-size:13px;font-weight:700;cursor:pointer">Открыть доступ</button>' +
+        '<span style="color:#8b93b5;font-size:12px;margin-left:10px">демо-часть остаётся бесплатной навсегда</span>';
+      sec.appendChild(card);
+      document.getElementById('cn_lock_open').addEventListener('click', () => showTariffs());
+    } catch (e) {}
+  }
+
+  // перехват openHome — после рендера хаба навешиваем замки (и при каждом открытии)
+  function wrapOpenHome() {
+    if (!window.LearnPlayer || typeof window.LearnPlayer.openHome !== 'function' || window.LearnPlayer.__saas_home_wrapped) return;
+    const orig = window.LearnPlayer.openHome;
+    window.LearnPlayer.openHome = function () {
+      const res = orig.apply(this, arguments);
+      setTimeout(mountLockCards, 350);
+      setTimeout(mountLockCards, 1200); // страховка на ленивый рендер
+      return res;
+    };
+    window.LearnPlayer.__saas_home_wrapped = true;
+  }
+
   // ============================ старт ============================
   ensureUI();
 
   onEngineReady(() => {
     wrapLearnPlayer();
+    wrapOpenHome();
     // Learn-first: режим по умолчанию (§6.2). Классика — только по явному выбору.
     if (getMode() !== 'classic') {
       const firstVisit = !lsGet('cn_saas_welcomed') && !lsGet('cn_tour_done') && !lsGet('cn_learn_pos');
