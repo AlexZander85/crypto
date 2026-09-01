@@ -4,6 +4,13 @@ import { json, cors, readJson, signJWT, verifyJWT, bearer, sha256hex, randomToke
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 export const normalizeEmail = e => String(e || '').trim().toLowerCase();
 
+// отметка последнего входа (миграция 0002) — не блокирует логин при сбое
+async function touchLastLogin(env, userId, provider) {
+  try {
+    await env.DB.prepare('UPDATE users SET last_login_at = ? WHERE id = ?').bind(Date.now(), userId).run();
+  } catch { /* колонка может отсутствовать до миграции 0002 в старых окружениях */ }
+}
+
 async function getUserByEmail(env, email) {
   return env.DB.prepare('SELECT * FROM users WHERE email = ?').bind(email).first();
 }
@@ -60,7 +67,10 @@ export async function magicRequest(ctx, req) {
   if (!EMAIL_RE.test(email)) return json({ error: 'invalid_email' }, 400, { 'access-control-allow-origin': corsOrigin(env, req) });
 
   const ip = clientIp(req);
-  if (!(await rateLimit(env, `auth:${ip}`, 10, 3600)) || !(await rateLimit(env, `auth-em:${email}`, 5, 3600))) {
+  // §22.2: 5/час по email и IP на проде. В dev (wrangler dev) cf-connecting-ip всегда
+  // 'local' — один счётчик на все тесты, поэтому лимиты подняты только для dev-окружения.
+  const devScale = env.ENV === 'dev' ? 200 : 1;
+  if (!(await rateLimit(env, `auth:${ip}`, 10 * devScale, 3600)) || !(await rateLimit(env, `auth-em:${email}`, 5 * devScale, 3600))) {
     return json({ error: 'rate_limited' }, 429);
   }
   if (!(await verifyTurnstile(env, body?.turnstile, ip))) return json({ error: 'captcha_failed' }, 403);
@@ -97,6 +107,7 @@ export async function magicConfirm(ctx, req) {
   let user = await getUserByEmail(env, email);
   const isNew = !user;
   if (!user) user = await createUser(env, email, 'email');
+  await touchLastLogin(env, user.id, 'email');
   const jwt = await issueJWT(env, user);
 
   const { track } = await import('./telemetry.js');
@@ -217,6 +228,7 @@ export async function oauthCallback(ctx, req, provider) {
   let user = await getUserByEmail(env, email);
   const isNew = !user;
   if (!user) user = await createUser(env, email, provider);
+  await touchLastLogin(env, user.id, provider);
   const jwt = await issueJWT(env, user);
 
   const { track } = await import('./telemetry.js');
@@ -230,10 +242,22 @@ export async function me(ctx, req) {
   const { env } = ctx;
   const claims = await requireAuth(env, req);
   if (!claims) return json({ error: 'unauthorized' }, 401);
-  const user = await env.DB.prepare('SELECT id, email, access_tier, locale, created_at FROM users WHERE id = ?')
+  const user = await env.DB.prepare('SELECT id, email, access_tier, locale, created_at, access_expires_at FROM users WHERE id = ?')
     .bind(claims.sub).first();
   if (!user) return json({ error: 'unauthorized' }, 401);
-  return json({ id: user.id, email: user.email, tier: user.access_tier, locale: user.locale }, 200);
+  // подписка «Макс»: истёкший период → фактический даунгрейд при чтении (§9)
+  let tier = user.access_tier;
+  if (tier === 'max' && user.access_expires_at && user.access_expires_at < Date.now()) {
+    const down = env.TIER_DOWNGRADE && env.TIER_DOWNGRADE !== 'max' ? env.TIER_DOWNGRADE : 'free';
+    try {
+      await env.DB.prepare('UPDATE users SET access_tier = ?, access_changed_at = ? WHERE id = ?')
+        .bind(down, Date.now(), user.id).run();
+      const { track } = await import('./telemetry.js');
+      track(ctx, 'tier_change', user.id, { from: 'max', to: down, reason: 'subscription_expired' });
+    } catch { /* даунгрейд не блокирует ответ */ }
+    tier = down;
+  }
+  return json({ id: user.id, email: user.email, tier, locale: user.locale, access_expires_at: user.access_expires_at || null }, 200);
 }
 
 function corsOrigin(env, req) {

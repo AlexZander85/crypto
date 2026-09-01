@@ -48,6 +48,20 @@ export default {
       if (path === '/api/pay/crypto/invoice' && req.method === 'POST') return paymentsCrypto.createInvoice({ env, ctx }, req);
       if (path === '/api/pay/crypto/webhook' && req.method === 'POST') return paymentsCrypto.cryptoWebhook({ env, ctx }, req);
 
+      // ---- телеметрия клиентских событий (§12.1): learn_open, perf, quiz_answer, lesson_complete, app_error ----
+      if (path === '/api/telemetry' && req.method === 'POST') {
+        const claims = await auth.requireAuth(env, req);
+        if (!claims) return json({ ok: true }, 200, H); // гость: события прогресса не пишем, тихо
+        const body = await readJson(req);
+        const allowed = new Set(['learn_open', 'perf', 'quiz_answer', 'lesson_complete', 'app_error', 'pack_download']);
+        if (!body || !allowed.has(body.type)) return json({ error: 'bad_type' }, 400, H);
+        // мета обрезается и сериализуется; текстов конспектов/диалогов здесь нет по контракту
+        const meta = JSON.stringify(body.meta || {}).slice(0, 500);
+        const { track } = await import('./telemetry.js');
+        track({ env, ctx }, body.type, claims.sub, JSON.parse(meta));
+        return json({ ok: true }, 200, H);
+      }
+
       // ---- feedback ----
       if (path === '/api/feedback' && req.method === 'POST') {
         const claims = await auth.requireAuth(env, req);
