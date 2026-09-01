@@ -92,6 +92,18 @@ function initRegistrationModal() {
     });
   });
 
+  // Вход через Google прямо с лендинга: OAuth начинается на Workers, после
+  // согласования Google возвращает пользователя в приложение уже залогиненным
+  const googleBtn = document.getElementById('reg-oauth-google');
+  if (googleBtn) {
+    googleBtn.addEventListener('click', () => {
+      if (submitBtn) submitBtn.disabled = true;
+      googleBtn.disabled = true;
+      googleBtn.textContent = 'Переходим к Google…';
+      window.location.href = SAAS_URL + '/api/auth/oauth/google';
+    });
+  }
+
   if (closeButton) {
     closeButton.addEventListener('click', closeModal);
   }

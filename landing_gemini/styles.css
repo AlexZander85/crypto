@@ -1387,3 +1387,38 @@ button, input {
     padding: 20px;
   }
 }
+
+/* ==========================================================================
+   OAuth-кнопки в модалке регистрации
+   ========================================================================== */
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-card);
+}
+
+.btn-oauth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.btn-oauth svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
