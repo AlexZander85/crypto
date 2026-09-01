@@ -1,3 +1,4 @@
+const SAAS_URL = 'https://cryptonavigator-api.344792.workers.dev';
 /**
  * CryptoNavigator Landing Application Client Logic
  * Pure Vanilla JS - Zero External Dependencies
@@ -122,13 +123,6 @@ function initRegistrationModal() {
       hasError = true;
     }
 
-    // Password validation (min 8 chars)
-    const passVal = passInput ? passInput.value : '';
-    if (!passVal || passVal.length < 8) {
-      if (errPass) errPass.style.display = 'block';
-      hasError = true;
-    }
-
     // Terms validation
     if (termsCheckbox && !termsCheckbox.checked) {
       if (errTerms) errTerms.style.display = 'block';
@@ -144,38 +138,14 @@ function initRegistrationModal() {
       submitBtn.textContent = '...';
     }
 
-    try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailVal, password: passVal })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Redirect to application with unlocked Phase 0
-        window.location.href = '/index.html?welcome=phase0';
-        return;
-      } else {
-        throw new Error('API offline');
-      }
-    } catch (err) {
-      // Fallback: Honest waitlist confirmation
-      try {
-        localStorage.setItem('cn_waitlist_email', emailVal);
-      } catch (storageErr) {
-        // ignore localStorage limitation
-      }
-      
-      if (waitlistAlert) {
-        waitlistAlert.style.display = 'block';
-      }
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitBtn.dataset.origText || 'OK';
-      }
+    // КриптоНавигатор: вход без пароля (magic-link / Google) — редирект в приложение
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Открываем…';
     }
-  });
+    try { localStorage.setItem('cn_waitlist_email', emailVal); } catch (storageErr) {}
+    window.location.href = SAAS_URL + '/?cn_login=' + encodeURIComponent(emailVal);
+    });
 }
 
 // FAQ Accordion with Accessibility Support

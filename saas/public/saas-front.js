@@ -223,7 +223,7 @@
   }
 
   // ============================ вход (§6.1) ============================
-  function showLoginModal() {
+  function showLoginModal(preEmail) {
     if ($id('cn_login_back')) return;
     const back = document.createElement('div');
     back.className = 'cn-modal-back';
@@ -246,6 +246,7 @@
     $id('cn_oauth_g').addEventListener('click', () => { location.href = API + '/auth/oauth/google'; });
     $id('cn_oauth_h').addEventListener('click', () => { location.href = API + '/auth/oauth/github'; });
     $id('cn_login_go').addEventListener('click', doMagicLogin);
+    if (preEmail) { const _ei = $id('cn_email'); if (_ei) { _ei.value = preEmail; setTimeout(() => _ei.focus(), 60); } }
     $id('cn_email').addEventListener('keydown', e => { if (e.key === 'Enter') doMagicLogin(); });
     setTimeout(() => $id('cn_email') && $id('cn_email').focus(), 50);
 
@@ -781,17 +782,20 @@
 
   // восстановление сессии
   (async function init() {
-    // OAuth-возврат (Google/GitHub): коллбэк редиректит с JWT в hash (#cn_token=…).
-    // Забираем токен, чистим hash (refresh не перезапустит флоу) и входим штатно.
     if (!authed()) {
-      const m = (location.hash || '').match(/cn_token=([A-Za-z0-9._-]+)/);
-      if (m && m[1].split('.').length === 3) {
-        try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
-        await afterLogin(m[1]);
-        return;
-      }
+      renderPanel();
+      // переход с лендинга: /?cn_login=<email> — сразу открываем вход с подставленной почтой
+      try {
+        const _u = new URL(location.href);
+        const _le = _u.searchParams.get('cn_login');
+        if (_le) {
+          showLoginModal(_le);
+          _u.searchParams.delete('cn_login');
+          history.replaceState(null, '', _u.pathname + _u.search + _u.hash);
+        }
+      } catch (_e) {}
+      return;
     }
-    if (!authed()) { renderPanel(); return; }
     await refreshMe();
     renderPanel();
     // после перезагрузки (логин/подтягивание) сервер должен получить слитую капсулу:

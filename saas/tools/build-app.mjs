@@ -109,7 +109,11 @@ if (!noInline) {
   appJs = `/* Стадия B: контент только из паков (§5.3) */\nwindow.CN_CONTENT_FALLBACK=null;\n` + appJs;
 }
 
-const buildHash = crypto.createHash('sha256').update(appJs).digest('hex').slice(0, 12);
+// хеш покрывает и движок, и SaaS-слой: иначе правка saas-front.js не меняет ?v= и
+// браузеры отдают закэшированную старую версию SaaS-слоя
+const layerSrcForHash = path.join(SAAS, 'layer', 'saas-front.js');
+const layerForHash = fs.existsSync(layerSrcForHash) ? fs.readFileSync(layerSrcForHash, 'utf8') : '';
+const buildHash = crypto.createHash('sha256').update(appJs + '\n;saas-front:' + layerForHash).digest('hex').slice(0, 12);
 console.log(`app.js: ${(appJs.length / 1024 / 1024).toFixed(2)} МБ символов · hash ${buildHash} · блоков ${blocks.length}`);
 
 // ------------------------------------------------------------------

@@ -31,6 +31,9 @@
   // ВАЖНО: секреты НЕ дублировать в vars — иначе API откажет (code 10053 «already in use»).
   "vars": {
     "ENV": "dev",
+    // Отправитель писем magic-link (Resend). Заработает после верификации домена cryptonavigator.app в Resend;
+    // до этого письма с этого адреса отклоняются — фронт честно показывает fallback (dev_link / Google).
+    "MAIL_FROM": "КриптоНавигатор <noreply@cryptonavigator.app>",
     "ALLOWED_ORIGIN": "*",
     "APP_ORIGIN": "https://cryptonavigator.app",
     "JWT_TTL_SECONDS": "2592000",
