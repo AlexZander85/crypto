@@ -138,3 +138,20 @@ Stage Summary:
 - Ключевые решения: 14 задокументированных отклонений от литерала П2 — 6 из них исправляют ошибки П2 (×100 в pct, чип в тесте, upsell при активном плеере, тумблер, дубль sprint_completed, порядок stage_completed), остальные реализуют требования ТЗ, которые литерал не покрывал (🔥→⭐→💤, 🛡️, cap из A/B, перенос флагов обёрток, гейт-карточка по §11-№13).
 - Красные линии: контент 14/14 IDENTICAL, ADAPTIVE_QUESTION_BANK не тронут, запись LS только в cn_track_profile/view/offers/events/migrated/ab, cn_learn_* и cn_lessons/cn_phase_tests/cn_learned — только чтение, гейты soft, тела функций плеера не редактировались.
 - Для будущих этапов: новые обёртки — только поверх Этапа 8 (порядок инициализации сверху вниз по файлу); вехи-события дедуплицировать по журналу cn_track_events; телеметрия подключается через window.cnTrackSink без правок кода; A/B-эксперименты — через localStorage cn_track_ab без релиза.
+
+---
+Task ID: github-v13
+Agent: Super Z (main)
+Task: Загрузка v13.0 и отчёта Этапа 8 на GitHub (репозиторий AlexZander85/crypto, токен заказчика)
+
+Work Log:
+- Верифицировано состояние: v13.0 (index_v13.0.html, 6 509 081 байт) и Отчёт_Этап8_трек_основной_факультатив.md закоммичены в локальный main (597e4cc, 206 файлов: версии v12.4–v13.0, отчёты Этапов 2–8, README, скриншоты 2–8, скрипты приёмки).
+- Проверка remote: https://github.com/AlexZander85/crypto.git доступен по токену; ветки main (HEAD) + 10 версионных (feat/saas-v12, v5-psych и др.).
+- Расхождение: локальный main и origin/main НЕ имеют общего предка (rev-list 8↔141); на origin/main — 141 коммит заказчика с ТЗ-документами. Принято решение НЕ трогать main (force-push исключён), следовать паттерну версионных веток.
+- Токен добавлен в remote origin; выполнен push: main → refs/heads/feat/saas-v13.
+- Верификация после пуша: git ls-remote → feat/saas-v13 = 597e4cc (совпадает с локальным HEAD); ls-tree удалённого коммита содержит download/index_v13.0.html и download/Отчёт_Этап8_трек_основной_факультатив.md; .env проверен (только локальный путь DATABASE_URL, секретов нет).
+
+Stage Summary:
+- v13.0 + отчёт Этапа 8 загружены на GitHub в ветку feat/saas-v13: https://github.com/AlexZander85/crypto/tree/feat/saas-v13
+- GitHub предлагает PR: https://github.com/AlexZander85/crypto/pull/new/feat/saas-v13 — вливание в main на усмотрение владельца (истории несовместимы, сливать только через PR владельцем).
+- Замечание безопасности: токен ghp_... был передан открытым текстом в чате — рекомендовать владельцу ротировать его после загрузки (Settings → Developer settings → Tokens).
