@@ -5,10 +5,11 @@ import * as progress from './progress.js';
 import * as content from './content.js';
 import * as payments from './payments.js';
 import * as paymentsCrypto from './payments-crypto.js';
-import { adminOverview, adminGrantTier } from './admin.js';
+import { adminOverview, adminGrantTier, adminAiUsage, adminUsers, adminUser, adminErrors, adminContentFunnel, adminContentPacks, adminDeleteUser, adminSubscriptionAction, adminActions } from './admin.js';
 import { ask as mentorAsk } from './mentor.js';
 import { adminGetAiModel, adminSetAiModel } from './admin-ai.js';
 import { live } from './live.js';
+import { scheduled } from './cron.js';
 const { prices, yookassaCreate } = payments;
 
 export default {
@@ -92,6 +93,36 @@ export default {
       // ---- admin (за секретом; на проде дополнительно за Cloudflare Access) ----
       if (path === '/admin/api/overview' && req.method === 'GET') return adminOverview({ env, ctx }, req);
       if (path === '/admin/api/grant_tier' && req.method === 'POST') return adminGrantTier({ env, ctx }, req);
+      if (path === '/admin/api/ai_usage' && req.method === 'GET') return adminAiUsage({ env, ctx }, req);
+      if (path === '/admin/api/users' && req.method === 'GET') return adminUsers({ env, ctx }, req);
+      if ((m = path.match(/^\/admin\/api\/user\/([a-zA-Z0-9-]+)$/)) && req.method === 'GET') return adminUser({ env, ctx }, req, m[1]);
+      if (path === '/admin/api/errors' && req.method === 'GET') return adminErrors({ env, ctx }, req);
+      if (path === '/admin/api/content_funnel' && req.method === 'GET') return adminContentFunnel({ env, ctx }, req);
+      if (path === '/admin/api/content_packs' && req.method === 'GET') return adminContentPacks({ env, ctx }, req);
+      if (path === '/admin/api/delete_user' && req.method === 'POST') return adminDeleteUser({ env, ctx }, req);
+      if (path === '/admin/api/subscription_action' && req.method === 'POST') return adminSubscriptionAction({ env, ctx }, req);
+      if (path === '/admin/api/actions' && req.method === 'GET') return adminActions({ env, ctx }, req);
+      // cron-run: ручной запуск свёртки (только dev; на проде — только по расписанию 03:00 UTC)
+      if (path === '/admin/api/cron-run' && req.method === 'POST') {
+        const auth = req.headers.get('authorization') || '';
+        if (auth !== `Bearer ${env.ADMIN_SECRET}`) return json({ error: 'unauthorized' }, 401);
+        if (env.ENV !== 'dev') return json({ error: 'dev_only' }, 403);
+        await scheduled({ cron: 'manual' }, env, ctx);
+        return json({ ok: true }, 200, H);
+      }
+      // свёртка stats_daily для дашборда (§13: дашборд читает только свёртку)
+      if (path === '/admin/api/stats' && req.method === 'GET') {
+        const auth = req.headers.get('authorization') || '';
+        if (auth !== `Bearer ${env.ADMIN_SECRET}`) return json({ error: 'unauthorized' }, 401);
+        const days = Math.min(365, Math.max(1, parseInt(new URL(req.url).searchParams.get('days') || '30', 10)));
+        const since = Date.now() - days * 86400000;
+        const rows = await env.DB.prepare("SELECT day, metric, value FROM stats_daily ORDER BY day DESC LIMIT ?").bind(Math.min(days, 365) * 40).all();
+        const daysMap = {};
+        for (const r of rows.results || []) {
+          (daysMap[r.day] = daysMap[r.day] || {})[r.metric] = r.value;
+        }
+        return json({ days: daysMap }, 200, H);
+      }
       if (path === '/admin/api/ai_model' && req.method === 'GET') return adminGetAiModel({ env, ctx }, req);
       if (path === '/admin/api/ai_model' && req.method === 'POST') return adminSetAiModel({ env, ctx }, req);
 
@@ -108,5 +139,10 @@ export default {
       } catch { /* ignore */ }
       return json({ error: 'internal' }, 500, H);
     }
+  },
+
+  // cron 03:00 UTC (§12.2): свёртка stats_daily + чистка events > 180 дней
+  async scheduled(event, env, ctx) {
+    return scheduled(event, env, ctx);
   }
 };

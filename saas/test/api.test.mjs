@@ -287,6 +287,41 @@ try {
   check('RAG: ответ с provenance-источниками', rg.status === 200 && Array.isArray(rg.body?.rag?.sources) && rg.body.rag.sources.length > 0,
     `sources=${JSON.stringify((rg.body?.rag?.sources || []).slice(0, 1))}`);
 
+  // 18. админка §13: полный API — 401 без секрета, маски, карточка, удаление GDPR
+  const authH = { authorization: 'Bearer dev-only-admin' };
+  const usersL = await api('/admin/api/users', { headers: authH });
+  check('admin users: список с масками', usersL.status === 200 && usersL.body?.users?.length >= 1 && String(usersL.body.users[0].email_masked).includes('***'),
+    JSON.stringify(usersL.body?.users?.[0] || {}));
+  const uc = await api('/admin/api/user/' + uid2, { headers: authH });
+  check('admin user: карточка с платежами/LTV', uc.status === 200 && uc.body?.id === uid2 && typeof uc.body?.ltv_minor === 'number' && uc.body?.email_masked?.includes('***'));
+  const ucNo = await api('/admin/api/user/' + uid2);
+  check('admin user без секрета → 401', ucNo.status === 401);
+  const au = await api('/admin/api/ai_usage?days=30', { headers: authH });
+  check('admin ai_usage: фичи и фильтрации', au.status === 200 && typeof au.body?.total_calls === 'number' && Array.isArray(au.body?.by_feature));
+  const cf = await api('/admin/api/content_funnel', { headers: authH });
+  check('admin content_funnel: ок', cf.status === 200);
+  const cp = await api('/admin/api/content_packs', { headers: authH });
+  check('admin content_packs: 15 паков', cp.status === 200 && cp.body?.packs?.length === 15, `packs=${cp.body?.packs?.length}`);
+  // удаление GDPR: стирает пользователя, покупки остаются анонимными
+  const delEmail = `del-${Date.now()}@example.com`;
+  const dr = await api('/api/auth/magic-request', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: delEmail }) });
+  const dc = await api(new URL(dr.body.dev_link).pathname + new URL(dr.body.dev_link).search, { headers: { accept: 'application/json' } });
+  const delUid = dc.body.user.id;
+  await api('/api/progress', { method: 'PUT', headers: { 'content-type': 'application/json', authorization: `Bearer ${dc.body.token}` }, body: JSON.stringify({ state: { cn_learned: { p0_l1: 1 } } }) });
+  const del = await api('/admin/api/delete_user', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ user_id: delUid }) });
+  check('admin delete_user: ok', del.status === 200 && del.body?.ok === true);
+  const meDel = await api('/api/me', { headers: { authorization: `Bearer ${dc.body.token}` } });
+  check('после удаления: JWT недействителен (пользователь стёрт)', meDel.status === 401);
+  const acts = await api('/admin/api/actions', { headers: authH });
+  check('admin actions: audit-лог пишется', acts.status === 200 && acts.body?.actions?.length >= 1);
+
+  // 19. cron scheduled: свёртка stats_daily пишется и читается (§12.2)
+  // (вызываем scheduled напрямую через dev-роут /admin/api/cron-run — только ENV=dev)
+  const cronRun = await api('/admin/api/cron-run', { method: 'POST', headers: authH });
+  check('cron-run: свёртка выполнена', cronRun.status === 200 && cronRun.body?.ok === true, JSON.stringify(cronRun.body || {}));
+  const cronStats = await api('/admin/api/stats?days=7', { headers: authH });
+  check('admin stats: свёртка читается', cronStats.status === 200 && typeof cronStats.body?.days === 'object' && Object.keys(cronStats.body.days).length > 0);
+
 } catch (e) {
   check('suite completed', false, String(e?.message || e).slice(0, 200));
 } finally {

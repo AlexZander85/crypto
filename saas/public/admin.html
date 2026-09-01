@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>КриптоНавигатор · Админка</title>
+<style>
+:root{--bg:#0d1022;--panel:#12162b;--line:#2c3350;--txt:#e8eaf2;--mut:#8b93b5;--acc:#6c5ce7;--ok:#5fd4a2;--warn:#f6c86a;--err:#ff7a8a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,sans-serif}
+header{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+header h1{font-size:16px;margin:0}
+header .spacer{flex:1}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:transparent;border:1px solid transparent;color:var(--mut);padding:7px 13px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:600}
+nav button.active{color:var(--txt);border-color:var(--line);background:var(--panel)}
+main{padding:20px;max-width:1180px;margin:0 auto}
+.login{max-width:380px;margin:12vh auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px}
+.login input{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--txt);font-size:14px}
+.login button{width:100%;margin-top:10px;padding:11px;border-radius:10px;border:0;background:linear-gradient(90deg,#6c5ce7,#5b4bd6);color:#fff;font-weight:700;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card .k{color:var(--mut);font-size:12px}
+.card .v{font-size:24px;font-weight:800;margin-top:2px}
+.card .s{font-size:11.5px;color:var(--mut)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--mut);font-weight:600;background:#0f1328}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badge.free{background:#2a3050;color:#9aa3c0}.badge.lite{background:#1d3a2f;color:#5fd4a2}
+.badge.pro{background:#173047;color:#5cb8f7}.badge.max{background:#33245c;color:#b78cff}
+.btn{padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:#1a2040;color:var(--txt);cursor:pointer;font-size:12.5px}
+.btn.danger{border-color:#5c2c3a;color:var(--err)}
+.btn:hover{background:#232a52}
+#charts svg{width:100%;height:120px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+.model-row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+select{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px}
+.mut{color:var(--mut);font-size:12px}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#0F172A;border:1px solid #334155;border-radius:12px;padding:9px 16px;font-size:13.5px;display:none;z-index:9}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+  <h2 style="margin:0 0 4px">🔐 Админка КриптоНавигатора</h2>
+  <p class="mut" style="margin-top:0">Введите ADMIN_SECRET. На проде страница дополнительно защищена Cloudflare Access.</p>
+  <input type="password" id="secret" placeholder="ADMIN_SECRET" autocomplete="off">
+  <button id="login_go">Войти</button>
+  <p class="mut" id="login_err" style="color:var(--err)"></p>
+</div>
+
+<div id="app" style="display:none">
+<header>
+  <h1>🧭 КриптоНавигатор · Админка</h1>
+  <div class="spacer"></div>
+  <nav id="nav"></nav>
+</header>
+<main id="main"></main>
+</div>
+<div id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+let SECRET = sessionStorage.getItem('cn_admin_secret') || '';
+let screen = 'overview';
+
+const $ = id => document.getElementById(id);
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none', 2600); }
+async function api(path){
+  const r = await fetch(path, { headers: { authorization: 'Bearer ' + SECRET } });
+  if (r.status === 401) { showLogin('Секрет не принят сервером'); throw new Error('401'); }
+  return r.json();
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmt(n){ return new Intl.NumberFormat('ru-RU').format(n||0); }
+function tierBadge(t){ return '<span class="badge '+esc(t)+'">'+esc(t)+'</span>'; }
+
+/* --- инлайн-SVG-линия (§13: без библиотек) --- */
+function svgLine(values, color){
+  if (!values || !values.length) return '<div class="mut">нет данных</div>';
+  const w = 320, h = 100, max = Math.max(...values.map(v=>v[1]), 1);
+  const step = values.length > 1 ? w / (values.length - 1) : w;
+  const pts = values.map((v,i)=>`${(i*step).toFixed(1)},${(h - v[1]/max*(h-8) - 4).toFixed(1)}`).join(' ');
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <polyline points="${pts}" fill="none" stroke="${color||'#6c5ce7'}" stroke-width="2"/>
+    <polyline points="0,${h} ${pts} ${w},${h}" fill="${color||'#6c5ce7'}" opacity="0.12" stroke="none"/>
+  </svg>`;
+}
+
+const SCREENS = {
+  overview: 'Обзор',
+  ai: 'AI-расход',
+  users: 'Пользователи',
+  content: 'Контент',
+  actions: 'Действия'
+};
+
+async function load(){
+  $('nav').innerHTML = Object.entries(SCREENS).map(([k,v])=>`<button class="${k===screen?'active':''}" data-s="${k}">${v}</button>`).join('');
+  $('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{ screen=b.dataset.s; load(); });
+  const main = $('main');
+  main.innerHTML = '<p class="mut">Загрузка…</p>';
+  try { await ({overview, ai, users, content, actions})[screen](); }
+  catch(e){ if (String(e.message)!=='401') main.innerHTML = '<p class="mut">Ошибка загрузки: '+esc(e.message)+'</p>'; }
+}
+
+async function overview(){
+  const d = await api('/admin/api/overview?days=30');
+  const conv = d.funnel || {};
+  $('main').innerHTML = `
+    <div class="grid">
+      <div class="card"><div class="k">Пользователей</div><div class="v">${fmt(d.users_total)}</div><div class="s">+${fmt(d.signups)} за ${d.days} д</div></div>
+      <div class="card"><div class="k">Активные (30 д)</div><div class="v">${fmt(d.active_users)}</div><div class="s">логинов: ${fmt(d.logins)}</div></div>
+      <div class="card"><div class="k">Открытий уроков</div><div class="v">${fmt(d.lessons_opened)}</div><div class="s">завершений: ${fmt(d.lessons_completed)}</div></div>
+      <div class="card"><div class="k">Выручка</div><div class="v">${d.revenue.map(r=>fmt(r.amount_minor/100)+' '+r.currency).join(', ')||'—'}</div><div class="s">вебхуков: ${fmt(d.pay_webhooks)}</div></div>
+      <div class="card"><div class="k">Ошибки</div><div class="v" style="color:${d.errors?'var(--warn)':'var(--ok)'}">${fmt(d.errors)}</div><div class="s">app_error за ${d.days} д</div></div>
+    </div>
+    <div class="two">
+      <div class="card"><div class="k">Воронка демо → платные (§13)</div>
+        <div style="display:flex;gap:10px;align-items:center;margin:10px 0">${tierBadge('free')} ${fmt(conv.demo)} → ${tierBadge('lite')} ${fmt(conv.lite)} → ${tierBadge('pro')} ${fmt(conv.pro)} → ${tierBadge('max')} ${fmt(conv.max)}</div>
+        <div class="v" style="font-size:20px">${conv.conversion_paid_pct}%</div><div class="s">конверсия в оплату</div></div>
+      <div class="card"><div class="k">Распределение тарифов</div>
+        ${Object.entries(d.tiers).map(([t,n])=>`<div style="display:flex;justify-content:space-between;margin:5px 0"><span>${tierBadge(t)}</span><b>${fmt(n)}</b></div>`).join('')||'<p class="mut">нет</p>'}
+      </div>
+    </div>`;
+}
+
+async function ai(){
+  const [d, model] = await Promise.all([api('/admin/api/ai_usage?days=30'), api('/admin/api/ai_model')]);
+  $('main').innerHTML = `
+    <div class="grid">
+      <div class="card"><div class="k">Вызовов за ${d.days} д</div><div class="v">${fmt(d.total_calls)}</div><div class="s">отфильтровано: ${d.filtered_calls} (${d.filtered_pct}%)</div></div>
+      <div class="card"><div class="k">Активная модель</div>
+        <div class="v" style="font-size:14px;font-family:monospace">${esc(model.sku)}</div>
+        <div class="model-row">
+          <select id="ai_select">${Object.keys(model.whitelist).map(s=>`<option ${s===model.sku?'selected':''}>${s}</option>`).join('')}</select>
+          <button class="btn" id="ai_save">Сменить</button>
+        </div>
+        <div class="s">смена без передеплоя, пишется в audit</div>
+      </div>
+    </div>
+    <div id="charts" class="two">
+      <div class="card"><div class="k">Вызовы по дням</div>${svgLine((d.by_day||[]).map(r=>[r.day, r.n]))}</div>
+      <div class="card"><div class="k">По фичам</div>${(d.by_feature||[]).map(f=>`<div style="display:flex;justify-content:space-between;margin:4px 0"><span>${esc(f.feature||'—')}</span><b>${fmt(f.n)}</b></div>`).join('')||'<p class="mut">нет</p>'}</div>
+    </div>
+    <div class="card" style="margin-top:14px"><div class="k">Топ-потребители (псевдонимно)</div>
+      <table><tr><th>Пользователь</th><th>Вызовов</th></tr>
+      ${(d.top_consumers||[]).map(u=>`<tr><td><code>${esc(u.user)}…</code></td><td>${fmt(u.calls)}</td></tr>`).join('')||'<tr><td colspan="2" class="mut">нет</td></tr>'}
+      </table></div>`;
+  $('ai_save').onclick = async () => {
+    const sku = $('ai_select').value;
+    const r = await fetch('/admin/api/ai_model', { method:'POST', headers:{'content-type':'application/json', authorization:'Bearer '+SECRET}, body: JSON.stringify({sku}) });
+    toast(r.ok ? 'Модель сменена: ' + sku : 'Ошибка смены');
+    load();
+  };
+}
+
+async function users(){
+  $('main').innerHTML = `
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input id="u_filter" placeholder="фильтр по email…" style="flex:1;max-width:320px;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--txt)">
+      <button class="btn" id="u_search">Найти</button>
+    </div>
+    <div id="u_table"></div><div id="u_card" style="margin-top:14px"></div>`;
+  const loadUsers = async () => {
+    const d = await api('/admin/api/users?filter=' + encodeURIComponent($('u_filter').value||''));
+    $('u_table').innerHTML = `<table><tr><th>Email (маска)</th><th>Тариф</th><th>Регистрация</th><th>Вход</th><th>Уроков</th><th></th></tr>
+      ${(d.users||[]).map(u=>`<tr>
+        <td>${esc(u.email_masked)}</td><td>${tierBadge(u.tier)}</td>
+        <td class="mut">${u.created_at?new Date(u.created_at).toLocaleDateString('ru-RU'):'—'}</td>
+        <td class="mut">${u.last_login_at?new Date(u.last_login_at).toLocaleDateString('ru-RU'):'—'}</td>
+        <td>${fmt(u.lessons_done)}</td>
+        <td><button class="btn" data-id="${esc(u.id)}">Карточка</button></td>
+      </tr>`).join('')||'<tr><td colspan="6" class="mut">нет пользователей</td></tr>'}</table>`;
+    $('u_table').querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>showUser(b.dataset.id));
+  };
+  $('u_search').onclick = loadUsers;
+  $('u_filter').onkeydown = e => { if (e.key==='Enter') loadUsers(); };
+  await loadUsers();
+}
+
+async function showUser(id){
+  const u = await api('/admin/api/user/' + id);
+  $('u_card').innerHTML = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div><b>${esc(u.email_masked)}</b> ${tierBadge(u.tier)} <span class="mut">LTV: ${fmt(u.ltv_minor/100)} ₽ · уроков: ${fmt(u.lessons_done)}</span></div>
+      <div class="actions">
+        <button class="btn" data-act="grant" data-id="${esc(id)}">Сменить тариф</button>
+        <button class="btn" data-act="extend" data-id="${esc(id)}">+30 дней</button>
+        <button class="btn" data-act="cancel" data-id="${esc(id)}">Отменить подписку</button>
+        <button class="btn danger" data-act="delete" data-id="${esc(id)}">Удалить (GDPR)</button>
+      </div>
+    </div>
+    <table style="margin-top:10px"><tr><th>Платежи</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr>
+      ${(u.purchases||[]).map(p=>`<tr><td>${esc(p.provider)} / ${esc(p.tier||'—')}</td><td>${fmt(p.amount_minor/100)} ${esc(p.currency)}</td><td>${esc(p.status)}</td><td class="mut">${new Date(p.created_at).toLocaleDateString('ru-RU')}</td></tr>`).join('')||'<tr><td colspan="4" class="mut">нет платежей</td></tr>'}
+    </table></div>`;
+  $('u_card').querySelectorAll('[data-act]').forEach(b=>b.onclick=async ()=>{
+    const act = b.dataset.act, uid = b.dataset.id;
+    if (act === 'grant') {
+      const tier = prompt('Тариф (free/lite/pro/max):', 'lite');
+      if (!tier) return;
+      await post('/admin/api/grant_tier', {user_id: uid, tier, reason: 'admin UI'});
+      toast('Тариф сменён'); load();
+    } else if (act === 'extend') {
+      await post('/admin/api/subscription_action', {user_id: uid, action: 'extend', days: 30});
+      toast('Подписка продлена на 30 дней'); showUser(uid);
+    } else if (act === 'cancel') {
+      if (!confirm('Отменить подписку?')) return;
+      await post('/admin/api/subscription_action', {user_id: uid, action: 'cancel'});
+      toast('Подписка отменена'); showUser(uid);
+    } else if (act === 'delete') {
+      if (!confirm('Удалить пользователя безвозвратно (GDPR)? Прогресс и email будут стёрты; покупки останутся анонимными.')) return;
+      await post('/admin/api/delete_user', {user_id: uid});
+      toast('Пользователь удалён'); $('u_card').innerHTML=''; load();
+    }
+  });
+}
+
+async function post(path, body){
+  const r = await fetch(path, { method:'POST', headers:{'content-type':'application/json', authorization:'Bearer '+SECRET}, body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json().catch(()=>({})); toast('Ошибка: ' + (e.error||r.status)); throw new Error('post fail'); }
+  return r.json();
+}
+
+async function content(){
+  const [packs, funnel, errors] = await Promise.all([
+    api('/admin/api/content_packs'), api('/admin/api/content_funnel'), api('/admin/api/errors?days=7')
+  ]);
+  $('main').innerHTML = `
+    <div class="two">
+      <div class="card"><div class="k">Контент-паки (версии и скачивания)</div>
+        <table><tr><th>Пак</th><th>Версия</th><th>Размер</th><th>Скачали</th></tr>
+        ${(packs.packs||[]).map(p=>`<tr><td>${esc(p.name)}${p.demo?' <span class="mut">(free)</span>':''}</td><td class="mut"><code>${esc(p.version)}</code></td><td class="mut">${fmt(Math.round(p.brotli_bytes/1024))} КБ</td><td>${fmt(p.downloads)}</td></tr>`).join('')}</table></div>
+      <div class="card"><div class="k">Ошибки (7 д)</div>
+        <table><tr><th>Где</th><th>Хэш</th><th>Раз</th></tr>
+        ${(errors.top||[]).map(e=>`<tr><td class="mut">${esc(e.where_)}</td><td class="mut"><code>${esc(e.hash)}</code></td><td>${fmt(e.n)}</td></tr>`).join('')||'<tr><td colspan="3" class="mut">чисто</td></tr>'}</table></div>
+    </div>
+    <div class="card" style="margin-top:14px"><div class="k">Воронка уроков: топ открытий и оттоков</div>
+      <table><tr><th>Урок</th><th>Открытий</th><th>Завершений</th><th>Отток</th></tr>
+      ${(funnel.funnel||[]).slice(0,15).map(f=>`<tr><td>${esc(f.lesson)}</td><td>${fmt(f.opens)}</td><td>${fmt(f.completes)}</td><td style="color:${f.drop_pct>50?'var(--warn)':'inherit'}">${f.drop_pct}%</td></tr>`).join('')||'<tr><td colspan="4" class="mut">нет данных телеметрии</td></tr>'}</table></div>`;
+}
+
+async function actions(){
+  const d = await api('/admin/api/actions');
+  $('main').innerHTML = `<div class="card"><div class="k">Audit-лог действий администратора (последние 100)</div>
+    <table><tr><th>Время</th><th>Действие</th><th>Кто/что</th><th>Детали</th></tr>
+    ${(d.actions||[]).map(a=>`<tr><td class="mut">${new Date(a.ts).toLocaleString('ru-RU')}</td><td>${esc(a.action)}</td><td class="mut"><code>${esc(String(a.target_user||'').slice(0,8))}…</code></td><td class="mut">${esc(a.detail)}</td></tr>`).join('')||'<tr><td colspan="4" class="mut">пусто</td></tr>'}
+    </table></div>`;
+}
+
+function showLogin(err){
+  $('login').style.display='block'; $('app').style.display='none';
+  $('login_err').textContent = err || '';
+}
+$('login_go').onclick = async () => {
+  SECRET = $('secret').value.trim();
+  try {
+    const r = await fetch('/admin/api/overview?days=1', { headers: { authorization: 'Bearer ' + SECRET } });
+    if (r.status !== 200) { showLogin('Секрет не принят (401). Проверь ADMIN_SECRET.'); return; }
+    sessionStorage.setItem('cn_admin_secret', SECRET);
+    $('login').style.display='none'; $('app').style.display='block';
+    load();
+  } catch(e){ showLogin('Сервер недоступен'); }
+};
+if (SECRET) $('secret').value = SECRET;
+if (SECRET) $('login_go').click();
+})();
+</script>
+</body>
+</html>

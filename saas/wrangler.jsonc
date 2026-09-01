@@ -56,7 +56,8 @@
     "MENTOR_MOCK_MODEL": "1"
   },
 
-  "triggers": { "crons": [] },
+  // cron 03:00 UTC (§12.2): свёртка телеметрии в stats_daily + чистка events > 180 дней
+  "triggers": { "crons": ["0 3 * * *"] },
 
   "observability": { "enabled": true }
 }
