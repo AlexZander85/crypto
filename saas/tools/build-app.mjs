@@ -121,6 +121,19 @@ const bootScript = `
   var status = document.getElementById('cn_boot_status');
   var bar = document.getElementById('cn_boot_bar');
   function progress(txt, pct) { if (status) status.textContent = txt; if (bar) bar.style.width = Math.round(pct * 100) + '%'; }
+
+  // PWA (§15): service worker — после успешного старта, не мешаем первому запуску.
+  // SW доступен на https и на localhost (для локальной приёмки).
+  function registerSW() {
+    try {
+      var local = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || local)) {
+        navigator.serviceWorker.register('/service-worker.js').catch(function () {});
+      }
+    } catch (e) {}
+  }
+  if (document.readyState === 'complete') registerSW();
+  else window.addEventListener('load', registerSW);
   function showRetry(msg) {
     if (!scr) return;
     scr.innerHTML = '<div style="font-size:46px">📡</div><div style="margin:12px 0 6px;font-weight:700">' + (msg || 'Нет соединения') + '</div>' +
@@ -256,7 +269,12 @@ const bootScript = `
 // 5. Шелл: разметка + boot перед </body>
 // ------------------------------------------------------------------
 if (!markup.includes('</body>')) { console.error('FAIL: нет </body>'); process.exit(1); }
-const shell = markup.replace('</body>', bootScript + '\n</body>');
+// manifest в head (§15) — один тег (идемпотентно)
+let shell = markup;
+if (!shell.includes('rel="manifest"')) {
+  shell = shell.replace('</head>', '<link rel="manifest" href="/manifest.json">\n<meta name="theme-color" content="#0d1022">\n</head>');
+}
+shell = shell.replace('</body>', bootScript + '\n</body>');
 
 // ------------------------------------------------------------------
 // 6. Выход

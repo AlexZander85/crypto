@@ -172,12 +172,20 @@
       panel.innerHTML =
         `<div class="cn-title"><span>${escapeHtml(me.email || 'Аккаунт')}</span>` +
         `<span class="cn-badge ${escapeHtml(me.tier || 'free')}">${tierLabel(me.tier)}</span></div>` +
-        `<div class="cn-row"><button id="cn_tariffs">Тарифы</button><button id="cn_syncnow">Синк сейчас</button></div>` +
-        `<div class="cn-row"><button id="cn_logout" class="ghost">Выйти</button><button id="cn_hidepanel" class="ghost">Скрыть</button></div>` +
+        `<div class="cn-row"><button id="cn_tariffs">Тарифы</button><button id="cn_syncnow">Синк</button></div>` +
+        `<div class="cn-row"><button id="cn_retour" class="ghost">Показать тур снова</button><button id="cn_logout" class="ghost">Выйти</button></div>` +
+        `<div class="cn-row"><button id="cn_hidepanel" class="ghost">Скрыть панель</button></div>` +
         `<div class="cn-muted"><span class="cn-sync-dot ${syncDirty ? 'dirty' : ''}"></span>` +
         `${ago === null ? 'Синк: ожидание' : ago < 1 ? 'Синхронизировано только что' : 'Синхронизировано ' + ago + ' мин назад'}</div>`;
       $id('cn_tariffs').addEventListener('click', () => { panelOpen = false; renderPanel(); if (typeof window.CN_SAAS_showTariffs === 'function') window.CN_SAAS_showTariffs(); });
       $id('cn_syncnow').addEventListener('click', async () => { toast('Подтягиваем прогресс…'); await pullAndReload(); });
+      $id('cn_retour').addEventListener('click', () => {
+        // §16: «Показать тур снова» — сбрасываем флаг тура v12.9 и SaaS-шаг 0
+        lsDel('cn_tour_done');
+        lsDel('cn_saas_welcomed');
+        origSetItem.call(localStorage, 'cn_saas_show_welcome', '1');
+        try { location.reload(); } catch (e) {}
+      });
       $id('cn_logout').addEventListener('click', () => { flushNow(); setToken(''); me = null; panelOpen = false; renderPanel(); toast('Вы вышли. Прогресс остался на устройстве.'); });
       $id('cn_hidepanel').addEventListener('click', () => { panelOpen = false; renderPanel(); });
     } else {
@@ -185,8 +193,14 @@
         `<div class="cn-title"><span>Гость</span><span class="cn-badge free">${tierLabel('free')}</span></div>` +
         `<div class="cn-muted">Демо-курс доступен без аккаунта. Войди — и прогресс будет синхронизироваться между устройствами.</div>` +
         `<div class="cn-row"><button id="cn_login" class="primary">Войти</button></div>` +
-        `<div class="cn-row"><button id="cn_hidepanel2" class="ghost">Скрыть</button></div>`;
+        `<div class="cn-row"><button id="cn_retour" class="ghost">Показать тур снова</button><button id="cn_hidepanel2" class="ghost">Скрыть</button></div>`;
       $id('cn_login').addEventListener('click', () => { panelOpen = false; renderPanel(); showLoginModal(); });
+      $id('cn_retour').addEventListener('click', () => {
+        lsDel('cn_tour_done');
+        lsDel('cn_saas_welcomed');
+        origSetItem.call(localStorage, 'cn_saas_show_welcome', '1');
+        try { location.reload(); } catch (e) {}
+      });
       $id('cn_hidepanel2').addEventListener('click', () => { panelOpen = false; renderPanel(); });
     }
   }
@@ -705,13 +719,49 @@
   // ============================ старт ============================
   ensureUI();
 
+  // ============================ наставник: JWT-мост (§10) ============================
+  // Клиентский MENTOR.ask не шлёт JWT (контракт v12.9). Оборачиваем аддитивно:
+  // для авторизованных добавляем Authorization в запрос наставника, не трогая
+  // существующие обёртки приложения (санитизация Т6, память AI5). Гость идёт
+  // прежним путём — сервер авторизует его по deviceId (витрина 3/день).
+  function wrapMentor() {
+    if (!window.MENTOR || typeof window.MENTOR.ask !== 'function' || window.MENTOR.__saas_jwt_wrapped) return;
+    const M = window.MENTOR;
+    const orig = M.ask.bind(M);
+    M.ask = async function (action, lessonId, payload) {
+      if (M.mock || !JWT) return orig(action, lessonId, payload); // мок не считается (§10.2)
+      const realFetch = window.fetch;
+      window.fetch = function (input, init) {
+        try {
+          if (typeof input === 'string' && input.indexOf('/api/mentor/ask') >= 0) {
+            init = init || {};
+            init.headers = Object.assign({}, init.headers || {}, { authorization: 'Bearer ' + JWT });
+          }
+        } catch (e) {}
+        return realFetch.call(this, input, init);
+      };
+      try {
+        return await orig(action, lessonId, payload);
+      } catch (e) {
+        // исчерпана дневная квота тарифа → штатный апселл v12.6 (меаника «limit»)
+        if (e && (e.message === 'HTTP 402' || e.message === 'HTTP 429')) throw new Error('limit');
+        throw e;
+      } finally {
+        window.fetch = realFetch;
+      }
+    };
+    M.__saas_jwt_wrapped = true;
+  }
+
   onEngineReady(() => {
     wrapLearnPlayer();
     wrapOpenHome();
+    wrapMentor();
     // Learn-first: режим по умолчанию (§6.2). Классика — только по явному выбору.
     if (getMode() !== 'classic') {
+      const rerun = !!lsGet('cn_saas_show_welcome');
       const firstVisit = !lsGet('cn_saas_welcomed') && !lsGet('cn_tour_done') && !lsGet('cn_learn_pos');
-      if (firstVisit) showWelcome();
+      if (rerun || firstVisit) showWelcome();
       else { try { window.LearnPlayer.openHome(); } catch (e) {} }
     }
     sendPerf();

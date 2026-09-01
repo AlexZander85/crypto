@@ -172,12 +172,20 @@
       panel.innerHTML =
         `<div class="cn-title"><span>${escapeHtml(me.email || 'Аккаунт')}</span>` +
         `<span class="cn-badge ${escapeHtml(me.tier || 'free')}">${tierLabel(me.tier)}</span></div>` +
-        `<div class="cn-row"><button id="cn_tariffs">Тарифы</button><button id="cn_syncnow">Синк сейчас</button></div>` +
-        `<div class="cn-row"><button id="cn_logout" class="ghost">Выйти</button><button id="cn_hidepanel" class="ghost">Скрыть</button></div>` +
+        `<div class="cn-row"><button id="cn_tariffs">Тарифы</button><button id="cn_syncnow">Синк</button></div>` +
+        `<div class="cn-row"><button id="cn_retour" class="ghost">Показать тур снова</button><button id="cn_logout" class="ghost">Выйти</button></div>` +
+        `<div class="cn-row"><button id="cn_hidepanel" class="ghost">Скрыть панель</button></div>` +
         `<div class="cn-muted"><span class="cn-sync-dot ${syncDirty ? 'dirty' : ''}"></span>` +
         `${ago === null ? 'Синк: ожидание' : ago < 1 ? 'Синхронизировано только что' : 'Синхронизировано ' + ago + ' мин назад'}</div>`;
       $id('cn_tariffs').addEventListener('click', () => { panelOpen = false; renderPanel(); if (typeof window.CN_SAAS_showTariffs === 'function') window.CN_SAAS_showTariffs(); });
       $id('cn_syncnow').addEventListener('click', async () => { toast('Подтягиваем прогресс…'); await pullAndReload(); });
+      $id('cn_retour').addEventListener('click', () => {
+        // §16: «Показать тур снова» — сбрасываем флаг тура v12.9 и SaaS-шаг 0
+        lsDel('cn_tour_done');
+        lsDel('cn_saas_welcomed');
+        origSetItem.call(localStorage, 'cn_saas_show_welcome', '1');
+        try { location.reload(); } catch (e) {}
+      });
       $id('cn_logout').addEventListener('click', () => { flushNow(); setToken(''); me = null; panelOpen = false; renderPanel(); toast('Вы вышли. Прогресс остался на устройстве.'); });
       $id('cn_hidepanel').addEventListener('click', () => { panelOpen = false; renderPanel(); });
     } else {
@@ -185,8 +193,14 @@
         `<div class="cn-title"><span>Гость</span><span class="cn-badge free">${tierLabel('free')}</span></div>` +
         `<div class="cn-muted">Демо-курс доступен без аккаунта. Войди — и прогресс будет синхронизироваться между устройствами.</div>` +
         `<div class="cn-row"><button id="cn_login" class="primary">Войти</button></div>` +
-        `<div class="cn-row"><button id="cn_hidepanel2" class="ghost">Скрыть</button></div>`;
+        `<div class="cn-row"><button id="cn_retour" class="ghost">Показать тур снова</button><button id="cn_hidepanel2" class="ghost">Скрыть</button></div>`;
       $id('cn_login').addEventListener('click', () => { panelOpen = false; renderPanel(); showLoginModal(); });
+      $id('cn_retour').addEventListener('click', () => {
+        lsDel('cn_tour_done');
+        lsDel('cn_saas_welcomed');
+        origSetItem.call(localStorage, 'cn_saas_show_welcome', '1');
+        try { location.reload(); } catch (e) {}
+      });
       $id('cn_hidepanel2').addEventListener('click', () => { panelOpen = false; renderPanel(); });
     }
   }
@@ -745,8 +759,9 @@
     wrapMentor();
     // Learn-first: режим по умолчанию (§6.2). Классика — только по явному выбору.
     if (getMode() !== 'classic') {
+      const rerun = !!lsGet('cn_saas_show_welcome');
       const firstVisit = !lsGet('cn_saas_welcomed') && !lsGet('cn_tour_done') && !lsGet('cn_learn_pos');
-      if (firstVisit) showWelcome();
+      if (rerun || firstVisit) showWelcome();
       else { try { window.LearnPlayer.openHome(); } catch (e) {} }
     }
     sendPerf();

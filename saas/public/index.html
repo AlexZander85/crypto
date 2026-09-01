@@ -814,6 +814,8 @@ body.light-theme select option:hover, body.light-theme select option:checked {
 
 .source-audit-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.35);color:var(--warn);font-size:11.5px;font-weight:700}
 </style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0d1022">
 </head>
 <body>
 <header>
@@ -3031,6 +3033,19 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
   var status = document.getElementById('cn_boot_status');
   var bar = document.getElementById('cn_boot_bar');
   function progress(txt, pct) { if (status) status.textContent = txt; if (bar) bar.style.width = Math.round(pct * 100) + '%'; }
+
+  // PWA (§15): service worker — после успешного старта, не мешаем первому запуску.
+  // SW доступен на https и на localhost (для локальной приёмки).
+  function registerSW() {
+    try {
+      var local = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || local)) {
+        navigator.serviceWorker.register('/service-worker.js').catch(function () {});
+      }
+    } catch (e) {}
+  }
+  if (document.readyState === 'complete') registerSW();
+  else window.addEventListener('load', registerSW);
   function showRetry(msg) {
     if (!scr) return;
     scr.innerHTML = '<div style="font-size:46px">📡</div><div style="margin:12px 0 6px;font-weight:700">' + (msg || 'Нет соединения') + '</div>' +
