@@ -165,7 +165,8 @@ export async function oauthStart(ctx, req, provider) {
   }
   const state = randomToken(16);
   const origin = new URL(req.url).origin;
-  await env.KV.put(`oauth-state:${state}`, '1', { expirationTtl: 600 });
+  // в state храним origin, начавший flow, — коллбэк вернёт пользователя именно сюда
+  await env.KV.put(`oauth-state:${state}`, origin, { expirationTtl: 600 });
   const url = new URL(cfg.authUrl);
   url.searchParams.set('client_id', clientId);
   url.searchParams.set('redirect_uri', `${origin}/api/auth/oauth/${provider}/callback`);
@@ -182,7 +183,8 @@ export async function oauthCallback(ctx, req, provider) {
   const url = new URL(req.url);
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
-  if (!code || !state || !(await env.KV.get(`oauth-state:${state}`))) {
+  const stateOrigin = await env.KV.get(`oauth-state:${state}`);
+  if (!code || !state || !stateOrigin) {
     return json({ error: 'bad_state' }, 400);
   }
   await env.KV.delete(`oauth-state:${state}`);
@@ -234,7 +236,11 @@ export async function oauthCallback(ctx, req, provider) {
   const { track } = await import('./telemetry.js');
   track(ctx, isNew ? 'signup' : 'login', user.id, { provider, locale: user.locale });
 
-  return json({ ok: true, token: jwt, user: { id: user.id, email, tier: user.access_tier, locale: user.locale }, is_new: isNew });
+  // браузерный флоу: возвращаем пользователя в приложение с JWT в hash-фрагменте
+  // (hash не уходит на сервер и не попадает в access-логи); фронт (saas-front.js)
+  // забирает #cn_token, сохраняет cn_jwt и выполняет слияние прогресса.
+  const base = /^https:\/\//.test(stateOrigin) ? stateOrigin : url.origin;
+  return Response.redirect(`${base}/#cn_token=${jwt}`, 302);
 }
 
 // GET /api/me (JWT)

@@ -5,12 +5,12 @@
 // Лимит Workers Free — 10 000 нейронов/день (env.NEURON_DAILY_LIMIT).
 import { MODEL_WHITELIST } from './mentor.js';
 
-// Тарифы владельца (нейронов за миллион токенов). Источник истины — сообщение владельца.
-// SKU — ключи MODEL_WHITELIST (Стадия 11).
+// Тарифы владельца (нейронов за миллион токенов). Источник истины — официальная
+// страница pricing Workers AI (developers.cloudflare.com/workers-ai/platform/pricing, 09.2026).
+// Только модели, доступные на Workers Free плане. SKU — ключи MODEL_WHITELIST.
 export const NEURON_PRICING = {
-  'cf-glm-5.3-flash':      { model: '@cf/zai-org/glm-5.3-flash',           label: 'GLM 5.3 Flash',      in: 13636, cached: 2727, out: 45455 },
+  'cf-gpt-oss-120b':       { model: '@cf/openai/gpt-oss-120b',             label: 'GPT OSS 120B',       in: 31818, cached: 0,    out: 68182 },
   'cf-glm-4.7-flash':      { model: '@cf/zai-org/glm-4.7-flash',           label: 'GLM 4.7 Flash',      in: 5500,  cached: 0,    out: 36400 },
-  'cf-deepseek-v4-flash':  { model: '@cf/deepseek-ai/deepseek-v4-flash-0731', label: 'DeepSeek V4 Flash', in: 40000, cached: 1273, out: 120000 },
   'cf-qwen3.8-27b':        { model: '@cf/qwen/qwen3.8-27b',                label: 'Qwen 3.8 27B',       in: 40909, cached: 0,    out: 290909 },
   'cf-gemma-4-26b-a4b-it': { model: '@cf/google/gemma-4-26b-a4b-it',       label: 'Gemma 4 26B A4B',    in: 9091,  cached: 0,    out: 27273 }
 };

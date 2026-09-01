@@ -82,9 +82,8 @@ let appJs = blocks.join('\n;\n');
 //     (значение не из списка → дефолт) — отдельная миграция не нужна.
 // ------------------------------------------------------------------
 const MODERN_MODELS_JS = `[
-  { id: 'cf-glm-4.7-flash', label: '💡 GLM 4.7 Flash', desc: '@cf/zai-org/glm-4.7-flash — по умолчанию, доступна на Free. ✓ каталог 09.2026', ok: true },
-  { id: 'cf-glm-5.3-flash', label: '🧠 GLM 5.3 Flash', desc: '@cf/zai-org/glm-5.3-flash — новейшая генерация (нужен платный Workers plan). ✓ каталог 09.2026', ok: true },
-  { id: 'cf-deepseek-v4-flash', label: '⚡ DeepSeek V4 Flash', desc: '@cf/deepseek-ai/deepseek-v4-flash-0731 — логика и рассуждения (платный plan). ✓ каталог 09.2026', ok: true },
+  { id: 'cf-gpt-oss-120b', label: '🚀 GPT OSS 120B', desc: '@cf/openai/gpt-oss-120b — по умолчанию, самая быстрая (5–9 с), доступна на Free. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-glm-4.7-flash', label: '💡 GLM 4.7 Flash', desc: '@cf/zai-org/glm-4.7-flash — быстрая альтернатива, доступна на Free. ✓ каталог 09.2026', ok: true },
   { id: 'cf-qwen3.8-27b', label: '🐉 Qwen 3.8 27B', desc: '@cf/qwen/qwen3.8-27b — мультиязычная, сильна в JSON-структурах. Доступна на Free. ✓ каталог 09.2026', ok: true },
   { id: 'cf-gemma-4-26b-a4b-it', label: '💎 Gemma 4 26B A4B', desc: '@cf/google/gemma-4-26b-a4b-it — компактная MoE от Google. Доступна на Free. ✓ каталог 09.2026', ok: true }
 ]`;
@@ -97,8 +96,8 @@ appJs = appJs.replace(modelsRe, 'const MENTOR_MODELS = ' + MODERN_MODELS_JS);
 // дефолтный SKU в mentorModelGet (2 вхождения после замены массива) → новый дефолт
 const legacyDefaultRe = /'cf-llama-3.1-8b-instruct'/g;
 const legacyDefaults = (appJs.match(legacyDefaultRe) || []).length;
-appJs = appJs.replace(legacyDefaultRe, "'cf-glm-4.7-flash'");
-console.log(`Стадия 11: MENTOR_MODELS → 5 современных моделей; дефолтных SKU заменено: ${legacyDefaults}`);
+appJs = appJs.replace(legacyDefaultRe, "'cf-gpt-oss-120b'");
+console.log(`Стадия 11: MENTOR_MODELS → 4 модели Free-плана (gpt-oss-120b дефолт); дефолтных SKU заменено: ${legacyDefaults}`);
 
 // Стадия A: инлайн-фолбэк всего контента (§5.3) — движок работает без сети/паков
 if (!noInline) {

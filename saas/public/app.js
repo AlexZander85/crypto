@@ -24407,9 +24407,8 @@ window.mentorCacheSet = mentorCacheSet;
 
 /* ---------- модель: список доступных + выбор ---------- */
 const MENTOR_MODELS = [
-  { id: 'cf-glm-4.7-flash', label: '💡 GLM 4.7 Flash', desc: '@cf/zai-org/glm-4.7-flash — по умолчанию, доступна на Free. ✓ каталог 09.2026', ok: true },
-  { id: 'cf-glm-5.3-flash', label: '🧠 GLM 5.3 Flash', desc: '@cf/zai-org/glm-5.3-flash — новейшая генерация (нужен платный Workers plan). ✓ каталог 09.2026', ok: true },
-  { id: 'cf-deepseek-v4-flash', label: '⚡ DeepSeek V4 Flash', desc: '@cf/deepseek-ai/deepseek-v4-flash-0731 — логика и рассуждения (платный plan). ✓ каталог 09.2026', ok: true },
+  { id: 'cf-gpt-oss-120b', label: '🚀 GPT OSS 120B', desc: '@cf/openai/gpt-oss-120b — по умолчанию, самая быстрая (5–9 с), доступна на Free. ✓ каталог 09.2026', ok: true },
+  { id: 'cf-glm-4.7-flash', label: '💡 GLM 4.7 Flash', desc: '@cf/zai-org/glm-4.7-flash — быстрая альтернатива, доступна на Free. ✓ каталог 09.2026', ok: true },
   { id: 'cf-qwen3.8-27b', label: '🐉 Qwen 3.8 27B', desc: '@cf/qwen/qwen3.8-27b — мультиязычная, сильна в JSON-структурах. Доступна на Free. ✓ каталог 09.2026', ok: true },
   { id: 'cf-gemma-4-26b-a4b-it', label: '💎 Gemma 4 26B A4B', desc: '@cf/google/gemma-4-26b-a4b-it — компактная MoE от Google. Доступна на Free. ✓ каталог 09.2026', ok: true }
 ]
@@ -24419,9 +24418,9 @@ function mentorModelGet(){
   try{
     const cur = localStorage.getItem('cn_mentor_model');
     /* v10/ДЕФ-20: старое значение 'reserve' и снятые с листинга SKU мигрируют на проверенную модель */
-    if(!cur || cur === 'reserve' || !MENTOR_MODELS.some(m => m.id === cur)) return 'cf-glm-4.7-flash';
+    if(!cur || cur === 'reserve' || !MENTOR_MODELS.some(m => m.id === cur)) return 'cf-gpt-oss-120b';
     return cur;
-  }catch(e){ return 'cf-glm-4.7-flash'; }
+  }catch(e){ return 'cf-gpt-oss-120b'; }
 }
 function mentorModelSet(id){
   try{ localStorage.setItem('cn_mentor_model', id); }catch(e){}

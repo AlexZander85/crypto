@@ -15,9 +15,10 @@ D1 (users/purchases/progress/subscriptions/mentor_usage/stats_daily/…) · KV (
 R2 (контент-паки, приватно) · Workers AI (наставник) · Vectorize (опционально)
 ```
 
-### AI-наставник — модели (Стадия 11, каталог 09.2026)
-Только современные SKU Workers AI, дефолт `@cf/zai-org/glm-5.3-flash`: GLM 5.3 Flash,
-GLM 4.7 Flash, DeepSeek V4 Flash (ретрай), Qwen 3.8 27B, Gemma 4 26B A4B.
+### AI-наставник — модели (каталог 09.2026, только Workers Free)
+Дефолт `@cf/openai/gpt-oss-120b` (самая быстрая, 5–9 с): GPT OSS 120B,
+GLM 4.7 Flash (первый ретрай), Qwen 3.8 27B, Gemma 4 26B A4B.
+Платные SKU (glm-5.3-flash, deepseek-v4-flash — на Free code 5035) сняты с листинга.
 Белый список — `MODEL_WHITELIST` в `src/mentor.js`; выбор пользователя (⚙️ панель наставника)
 едет в `body.model` и валидируется сервером; смена активной модели — через `POST /admin/api/ai_model`
 без передеплоя. Подробности — `DEPLOY_GUIDE_CLOUDFLARE.md` §S3.1.

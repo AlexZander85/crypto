@@ -11,26 +11,20 @@ import { verifyJWT } from './util.js';
 import { ragSearch } from './rag.js';
 import { extractUsage, estimateTokens, recordUsage, calcNeurons } from './neurons.js';
 
-// §10.2 — белый список SKU Workers AI. Стадия 11 (09.2026): каталог обновлён —
-// только современные модели поколения 2026 по выбору владельца; старое поколение
-// (llama-3.x, mistral-7b, qwen2.5, gemma-7b) снято с листинга.
+// §10.2 — белый список SKU Workers AI. Модели, доступные на Workers FREE плане
+// (проверено live-вызовами 09.2026); платные (glm-5.3-flash, deepseek-v4-flash —
+// code 5035 на Free) сняты с листинга по решению владельца.
 // Значения в localStorage клиента с устаревшими id мигрируют на дефолт
 // (mentorModelGet на фронте, getActiveSku на сервере — оба валидируют по белому списку).
 export const MODEL_WHITELIST = {
-  'cf-glm-5.3-flash': '@cf/zai-org/glm-5.3-flash',
+  'cf-gpt-oss-120b': '@cf/openai/gpt-oss-120b',
   'cf-glm-4.7-flash': '@cf/zai-org/glm-4.7-flash',
-  'cf-deepseek-v4-flash': '@cf/deepseek-ai/deepseek-v4-flash-0731',
   'cf-qwen3.8-27b': '@cf/qwen/qwen3.8-27b',
   'cf-gemma-4-26b-a4b-it': '@cf/google/gemma-4-26b-a4b-it'
 };
-// Доступность на Workers Free план (проверено REST-вызовом 09.2026):
-//   ✅ glm-4.7-flash, qwen3.8-27b, gemma-4-26b-a4b-it
-//   ❌ glm-5.3-flash, deepseek-v4-flash — только платный Workers plan (code 5035).
-// Белый список сохраняем полностью: после апгрейда плана модели доступны без передеплоя
-// (смена — POST /admin/api/ai_model или выбор пользователя; при сбое — авторетрай).
-export const DEFAULT_SKU = 'cf-glm-4.7-flash';        // дефолт на Free-плане
+export const DEFAULT_SKU = 'cf-gpt-oss-120b';         // самая быстрая и стабильная (5–9 с в live-замерах)
 // Ретрай при сбое (§10.1): первая ДРУГАЯ модель из порядка фолбэка — ретрай самой собой запрещён.
-const FALLBACK_ORDER = ['cf-qwen3.8-27b', 'cf-glm-4.7-flash', 'cf-gemma-4-26b-a4b-it'];
+const FALLBACK_ORDER = ['cf-glm-4.7-flash', 'cf-qwen3.8-27b', 'cf-gemma-4-26b-a4b-it'];
 function nextSkuAfter(sku) {
   const free = FALLBACK_ORDER.find(s => s !== sku);
   return free || Object.keys(MODEL_WHITELIST).find(s => s !== sku) || DEFAULT_SKU;

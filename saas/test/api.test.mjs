@@ -284,10 +284,11 @@ try {
   check('admin neurons: avg_per_task и tasks_left согласованы', typeof nr.body?.avg_per_task === 'number' && nr.body.avg_per_task > 0
     && nr.body?.tasks_left > 0 && nr.body.tasks_left <= 10000,
     `avg=${nr.body?.avg_per_task} tasks_left=${nr.body?.tasks_left}`);
-  check('admin neurons: тарифы всех 5 моделей в ответе', nr.body?.pricing && Object.keys(nr.body.pricing).length === 5
-    && nr.body.pricing['cf-glm-5.3-flash'].in === 13636 && nr.body.pricing['cf-deepseek-v4-flash'].out === 120000);
+  check('admin neurons: тарифы всех 4 моделей Free-плана в ответе', nr.body?.pricing && Object.keys(nr.body.pricing).length === 4
+    && nr.body.pricing['cf-gpt-oss-120b'].in === 31818 && nr.body.pricing['cf-gpt-oss-120b'].out === 68182
+    && nr.body.pricing['cf-glm-4.7-flash'].in === 5500 && nr.body.pricing['cf-qwen3.8-27b'].out === 290909);
   check('mentor: _neurons в ответе наставника', typeof g1.body?._neurons === 'object' && g1.body._neurons.neurons >= 0
-    && ['cf-glm-5.3-flash', 'cf-glm-4.7-flash', 'cf-deepseek-v4-flash'].includes(g1.body._neurons.model),
+    && ['cf-gpt-oss-120b', 'cf-glm-4.7-flash', 'cf-qwen3.8-27b', 'cf-gemma-4-26b-a4b-it'].includes(g1.body._neurons.model),
     JSON.stringify(g1.body?._neurons || {}));
 
   // 16. живой рынок §11: гейтинг ДО обращения к внешним источникам

@@ -781,6 +781,16 @@
 
   // восстановление сессии
   (async function init() {
+    // OAuth-возврат (Google/GitHub): коллбэк редиректит с JWT в hash (#cn_token=…).
+    // Забираем токен, чистим hash (refresh не перезапустит флоу) и входим штатно.
+    if (!authed()) {
+      const m = (location.hash || '').match(/cn_token=([A-Za-z0-9._-]+)/);
+      if (m && m[1].split('.').length === 3) {
+        try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+        await afterLogin(m[1]);
+        return;
+      }
+    }
     if (!authed()) { renderPanel(); return; }
     await refreshMe();
     renderPanel();
