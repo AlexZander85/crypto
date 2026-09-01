@@ -24,7 +24,7 @@ const SAAS_DIR = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)
 // Стадия 1: свежие паки → локальные R2/KV перед прогоном (воспроизводимость в чистом клоне)
 execSync('node tools/upload-packs.mjs --local', { cwd: SAAS_DIR, stdio: 'pipe', shell: true });
 execSync('npx wrangler d1 migrations apply DB --local', { cwd: SAAS_DIR, stdio: 'pipe', shell: true });
-const child = spawn('npx', ['wrangler', 'dev', '--port', String(PORT)], {
+const child = spawn('npx', ['wrangler', 'dev', '--port', String(PORT), '--config', 'wrangler.test.jsonc'], {
   cwd: SAAS_DIR,
   shell: true, stdio: 'pipe', detached: true, windowsHide: true
 });
@@ -221,6 +221,51 @@ try {
   // подпись верна → прошли гейт → неизвестная покупка честно 404
   check('crypto webhook signature gate works', cwUnknown.status === 404 && cwUnknown.body?.error === 'unknown_purchase',
     `status=${cwUnknown.status} body=${JSON.stringify(cwUnknown.body)}`);
+
+  // 15. наставник §10/§19.4 (dev-фикстура MENTOR_MOCK_MODEL): лимиты free 3/день, фильтр, вердикт
+  const mentorReq = (body, token) => api('/api/mentor/ask', {
+    method: 'POST', headers: { 'content-type': 'application/json', ...(token ? { authorization: `Bearer ${token}` } : {}) },
+    body: JSON.stringify(body)
+  });
+  const dev = 'dev-' + Date.now();
+  // гость по deviceId: 3 вопроса ок, 4-й → 402
+  const g1 = await mentorReq({ action: 'hint', lessonId: 'p0_l1', deviceId: dev, lessonText: 'урок', payload: {} });
+  check('mentor guest: 1-й вопрос ok', g1.status === 200 && typeof g1.body?.text === 'string', `status=${g1.status}`);
+  await mentorReq({ action: 'hint', lessonId: 'p0_l1', deviceId: dev, lessonText: 'урок' });
+  await mentorReq({ action: 'hint', lessonId: 'p0_l1', deviceId: dev, lessonText: 'урок' });
+  const g4 = await mentorReq({ action: 'hint', lessonId: 'p0_l1', deviceId: dev, lessonText: 'урок' });
+  check('mentor guest: 4-й вопрос → 402 (лимит free 3/день)', g4.status === 402 && g4.body?.error === 'limit', `status=${g4.status}`);
+  // без deviceId и без JWT → 401
+  const mNoAuth = await mentorReq({ action: 'hint', lessonId: 'p0_l1' });
+  check('mentor без JWT и deviceId → 401', mNoAuth.status === 401);
+  // новый email (fresh user) с JWT: feynman-вердикт в формате json
+  const emailM = `mentor-${Date.now()}@example.com`;
+  const mr2 = await api('/api/auth/magic-request', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: emailM }) });
+  const mcM = await api(new URL(mr2.body.dev_link).pathname + new URL(mr2.body.dev_link).search, { headers: { accept: 'application/json' } });
+  const jwt2 = mcM.body.token;
+  const fj = await mentorReq({ action: 'feynman', lessonId: 'p0_l1', lessonText: 'урок', payload: { explanation: 'объяснение' } }, jwt2);
+  check('feynman: verdict json (partial/advice/gaps)', fj.status === 200 && fj.body?.json?.verdict === 'partial' && typeof fj.body?.json?.advice === 'string' && Array.isArray(fj.body?.json?.gaps),
+    JSON.stringify(fj.body?.json || {}));
+  // выходной фильтр: banned-фраза в ответе модели заменяется
+  const fl = await mentorReq({ action: 'rephrase', lessonId: 'p0_l1', lessonText: '__TEST_FILTER__' }, jwt2);
+  check('серверный фильтр: banned → замена', fl.status === 200 && !String(fl.body?.text || '').toLowerCase().includes('покупай') && String(fl.body?.text || '').includes('материале урока'),
+    String(fl.body?.text || '').slice(0, 50));
+  // лимит free для этого пользователя: уже 2 запроса → до 3-го ок, 4-й 402
+  await mentorReq({ action: 'hint', lessonId: 'p0_l1', lessonText: 'урок' }, jwt2);
+  const m4 = await mentorReq({ action: 'hint', lessonId: 'p0_l1', lessonText: 'урок' }, jwt2);
+  check('mentor user: 4-й вопрос → 402', m4.status === 402, `status=${m4.status}`);
+  // admin ai_model: 401 без секрета; bad sku 400; смена ок и в audit
+  const amNo = await api('/admin/api/ai_model');
+  check('admin ai_model требует секрет', amNo.status === 401);
+  const amBad = await api('/admin/api/ai_model', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ sku: 'nope' }) });
+  check('admin ai_model bad sku → 400', amBad.status === 400);
+  const amOk = await api('/admin/api/ai_model', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer dev-only-admin' }, body: JSON.stringify({ sku: 'cf-llama-3.3-70b-instruct-fp8-fast' }) });
+  check('admin ai_model смена ок', amOk.status === 200 && amOk.body?.ok === true);
+  const amGet = await api('/admin/api/ai_model', { headers: { authorization: 'Bearer dev-only-admin' } });
+  check('admin ai_model GET отражает смену', amGet.status === 200 && amGet.body?.sku === 'cf-llama-3.3-70b-instruct-fp8-fast');
+  // смена модели в admin_actions
+  const admAudit = await api('/admin/api/overview?days=30', { headers: { authorization: 'Bearer dev-only-admin' } });
+  check('telemetry/audit живы после mentor', admAudit.status === 200);
 
 } catch (e) {
   check('suite completed', false, String(e?.message || e).slice(0, 200));

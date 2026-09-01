@@ -6,6 +6,8 @@ import * as content from './content.js';
 import * as payments from './payments.js';
 import * as paymentsCrypto from './payments-crypto.js';
 import { adminOverview, adminGrantTier } from './admin.js';
+import { ask as mentorAsk } from './mentor.js';
+import { adminGetAiModel, adminSetAiModel } from './admin-ai.js';
 const { prices, yookassaCreate } = payments;
 
 export default {
@@ -65,6 +67,9 @@ export default {
         return json({ ok: true }, 200, H);
       }
 
+      // ---- mentor (§10: контракт v12.9) ----
+      if (path === '/api/mentor/ask' && req.method === 'POST') return mentorAsk({ env, ctx }, req);
+
       // ---- feedback ----
       if (path === '/api/feedback' && req.method === 'POST') {
         const claims = await auth.requireAuth(env, req);
@@ -81,6 +86,8 @@ export default {
       // ---- admin (за секретом; на проде дополнительно за Cloudflare Access) ----
       if (path === '/admin/api/overview' && req.method === 'GET') return adminOverview({ env, ctx }, req);
       if (path === '/admin/api/grant_tier' && req.method === 'POST') return adminGrantTier({ env, ctx }, req);
+      if (path === '/admin/api/ai_model' && req.method === 'GET') return adminGetAiModel({ env, ctx }, req);
+      if (path === '/admin/api/ai_model' && req.method === 'POST') return adminSetAiModel({ env, ctx }, req);
 
       return json({ error: 'not_found' }, 404, H);
     } catch (err) {

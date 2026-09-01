@@ -705,9 +705,44 @@
   // ============================ старт ============================
   ensureUI();
 
+  // ============================ наставник: JWT-мост (§10) ============================
+  // Клиентский MENTOR.ask не шлёт JWT (контракт v12.9). Оборачиваем аддитивно:
+  // для авторизованных добавляем Authorization в запрос наставника, не трогая
+  // существующие обёртки приложения (санитизация Т6, память AI5). Гость идёт
+  // прежним путём — сервер авторизует его по deviceId (витрина 3/день).
+  function wrapMentor() {
+    if (!window.MENTOR || typeof window.MENTOR.ask !== 'function' || window.MENTOR.__saas_jwt_wrapped) return;
+    const M = window.MENTOR;
+    const orig = M.ask.bind(M);
+    M.ask = async function (action, lessonId, payload) {
+      if (M.mock || !JWT) return orig(action, lessonId, payload); // мок не считается (§10.2)
+      const realFetch = window.fetch;
+      window.fetch = function (input, init) {
+        try {
+          if (typeof input === 'string' && input.indexOf('/api/mentor/ask') >= 0) {
+            init = init || {};
+            init.headers = Object.assign({}, init.headers || {}, { authorization: 'Bearer ' + JWT });
+          }
+        } catch (e) {}
+        return realFetch.call(this, input, init);
+      };
+      try {
+        return await orig(action, lessonId, payload);
+      } catch (e) {
+        // исчерпана дневная квота тарифа → штатный апселл v12.6 (меаника «limit»)
+        if (e && (e.message === 'HTTP 402' || e.message === 'HTTP 429')) throw new Error('limit');
+        throw e;
+      } finally {
+        window.fetch = realFetch;
+      }
+    };
+    M.__saas_jwt_wrapped = true;
+  }
+
   onEngineReady(() => {
     wrapLearnPlayer();
     wrapOpenHome();
+    wrapMentor();
     // Learn-first: режим по умолчанию (§6.2). Классика — только по явному выбору.
     if (getMode() !== 'classic') {
       const firstVisit = !lsGet('cn_saas_welcomed') && !lsGet('cn_tour_done') && !lsGet('cn_learn_pos');

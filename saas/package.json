@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev --port 8787",
+    "dev": "wrangler dev --port 8787 --config wrangler.test.jsonc",
     "deploy": "wrangler deploy",
     "migrate:local": "wrangler d1 migrations apply DB --local",
     "migrate:remote": "wrangler d1 migrations apply DB --remote",
@@ -12,9 +12,9 @@
     "content:update": "node tools/extract-content.mjs && node tools/upload-packs.mjs",
     "test": "node test/api.test.mjs",
     "build": "node tools/build-app.mjs",
-    "build:stage-b": "node tools/build-app.mjs --no-inline-content",
     "build:all": "node tools/extract-content.mjs && node tools/build-app.mjs",
-    "build:stage-a": "node tools/build-app.mjs --inline-content"
+    "build:stage-a": "node tools/build-app.mjs --inline-content",
+    "dev:ai": "wrangler dev --port 8787"
   },
   "devDependencies": {
     "wrangler": "^4.125.0"

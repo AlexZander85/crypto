@@ -18,8 +18,8 @@
     { "binding": "PACKS", "bucket_name": "cn-packs" }
   ],
 
-  // Workers AI — наставник (§10). Бесплатный тариф: 10 000 нейронов/день.
-  "ai": { "binding": "AI" },
+  // ТЕСТОВЫЙ КОНФИГ: без AI-биндинга (AI тянет remote-сессию и требует токен).
+  // Деплой и dev с реальным наставником — через основной wrangler.jsonc.
 
   // Статика SaaS-версии приложения (public/index.html = сборка из index_v9.html + integration.js).
   // Assets отдаются напрямую; /api/* уходит в воркер.
