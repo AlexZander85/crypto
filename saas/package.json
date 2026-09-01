@@ -17,6 +17,6 @@
     "dev:ai": "wrangler dev --port 8787"
   },
   "devDependencies": {
-    "wrangler": "^4.125.0"
+    "wrangler": "^4.127.1"
   }
 }

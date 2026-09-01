@@ -9,7 +9,7 @@
   "account_id": "ac2b178b7823f4971ec5d451e95129ad",
 
   "d1_databases": [
-    { "binding": "DB", "database_name": "cn", "database_id": "PENDING_D1_CREATE" }
+    { "binding": "DB", "database_name": "cn", "database_id": "f4b86f73-baa7-46a1-a6b4-e5687deacc19" }
   ],
   "kv_namespaces": [
     { "binding": "KV", "id": "155c0fded467455ba7baa0f0f48d982f" }
@@ -26,23 +26,15 @@
   "assets": { "directory": "./public", "binding": "ASSETS" },
 
   // НЕ секретные настройки. Секреты — через `wrangler secret put`:
-  //   JWT_SECRET, RESEND_API_KEY, LS_SIGNING_SECRET, YOOKASSA_WEBHOOK_SECRET,
-  //   TURNSTILE_SECRET, ADMIN_SECRET, OAUTH_GOOGLE_SECRET, OAUTH_GITHUB_SECRET
+  //   JWT_SECRET, ADMIN_SECRET (залиты), RESEND_API_KEY, LS_SIGNING_SECRET,
+  //   YOOKASSA_WEBHOOK_SECRET, TURNSTILE_SECRET, OAUTH_*, YOOKASSA_*, CRYPTOMUS_*
+  // ВАЖНО: секреты НЕ дублировать в vars — иначе API откажет (code 10053 «already in use»).
   "vars": {
     "ENV": "dev",
     "ALLOWED_ORIGIN": "*",
     "APP_ORIGIN": "https://cryptonavigator.app",
     "JWT_TTL_SECONDS": "2592000",
-    // ВНИМАНИЕ: значения ниже — ТОЛЬКО для локальной разработки.
-    // На проде: npx wrangler secret put JWT_SECRET / ADMIN_SECRET / LS_SIGNING_SECRET /
-    //   YOOKASSA_WEBHOOK_SECRET / RESEND_API_KEY / TURNSTILE_SECRET
-    "JWT_SECRET": "dev-only-secret-change-me",
-    "ADMIN_SECRET": "dev-only-admin",
-    "LS_SIGNING_SECRET": "dev-only-ls",
-    "YOOKASSA_WEBHOOK_SECRET": "dev-only-yk",
-    // Cryptomus: ключ задан (для проверки подписи вебхука локально),
-    // MERCHANT_ID пуст → создание инвойса честно отвечает 501 в тестах.
-    "CRYPTOMUS_API_KEY": "dev-only-crypto",
+    // Cryptomus: MERCHANT_ID пуст → создание инвойса честно отвечает 501 (платежи позже).
     "CRYPTO_PRICE_JSON": "{\"lite\":{\"amount\":\"12.00\",\"currency\":\"USD\"},\"pro\":{\"amount\":\"24.00\",\"currency\":\"USD\"},\"max\":{\"amount\":\"3.99\",\"currency\":\"USD\"}}",
     "LS_TIER_MAP": "{}",
     "YK_TIER_MAP": "{}",
@@ -52,10 +44,7 @@
     // Даунгрейд после истечения подписки «Макс» (§9): free | lite | pro
     "TIER_DOWNGRADE": "free",
     // Дневной лимит нейронов Workers AI (дашборд «Нейроны» в админке). Workers Free = 10 000/день.
-    "NEURON_DAILY_LIMIT": "10000",
-    // dev-фикстура приёмки наставника (§19.4): детерминированные ответы модели.
-    // Только для локальной разработки/тестов; на проде не выставлять.
-    "MENTOR_MOCK_MODEL": "1"
+    "NEURON_DAILY_LIMIT": "10000"
   },
 
   // cron 03:00 UTC (§12.2): свёртка телеметрии в stats_daily + чистка events > 180 дней

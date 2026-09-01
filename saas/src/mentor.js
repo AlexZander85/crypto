@@ -23,8 +23,18 @@ export const MODEL_WHITELIST = {
   'cf-qwen3.8-27b': '@cf/qwen/qwen3.8-27b',
   'cf-gemma-4-26b-a4b-it': '@cf/google/gemma-4-26b-a4b-it'
 };
-export const DEFAULT_SKU = 'cf-glm-5.3-flash';       // новейшая генерация, дефолт для всех
-const FALLBACK_SKU = 'cf-deepseek-v4-flash';          // ретрай другой моделью (§10.1), другое семейство
+// Доступность на Workers Free план (проверено REST-вызовом 09.2026):
+//   ✅ glm-4.7-flash, qwen3.8-27b, gemma-4-26b-a4b-it
+//   ❌ glm-5.3-flash, deepseek-v4-flash — только платный Workers plan (code 5035).
+// Белый список сохраняем полностью: после апгрейда плана модели доступны без передеплоя
+// (смена — POST /admin/api/ai_model или выбор пользователя; при сбое — авторетрай).
+export const DEFAULT_SKU = 'cf-glm-4.7-flash';        // дефолт на Free-плане
+// Ретрай при сбое (§10.1): первая ДРУГАЯ модель из порядка фолбэка — ретрай самой собой запрещён.
+const FALLBACK_ORDER = ['cf-qwen3.8-27b', 'cf-glm-4.7-flash', 'cf-gemma-4-26b-a4b-it'];
+function nextSkuAfter(sku) {
+  const free = FALLBACK_ORDER.find(s => s !== sku);
+  return free || Object.keys(MODEL_WHITELIST).find(s => s !== sku) || DEFAULT_SKU;
+}
 
 const TIER_LIMITS = { free: 3, lite: 5, pro: 10, max: 100 };
 
@@ -84,17 +94,24 @@ async function runModel(env, sku, messages) {
   }
   if (!env.AI) throw Object.assign(new Error('ai_not_configured'), { code: 'ai_not_configured' });
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 15000); // таймаут 15 с (§10.1)
+  const t = setTimeout(() => ctrl.abort(), 45000); // таймаут 45 с: reasoning-модели на Free сильно варьируются по времени (live: 13–31 с)
   try {
     const out = await Promise.race([
       env.AI.run(MODEL_WHITELIST[sku] || sku, { messages, signal: ctrl.signal }),
-      new Promise((_, rej) => setTimeout(() => rej(new Error('model_timeout')), 15000))
+      new Promise((_, rej) => setTimeout(() => rej(new Error('model_timeout')), 45000))
     ]);
-    const text = typeof out === 'string' ? out : (out && (out.response || out.text || out.result)) || '';
+    // Форматы ответов Workers AI: {response} (простой), {choices:[{message:{content}}]} (OpenAI-совместимый, напр. qwen3.8-27b), строка.
+    const text = typeof out === 'string'
+      ? out
+      : (out && (out.response || out.text || out.result || out.choices?.[0]?.message?.content)) || '';
     if (!text) throw new Error('empty_model_output');
     // usage (токены) из ответа модели — источник истины для учёта нейронов;
     // некоторые модели не отдают usage → вернём null, звонящий оценит по эвристике
     return { text: String(text), usage: extractUsage(out) };
+  } catch (e) {
+    // диагностика сбоев модели видна в Observability (workers.dev → logs)
+    console.log('mentor_model_fail', sku, e && (e.message || String(e)));
+    throw e;
   } finally { clearTimeout(t); }
 }
 
@@ -192,6 +209,7 @@ export async function ask(ctx, req) {
     messages[1].content += '\n\nРелевантные фрагменты доказательной базы книг (ссылайся честно: если этого нет в фрагментах — так и скажи):\n' + ragContext;
   }
   let text = null, modelUsage = null, usedSku = sku, retried = false;
+  const fbSku = nextSkuAfter(sku);
   try {
     ({ text, usage: modelUsage } = await runModel(env, sku, messages));
   } catch (e) {
@@ -199,8 +217,8 @@ export async function ask(ctx, req) {
     // один ретрай другой моделью из белого списка (§10.1), потом честный 502
     try {
       retried = true;
-      usedSku = FALLBACK_SKU;
-      ({ text, usage: modelUsage } = await runModel(env, FALLBACK_SKU, messages));
+      usedSku = fbSku;
+      ({ text, usage: modelUsage } = await runModel(env, fbSku, messages));
     } catch (e2) {
       try {
         const { track } = await import('./telemetry.js');
@@ -210,9 +228,10 @@ export async function ask(ctx, req) {
     }
   }
 
-  // автороллбэк активной модели при её недоступности (§10.2)
-  if (retried) {
-    try { await setActiveSku(env, FALLBACK_SKU); } catch { /* не критично */ }
+  // автороллбэк активной модели при её недоступности (§10.2) — только если сбойнул
+  // не выбор пользователя, а активная модель админки/дефолт (чужой выбор не перетираем)
+  if (retried && sku === (await getActiveSku(env))) {
+    try { await setActiveSku(env, fbSku); } catch { /* не критично */ }
   }
 
   const filteredRes = applyFilter(text);
