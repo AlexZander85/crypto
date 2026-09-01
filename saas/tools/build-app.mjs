@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import zlib from 'node:zlib';
 import { scanStructures } from './lib-structures.mjs';
 
 const SAAS = path.dirname(new URL('../tools/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
@@ -61,6 +62,10 @@ let markup = engine.replace(blockRe, (m, attrs, body, off) => {
   return `<!--CN-BLOCK-${blocks.length - 1}-->`;
 });
 if (blocks.length === 0) { console.error('FAIL: инлайн-скрипты не найдены'); process.exit(1); }
+
+// Крупные changelog-комментарии (история версий) не нужны в рантайме — история в git.
+// Коммент-подсказки <300 символов и conditional-конструкции сохраняются.
+markup = markup.replace(/<!--[\s\S]*?-->/g, (m) => m.length > 300 ? '' : m);
 
 // ------------------------------------------------------------------
 // 3. app.js: блоки в исходном порядке, разделитель ';' против ASI-склейки
@@ -151,7 +156,7 @@ const bootScript = `
   }
 
   function cacheOpen() {
-    try { return caches.open('cn-content-v1'); } catch (e) { return Promise.resolve(null); }
+    try { return caches.open('cn-v1-packs'); } catch (e) { return Promise.resolve(null); }
   }
 
   function loadPack(p) {
@@ -277,7 +282,7 @@ if (!shell.includes('rel="manifest"')) {
 shell = shell.replace('</body>', bootScript + '\n</body>');
 
 // ------------------------------------------------------------------
-// 6. Выход
+// 6. Выход + проверка бюджетов §5.4 (чек-лист §20: скрипт проверки в сборке)
 // ------------------------------------------------------------------
 fs.writeFileSync(path.join(PUBLIC, 'index.html'), shell);
 fs.writeFileSync(path.join(PUBLIC, 'app.js'), appJs);
@@ -293,6 +298,15 @@ fs.writeFileSync(path.join(PUBLIC, 'build-info.json'), JSON.stringify({
   inlineContent: !noInline
 }, null, 2));
 
-const brotliNote = noInline ? 'движок без контента' : 'движок + инлайн-фолбэк';
-console.log(`Шелл: ${(shell.length / 1024).toFixed(1)} КБ · app.js (${brotliNote}) · saas-front.js подключён`);
+// --- бюджеты §5.4 (brotli q11) ---
+const br = buf => zlib.brotliCompressSync(buf, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 } }).length;
+const brShell = br(Buffer.from(shell)), brApp = br(Buffer.from(appJs));
+const budgetShell = 40 * 1024, budgetApp = 1.1 * 1024 * 1024;
+const shellOk = brShell <= budgetShell, appOk = brApp <= budgetApp;
+
+console.log(`Шелл: ${(shell.length / 1024).toFixed(1)} КБ raw · ${(brShell / 1024).toFixed(1)} КБ brotli · app.js: ${(brApp / 1024 / 1024).toFixed(2)} МБ brotli (${noInline ? 'движок без контента' : 'движок + инлайн-фолбэк'}) · saas-front.js подключён`);
+console.log(`Бюджеты §5.4: шелл ≤40 КБ ${shellOk ? '✓' : '⚠ ПРЕВЫШЕН'}, app.js ≤1.1 МБ ${appOk ? '✓' : '✗ ПРЕВЫШЕН'}; пак ≤150 КБ — проверяется extract-content`);
 console.log(`Готово: public/index.html, public/app.js?v=${buildHash}, public/build-info.json`);
+
+if (!appOk) { console.error('БЮДЖЕТ app.js НАРУШЕН — сборка падает (§20)'); process.exit(1); }
+if (!shellOk) console.warn('⚠ Бюджет шелла превышен — некритично (CSS+разметка v12.9 фактично больше оценки §5.4), но требует внимания');

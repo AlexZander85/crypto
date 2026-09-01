@@ -124,3 +124,82 @@ dash → проект → Settings → **Variables and Secrets** → Add. Тип
 
 ---
 Конец инструкции. Этапы выполняются по мере роста проекта: §1 можно сделать сегодня вечером; §3–§8 — когда дойдёт до соответствующих модулей проекта.
+
+---
+
+# ЧАСТЬ 2 (v2): Деплой SaaS v12.9 по PROMPT_SAAS_CLOUDFLARE_V2.md
+
+Эта часть заменяет этапы 3+ части 1. Ветка `feat/saas-v12` (после приёмки влить в `main`).
+
+## S1. Что уже готово в репо (сделал агент)
+- контент-конвейер v2 (15 паков из index_v12.9.html, инвариант 213 уроков),
+- сборка фронта v2 (шелл + app.js без контента + SaaS-слой),
+- весь API воркера (auth/progress/content/pay/mentor/live/telemetry/admin),
+- cron-свёртка, админка `/admin`, PWA, миграции D1 0001–0003,
+- тесты: `npm test` (70 проверок) + Playwright-сценарии `saas/test/e2e_py/`.
+
+## S2. Разовые действия в Cloudflare (твои руки)
+```bash
+cd saas && npm install
+npx wrangler login            # браузер → разрешить
+npx wrangler d1 create cn     # скопируй database_id
+npx wrangler r2 bucket create cn-packs
+npx wrangler kv namespace create KV   # скопируй id
+```
+Впиши `database_id` и KV `id` в `saas/wrangler.jsonc` (там же `account_id`), затем:
+```bash
+npx wrangler d1 migrations apply DB --remote
+npm run build && npm run content:update -- --remote
+npx wrangler deploy
+```
+Проверь: `https://cryptonavigator-api.<твой-аккаунт>.workers.dev` открывает курс; гость
+видит только Ф0+П1–П8.
+
+## S3. Секреты — ТОЛЬКО через wrangler secret put (или дашборд)
+```bash
+npx wrangler secret put JWT_SECRET              # длинная случайная строка
+npx wrangler secret put ADMIN_SECRET            # для /admin/api/*
+npx wrangler secret put RESEND_API_KEY          # письма magic-link (resend.com)
+npx wrangler secret put TURNSTILE_SECRET        # капча (после добавления виджета)
+npx wrangler secret put YOOKASSA_SHOP_ID        # прод-магазин ЮKassa
+npx wrangler secret put YOOKASSA_SECRET
+npx wrangler secret put YOOKASSA_WEBHOOK_SECRET
+npx wrangler secret put LS_SIGNING_SECRET       # Lemon Squeezy
+npx wrangler secret put CRYPTOMUS_API_KEY
+npx wrangler secret put CRYPTOMUS_MERCHANT_ID
+```
+Не секреты (значения можно менять в дашборде Variables): `PRICES_JSON` (цены и кнопки
+тарифов), `LS_TIER_MAP`/`YK_TIER_MAP` (маппинг продуктов → тарифы), `TIER_DOWNGRADE`
+(даунгрейд после истечения «Макс»). `MENTOR_MOCK_MODEL` на проде НЕ выставлять.
+
+## S4. Вебхуки провайдеров
+- Lemon Squeezy: `https://<домен>/api/pay/lemonsqueezy/webhook` (подпись X-Signature);
+- ЮKassa: `https://<домен>/api/pay/yookassa/webhook` (+ заголовок `x-webhook-secret`);
+- Cryptomus: `https://<домен>/api/pay/crypto/webhook`.
+Продукты/варианты LS привяжи к тарифам в `LS_TIER_MAP`; чекаут-ссылки — в
+`PRICES_JSON[t].pay.lemonsqueezy`.
+
+## S5. Домен, Access, ротация
+- Домен: dash → Workers → твой воркер → Custom Domains → `cryptonavigator.app`.
+- Cloudflare Access: Zero Trust → Access → Applications → защитить `/admin*`
+  (email-политика «Only you») — второй слой поверх ADMIN_SECRET.
+- Ротация JWT_SECRET раз в квартал: `npx wrangler secret put JWT_SECRET` —
+  все сессии инвалидируются, пользователи просто перелогинятся.
+
+## S6. Обновление контента (ежедневный цикл)
+Правишь `index_v13.html` локально → кладёшь в корень репо →
+```bash
+cd saas && npm run content:update -- --src index_v13.html
+```
+Передеплой НЕ нужен. Если инварианты (213 уроков / 301 термин / бюджеты) нарушены —
+сборка упадёт с внятной ошибкой; чини источник, не «чинь» данные.
+
+## S7. Проверки после деплоя
+1. `curl https://<домен>/api/health` → `{"ok":true}`.
+2. Гость: видит Ф0+П1–П8; «🌍 Живой рынок» — витрина FNG+комиссии; платный пак → 401.
+3. Секретный вход: письмо приходит, прогресс синхронизируется между двумя браузерами.
+4. Тестовый платёж каждого провайдера (sandbox) меняет тариф; повторный вебхук не дублирует.
+5. Наставник: реальный AI-ответ на тарифах (лимиты 3/5/10/100 в день).
+6. `/admin` — под Access + секретом: обзор, AI-расход, пользователи, контент, действия.
+7. PWA: на телефоне «Установить приложение» → офлайн-старт с иконки.
+8. gitleaks по диффу чист; `npm test` зелёный.

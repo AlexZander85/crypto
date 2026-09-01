@@ -612,7 +612,7 @@
   async function onTierUnlocked() {
     try {
       lsDel('cn_manifest_cache');
-      try { const c = await caches.open('cn-content-v1'); const keys = await c.keys(); for (const k of keys) await c.delete(k); } catch (e) {}
+      try { const names = await caches.keys(); for (const n of names) if (/^cn-(v1|content)/.test(n)) { const c = await caches.open(n); const ks = await c.keys(); for (const k of ks) await c.delete(k); } } catch (e) {}
       toast('Доступ открыт: весь курс из 213 уроков! Загружаем…');
       setTimeout(() => { try { location.reload(); } catch (e) {} }, 900);
     } catch (e) {}

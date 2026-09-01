@@ -58,7 +58,7 @@ def main():
           res.psyIdsOk = (window.CN_CONTENT.data.PSY_LESSONS || []).every(l => ['П1','П2','П3','П4','П5','П6','П7','П8'].includes(l.num));
           // --- аудит кэша ---
           try {
-            const c = await caches.open('cn-content-v1');
+            const c = await caches.open('cn-v1-packs');
             const keys = await c.keys();
             res.cachedPacks = keys.map(k => decodeURIComponent(k.url).match(/pack\\/ru\\/([a-z0-9_]+)/i)).filter(Boolean).map(m => m[1]);
           } catch (e) { res.cachedPacks = 'ERR:' + e.message; }
