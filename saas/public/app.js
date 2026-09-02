@@ -42108,6 +42108,204 @@ window.LearnPlayer.version = '8.0 (Этап 8: трек «основа + фак�
 
 /* ===== learn_player_stage8: ЭТАП 8 (конец) ===== */
 
+/* ===== learn_player_stage9: ЭТАП 9 — Награды трека (начало) ===== */
+/* =========================================================================
+   КриптоНавигатор v13.1 · ЭТАП 9 поверх Этапа 8: квесты как награды стадий.
+   ПРИНЦИПЫ (наследуют §10 ТЗ v2):
+   — только обёртки и новая секция; тела существующих функций не правятся;
+   — LS-ключи только новые: cn_reward_seen, cn_reward_streak (коллизий нет);
+   — контент, банки, вкладки классики — заморожены; квесты открываются
+     существующими точками входа (qGo/mcGo/… и вкладка quest);
+   — критерий архитектуры: удалить секцию (от stage9 начала до конца) +
+     CSS-блок — приложение работает как v13.0 Этап 8, без ошибок консоли.
+   Наружу: window.CNRewards = {version, list, streak, openQuest}.
+   ========================================================================= */
+
+/* ---------- 9.1 ДАННЫЕ: стадия → квест-награда (тематическое соответствие) ---------- */
+var CN_REWARDS = {
+  version: '9.0',
+  seenKey:   'cn_reward_seen',    /* { stageId: ts } — награда уже открыта */
+  streakKey: 'cn_reward_streak',  /* { last:'YYYY-MM-DD', count, best } */
+  stages: {
+    A: { tab: 'quest',       go: 'qGo',  icon: '🕵️', title: 'Криптик против Мошенника',
+         why: 'Фаза 0 в бою: семь атак Ската — сохрани виртуальные активы' },
+    B: { tab: 'curvequest',  go: 'cvGo', icon: '📉', title: 'Кривая-обманщица',
+         why: 'Статистика в действии: вычисли подрисованную кривую доходности' },
+    C: { tab: 'marginquest', go: 'mcGo', icon: '💥', title: 'Маржин-колл',
+         why: 'Риск и плечо: переживи каскад ликвидаций и сохрани портфель' },
+    D: { tab: 'prodquest',   go: 'prGo', icon: '🌙', title: 'Ночь в проде',
+         why: 'Продакшн-инцидент: у тебя секунды на решение, как в Фазе 4' },
+    E: { tab: 'launchquest', go: 'lnGo', icon: '🚀', title: 'Первый запуск',
+         why: 'Чек-лист запуска твоего первого бота — до нажатия кнопки Live' },
+    F: { tab: 'firstquest',  go: 'fmGo', icon: '🌱', title: 'Первые деньги',
+         why: 'Живой запуск: путь первой реализованной прибыли' }
+  }
+};
+
+function r9DateStr(d){ function p(n){ return (n < 10 ? '0' : '') + n; } return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+function r9Streak(){ var s = lpLS_get(CN_REWARDS.streakKey, null); return (s && typeof s === 'object') ? s : { last: '', count: 0, best: 0 }; }
+
+/* ---------- 9.2 СЕРИЯ ДНЕЙ 🔥 (каждый день с хотя бы одним завершённым уроком) ---------- */
+LearnPlayer.onLessonComplete(function(){
+  try{
+    var t = r9DateStr(new Date()), s = r9Streak();
+    if(s.last === t) return;                       /* сегодня уже учтено */
+    var y = r9DateStr(new Date(Date.now() - 86400000));
+    s.count = (s.last === y) ? (s.count || 0) + 1 : 1;
+    s.best = Math.max(s.best || 0, s.count);
+    s.last = t;
+    lpLS_set(CN_REWARDS.streakKey, s);
+    try{ if(typeof window.cnTrackSink === 'function') window.cnTrackSink('streak_day', { count: s.count }); }catch(e){}
+  }catch(e){}
+});
+
+/* ---------- 9.3 ДЕТЕКТОР НОВЫХ НАГРАД (журнал Этапа 8 + дедуп по cn_reward_seen) ---------- */
+function r9Seen(){ var s = lpLS_get(CN_REWARDS.seenKey, {}); return (s && typeof s === 'object') ? s : {}; }
+function r9MarkSeen(stageId){ var s = r9Seen(); if(!s[stageId]){ s[stageId] = Date.now(); lpLS_set(CN_REWARDS.seenKey, s); } }
+function r9NewCompletions(){
+  var seen = r9Seen(), log = lpLS_get(TRK.eventsKey, []), out = [], i, ev;
+  for(i = 0; i < log.length; i++){
+    ev = log[i];
+    if(ev && ev.ev === 'stage_completed' && ev.d && ev.d.stage && CN_REWARDS.stages[ev.d.stage] && !seen[ev.d.stage]) out.push(ev.d.stage);
+  }
+  return out;
+}
+
+/* ---------- 9.4 МОДАЛ НАГРАДЫ (оверлей на body, стиль .learn-sheet) ---------- */
+function r9Modal(stageId){
+  var r = CN_REWARDS.stages[stageId];
+  if(!r) return;
+  var ov = document.createElement('div');
+  ov.className = 'learn-overlay';
+  ov.setAttribute('data-ov', 'r9reward');
+  ov.style.zIndex = 2147483647; /* поверх любых экранов приложения, включая NSDR-паузу */
+  ov.innerHTML = '<div class="learn-sheet r9-sheet">' +
+    '<div style="font-size:44px;text-align:center;line-height:1.2">🏆</div>' +
+    '<h3 style="text-align:center;margin:8px 0 2px">Стадия ' + esc(stageId) + ' закрыта!</h3>' +
+    '<p style="text-align:center;color:var(--mut);margin:0 0 12px">Награда трека — игра-тренажёр:</p>' +
+    '<div class="r9-card">' +
+      '<span class="r9-i">' + r.icon + '</span>' +
+      '<span class="r9-t"><b>' + esc(r.title) + '</b>' +
+      '<small>' + esc(r.why) + '</small></span>' +
+    '</div>' +
+    '<div style="display:flex;gap:10px;margin-top:16px">' +
+      '<button type="button" class="lp-btn primary" data-r9-play>▶ Пройти квест</button>' +
+      '<button type="button" class="lp-btn" data-r9-later>Позже</button>' +
+    '</div>' +
+    '<div style="text-align:center;margin-top:10px;font-size:12px;color:var(--mut)">Награда останется в хабе «Моё обучение» → 🏆 Награды</div>' +
+  '</div>';
+  document.body.appendChild(ov);
+  function r9Close(){ if(ov && ov.parentNode) ov.parentNode.removeChild(ov); ov = null; }
+  ov.addEventListener('click', function(e){ if(e.target === ov) r9Close(); });
+  ov.querySelector('[data-r9-later]').addEventListener('click', r9Close);
+  ov.querySelector('[data-r9-play]').addEventListener('click', function(){
+    r9Close();
+    try{ LearnPlayer.closeHome(); }catch(e){}
+    try{ LearnPlayer.close(); }catch(e){}
+    try{ if(typeof window[CN_REWARDS.stages[stageId].go] === 'function') window[CN_REWARDS.stages[stageId].go](); }catch(e){}
+  });
+}
+
+/* Обёртка сканера Этапа 8: после фиксации stage_completed показываем награду.
+   Правило вежливости: ровно 1 новая стадия за скан → модал; несколько сразу
+   (миграция старого прогресса) → тихо пометить, бейджи ждут в хабе. */
+var _r9StageScan = trkStageEventsScan;
+trkStageEventsScan = function(){
+  var r = _r9StageScan.apply(this, arguments);
+  try{
+    var nw = r9NewCompletions();
+    if(nw.length === 1){ r9MarkSeen(nw[0]); r9Modal(nw[0]); }
+    else { for(var i = 0; i < nw.length; i++) r9MarkSeen(nw[i]); }
+  }catch(e){}
+  return r;
+};
+
+/* ---------- 9.5 СЕКЦИЯ «🏆 НАГРАДЫ» В ХАБЕ (обёртка lp3HomeHtml поверх Этапа 8) ---------- */
+function r9BadgesHtml(){
+  var st = r9Streak(), h = '';
+  h += '<section class="lp3-sec trk-rew"><div class="lp3-sec-h">🏆 Награды трека</div>';
+  if(st.count > 0) h += '<div class="r9-streak">🔥 Серия: <b>' + st.count + '</b> ' + (st.count === 1 ? 'день' : (st.count < 5 ? 'дня' : 'дней')) + ' · рекорд ' + st.best + '</div>';
+  h += '<div class="r9-grid">';
+  Object.keys(CN_REWARDS.stages).forEach(function(sid){
+    var r = CN_REWARDS.stages[sid], done = !!r9Seen()[sid];
+    h += '<button type="button" class="r9-badge' + (done ? ' on' : '') + '" data-r9-act="quest" data-r9-go="' + r.go + '" data-r9-tab="' + r.tab + '" aria-label="' + esc(r.title) + '">' +
+           '<span class="r9-i">' + (done ? r.icon : '🔒') + '</span>' +
+           '<span class="r9-t"><b>' + esc(sid) + ' · ' + esc(r.title) + '</b>' +
+           '<small>' + (done ? 'Награда открыта — нажми, чтобы играть' : 'Закрой стадию ' + esc(sid) + ' — откроется квест') + '</small></span>' +
+         '</button>';
+  });
+  h += '</div>';
+  h += '<div class="r9-more"><span style="color:var(--mut)">Ещё игры:</span> ' +
+       '<button type="button" class="lp-btn sm" data-r9-act="tab" data-r9-tab="psyquest">🧠 Семь дней</button>' +
+       '<button type="button" class="lp-btn sm" data-r9-act="tab" data-r9-tab="panicquest">🚨 Симулятор паники</button>' +
+       '<button type="button" class="lp-btn sm" data-r9-act="tab" data-r9-tab="quiz">🎯 Викторина</button>' +
+       '</div></section>';
+  return h;
+}
+
+/* делегирование кликов по секции — тот же паттерн, что trkHomeClick (Этап 8) */
+function r9HomeClick(e){
+  var b = e.target.closest('[data-r9-act]');
+  if(!b) return;
+  var act = b.getAttribute('data-r9-act');
+  if(act === 'quest'){
+    var entry = b.getAttribute('data-r9-go'), tab = b.getAttribute('data-r9-tab');
+    try{ Home.close(true); }catch(err){}
+    try{ if(tab && typeof go === 'function') go(tab); }catch(err){}
+    try{ if(entry && typeof window[entry] === 'function') window[entry](); }catch(err){}
+  } else if(act === 'tab'){
+    var t2 = b.getAttribute('data-r9-tab');
+    try{ Home.close(true); }catch(err){}
+    try{ if(t2 && typeof go === 'function') go(t2); }catch(err){}
+  }
+}
+
+var _r9HomeHtml = lp3HomeHtml;
+lp3HomeHtml = function(){
+  var h = _r9HomeHtml.apply(this, arguments);
+  try{
+    if(/<\/div><\/div>$/.test(h)) h = h.replace(/<\/div><\/div>$/, r9BadgesHtml() + '</div></div>');
+  }catch(e){ /* не ломаем хаб */ }
+  return h;
+};
+try{ Object.keys(_r9HomeHtml).forEach(function(k){ if(!(k in lp3HomeHtml)) lp3HomeHtml[k] = _r9HomeHtml[k]; }); }catch(e){}
+
+var _r9HomeOpen = Home.open;
+Home.open = function(){
+  var r = _r9HomeOpen.apply(this, arguments);
+  try{ if(H.root) H.root.addEventListener('click', r9HomeClick); }catch(e){}
+  return r;
+};
+try{ Object.keys(_r9HomeOpen).forEach(function(k){ if(!(k in Home.open)) Home.open[k] = _r9HomeOpen[k]; }); }catch(e){}
+
+/* ---------- 9.6 ЭКСПОРТ + САМОТЕСТ ---------- */
+window.CNRewards = {
+  version: CN_REWARDS.version,
+  list: function(){
+    var seen = r9Seen(), out = [];
+    Object.keys(CN_REWARDS.stages).forEach(function(sid){
+      var r = CN_REWARDS.stages[sid];
+      out.push({ stage: sid, quest: r.title, tab: r.tab, unlocked: !!seen[sid] });
+    });
+    return out;
+  },
+  streak: function(){ var s = r9Streak(); return { count: s.count || 0, best: s.best || 0 }; },
+  openQuest: function(stageId){
+    var r = CN_REWARDS.stages[stageId];
+    if(r && typeof window[r.go] === 'function') window[r.go]();
+  }
+};
+try{
+  var _r9ok = 0, _r9all = true;
+  Object.keys(CN_REWARDS.stages).forEach(function(sid){
+    _r9ok++;
+    if(typeof window[CN_REWARDS.stages[sid].go] !== 'function') _r9all = false;
+  });
+  if(typeof V10 !== 'undefined' && V10.smoke) V10.smoke.add('lp9:rewards', _r9ok === 6 && _r9all, 'CNRewards ' + CN_REWARDS.version);
+  console.log('[CNRewards] self-test ' + (_r9all ? 'OK' : 'FAIL') + ': ' + _r9ok + ' наград, entry-функции квестов на месте');
+}catch(e){}
+/* ===== learn_player_stage9: ЭТАП 9 (конец) ===== */
+
 
 
 /* ===== learn_player_stage6: Этап 6 (конец) ===== */

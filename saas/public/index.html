@@ -3075,6 +3075,28 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
 
 /* Хаб и плеер: доступность — контраст наследуется от тем приложения (§12.8) */
 </style>
+
+/* ===== learn_player_stage9: CSS наград трека (внутри блока стилей Этапа 8) ===== */
+.trk-rew .r9-grid{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:8px; }
+.trk-rew .r9-badge{ display:flex; align-items:center; gap:10px; text-align:left; width:100%;
+  padding:10px 12px; border-radius:12px; border:1px solid var(--lp-line,rgba(255,255,255,.12));
+  background:rgba(255,255,255,.03); color:inherit; cursor:pointer; transition:border-color .15s, background .15s; }
+.trk-rew .r9-badge:hover{ border-color:rgba(255,255,255,.3); }
+.trk-rew .r9-badge.on{ border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.08); }
+.trk-rew .r9-badge .r9-i{ font-size:22px; flex:none; width:30px; text-align:center; }
+.trk-rew .r9-badge .r9-t{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.trk-rew .r9-badge .r9-t b{ font-size:13.5px; }
+.trk-rew .r9-badge .r9-t small{ color:var(--mut); font-size:12px; }
+.trk-rew .r9-streak{ display:inline-block; margin-top:8px; padding:5px 12px; border-radius:999px;
+  background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.4); font-size:12.5px; }
+.trk-rew .r9-more{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px; font-size:12.5px; }
+.learn-overlay .r9-sheet{ max-width:380px; }
+.learn-overlay .r9-card{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px;
+  border:1px solid rgba(251,191,36,.45); background:rgba(251,191,36,.08); }
+.learn-overlay .r9-card .r9-i{ font-size:30px; flex:none; }
+.learn-overlay .r9-card .r9-t{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.learn-overlay .r9-card .r9-t small{ color:var(--mut); font-size:12.5px; }
+
 <!-- ================= LEARN PLAYER — конец ================= -->
 
 <script id="cn_boot">
@@ -3082,7 +3104,7 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
 (function () {
   'use strict';
   window.CN_REGISTERS = {"LESSONS":{"packs":["core_demo","core_p1","core_p2","core_p3","core_p4","core_p5","core_p6"],"kind":"array"},"PSY_LESSONS":{"packs":["core_demo","core_p8"],"kind":"array"},"PSY_LESSONS_2":{"packs":["core_p8"],"kind":"array"},"MATH_LESSONS_SOURCE":{"packs":["core_p7"],"kind":"array"},"VIBECODING_LESSONS":{"packs":["core_p6"],"kind":"array"},"V4_CONTENT_LESSONS":{"packs":["core_p6"],"kind":"array"},"FT":{"packs":["core_p9"],"kind":"array"},"V11_FT_LABS":{"packs":["core_p9"],"kind":"object"},"TERMS_RAW":{"packs":["terms"],"kind":"array"},"PHASE_TESTS":{"packs":["tests"],"kind":"array"},"MATH_TESTS":{"packs":["tests"],"kind":"array"},"CAPSTONE_EXAM":{"packs":["tests"],"kind":"object"},"PSY_CUMULATIVE_QUESTIONS":{"packs":["tests"],"kind":"array"},"QUIZ_PSY":{"packs":["quizbanks"],"kind":"array"},"QUIZ_DATA":{"packs":["quizbanks"],"kind":"array"},"QUIZ_LEGAL":{"packs":["quizbanks"],"kind":"array"},"QUIZ_CALC":{"packs":["quizbanks"],"kind":"array"},"QUIZ_CASES":{"packs":["quizbanks"],"kind":"array"},"PSY_SITUATIONAL_DRILL":{"packs":["quizbanks"],"kind":"array"},"EARNING_METHODS":{"packs":["earning"],"kind":"array"},"CRYPTO_LITERACY_EXAM":{"packs":["core_demo"],"kind":"object"},"BOOKS":{"packs":["books"],"kind":"array"}};
-  window.CN_BUILD = { app: '6540ef94bf2d', source: 'index_v13.0.html', stageB: true };
+  window.CN_BUILD = { app: '6aa6e4fc6b87', source: 'index_v13.0.html', stageB: true };
   window.CN_CONTENT = {
     data: {},
     ensure: function (k) {
@@ -3181,8 +3203,8 @@ button[aria-disabled="true"][id^="lesson_bottom_complete_btn_"] {
   var booted = false;
   function boot() {
     if (booted) return; booted = true;
-    inject('/app.js?v=6540ef94bf2d').then(function () {
-      return inject('/saas-front.js?v=6540ef94bf2d');
+    inject('/app.js?v=6aa6e4fc6b87').then(function () {
+      return inject('/saas-front.js?v=6aa6e4fc6b87');
     }).then(function () {
       // Движок вставлен после парсинга DOM: переотправим DOMContentLoaded,
       // чтобы сработали неподстрахованные подписчики v12.9 (§5.2).
