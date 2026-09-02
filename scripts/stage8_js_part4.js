@@ -10,6 +10,20 @@ try{
   Object.keys(_trkUpdateChrome).forEach(function(k){ if(!(k in updateChrome)) updateChrome[k] = _trkUpdateChrome[k]; });
 }catch(e){}
 
+/* F2 (аудит v13.0): переход урок→тест из гейт-CTA идёт через openTest →
+   startTestSession (in-place, S.active) без updateChrome — чип стадии оставался
+   на экране теста. startTestSession — единая точка ВСЕХ входов в тестовый режим
+   плеера (in-place 61314 и через openTestWindow 61345): в тесте trkChrome()
+   снимает чип (TS.active). */
+var _trkStartTestSession = startTestSession;
+startTestSession = function(){
+  _trkStartTestSession.apply(this, arguments);
+  try{ trkChrome(); }catch(e){}
+};
+try{
+  Object.keys(_trkStartTestSession).forEach(function(k){ if(!(k in startTestSession)) startTestSession[k] = _trkStartTestSession[k]; });
+}catch(e){}
+
 function trkChrome(){
   if(!S.active || !S.root) return;
   var bar = S.root.querySelector('.learn-top-right');
@@ -61,10 +75,13 @@ function trkFinishAugment(){
   if(typeof TS !== 'undefined' && TS && TS.active) return; /* тестовый режим без трека */
   var old = document.getElementById('trk_finish');
   if(old) old.remove();
-  /* строка кнопок финала: CTA «▸ Следующий урок: …» (уникальный префикс finishHtml) */
+  /* строка кнопок финала: глобальный CTA бывает двух видов (F1 аудита v13.0):
+     «▸ Следующий урок: …» (finishHtml, внутри фазы) и «▸ Следующий непройденный
+     урок курса: …» (последний урок фазы — вариант CTA Этапа 3). */
   var nextBtn = null, btns = S.root.querySelectorAll('button.lp-btn');
   for(var i = 0; i < btns.length; i++){
-    if(btns[i].textContent.indexOf('▸ Следующий урок:') === 0){ nextBtn = btns[i]; break; }
+    var bt = btns[i].textContent;
+    if(bt.indexOf('▸ Следующий урок:') === 0 || bt.indexOf('▸ Следующий непройденный урок курса:') === 0){ nextBtn = btns[i]; break; }
   }
   var html = '';
   if(trkSprint()){
@@ -138,8 +155,12 @@ function trkOffersHtml(l){
   if(!blocks.length) return '';
   var h = '<div class="trk-card offers"><div class="trk-card-h">🎯 Рекомендуемый факультатив — необязательно, но усилит только что пройденное</div>';
   blocks.forEach(function(b){
-    if(trkOfferState(b.id) === null) trkOfferSet(b.id, 'shown');
-    trkTrack('offer_shown', { block: b.id, anchor: l.id });
+    /* F3 (аудит v13.0): offer_shown — только при первом показе (переход null→shown);
+       повторные рендеры финала якоря не шумят в журнале cn_track_events */
+    if(trkOfferState(b.id) === null){
+      trkOfferSet(b.id, 'shown');
+      trkTrack('offer_shown', { block: b.id, anchor: l.id });
+    }
     h += '<div class="trk-row" id="trk_offr_' + esc(b.id) + '"><span class="pr" aria-hidden="true">' + b.priority + '</span>' +
          '<span class="t">' + esc(b.name) + ' · ' + b.lessons.length + ' ' + trkPluralLessons(b.lessons.length) + ' · ≈' + trkBlockMins(b) + ' мин</span>' +
          '<span class="m">' + esc(b.why || '') + '</span>' +

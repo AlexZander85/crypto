@@ -11,6 +11,15 @@ function trkStageEventsScan(){
     if(fired[st[i].id]) continue;
     if(trkStageDone(st[i])) trkTrack('stage_completed', { stage: st[i].id });
   }
+  /* F4 (аудит v13.0): спринт мог закрыться сдачей гейта (последнее действие —
+     тест, а не урок) — проверяем веху и здесь; скан вызывается и из обёртки
+     calcPhaseTestResult после каждой сдачи. Дедуп по журналу сохранён. */
+  if(trkSprintDone()){
+    log = lpLS_get(TRK.eventsKey, []);
+    var hadSprint = false;
+    for(i = 0; i < log.length; i++){ if(log[i] && log[i].ev === 'sprint_completed'){ hadSprint = true; break; } }
+    if(!hadSprint) trkTrack('sprint_completed', { pct: trkPct() });
+  }
 }
 /* Сдача гейта идёт через существующую calcPhaseTestResult (пишет phaseTestsDone);
    обёртка только слушает факт сдачи — запись результата не изменяется. */
