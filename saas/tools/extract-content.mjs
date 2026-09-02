@@ -25,6 +25,7 @@ fs.mkdirSync(OUT, { recursive: true });
 const srcArgIdx = process.argv.indexOf('--src');
 const srcPath = srcArgIdx > -1
   ? (path.isAbsolute(process.argv[srcArgIdx + 1]) ? process.argv[srcArgIdx + 1] : path.join(ROOT, process.argv[srcArgIdx + 1]))
+  : fs.existsSync(path.join(ROOT, 'index_v13.0.html')) ? path.join(ROOT, 'index_v13.0.html')
   : fs.existsSync(path.join(ROOT, 'index_v12.9.html')) ? path.join(ROOT, 'index_v12.9.html')
   : path.join(ROOT, 'index.html');
 console.log('Источник контента:', path.relative(ROOT, srcPath));
@@ -260,7 +261,7 @@ packs.push(pack('core_p9', false, { FT: ft, V11_FT_LABS: labs }));
 packs.push(pack('terms', false, { TERMS_RAW: terms }));
 packs.push(pack('tests', false, { PHASE_TESTS: phaseTests, MATH_TESTS: mathTests, CAPSTONE_EXAM: capstone, PSY_CUMULATIVE_QUESTIONS: psyCum }));
 packs.push(pack('quizbanks', false, { QUIZ_PSY: quizPsy, QUIZ_DATA: quizData, QUIZ_LEGAL: quizLegal, QUIZ_CALC: quizCalc, QUIZ_CASES: quizCases, PSY_SITUATIONAL_DRILL: drill }));
-packs.push(pack('earning', false, { EARNING_METHODS: earning }));
+packs.push(pack('earning', true, { EARNING_METHODS: earning }));
 packs.push(pack('books', true, { BOOKS: books }));
 
 // целостность раскладки: сумма регистров = суммам источников

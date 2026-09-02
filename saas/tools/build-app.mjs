@@ -32,6 +32,7 @@ const noInline = !args.includes('--inline-content');
 const srcArgIdx = args.indexOf('--src');
 const srcPath = srcArgIdx > -1
   ? (path.isAbsolute(args[srcArgIdx + 1]) ? args[srcArgIdx + 1] : path.join(ROOT, args[srcArgIdx + 1]))
+  : fs.existsSync(path.join(ROOT, 'index_v13.0.html')) ? path.join(ROOT, 'index_v13.0.html')
   : fs.existsSync(path.join(ROOT, 'index_v12.9.html')) ? path.join(ROOT, 'index_v12.9.html')
   : path.join(ROOT, 'index.html');
 

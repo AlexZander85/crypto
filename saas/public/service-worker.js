@@ -7,7 +7,7 @@
    - прочие /api/*: network-only (прогресс/наставник — только сеть; сбой сети
      не кэшируется, прогресс живёт в localStorage);
    - иконки/админка: cache-first. */
-const VERSION = 'cn-v1';
+const VERSION = 'cn-v2'; /* bump: очистка старых кэшей (v13) */
 const SHELL_CACHE = VERSION + '-shell';
 const ASSET_CACHE = VERSION + 'assets';
 const PACK_CACHE = VERSION + '-packs';
