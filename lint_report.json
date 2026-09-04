@@ -1,21 +1,14 @@
 {
  "build": "2026-09-04",
  "total": 231,
- "blocked": 270,
- "warnings": 154,
- "review": 277,
+ "blocked": 0,
+ "warnings": 170,
+ "review": 190,
  "by_rule": {
-  "M02": 6,
-  "M04": 2,
   "M05": 4,
-  "Q01": 1,
-  "Q03": 132,
-  "Q04": 6,
-  "Q05": 122,
-  "Q06": 146,
-  "Q08": 1,
-  "Q11": 210,
-  "Q13": 67,
+  "Q06": 162,
+  "Q11": 166,
+  "Q13": 24,
   "Q16": 4
  },
  "meta": {
@@ -98,15 +91,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 7.60 > 1.6"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0001",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «win» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.71 > 1.6"
   },
   {
    "bank": "QUIZ_DATA",
@@ -118,43 +103,11 @@
   },
   {
    "bank": "QUIZ_DATA",
-   "id": "QD-0002",
-   "rule": "Q04",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "фраза из пула: «серию убытков закладывают в план заранее…»"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0002",
-   "rule": "Q06",
-   "level": "WARN",
+   "id": "QD-0001",
+   "rule": "Q11",
+   "level": "REVIEW",
    "option": null,
-   "msg": "отношение длин 2.89 > 1.6"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0003",
-   "rule": "Q04",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "фраза из пула: «чек лист перед сделкой экономит больше…»"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0003",
-   "rule": "Q04",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "фраза из пула: «правило входа и правило выхода проверяют…»"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0003",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 2.91 > 1.6"
+   "msg": "английский термин «win» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "QUIZ_DATA",
@@ -174,38 +127,6 @@
   },
   {
    "bank": "QUIZ_DATA",
-   "id": "QD-0004",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «std» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0005",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 7.60 > 1.6"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0006",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 6.00 > 1.6"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0006",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «win» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "QUIZ_DATA",
    "id": "QD-0006",
    "rule": "Q11",
    "level": "REVIEW",
@@ -214,43 +135,11 @@
   },
   {
    "bank": "QUIZ_DATA",
-   "id": "QD-0007",
-   "rule": "Q04",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "фраза из пула: «после серии выигрышей риск незаметно воз…»"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0007",
-   "rule": "Q04",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "фраза из пула: «исполнение по рынку в тонкой книге обход…»"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0007",
-   "rule": "Q06",
-   "level": "WARN",
+   "id": "QD-0006",
+   "rule": "Q11",
+   "level": "REVIEW",
    "option": null,
-   "msg": "отношение длин 7.40 > 1.6"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0008",
-   "rule": "Q04",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "фраза из пула: «страх пропустить вход искажает оценку…»"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "QD-0008",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 11.14 > 1.6"
+   "msg": "английский термин «win» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "QUIZ_DATA",
@@ -434,7 +323,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Fee» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Miner» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -442,39 +331,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Miner» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-005",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-005",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-005",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "139 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-005",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «как рассчитывается реальный финансовый результат п…»"
+   "msg": "английский термин «Fee» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -482,23 +339,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.63 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-005",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Uniswap» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-005",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «CEX» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.98 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -514,7 +355,23 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
+   "msg": "английский термин «CEX» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-0-005",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
    "msg": "английский термин «Bybit» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-0-005",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Uniswap» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -538,7 +395,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Bid» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Ask» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -546,47 +403,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Ask» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «cex это классическая биржа как банк а dex…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «dex это автоматический торговый автомат с кофе кот…»"
+   "msg": "английский термин «Bid» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -594,7 +411,15 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.44 > 1.6"
+   "msg": "отношение длин 2.30 > 1.6"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-0-007",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Ask» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -606,99 +431,27 @@
   },
   {
    "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Ask» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Spread» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-007",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "140 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «а менеджер в личке с такой просьбой вор…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
    "id": "PH-0-008",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 5.83 > 1.6"
+   "msg": "отношение длин 2.59 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-0-008",
-   "rule": "Q13",
+   "rule": "Q11",
    "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "option": null,
+   "msg": "английский термин «Taker-» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-0-008",
-   "rule": "Q13",
+   "rule": "Q11",
    "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-009",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "132 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «1000 на одной удачной сделке это классическая ошиб…»"
+   "option": null,
+   "msg": "английский термин «Maker-» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -706,7 +459,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 6.60 > 1.6"
+   "msg": "отношение длин 2.73 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -737,15 +490,7 @@
    "id": "PH-0-009",
    "rule": "Q13",
    "level": "REVIEW",
-   "option": "B",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-009",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
+   "option": "A",
    "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
   },
   {
@@ -850,14 +595,6 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «High» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-014",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
    "msg": "английский термин «Low» — проверить пару русский (english) по глоссарию"
   },
   {
@@ -867,6 +604,14 @@
    "level": "REVIEW",
    "option": null,
    "msg": "английский термин «Open» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-0-014",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «High» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -895,34 +640,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-0-015",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "140 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-015",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «50 от депозита вам потребуется заработать не 50…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-015",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.12 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-015",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "msg": "отношение длин 2.33 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -943,26 +664,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-0-018",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "135 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-018",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 1.99 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-019",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «абсолютных долларах или в базисных пунктах bps 1…»"
+   "msg": "отношение длин 1.76 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -970,7 +675,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.35 > 1.6"
+   "msg": "отношение длин 2.64 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -990,51 +695,11 @@
   },
   {
    "bank": "PHASE_TESTS",
-   "id": "PH-0-019",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «MaxDD» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-020",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-020",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-020",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-020",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «деньги которые не принадлежат ни одному банку госу…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
    "id": "PH-0-020",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.27 > 1.6"
+   "msg": "отношение длин 2.50 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1055,26 +720,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-0-022",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-022",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.21 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-022",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "msg": "отношение длин 2.84 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1103,18 +752,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-0-025",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «0 01 одна сотая процента или 0 0001…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-0-025",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «bips» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.64 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1127,26 +768,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-1-001",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «идеи так чтобы не терять на них деньги…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-001",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.28 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-002",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «доходность это чинит е можно спокойно складывать з…»"
+   "msg": "отношение длин 2.79 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1154,15 +779,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.12 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-002",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Fat» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.86 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1178,23 +795,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Kurtosis» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "134 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «обычная статистика та самая колокольчик кривая гов…»"
+   "msg": "английский термин «Fat» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1202,31 +803,15 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.85 > 1.6"
+   "msg": "отношение длин 2.76 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-1-004",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "137 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-004",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «доходность это чинит е можно спокойно складывать з…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-004",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «Look-ahead» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.71 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1238,11 +823,11 @@
   },
   {
    "bank": "PHASE_TESTS",
-   "id": "PH-1-005",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «вс что построено на предположении о нормальности н…»"
+   "id": "PH-1-004",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Look-ahead» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1250,15 +835,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 5.22 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-005",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "msg": "отношение длин 1.94 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1267,6 +844,14 @@
    "level": "WARN",
    "option": null,
    "msg": "отношение длин 1.73 > 1.6"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-1-006",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Final» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1283,14 +868,6 @@
    "level": "REVIEW",
    "option": null,
    "msg": "английский термин «Test» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-006",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Final» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1314,14 +891,6 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Drawdown» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-007",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
    "msg": "английский термин «Sharpe» — проверить пару русский (english) по глоссарию"
   },
   {
@@ -1335,6 +904,14 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-1-007",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Drawdown» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-1-007",
    "rule": "Q13",
    "level": "REVIEW",
    "option": "A",
@@ -1343,66 +920,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-1-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «50 вырос на 50 ты не в нуле…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «50 вырос на 50 ты не в нуле…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-009",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-009",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «как проверять есть ли у знакомого привычка опаздыв…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «идеи так чтобы не терять на них деньги…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 3.55 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1410,47 +931,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.90 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-009",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Robustness» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-009",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «50 вырос на 50 ты не в нуле…»"
+   "msg": "отношение длин 2.41 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1458,7 +939,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.96 > 1.6"
+   "msg": "отношение длин 2.16 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1466,7 +947,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Test» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Walk-Forward» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1482,15 +963,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Walk-Forward» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-1-011",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «win» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Test» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1502,35 +975,11 @@
   },
   {
    "bank": "PHASE_TESTS",
-   "id": "PH-2-001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-001",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «биржа переложила деньги из одного своего кармана в…»"
+   "id": "PH-1-011",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «win» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1538,7 +987,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 1.93 > 1.6"
+   "msg": "отношение длин 2.06 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1546,7 +995,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Greed» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «and» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1562,7 +1011,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Crypto» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Greed» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1575,42 +1024,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-2-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «начинается не с объ ма а с разметки…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «начинается не с объ ма а с разметки…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-003",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «Exchange» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 3.00 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1622,19 +1039,11 @@
   },
   {
    "bank": "PHASE_TESTS",
-   "id": "PH-2-005",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «в скорости сбора и обработки а не в…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-005",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «биржи на новый холодный кошел к скорее намерение…»"
+   "id": "PH-2-003",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Exchange» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1642,7 +1051,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.30 > 1.6"
+   "msg": "отношение длин 2.38 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1666,39 +1075,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «OBI» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-005",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
    "msg": "английский термин «Imbalance» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-007",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «0 баланс 0 5 и выше давит спрос…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «говорит о поведении владельцев но не о намерениях…»"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1706,7 +1083,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.22 > 1.6"
+   "msg": "отношение длин 2.38 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1738,7 +1115,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Exchange» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Inflow» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1746,47 +1123,15 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Inflow» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Exchange» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-2-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «в скорости сбора и обработки а не в…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «начинается не с объ ма а с разметки…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.51 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1802,23 +1147,15 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Cumulative» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-010",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «CVD» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-2-010",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
    "msg": "английский термин «Volume» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-2-010",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Cumulative» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1831,34 +1168,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-3-001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-001",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «паритет это рассадка по весу а не по…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-001",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «паритет это рассадка по весу а не по…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-002",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "135 символов > 130"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.11 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1866,63 +1179,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 1.73 > 1.6"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-002",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Full» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-002",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Kelly» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «входа и выхода съедают доход при коротком удержани…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «40 тонн и пускает по нему грузовик ровно…»"
+   "msg": "отношение длин 1.79 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -1930,71 +1187,15 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.64 > 1.6"
+   "msg": "отношение длин 2.49 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "id": "PH-3-004",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «Risk» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Parity» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-003",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-004",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-004",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-004",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-004",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «берут средние значения за всю историю а средние…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-004",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Long» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.81 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2010,6 +1211,14 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
+   "msg": "английский термин «Spot» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-3-004",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
    "msg": "английский термин «Perp» — проверить пару русский (english) по глоссарию"
   },
   {
@@ -2018,7 +1227,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Spot» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Long» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2063,74 +1272,18 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-3-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «вопрос каким размером входить важнее вопроса куда …»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «вдруг стала пятьдесят либо одно скоро снизит цену…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «может стать отрицательной и платить начн шь ты…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-009",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-009",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «можно только во втором случае когда она возвращает…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-009",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «Risk» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.88 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-3-009",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «CVaR» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-3-009",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Conditional» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.97 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2146,23 +1299,31 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
+   "msg": "английский термин «Conditional» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "PHASE_TESTS",
+   "id": "PH-3-009",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
    "msg": "английский термин «VaR» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
-   "id": "PH-3-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «бер м пару активов у которых расстояние спред…»"
+   "id": "PH-3-009",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Risk» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-3-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «два соседних кафе обычно держат цену на кофе…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.36 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2199,50 +1360,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-4-002",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-002",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-002",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-002",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «бирже через api ключ пару из идентификатора и…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-002",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «115 фз и рекомендации цб заставляют банк реагирова…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-002",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.92 > 1.6"
+   "msg": "отношение длин 2.42 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2258,7 +1379,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «trading» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Deviation» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2274,7 +1395,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Deviation» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «paper» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2282,39 +1403,15 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «paper» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «trading» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-4-004",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-004",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-004",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «а от отсутствия детерминированного лимита между пр…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-004",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «курьеру ключ от офиса чтобы он оставлял посылки…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.33 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2335,46 +1432,6 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-4-006",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-006",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-006",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-006",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «в проводке скачок он просто обесточивает квартиру …»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-006",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «курьеру ключ от офиса чтобы он оставлял посылки…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-006",
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
@@ -2391,42 +1448,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-4-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «второй уровень недостаточно перезапускаться нужно …»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-008",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.74 > 1.6"
+   "msg": "отношение длин 2.60 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2442,7 +1467,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «loguru» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «logging» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2450,23 +1475,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «logging» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-008",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-008",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "msg": "английский термин «loguru» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2479,34 +1488,10 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-4-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «боту не нужно никогда торговать можно и без…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-4-011",
-   "rule": "Q01",
-   "level": "BLOCK",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "NUMERIC: absTol отсутствует или < 0"
+   "msg": "отношение длин 3.00 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2519,82 +1504,18 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-001",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «задним числом рисует ясный сигнал которого в момен…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-001",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.69 > 1.6"
+   "msg": "отношение длин 1.94 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-002",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-002",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-002",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "140 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-002",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «стоимость ошибки при этом ограничена размером трен…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-002",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «обычная просадка глубокая но временная и показател…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-002",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «безупречную стратегию и потерять вс за одну ночь…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.23 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2639,162 +1560,34 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-006",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-006",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «20 не магические числа а принцип базовый фундамент…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-006",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «весь мой капитал микро лайв проверяет систему а…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-007",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-007",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «40 фундамент консервативные подходы с невысокой но…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «2 3 независимыми биржами первого эшелона bybit okx…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-007",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «quant-» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.71 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-007",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «CEX» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-007",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Insolvency» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.79 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «5 6 млн рублей никогда не делается одной…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «в одной стратегии нельзя даже если она лучшая…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-009",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «который жив т в голове уставом не является…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «без него любые знания из предыдущих 40 уроков…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-009",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «LLM» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 3.50 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-009",
-   "rule": "Q11",
-   "level": "REVIEW",
+   "rule": "Q06",
+   "level": "WARN",
    "option": null,
-   "msg": "английский термин «Agents» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.73 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -2807,42 +1600,18 @@
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-011",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «купить булку хлеба в пекарне можно по ценнику…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-011",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «купить булку хлеба в пекарне можно по ценнику…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 1.90 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
    "id": "PH-5-012",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "144 символов > 130"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-012",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «купить булку хлеба в пекарне можно по ценнику…»"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "PH-5-012",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «крупнее твой ордер относительно объ ма рынка тем…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.05 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -2850,7 +1619,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.79 > 1.6"
+   "msg": "отношение длин 3.50 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -2858,7 +1627,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 1.60 > 1.6"
+   "msg": "отношение длин 1.71 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -2871,50 +1640,10 @@
   {
    "bank": "CAPSTONE",
    "id": "CAP-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "159 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "140 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «десять неудач подряд примерно 10 000 до уч…»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-003",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 6.91 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-003",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Disagree-» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-003",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «p-value» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.95 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -2930,15 +1659,23 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
+   "msg": "английский термин «p-value» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "CAPSTONE",
+   "id": "CAP-003",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
    "msg": "английский термин «ADF» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "CAPSTONE",
    "id": "CAP-003",
-   "rule": "Q13",
+   "rule": "Q11",
    "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "option": null,
+   "msg": "английский термин «Disagree-» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "CAPSTONE",
@@ -2946,7 +1683,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 1.98 > 1.6"
+   "msg": "отношение длин 2.02 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -2959,66 +1696,10 @@
   {
    "bank": "CAPSTONE",
    "id": "CAP-005",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "131 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-005",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "148 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-005",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 5.10 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-005",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Sharpe» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-005",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Sortino» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-005",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Ratio» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-005",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "B",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-005",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "msg": "отношение длин 2.66 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3031,50 +1712,26 @@
   {
    "bank": "CAPSTONE",
    "id": "CAP-007",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "135 символов > 130"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.45 > 1.6"
   },
   {
    "bank": "CAPSTONE",
    "id": "CAP-007",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 3.00 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-008",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «прежде чем делать вывод из серии проверь саму…»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-008",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 2.96 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-008",
    "rule": "Q13",
    "level": "REVIEW",
-   "option": "B",
+   "option": "D",
    "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+  },
+  {
+   "bank": "CAPSTONE",
+   "id": "CAP-008",
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.86 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3090,7 +1747,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.02 > 1.6"
+   "msg": "отношение длин 2.22 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3098,31 +1755,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 1.92 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-012",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "145 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-012",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «вероятность описывает множество возможных результа…»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-012",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «не означает каждый второй бросок обязан быть орлом…»"
+   "msg": "отношение длин 2.08 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3130,39 +1763,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.83 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-012",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «bps» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-012",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-013",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "131 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-013",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «никакая формула не скажет заранее что выпадет имен…»"
+   "msg": "отношение длин 2.32 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3170,15 +1771,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.91 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-013",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Limit-» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.76 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3242,7 +1835,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Ratio» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Walk-Forward» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "CAPSTONE",
@@ -3250,7 +1843,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Walk-Forward» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Ratio» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "CAPSTONE",
@@ -3263,18 +1856,10 @@
   {
    "bank": "CAPSTONE",
    "id": "CAP-016",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-016",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.76 > 1.6"
+   "msg": "отношение длин 2.23 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3283,22 +1868,6 @@
    "level": "REVIEW",
    "option": null,
    "msg": "английский термин «Z-Score» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-016",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Arbitrage» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-016",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Statistical» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "CAPSTONE",
@@ -3351,18 +1920,10 @@
   {
    "bank": "CAPSTONE",
    "id": "CAP-022",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "133 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-022",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.56 > 1.6"
+   "msg": "отношение длин 2.45 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3371,14 +1932,6 @@
    "level": "REVIEW",
    "option": null,
    "msg": "английский термин «WebSocket» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-022",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
   },
   {
    "bank": "CAPSTONE",
@@ -3394,7 +1947,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Execution» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Deviation» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "CAPSTONE",
@@ -3402,39 +1955,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Deviation» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-024",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "155 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-024",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "137 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-024",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «если одна сделка принесла огромную прибыль среднее…»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-024",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «1102 гк рф и подать жалобу в арбитраж…»"
+   "msg": "английский термин «Execution» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "CAPSTONE",
@@ -3442,71 +1963,15 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.19 > 1.6"
+   "msg": "отношение длин 2.97 > 1.6"
   },
   {
    "bank": "CAPSTONE",
    "id": "CAP-024",
    "rule": "Q13",
    "level": "REVIEW",
-   "option": "A",
+   "option": "B",
    "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-025",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "157 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-025",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-025",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-025",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "135 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-025",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "135 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-025",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «аномалию например цена на одной площадке отста т…»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-025",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «вероятность описывает множество возможных результа…»"
   },
   {
    "bank": "CAPSTONE",
@@ -3514,7 +1979,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.96 > 1.6"
+   "msg": "отношение длин 1.93 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3527,66 +1992,10 @@
   {
    "bank": "CAPSTONE",
    "id": "CAP-027",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «в плюс а итог дня минус тридцать рублей…»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-027",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.89 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-027",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "155 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "177 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "предложений 3 > 2"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "134 символов > 130"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «в трейдинге ты и частоты считаешь и уверенность…»"
+   "msg": "отношение длин 2.34 > 1.6"
   },
   {
    "bank": "CAPSTONE",
@@ -3594,55 +2003,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.47 > 1.6"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Evidence» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «CEX» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "CAP-029",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Insufficient» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0001",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "203 символов > 130"
+   "msg": "отношение длин 1.82 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -3650,31 +2011,15 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 1.93 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0001",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "похож на абсурдный дистрактор: «Maker работает только ночью. Рыночный ордер исполняется мгно»"
+   "msg": "отношение длин 1.66 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0002",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «это как наблюдать за грузовиками у ворот склада…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0002",
-   "rule": "Q08",
-   "level": "BLOCK",
-   "option": "A,B",
-   "msg": "варианты почти совпадают"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 1.66 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -3686,43 +2031,11 @@
   },
   {
    "bank": "ADAPTIVE",
-   "id": "ADP-0002",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Slippage» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0002",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «bps» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0003",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
    "id": "ADP-0003",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.97 > 1.6"
+   "msg": "отношение длин 2.78 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -3762,7 +2075,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Cumulative» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Volume» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -3778,31 +2091,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Volume» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0005",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "145 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0005",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «ончейн верификация инспекция исходного кода на eth…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0005",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «а вот доходности изменения цены обычно ведут себя…»"
+   "msg": "английский термин «Cumulative» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -3810,7 +2099,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.37 > 1.6"
+   "msg": "отношение длин 1.87 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -3822,35 +2111,19 @@
   },
   {
    "bank": "ADAPTIVE",
-   "id": "ADP-0005",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0006",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "134 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0006",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «ваш секретный pin код паспорт и право подписи…»"
-  },
-  {
-   "bank": "ADAPTIVE",
    "id": "ADP-0006",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.79 > 1.6"
+   "msg": "отношение длин 1.82 > 1.6"
+  },
+  {
+   "bank": "ADAPTIVE",
+   "id": "ADP-0006",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «KPSS» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -3870,67 +2143,11 @@
   },
   {
    "bank": "ADAPTIVE",
-   "id": "ADP-0006",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Augmented» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0006",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Dickey-Fuller» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0006",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «KPSS» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0006",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «000 раз орлов будет почти ровно 5 000…»"
-  },
-  {
-   "bank": "ADAPTIVE",
    "id": "ADP-0007",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.10 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0007",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Fractional» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0007",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Differentiation» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.88 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -3946,7 +2163,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Hurst» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «Exponent» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -3954,15 +2171,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «Exponent» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «dex работает по формулам автоматического маркет ме…»"
+   "msg": "английский термин «Hurst» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -3970,15 +2179,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.80 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0009",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Look-Ahead» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.07 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -3991,18 +2192,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0009",
-   "rule": "Q13",
+   "rule": "Q11",
    "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0009",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "option": null,
+   "msg": "английский термин «Look-ahead» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4018,7 +2211,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «scaler» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «data» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4026,7 +2219,7 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
-   "msg": "английский термин «data» — проверить пару русский (english) по глоссарию"
+   "msg": "английский термин «scaler» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4039,26 +2232,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0011",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «обменять рубли или доллары на криптовалюту использ…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0011",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.38 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0011",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «True» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.21 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4078,35 +2255,11 @@
   },
   {
    "bank": "ADAPTIVE",
-   "id": "ADP-0012",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0012",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0012",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «обменять рубли или доллары на криптовалюту использ…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0012",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «обменять рубли или доллары на криптовалюту использ…»"
+   "id": "ADP-0011",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «True» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4114,7 +2267,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.03 > 1.6"
+   "msg": "отношение длин 2.22 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4126,51 +2279,11 @@
   },
   {
    "bank": "ADAPTIVE",
-   "id": "ADP-0012",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0013",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0013",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0013",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "140 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0013",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «1 2 log доходность почти совпадает с обычной…»"
-  },
-  {
-   "bank": "ADAPTIVE",
    "id": "ADP-0013",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.11 > 1.6"
+   "msg": "отношение длин 2.66 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4198,67 +2311,11 @@
   },
   {
    "bank": "ADAPTIVE",
-   "id": "ADP-0013",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «DSR» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0014",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0014",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0014",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "161 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0014",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "предложений 3 > 2"
-  },
-  {
-   "bank": "ADAPTIVE",
    "id": "ADP-0014",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.93 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0014",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Purged» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0014",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Cross-Validation» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.39 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4274,7 +2331,23 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
+   "msg": "английский термин «Purged» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "ADAPTIVE",
+   "id": "ADP-0014",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
    "msg": "английский термин «Combinatorial» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "ADAPTIVE",
+   "id": "ADP-0014",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «Cross-Validation» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4287,74 +2360,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0016",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «000 раз орлов будет почти ровно 5 000…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «блокчейне а кошелек хранит ваш секретный ключ подп…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.84 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «CVaR» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Risk» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Expected» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0016",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Value» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.76 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4370,7 +2379,23 @@
    "rule": "Q11",
    "level": "REVIEW",
    "option": null,
+   "msg": "английский термин «Expected» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "ADAPTIVE",
+   "id": "ADP-0016",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
    "msg": "английский термин «Shortfall» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "ADAPTIVE",
+   "id": "ADP-0016",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «CVaR» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4383,66 +2408,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0018",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «аналитики работают не с ценой а с доходностью…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0018",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.90 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0019",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «cex операции проходят мгновенно в базе данных бирж…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0019",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 7.11 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0019",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "B",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0019",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0020",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0020",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "усечён посреди слова"
+   "msg": "отношение длин 2.38 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4450,63 +2419,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.13 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0020",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Fractional» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0020",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Full» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0020",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Kelly» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0020",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "B",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0020",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0021",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "предложений 3 > 2"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0021",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «думаешь что тебя не обманут ты уже идеальная…»"
+   "msg": "отношение длин 2.29 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4514,23 +2427,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.53 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0022",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0022",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "141 символов > 130"
+   "msg": "отношение длин 2.12 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4538,39 +2435,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.66 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0022",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Square-Root» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0022",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Market» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0022",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Law» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0022",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Impact» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 1.90 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4623,74 +2488,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0025",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0025",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.33 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0025",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0025",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «быстрый векторный отсев потом событийная проверка …»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «уверенно читать рынок нужно быстро определять 3 ве…»"
+   "msg": "отношение длин 2.05 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4698,39 +2499,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.28 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Triangle» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Scam» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0026",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0027",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "138 символов > 130"
+   "msg": "отношение длин 2.05 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4738,15 +2507,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.18 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0027",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «Idempotency-Key» — проверить пару русский (english) по глоссарию"
+   "msg": "отношение длин 2.74 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4759,18 +2520,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0027",
-   "rule": "Q13",
+   "rule": "Q11",
    "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0027",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "option": null,
+   "msg": "английский термин «Idempotency-Key» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4779,14 +2532,6 @@
    "level": "WARN",
    "option": null,
    "msg": "отношение длин 6.00 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0028",
-   "rule": "Q11",
-   "level": "REVIEW",
-   "option": null,
-   "msg": "английский термин «WebSocket-» — проверить пару русский (english) по глоссарию"
   },
   {
    "bank": "ADAPTIVE",
@@ -4815,6 +2560,14 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0028",
+   "rule": "Q11",
+   "level": "REVIEW",
+   "option": null,
+   "msg": "английский термин «WebSocket-» — проверить пару русский (english) по глоссарию"
+  },
+  {
+   "bank": "ADAPTIVE",
+   "id": "ADP-0028",
    "rule": "Q13",
    "level": "REVIEW",
    "option": "B",
@@ -4839,82 +2592,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0030",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0030",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0030",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0030",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «абсолютных долларах или в базисных пунктах bps 1…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0030",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.13 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0030",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0031",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "142 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0031",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0031",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0031",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «open цена в первую секунду периода close цена…»"
+   "msg": "отношение длин 1.72 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -4922,79 +2603,15 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.58 > 1.6"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0031",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "B",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0031",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
+   "msg": "отношение длин 1.98 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
    "id": "ADP-0032",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «окупить средняя сырая прибыль сделки должна быть з…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0032",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «аналитики работают не с ценой а с доходностью…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0033",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0033",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0033",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0033",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «1 метр можно легко утонуть если посреди реки…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0033",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «внизу столбцы показывают объ м сколько монет смени…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.79 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -5002,7 +2619,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.44 > 1.6"
+   "msg": "отношение длин 2.77 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -5014,67 +2631,11 @@
   },
   {
    "bank": "ADAPTIVE",
-   "id": "ADP-0033",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0034",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0034",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0034",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "141 символов > 130"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0034",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «ваш секретный pin код паспорт и право подписи…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0034",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «по кривой fee c feerate p 1 p…»"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0034",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «быстрый векторный отсев потом событийная проверка …»"
-  },
-  {
-   "bank": "ADAPTIVE",
    "id": "ADP-0034",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 4.55 > 1.6"
+   "msg": "отношение длин 2.55 > 1.6"
   },
   {
    "bank": "ADAPTIVE",
@@ -5083,14 +2644,6 @@
    "level": "REVIEW",
    "option": null,
    "msg": "английский термин «YES» — проверить пару русский (english) по глоссарию"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "ADP-0034",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
   },
   {
    "bank": "MATH_TESTS",
@@ -5143,18 +2696,10 @@
   {
    "bank": "MATH_TESTS",
    "id": "MATH-math_core-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «десять неудач подряд примерно 10 000 до уч…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_core-007",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.94 > 1.6"
+   "msg": "отношение длин 1.93 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5166,51 +2711,11 @@
   },
   {
    "bank": "MATH_TESTS",
-   "id": "MATH-math_core-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «в ближайшем броске ты можешь получить орла решку…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_core-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "буллит/нумерация внутри варианта"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_core-009",
-   "rule": "Q06",
-   "level": "WARN",
-   "option": null,
-   "msg": "отношение длин 2.24 > 1.6"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_core-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «0 4 100 0 6 50 40 30…»"
-  },
-  {
-   "bank": "MATH_TESTS",
    "id": "MATH-math_core-010",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.30 > 1.6"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-001",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «средняя продолжительность жизни по тысячам людей у…»"
+   "msg": "отношение длин 2.23 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5218,7 +2723,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.33 > 1.6"
+   "msg": "отношение длин 2.55 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5231,26 +2736,10 @@
   {
    "bank": "MATH_TESTS",
    "id": "MATH-math_stats-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «вероятность выпадения орла при честном броске моне…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-003",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.79 > 1.6"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-004",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «0 4 100 0 6 50 40 30…»"
+   "msg": "отношение длин 2.57 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5258,31 +2747,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.03 > 1.6"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-004",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-004",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-005",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «в трейдинге ты и частоты считаешь и уверенность…»"
+   "msg": "отношение длин 3.06 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5290,7 +2755,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 6.17 > 1.6"
+   "msg": "отношение длин 4.36 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5302,51 +2767,11 @@
   },
   {
    "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-005",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "C",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-006",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «выигрывать часто и зарабатывать не одно и то…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-006",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «бросать монету очень много раз доля орлов будет…»"
-  },
-  {
-   "bank": "MATH_TESTS",
    "id": "MATH-math_stats-006",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.07 > 1.6"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-006",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "D",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_stats-007",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «бросать монету очень много раз доля орлов будет…»"
+   "msg": "отношение длин 2.76 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5375,10 +2800,10 @@
   {
    "bank": "MATH_TESTS",
    "id": "MATH-math_final_map-001",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «десять неудач подряд примерно 10 000 до уч…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.28 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5391,26 +2816,10 @@
   {
    "bank": "MATH_TESTS",
    "id": "MATH-math_final_map-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «41 нужно 69 формула 1 1 dd 1…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-003",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "B",
-   "msg": "дословный фрагмент урока: «даже хорошая стратегия может дать длинную серию не…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-004",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «000 бросков результат обычно окажется намного ближ…»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.74 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5418,7 +2827,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 2.04 > 1.6"
+   "msg": "отношение длин 3.11 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5439,82 +2848,18 @@
   {
    "bank": "MATH_TESTS",
    "id": "MATH-math_final_map-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «вс ещ имеет ор л 50 решка 50…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-008",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "буллит/нумерация внутри варианта"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-008",
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.00 > 1.6"
+   "msg": "отношение длин 2.11 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
    "id": "MATH-math_final_map-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "дословный фрагмент урока: «в ближайшем броске ты можешь получить орла решку…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "A",
-   "msg": "буллит/нумерация внутри варианта"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-009",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «не означает каждый второй бросок обязан быть орлом…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён многоточием"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-010",
-   "rule": "Q03",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "усечён посреди слова"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "C",
-   "msg": "дословный фрагмент урока: «вероятность выпадения орла при честном броске моне…»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-010",
-   "rule": "Q05",
-   "level": "BLOCK",
-   "option": "D",
-   "msg": "дословный фрагмент урока: «ev после издержек выживаемый размер ставки чистые …»"
+   "rule": "Q06",
+   "level": "WARN",
+   "option": null,
+   "msg": "отношение длин 2.23 > 1.6"
   },
   {
    "bank": "MATH_TESTS",
@@ -5522,47 +2867,7 @@
    "rule": "Q06",
    "level": "WARN",
    "option": null,
-   "msg": "отношение длин 3.05 > 1.6"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-010",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "A",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "MATH-math_final_map-010",
-   "rule": "Q13",
-   "level": "REVIEW",
-   "option": "B",
-   "msg": "слишком короткий на фоне правильного — вероятно, «пустышка»"
-  },
-  {
-   "bank": "QUIZ_DATA",
-   "id": "-",
-   "rule": "M02",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "арифметический цикл с шагом 1 длиной 8"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "-",
-   "rule": "M02",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "арифметический цикл с шагом 1 длиной 15"
-  },
-  {
-   "bank": "PHASE_TESTS",
-   "id": "-",
-   "rule": "M04",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "в 36% вопросов правильный — самый длинный (допустимо ≤ 35%)"
+   "msg": "отношение длин 2.27 > 1.6"
   },
   {
    "bank": "PHASE_TESTS",
@@ -5575,22 +2880,6 @@
   {
    "bank": "CAPSTONE",
    "id": "-",
-   "rule": "M02",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "арифметический цикл с шагом 1 длиной 12"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "-",
-   "rule": "M04",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "в 57% вопросов правильный — самый длинный (допустимо ≤ 35%)"
-  },
-  {
-   "bank": "CAPSTONE",
-   "id": "-",
    "rule": "M05",
    "level": "WARN",
    "option": null,
@@ -5599,34 +2888,10 @@
   {
    "bank": "ADAPTIVE",
    "id": "-",
-   "rule": "M02",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "арифметический цикл с шагом 1 длиной 34"
-  },
-  {
-   "bank": "ADAPTIVE",
-   "id": "-",
    "rule": "M05",
    "level": "WARN",
    "option": null,
    "msg": "формат NUMERIC: 0/34 при цели ≥ 20%; CHOICE — остальное (цель 50%)"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "-",
-   "rule": "M02",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "серия из 8 одинаковых позиций"
-  },
-  {
-   "bank": "MATH_TESTS",
-   "id": "-",
-   "rule": "M02",
-   "level": "BLOCK",
-   "option": null,
-   "msg": "ключ разбит на блоки [8, 8, 7, 7]"
   },
   {
    "bank": "MATH_TESTS",
