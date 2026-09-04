@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Харнесс приёмки виджетов ТЗ-2 · КриптоНавигатор</title>
+<style>
+  :root{--bg:#0d1022;--panel:#040714;--txt:#eef1ff;--mut:#9aa3c7;--line:rgba(255,255,255,.12);--acc2:#06b6d4;--ok:#22c55e;--err:#ef4444;--warn:#eab308;--mono:'Consolas','Menlo',monospace}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,sans-serif;margin:0;padding:24px}
+  .wrap{max-width:840px;margin:0 auto}
+  h1{font-size:18px;margin:0 0 6px} .sub{color:var(--mut);font-size:12px;margin-bottom:18px}
+  .btn{background:var(--acc2);color:#040714;border:0;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:13px}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+  select,input{background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+  #stage{margin-top:16px;border:1px dashed var(--line);border-radius:12px;padding:8px;min-height:120px}
+  #log{margin-top:16px;font:12px/1.6 var(--mono);color:var(--mut);white-space:pre-wrap}
+  .ok{color:var(--ok)} .err{color:var(--err)} .warn{color:var(--warn)}
+  textarea{width:100%;min-height:220px;background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.5 var(--mono);box-sizing:border-box}
+  fieldset{border:1px solid var(--line);border-radius:12px;margin:14px 0}
+  legend{color:var(--acc2);font-size:12px;font-weight:700;text-transform:uppercase}
+</style></head><body><div class="wrap">
+  <h1>Харнесс приёмки виджетов ТЗ-2 (V15.1-EXPERT-TZ-INTERACTIVES-REBUILD.md §2.4)</h1>
+  <div class="sub">Вставь блок ```js эксперта в поле ниже → «Загрузить» → проверь: двойной рендер, ширина 360, чистота таймеров.</div>
+
+  <fieldset><legend>Код виджета (один блок ```js)</legend>
+    <textarea id="code" placeholder="window.EXPERT_WIDGETS = window.EXPERT_WIDGETS || {};
+window.EXPERT_WIDGETS['widget_m_kelly_criterion'] = function(box){ … };"></textarea>
+    <div class="row">
+      <button class="btn" onclick="loadCode()">Загрузить код</button>
+      <input id="wid" placeholder="id виджета, напр. widget_m_kelly_criterion" style="width:280px">
+      <span id="load_state" class="warn">не загружен</span>
+    </div>
+  </fieldset>
+
+  <fieldset><legend>Проверки</legend>
+    <div class="row">
+      <button class="btn ghost" onclick="rerender()">▶ Рендер повторно ×2 (тест чистоты)</button>
+      <button class="btn ghost" onclick="setNarrow()">↔ Тест ширины 360px</button>
+      <button class="btn ghost" onclick="setWide()">↔ Вернуть 840px</button>
+      <button class="btn ghost" onclick="scanCode()">🔬 Скан контракта (alert/fetch/onclick/document.getElementById)</button>
+    </div>
+    <div class="row">
+      <label style="color:var(--mut);font-size:12px">Счётчик живых таймеров (после повторного рендера должен НЕ расти):
+        <b id="timers" style="color:var(--ok)">0</b>
+      </label>
+    </div>
+    <div id="stage"></div>
+  </fieldset>
+
+  <div id="log">— лог проверок —</div>
+</div>
+<script>
+window.EXPERT_WIDGETS = {};
+const logEl = document.getElementById('log'), stage = document.getElementById('stage'), timersEl = document.getElementById('timers');
+function log(msg, cls){ const s = document.createElement('div'); if(cls) s.className = cls; s.textContent = msg; logEl.appendChild(s); }
+function activeTimers(){
+  let n = 0;
+  const t = stage._expTimers; n += (t && t.length) || 0;
+  // грубая оценка глобальных таймеров через monkeypatch не делаем: считаем по контракту box._expTimers
+  return n;
+}
+function loadCode(){
+  const src = document.getElementById('code').value;
+  try{
+    const fn = new Function(src + '\n//# sourceURL=expert-widget.js');
+    fn();
+    const wid = document.getElementById('wid').value.trim();
+    if(wid && !window.EXPERT_WIDGETS[wid]){ document.getElementById('load_state').className='err'; document.getElementById('load_state').textContent='id не зарегистрирован!'; log('ОШИБКА: EXPERT_WIDGETS["'+wid+'"] не найден после загрузки', 'err'); return; }
+    document.getElementById('load_state').className='ok'; document.getElementById('load_state').textContent='загружен'+(wid?' · '+wid:'');
+    log('Код загружен и выполнен без синтаксических ошибок.', 'ok');
+    if(wid) rerender(); else log('Введи id виджета и нажми «Рендер повторно».');
+  }catch(e){ document.getElementById('load_state').className='err'; document.getElementById('load_state').textContent='ошибка'; log('ИСКЛЮЧЕНИЕ: ' + e.message, 'err'); }
+}
+function rerender(){
+  const wid = document.getElementById('wid').value.trim();
+  if(!window.EXPERT_WIDGETS[wid]){ log('Нет виджета '+wid, 'err'); return; }
+  stage.innerHTML = '';  // имитация повторного входа в урок: контейнер ОСТАЁТСЯ тем же объектом
+  window.EXPERT_WIDGETS[wid](stage);
+  window.EXPERT_WIDGETS[wid](stage); // двойной рендер подряд
+  timersEl.textContent = activeTimers();
+  log('Двойной рендер выполнен. Если интерфейс не удвоился и анимация не ускорилась — тест чистоты пройден. Живых таймеров по box._expTimers: ' + activeTimers());
+}
+function setNarrow(){ document.querySelector('.wrap').style.maxWidth='360px'; log('Ширина контейнера 360px — проверь горизонтальный скролл.', 'warn'); }
+function setWide(){ document.querySelector('.wrap').style.maxWidth='840px'; log('Ширина 840px.'); }
+function scanCode(){
+  const src = document.getElementById('code').value;
+  const bad = [
+    [/alert\s*\(/, 'alert('], [/confirm\s*\(/, 'confirm('], [/prompt\s*\(/, 'prompt('],
+    [/fetch\s*\(/, 'fetch('], [/\bimport\s/, 'import'], [/require\s*\(/, 'require('],
+    [/onclick\s*=/, 'инлайновый onclick='], [/document\.getElementById/, 'document.getElementById вне box'],
+    [/https?:\/\/(?!sourceURL)/, 'внешний URL'], [/\bsrc\s*=\s*["']/, 'внешний src']
+  ];
+  let n = 0;
+  bad.forEach(([re, name]) => { const m = src.match(re); if(m){ n++; log('НАРУШЕНИЕ КОНТРАКТА: ' + name, 'err'); } });
+  if(!n) log('Скан контракта: нарушений не найдено (alert/fetch/import/onclick/document.getElementById/URL).', 'ok');
+  const hasReg = /EXPERT_WIDGETS\s*\[\s*['"][a-z0-9_]+['"]\s*\]\s*=\s*function/.test(src);
+  log(hasReg ? 'Регистрация по контракту найдена.' : 'ВНИМАНИЕ: регистрация EXPERT_WIDGETS["id"] = function(box){…} не найдена.', hasReg ? 'ok' : 'warn');
+}
+</script></body></html>
