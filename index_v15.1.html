@@ -35853,7 +35853,11 @@ Object.keys(ATTACH).forEach(function(lid){
   };
   const origWidget=renderPhase0Widget;
   window.renderPhase0Widget=function(id){
-    if(typeof id==='string'&&id.indexOf('widget_m_')===0){ mountMathWidget(id); return; }
+    /* v15.1-fix (правка 2): раньше перехватывали только id с префиксом 'widget_m_', из-за чего
+       18 виджетов карты матфака (widget_m3_, widget_m7_, ... widget_m44_) монтировались
+       в пустой контейнер (виделась только кнопка «🤖 Подскажи»). Теперь перехватываем
+       ЛЮБОЙ id, реализованный в MATH_WIDGETS; коллизий с switch renderPhase0Widget нет. */
+    if(typeof id==='string'&&typeof MATH_WIDGETS!=='undefined'&&typeof MATH_WIDGETS[id]==='function'){ mountMathWidget(id); return; }
     origWidget(id);
   };
 })();
@@ -37234,7 +37238,9 @@ MATH_WIDGETS['widget_m_finalnaya_karta_matematicheskoy_statisti'] = function(box
 };
 
 window.mountMathWidget=function(id){
- if(typeof id==='string'&&id.indexOf('widget_m_')===0){
+ /* v15.1-fix (правка 2): снят префикс-фильтр 'widget_m_' — монтируем любой виджет,
+    реализованный в MATH_WIDGETS, включая id вида widget_m<N>_<slug> из карты attachMathWidgets */
+ if(typeof id==='string'){
   const f=MATH_WIDGETS[id];
   if(f){const box=document.getElementById(id);if(box){box.innerHTML='';f(box);return;}}
  }
